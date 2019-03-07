@@ -1276,49 +1276,49 @@ smaller, simpler, and smoother to use yet highly customizable.
 
 ** Ledger :notused:
 
-# # #+BEGIN_QUOTE
-# # Ledger is a powerful, double-entry accounting system that is accessed from the
-# # UNIX command-line.
+#+BEGIN_QUOTE
+Ledger is a powerful, double-entry accounting system that is accessed from the
+UNIX command-line.
 
-# # [[https://github.com/ledger/ledger][John Wiegley]]
-# # #+END_QUOTE
+[[https://github.com/ledger/ledger][John Wiegley]]
+#+END_QUOTE
 
-# # Before you can use this configuration, make sure you install =ledger= on your
-# # operating system.
+Before you can use this configuration, make sure you install =ledger= on your
+operating system.
 
-# # Now all we have to do is configure =ledger-mode=:
+Now all we have to do is configure =ledger-mode=:
 
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package ledger-mode
-# #     :ensure-system-package (ledger . "trizen -S --noconfirm ledger")
-# #     :mode ("\\.dat\\'"
-# #            "\\.ledger\\'")
-# #     :bind (:map ledger-mode-map
-# #                 ("C-x C-s" . my/ledger-save))
-# #     :hook (ledger-mode . ledger-flymake-enable)
-# #     :preface
-# #     (defun my/ledger-save ()
-# #       "Automatically clean the ledger buffer at each save."
-# #       (interactive)
-# #       (ledger-mode-clean-buffer)
-# #       (save-buffer))
-# #     :custom
-# #     (ledger-clear-whole-transactions t)
-# #     (ledger-reconcile-default-commodity "EUR")
-# #     (ledger-reports
-# #      '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
-# #        ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
-# #        ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
-# #        ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
-# #        ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
-# #        ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
-# #        ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
-# #        ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
-# #        ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
-# #      (ledger-report-use-header-line nil)))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ledger-mode
+    :ensure-system-package (ledger . "trizen -S --noconfirm ledger")
+    :mode ("\\.dat\\'"
+           "\\.ledger\\'")
+    :bind (:map ledger-mode-map
+                ("C-x C-s" . my/ledger-save))
+    :hook (ledger-mode . ledger-flymake-enable)
+    :preface
+    (defun my/ledger-save ()
+      "Automatically clean the ledger buffer at each save."
+      (interactive)
+      (ledger-mode-clean-buffer)
+      (save-buffer))
+    :custom
+    (ledger-clear-whole-transactions t)
+    (ledger-reconcile-default-commodity "EUR")
+    (ledger-reports
+     '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
+       ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
+       ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
+       ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
+       ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
+       ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
+       ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
+       ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
+       ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
+     (ledger-report-use-header-line nil)))
 
-# #   (use-package flycheck-ledger :after ledger-mode)
-# # #+END_SRC
+     (use-package flycheck-ledger :after ledger-mode)
+#+END_SRC
 
 *NOTE:* by default, =ledger= uses the [[ https://xkcd.com/1179/][ISO 8601]] format to write dates, which is the recommended
 # # format.
@@ -1737,6 +1737,7 @@ hiding its contents.
 # #   (use-package react-snippets :after yasnippet)
 # # #+END_SRC
 
+* Ledger-mode
 * Org-Mode
 
 # # One of my favorite modes in GNU Emacs. I mainly use it to organize my life, take
@@ -1845,20 +1846,20 @@ hiding its contents.
 # #     (org-load-modules-maybe t))
 # # #+END_SRC
 
-# # If like me, you're tired of manually updating your tables of contents, =toc-org=
-# # will maintain a table of contents at the first heading that has a =:TOC:= tag.
+If like me, you're tired of manually updating your tables of contents, =toc-org=
+will maintain a table of contents at the first heading that has a =:TOC:= tag.
 
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package toc-org
-# #     :after org
-# #     :hook (org-mode . toc-org-enable))
-# # #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package toc-org
+    :after org
+    :hook (org-mode . toc-org-enable))
+#+END_SRC
 
-# # For a cleaner online mode.
+For a cleaner online mode.
 
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package org-indent :after org :ensure nil :delight)
-# # #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-indent :after org :ensure nil :delight)
+#+END_SRC
 
 ** Agenda
 
