@@ -131,13 +131,6 @@
 (setq ido-everywhere t)
 (ido-mode 1)
 
-
-;;-------------------------------------;;
-;;                MAGIT                ;;
-;;             git versionning         ;;
-;;-------------------------------------;;
-(global-set-key (kbd "C-x g") 'magit-status)
-
 ;;-------------------------------------;;
 ;;                utop                 ;;
 ;;                ocaml                ;;
@@ -217,48 +210,34 @@
 ;; Or enable it globally:
 (add-hook 'after-init-hook 'global-company-mode)
 
-
-
-
 (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
       (let* ((this-win-buffer (window-buffer))
-	     (next-win-buffer (window-buffer (next-window)))
-	     (this-win-edges (window-edges (selected-window)))
-	     (next-win-edges (window-edges (next-window)))
-	     (this-win-2nd (not (and (<= (car this-win-edges)
-					 (car next-win-edges))
-				     (<= (cadr this-win-edges)
-					 (cadr next-win-edges)))))
-	     (splitter
-	      (if (= (car this-win-edges)
-		     (car (window-edges (next-window))))
-		  'split-window-horizontally
-		'split-window-vertically)))
-	(delete-other-windows)
-	(let ((first-win (selected-window)))
-	  (funcall splitter)
-	  (if this-win-2nd (other-window 1))
-	  (set-window-buffer (selected-window) this-win-buffer)
-	  (set-window-buffer (next-window) next-win-buffer)
-	  (select-window first-win)
-	  (if this-win-2nd (other-window 1))))))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
 
 (global-set-key (kbd "C-x |") 'toggle-window-split)
 
-;; (defun w3m-open-link-or-image-in-firefox ()
-;;   "Open the current link or image in Firefox."
-;;   (interactive)
-;;   (browse-url-firefox (or (w3m-anchor) (w3m-image))))
-
-;; (eval-after-load 'gnus
-;;   '(progn (define-key map (kbd "C-u f")
-;;             'w3m-open-link-or-image-in-firefox))
-;;   )
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
 (require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
 
 ;;-------------------------------------;;
 ;;                ORG                  ;;
