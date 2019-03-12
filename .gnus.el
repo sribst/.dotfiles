@@ -1,4 +1,4 @@
-;;ask encryption password once
+;;ask encryption password once
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 
 (setq
@@ -19,11 +19,7 @@
            (nnimap-stream ssl)
            (nnir-search-engine imap)
            (nnmail-expiry-target "nnimap+outlook:Junk")
-           (nnmail-expiry-wait immediate))
-   ;; (nnml   "solutec"
-   ;;         ((pop :server "127.0.0.1" ;; DavMail is running atlocalhost
-   ;;               :stream network))) ;; by default, DavMail  don't encrypt mail
-   ))
+           (nnmail-expiry-wait immediate))))
 
 ;; gnus+davmail bug, so I have to use pop3 for DavMail
 ;; http://permalink.gmane.org/gmane.emacs.gnus.general/83301
@@ -100,7 +96,8 @@
               (("Pro" visible ))
               (("Other" invisible ))
               (("Misc" invisible ))
-              (("Junk" invisible)))
+              (("Junk" invisible))
+              )
              (("Outlook" invisible))
              ))
 
@@ -112,39 +109,27 @@
               )
              ("Perso"
               "Personal"
-              "Personal/A mí mismo"
-              "Personal/Amigo"
-              "Personal/Familia"
-              "Personal/Volim"
-              "Personal/Activitad"
-              "Personal/Activitad/Désarçonnée"
+              "Volim"
+              "Activitad"
+              "Activitad/Désarçonnée"
+              "Activitad/AtelierSoudé"
               )
              ("Admin"
               "Administrativo"
-              "Administrativo/Apartamento"
-              "Administrativo/Billete"
-              "Administrativo/Billete/Actividad"
-              "Administrativo/Billete/Avión"
-              "Administrativo/Billete/Avión"
-              "Administrativo/Billete/Train"
               "Administrativo/Caf"
-              "Administrativo/Compra"
-              "Administrativo/Compra/Google play"
               "Administrativo/Contrato/"
-              "Administrativo/Donacion de sangre"
-              "Administrativo/Salud"
+              "Compra"
+              "Compra/Google play"
+              "Apartamento"
+              "Transporto"
+              "Salud"
               )
              ("Pro"
-              "Profesional"
-              "Profesional/Precious Plastic"
-              "Profesional/Scout"
-              "Profesional/Trabajo"
-              "Profesional/Universidad"
-              "Profesional/Voluntario"
+              "Trabajo"
+              "Universidad"
               )
              ("Other"
               "Misceláneo"
-              "Freecycle"
               )
              ("Misc"; the key of topic
               "nnset.2019"
@@ -157,9 +142,6 @@
              ("Junk"; the key of topic
               "[Gmail]/Spam"
               "[Gmail]/Papelera"
-              "nnimap+outlook:Junk"
-              "nnimap+outlook:Corbeille"
-              "nnimap+outlook:Deleted"
               )
              ("Outlook"
               "nnimap+outlook:Inbox"
@@ -180,12 +162,7 @@
               "nnimap+outlook:Notes"
               "nnimap+outlook:Outbox"
               "nnimap+outlook:famille"
-
-              )
-             ))))
-(setq nnmail-split-methods 'nnmail-split-fancy)
-
-
-(setq nnimap-split-fancy
-      '(|("Subject" ".*freecycle.*" "Freecycle")
-         "INBOX"))
+              "nnimap+outlook:Junk"
+              "nnimap+outlook:Corbeille"
+              "nnimap+outlook:Deleted"
+              )))))

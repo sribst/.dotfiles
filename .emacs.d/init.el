@@ -37,7 +37,7 @@
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 
-;;; All behond this line should disappear on myconfig.el
+;;; All behond this line should disappear on config.el
 ;;-------------------------------------;;
 ;;                CONFIG               ;;
 ;;-------------------------------------;;
@@ -45,112 +45,12 @@
 ;; (require 'helm-descbinds)
 ;; (helm-descbinds-mode)
 ;; del arrow in front
-(if (not (and (boundp 'window-system) window-system))
-    (setq overlay-arrow-string nil))
+;; (if (not (and (boundp 'window-system) window-system))
+;;     (setq overlay-arrow-string nil))
 
 ;; compile key
 (global-set-key "\C-cn" 'next-error)
 (global-set-key "\C-cp" 'previous-error)
-
-;; use space instead of tab to indent
-(setq-default indent-tabs-mode nil)
-
-;;-------------------------------------;;
-;;                smex                 ;;
-;;-------------------------------------;;
-
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-;;-------------------------------------;;
-;;           BUFFER MANAGEMENT         ;;
-;;-------------------------------------;;
-
-;; ace-windows is better then windove to switch buffer
-;; (global-set-key (kbd "M-o") 'ace-window)
-
-;; resize buffer
-(global-set-key (kbd "A-<down>") 'enlarge-window)
-(global-set-key (kbd "A-<up>") 'shrink-window)
-(global-set-key (kbd "A-<left>") 'enlarge-window-horizontally)
-(global-set-key (kbd "A-<right>") 'shrink-window-horizontally)
-;; ;;-------------------------------------;;
-;; ;;                COQ                  ;;
-;; ;;-------------------------------------;;
-;; (eval-after-load 'proof-script
-;;   '(progn
-;;      ;; (define-key proof-mode-map "\M-e" 'move-end-of-line)
-;;      ;; (define-key proof-mode-map "\M-a" 'move-beginning-of-line)
-;;      ;; (define-key proof-mode-map "\M-n"
-;;      ;;   'proof-assert-next-command-interactive)
-;;      ;; (define-key proof-mode-map "\M-p"
-;;      ;;   'proof-undo-last-successful-command)
-;;      (define-key proof-mode-map (kbd "\C-p") 'coq-About)
-;;      (define-key proof-mode-map (kbd "\C-c\C-k")
-;;        'proof-goto-point)
-;;      ))
-;; ;; Better indent for ssreflect
-;; (setq coq-one-command-per-line nil)
-;; (setq coq-indent-proofstart 0)
-;; (setq coq-indent-modulestart 0)
-;; ;; ;; input math symbol
-;; (add-hook 'proof-mode-hook (lambda () (set-input-method "TeX") ))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(proof-locked-face ((t (:background "#000d23" :slant italic)))))
-;; ;; Open .v files with Proof General's Coq mode
-;; (require 'proof-site "~/.emacs.d/lisp/PG/generic/proof-site")
-
-;;-------------------------------------;;
-;;                GNUS                 ;;
-;;               mail reader           ;;
-;;-------------------------------------;;
-;; (global-set-key (kbd "C-x e") 'gnus)
-;; (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
-;; to load head of threaded mail
-;; use nnir to search mail -> G G in mail
-
-;;-------------------------------------;;
-;;                BBDB                 ;;
-;;               contact               ;;
-;;-------------------------------------;;
-;; create new entry in bbdb for all mail received
-(setq bbdb/news-auto-create-p t)
-
-;;-------------------------------------;;
-;;                IDO                  ;;
-;;        better matching name         ;;
-;;-------------------------------------;;
-(require 'ido)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-
-;;-------------------------------------;;
-;;                utop                 ;;
-;;                ocaml                ;;
-;;-------------------------------------;;
-;; Use the opam installed utop
-(setq utop-command "opam config exec -- utop -emacs")
-
-
-;;-------------------------------------;;
-;;              ocp-indent             ;;
-;;                ocaml                ;;
-;;-------------------------------------;;
-(add-to-list 'load-path
- 	     "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-(require 'ocp-indent)
-
-;;-------------------------------------;;
-;;                WINNER               ;;
-;;-------------------------------------;;
-(winner-mode)
 
 ;;-------------------------------------;;
 ;;                FONCTION             ;;
@@ -163,18 +63,8 @@
   (dolist (buf (buffer-list))
     (with-current-buffer buf
       (when (and (buffer-file-name) (file-exists-p (buffer-file-name)) (not (buffer-modified-p)))
-	(revert-buffer t t t) )))
+        (revert-buffer t t t) )))
   (message "Refreshed open files.") )
-
-(defun flush-blank-lines ()
-  "Removes all blank lines from buffer or region"
-  (interactive)
-  (save-excursion
-    (let (min max)
-      (if (equal (region-active-p) nil)
- 	  (mark-whole-buffer))
-      (setq min (region-beginning) max (region-end))
-      (flush-lines "^ *$" min max t))))
 
 ;; reload emacs config
 (defun reload-dotemacs-file ()
@@ -183,32 +73,15 @@
   (load-file "~/.emacs.d/init.el"))
 
 ;;-------------------------------------;;
-;;                 COBOL               ;;
-;;-------------------------------------;;
-(autoload 'cobol-mode "cobol-mode" "A major mode for editing ANSI Cobol/Scobol files." t nil)
-(add-to-list 'auto-mode-alist '("\\.cbl\\'" . cobol-mode))
-(add-to-list 'auto-mode-alist '("\\.pco\\'" . cobol-mode))
-
-
-
-;;-------------------------------------;;
-;;           auto-complete             ;;
-;;-------------------------------------;;
-;; (ac-config-default)
-;; (setq merlin-ac-setup 'easy)
-;; (setq merlin-use-auto-complete-mode t)
-
-
-;;-------------------------------------;;
 ;;               company               ;;
 ;;-------------------------------------;;
 ;; Make company aware of merlin
-(with-eval-after-load 'company
-  (add-to-list 'company-backends 'merlin-company-backend))
+;; (with-eval-after-load 'company
+;;   (add-to-list 'company-backends 'merlin-company-backend))
 ;; Enable company on merlin managed buffers
 ;; (add-hook 'merlin-mode-hook 'company-mode)
 ;; Or enable it globally:
-(add-hook 'after-init-hook 'global-company-mode)
+;; (add-hook 'after-init-hook 'global-company-mode)
 
 (defun toggle-window-split ()
   (interactive)

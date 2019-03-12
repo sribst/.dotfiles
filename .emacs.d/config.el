@@ -36,7 +36,8 @@
   user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
   user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
   vc-follow-symlinks t                             ; Always follow the symlinks
-  view-read-only t)                                ; Always open read-only buffers in view-mode
+  view-read-only t                                 ; Always open read-only buffers in view-mode
+  indent-tabs-mode nil)                            ; use space instead of tab to indent
  (cd "~/")                                        ; Move to the user directory
  (column-number-mode 1)                           ; Show the column number
  (display-time-mode 1)                            ; Enable time in the mode-line
@@ -314,6 +315,12 @@
          (text-mode . turn-on-auto-fill))
   :custom (set-mark-command-repeat-pop t))
 
+(use-package smex
+  :bind (("M-x" . smex)
+         ("M-X" . smex-major-mode-commands)
+         ("C-c C-c M-x"))
+         )
+
 (use-package elisp-mode :ensure nil :delight "ξ ")
 
 (use-package eldoc
@@ -361,35 +368,139 @@
 
 (use-package reftex :after auctex)
 
-(use-package ledger-mode
-  :ensure-system-package (ledger . "trizen -S --noconfirm ledger")
-  :mode ("\\.dat\\'"
-         "\\.ledger\\'")
-  :bind (:map ledger-mode-map
-              ("C-x C-s" . my/ledger-save))
-  :hook (ledger-mode . ledger-flymake-enable)
-  :preface
-  (defun my/ledger-save ()
-    "Automatically clean the ledger buffer at each save."
-    (interactive)
-    (ledger-mode-clean-buffer)
-    (save-buffer))
-  :custom
-  (ledger-clear-whole-transactions t)
-  (ledger-reconcile-default-commodity "EUR")
-  (ledger-reports
-   '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
-     ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
-     ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
-     ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
-     ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
-     ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
-     ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
-     ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
-     ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
-   (ledger-report-use-header-line nil)))
+(use-package cobol-mode
+  :mode ("\\.cbl\\'"
+          "\\.cpy\\'"
+          "\\.pco\\'"))
 
-   (use-package flycheck-ledger :after ledger-mode)
+;; (eval-after-load 'proof-script
+;;   '(progn
+;;      ;; (define-key proof-mode-map "\M-e" 'move-end-of-line)
+;;      ;; (define-key proof-mode-map "\M-a" 'move-beginning-of-line)
+;;      ;; (define-key proof-mode-map "\M-n"
+;;      ;;   'proof-assert-next-command-interactive)
+;;      ;; (define-key proof-mode-map "\M-p"
+;;      ;;   'proof-undo-last-successful-command)
+;;      (define-key proof-mode-map (kbd "\C-p") 'coq-About)
+;;      (define-key proof-mode-map (kbd "\C-c\C-k")
+;;        'proof-goto-point)
+;;      ))
+;; ;; Better indent for ssreflect
+;; (setq coq-one-command-per-line nil)
+;; (setq coq-indent-proofstart 0)
+;; (setq coq-indent-modulestart 0)
+;; ;; ;; input math symbol
+;; (add-hook 'proof-mode-hook (lambda () (set-input-method "TeX") ))
+;; ;; Open .v files with Proof General's Coq mode
+;; (require 'proof-site "~/.emacs.d/lisp/PG/generic/proof-site")
+
+;; (setq utop-command "opam config exec -- utop -emacs")
+;; (add-to-list 'load-path
+;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
+;; (require 'ocp-indent)
+
+(use-package org
+  :ensure org-plus-contrib
+  :delight "Θ "
+  :bind
+   ("C-c l" . org-store-link)
+   ("C-c a" . org-agenda)
+   ("C-c c" . org-capture)
+   :custom
+   (org-agenda-files '("~/org/"))
+   )
+
+  ;; :preface
+  ;; (defun my/org-compare-times (clocked estimated)
+  ;;   "Gets the ratio between the timed time and the estimated time."
+  ;;   (if (and (> (length clocked) 0) estimated)
+  ;;       (format "%.2f"
+  ;;               (/ (* 1.0 (org-hh:mm-string-to-minutes clocked))
+  ;;                  (org-hh:mm-string-to-minutes estimated)))
+  ;;     "")
+    ;; )
+
+
+  ;; (defun my/org-archive-done-tasks ()
+  ;;   "Archives finished or cancelled tasks."
+  ;;   (interactive)
+  ;;   (org-map-entries
+  ;;    (lambda ()
+  ;;      (org-archive-subtree)
+  ;;      (setq org-map-continue-from (outline-previous-heading)))
+  ;;    "TODO=\"DONE\"|TODO=\"CANCELLED\"" (if (org-before-first-heading-p) 'file 'tree)))
+
+  ;; (defun my/org-jump ()
+  ;;   "Jumps to a specific task."
+  ;;   (interactive)
+  ;;   (let ((current-prefix-arg '(4)))
+  ;;     (call-interactively 'org-refile)))
+
+  ;; (defun my/org-use-speed-commands-for-headings-and-lists ()
+  ;;   "Activates speed commands on list items too."
+  ;;   (or (and (looking-at org-outline-regexp) (looking-back "^\**"))
+  ;;       (save-excursion (and (looking-at (org-item-re)) (looking-back "^[ \t]*")))))
+  ;; :hook ((after-save . my/config-tangle)
+  ;;        (auto-save . org-save-all-org-buffer)
+  ;;        (org-mode . org-indent-mode))
+  ;; :custom
+  ;; (org-archive-location "~/.personal/archives/%s::")
+  ;; (org-blank-before-new-entry '((heading . t)
+  ;;                               (plain-list-item . t)))
+  ;; (org-cycle-include-plain-lists 'integrate)
+  ;; (org-ditaa-jar-path "~/.local/lib/ditaa0_9.jar")
+  ;; (org-expiry-inactive-timestamps t)
+  ;; (org-export-backends '(ascii beamer html icalendar latex man md org texinfo))
+  ;; (org-log-done 'time)
+  ;; (org-log-into-drawer "LOGBOOK")
+  ;; (org-modules '(org-crypt
+  ;;                org-habit
+  ;;                org-info
+  ;;                org-irc
+  ;;                org-mouse
+  ;;                org-protocol))
+  ;; (org-refile-allow-creating-parent-nodes 'confirm)
+  ;; (org-refile-use-cache nil)
+  ;; (org-refile-use-outline-path nil)
+  ;; (org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+  ;; (org-startup-folded nil)
+  ;; (org-startup-with-inline-images t)
+  ;; (org-tag-alist '(("@coding" . ?c)
+  ;;                  ("@computer" . ?l)
+  ;;                  ("@errands" . ?e)
+  ;;                  ("@home" . ?h)
+  ;;                  ("@phone" . ?p)
+  ;;                  ("@reading" . ?r)
+  ;;                  ("@school" . ?s)
+  ;;                  ("@work" . ?b)
+  ;;                  ("@writing" . ?w)
+  ;;                  ("crypt" . ?C)
+  ;;                  ("fuzzy" . ?0)
+  ;;                  ("highenergy" . ?1)))
+  ;; (org-tags-exclude-from-inheritance '("crypt" "project"))
+  ;; (org-todo-keywords '((sequence "TODO(t)"
+  ;;                                "STARTED(s)"
+  ;;                                "WAITING(w@/!)"
+  ;;                                "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")
+  ;;                      (sequence "TOBUY"
+  ;;                                "TOSHRINK"
+  ;;                                "TOCUT"
+  ;;                                "TOSEW" "|" "DONE(x)")))
+  ;; (org-use-effective-time t)
+  ;; (org-use-speed-commands 'my/org-use-speed-commands-for-headings-and-lists)
+  ;; (org-yank-adjusted-subtrees t)
+  ;; :config
+  ;; (add-to-list 'org-global-properties '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
+  ;; (add-to-list 'org-speed-commands-user '("!" my/org-clock-in-and-track))
+  ;; (add-to-list 'org-speed-commands-user '("$" call-interactively 'org-archive-subtree))
+  ;; (add-to-list 'org-speed-commands-user '("d" my/org-move-line-to-destination))
+  ;; (add-to-list 'org-speed-commands-user '("i" call-interactively 'org-clock-in))
+  ;; (add-to-list 'org-speed-commands-user '("o" call-interactively 'org-clock-out))
+  ;; (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
+  ;; (add-to-list 'org-speed-commands-user '("x" org-todo "DONE"))
+  ;; (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
+  ;; (org-clock-persistence-insinuate)
+  ;; (org-load-modules-maybe t))
 
 (use-package toc-org
   :after org
@@ -397,14 +508,61 @@
 
 (use-package org-indent :after org :ensure nil :delight)
 
-(use-package gnus
-  :bind ("C-x e" . gnus)
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode)
+  :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
+
+(use-package org-contacts
+  :ensure nil
+  :after org
+  :custom (org-contacts-files '("~/org/contacts.org")))
+
+(use-package org-faces
+  :ensure nil
+  :after org
   :custom
-  (gnus-fetch-old-headers t))
-;;(use-package nnir
-;;  :after gnus
-;;  :config
-;;  (gnus-save-newsrc-file 'nil)
+  (org-todo-keyword-faces
+   '(("DONE" . (:foreground "cyan" :weight bold))
+     ("SOMEDAY" . (:foreground "gray" :weight bold))
+     ("TODO" . (:foreground "green" :weight bold))
+     ("WAITING" . (:foreground "red" :weight bold)))))
+
+(use-package ob-C :ensure nil :after org)
+;; (use-package ob-css :ensure nil :after org)
+;; (use-package ob-ditaa :ensure nil :after org)
+;; (use-package ob-dot :ensure nil :after org)
+(use-package ob-emacs-lisp :ensure nil :after org)
+;; (use-package ob-gnuplot :ensure nil :after org)
+(use-package ob-java :ensure nil :after org)
+(use-package ob-js :ensure nil :after org)
+(use-package ob-latex :ensure nil :after org)
+(use-package ob-ledger :ensure nil :after org)
+(use-package ob-makefile :ensure nil :after org)
+(use-package ob-org :ensure nil :after org)
+
+;; (use-package ob-plantuml
+;;   :ensure nil
+;;   :after org
+;;   :custom (org-plantuml-jar-path (expand-file-name (format "%s/plantuml.jar" xdg-lib))))
+
+;; (use-package ob-python :ensure nil :after org)
+;; (use-package ob-ruby :ensure nil :after org)
+(use-package ob-shell :ensure nil :after org)
+(use-package ob-sql :ensure nil :after org)
+
+(use-package gnus
+    :bind ("C-x e" . gnus)
+    :custom
+    (gnus-fetch-old-headers t))
+  ;;(use-package nnir
+  ;;  :after gnus
+  ;;  :config
+  ;;  (gnus-save-newsrc-file 'nil)
+  (use-package bbdb
+    :after gnus
+    ;; :custom
+    ;; bbdb/news-auto-create-p t)         ;; doesn't work
+)
 
 (use-package magit
    :defer 0.3
