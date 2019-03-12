@@ -1,13 +1,58 @@
 #+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
 
+* table of content :TOC:
+- [[#emacs-initialization][Emacs Initialization]]
+  - [[#packages-sources][Packages Sources]]
+  - [[#use-package][use-package]]
+  - [[#delight][delight]]
+  - [[#authentification][Authentification]]
+  - [[#defaults-values][defaults values]]
+  - [[#xdg][XDG]]
+  - [[#customization][Customization]]
+  - [[#theme][Theme]]
+  - [[#turn-off-mouse-interface][Turn off mouse interface]]
+- [[#advanced-configuration][Advanced Configuration]]
+  - [[#auto-completion-company][Auto-Completion (company)]]
+  - [[#backups][Backups]]
+  - [[#browser-firefox][Browser (Firefox)]]
+  - [[#buffers][Buffers]]
+  - [[#calculator][Calculator]]
+  - [[#calendar][Calendar]]
+  - [[#dashboard][Dashboard]]
+  - [[#ending-up][Ending Up]]
+  - [[#spelling][Spelling]]
+  - [[#history][History]]
+  - [[#hydra][Hydra]]
+  - [[#general][General]]
+  - [[#which-key][=which-key=]]
+  - [[#irc][IRC]]
+  - [[#ivy][Ivy]]
+  - [[#navigation][Navigation]]
+  - [[#parenthesis][Parenthesis]]
+  - [[#pdf][PDF]]
+  - [[#point-and-region][Point and Region]]
+  - [[#projectile][Projectile]]
+  - [[#recent-files][Recent Files]]
+  - [[#whitespaces][Whitespaces]]
+  - [[#windows][Windows]]
+  - [[#word-wrap][Word Wrap]]
+  - [[#yasnippet][YASnippet]]
+  - [[#smex][smex]]
+- [[#major-mode][Major mode]]
+  - [[#languages][Languages]]
+  - [[#org][Org]]
+  - [[#mail-gnus][Mail (Gnus)]]
+  - [[#git-magit][Git (Magit)]]
+  - [[#file-explorer-dired][File Explorer (Dired)]]
+
 * Emacs Initialization
 ** Packages Sources
    In order to install packages, it is useful to configure the package sources.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq package-archives '(
      ("melpa" . "http://melpa.org/packages/")
-     ("gnu" . "http://elpa.gnu.org/packages/")
+     ("gnu" . "http://elpa.gnu.org/packages/") ;; is it still used ?
      ("org" . "http://orgmode.org/elpa/")
      ("marmalade" . "http://marmalade-repo.org/packages/")
      ))
@@ -26,23 +71,16 @@
 #+END_SRC
 
 ** delight
-   delight is a way of showing wich major/minor is currently open
+   delight is a way of showing wich major/minor is currently ope
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package delight :ensure t)
 #+END_SRC
-
-* Start Up
 ** Authentification
    In which file the authentification is save
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq auth-sources '("~/.gnupg/shared/authinfo.gpg"
-                       "~/.authinfo.gpg"
-;;                       "~/.authinfo"
-;;                       "~/.netrc"
-  ))
+  (setq auth-sources '( "~/.authinfo.gpg" ))
 #+END_SRC
-
-** Better defaults
+** defaults values
 For a better user experience of GNU Emacs, here are the default values I use.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq-default
@@ -58,13 +96,17 @@ For a better user experience of GNU Emacs, here are the default values I use.
   mark-ring-max 128                                ; Maximum length of mark ring
   scroll-conservatively most-positive-fixnum       ; Always scroll by one line
   select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
+  x-select-enable-clipboard t                      ; enable copy pas to classic clipboard
   tab-width 4                                      ; Set width for tabs
   use-package-always-ensure t                      ; Avoid the :ensure keyword for each package
   user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
   user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
   vc-follow-symlinks t                             ; Always follow the symlinks
   view-read-only t                                 ; Always open read-only buffers in view-mode
+  blink-cursor-mode nil                            ; the cursor wont blink
   indent-tabs-mode nil)                            ; use space instead of tab to indent
+ (delete-selection-mode t)                        ; when writing into marked region delete it
+ (transient-mark-mode t)                          ; same mark mouse or keyboard
  (cd "~/")                                        ; Move to the user directory
  (column-number-mode 1)                           ; Show the column number
  (display-time-mode 1)                            ; Enable time in the mode-line
@@ -74,7 +116,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
  (show-paren-mode 1)                              ; Show the parenthesis
 #+END_SRC
 
-** XDG :notused:
+** XDG                                                              :notused:
 
 *NOTE:* I'm not using that config yet. Need to understand why doing it in emacs
 
@@ -123,21 +165,21 @@ user with the UI, I add the generated code in a separate file.
    *NOTE:* I prefer to use the default .Xressources file
    I like the light on dark because I find it to be more restful.
 
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package nord-theme
- #    :config
-# (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-#      (load-theme 'nord t))
-#    (use-package smart-mode-line
-#     :defer 0.1
-#     :custom (sml/theme 'respectful)
-#     :config (sml/setup))
- #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package nord-theme
+    :config
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
+     (load-theme 'nord t))
+   (use-package smart-mode-line
+    :defer 0.1
+    :custom (sml/theme 'respectful)
+    :config (sml/setup))
+#+END_SRC
 
 ** Turn off mouse interface
-Since I never use the mouse with GNU Emacs, I prefer not to use certain
-graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
-I find invasive.
+ Since I never use the mouse with GNU Emacs, I prefer not to use certain
+ graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
+ I find invasive.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (when window-system
@@ -148,7 +190,7 @@ I find invasive.
 #+END_SRC
 
 * Advanced Configuration
-** Alert :notused:
+** COMMENT Alert :notused:
 
 # Most packages use =alerts= to make notifications with =libnotify=. Don't forget
 # to first install a notification daemon, like =dunst=.
@@ -233,22 +275,53 @@ lot.
 #+END_SRC
 
 ** Buffers
-
+  ace window allow to simply switch when only 2 buffer or to choose
+  which buffer with key when multiple buff
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ace-window
-  :bind ("M-o" . ace-window)
-  :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
-  (use-package ibuffer
-    :defer 0.2
-    :bind ("C-x C-b" . ibuffer))
-;;  (use-package ibuffer-projectile
-;;   :after ibuffer
-;;   :preface
-;;   (defun my/ibuffer-projectile ()
-;;     (ibuffer-projectile-set-filter-groups)
-;;    (unless (eq ibuffer-sorting-mode 'alphabetic)
-;;        (ibuffer-do-sort-by-alphabetic)))
-;;    :hook (ibuffer . my/ibuffer-projectile))
+  (use-package ace-window
+    :bind
+      (("C-x o" . ace-window)
+      ("M-o" . ace-window))
+    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
+    (use-package ibuffer
+      :defer 0.2
+      :bind ("C-x C-b" . ibuffer))
+  ;;  (use-package ibuffer-projectile
+  ;;   :after ibuffer
+  ;;   :preface
+  ;;   (defun my/ibuffer-projectile ()
+  ;;     (ibuffer-projectile-set-filter-groups)
+  ;;    (unless (eq ibuffer-sorting-mode 'alphabetic)
+  ;;        (ibuffer-do-sort-by-alphabetic)))
+  ;;    :hook (ibuffer . my/ibuffer-projectile))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(global-set-key (kbd "C-x |") 'toggle-window-split)
 #+END_SRC
 ** Calculator :notused:
 
@@ -949,14 +1022,17 @@ Colorize colors as text with their value.
 
 Avoids call the function or reload Emacs.
 
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package autorevert
-#     :ensure nil
-#     :delight auto-revert-mode
-#     :bind ("C-x R" . revert-buffer)
-#     :custom (auto-revert-verbose nil)
-#     :config (global-auto-revert-mode 1))
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package autorevert
+    :ensure nil
+    :delight auto-revert-mode
+    :bind ("C-x R" . revert-buffer)
+    :custom (auto-revert-verbose nil)
+    :config (global-auto-revert-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: revert-buffer
 
 *** =try= :notused:
 
@@ -1574,9 +1650,7 @@ a better M-x command
 *** Cobol
  #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package cobol-mode
-   :mode ("\\.cbl\\'"
-           "\\.cpy\\'"
-           "\\.pco\\'"))
+  :mode ("\\.cbl\\'" "\\.cpy\\'" "\\.pco\\'"))
  #+END_SRC
 *** COQ
  #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1609,6 +1683,12 @@ a better M-x command
 ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
 ;; (require 'ocp-indent)
 #+END_SRC
+*** Antlr
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package antlr-mode
+     :mode ("\\.g4\\'")
+ #+END_SRC
+
 ** COMMENT Ledger                                                           :notused:
 
  #+BEGIN_QUOTE

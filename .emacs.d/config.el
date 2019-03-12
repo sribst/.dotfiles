@@ -1,6 +1,6 @@
 (setq package-archives '(
      ("melpa" . "http://melpa.org/packages/")
-     ("gnu" . "http://elpa.gnu.org/packages/")
+     ("gnu" . "http://elpa.gnu.org/packages/") ;; is it still used ?
      ("org" . "http://orgmode.org/elpa/")
      ("marmalade" . "http://marmalade-repo.org/packages/")
      ))
@@ -12,11 +12,7 @@
 
 (use-package delight :ensure t)
 
-(setq auth-sources '("~/.gnupg/shared/authinfo.gpg"
-                       "~/.authinfo.gpg"
-;;                       "~/.authinfo"
-;;                       "~/.netrc"
-  ))
+(setq auth-sources '( "~/.authinfo.gpg" ))
 
 (setq-default
   ad-redefinition-action 'accept                   ; Silence warnings for redefinition
@@ -31,13 +27,17 @@
   mark-ring-max 128                                ; Maximum length of mark ring
   scroll-conservatively most-positive-fixnum       ; Always scroll by one line
   select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
+  x-select-enable-clipboard t                      ; enable copy pas to classic clipboard
   tab-width 4                                      ; Set width for tabs
   use-package-always-ensure t                      ; Avoid the :ensure keyword for each package
   user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
   user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
   vc-follow-symlinks t                             ; Always follow the symlinks
   view-read-only t                                 ; Always open read-only buffers in view-mode
+  blink-cursor-mode nil                            ; the cursor wont blink
   indent-tabs-mode nil)                            ; use space instead of tab to indent
+ (delete-selection-mode t)                        ; when writing into marked region delete it
+ (transient-mark-mode t)                          ; same mark mouse or keyboard
  (cd "~/")                                        ; Move to the user directory
  (column-number-mode 1)                           ; Show the column number
  (display-time-mode 1)                            ; Enable time in the mode-line
@@ -49,6 +49,15 @@
 (setq-default custom-file (expand-file-name "~/.emacs.d/custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file t))
+
+(use-package nord-theme
+    :config
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
+     (load-theme 'nord t))
+   (use-package smart-mode-line
+    :defer 0.1
+    :custom (sml/theme 'respectful)
+    :config (sml/setup))
 
 (when window-system
   (menu-bar-mode -1)                              ; Disable the menu bar
@@ -85,7 +94,9 @@
     :keybinding "d"))
 
 (use-package ace-window
-  :bind ("M-o" . ace-window)
+  :bind
+    (("C-x o" . ace-window)
+    ("M-o" . ace-window))
   :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
   (use-package ibuffer
     :defer 0.2
@@ -98,6 +109,33 @@
 ;;    (unless (eq ibuffer-sorting-mode 'alphabetic)
 ;;        (ibuffer-do-sort-by-alphabetic)))
 ;;    :hook (ibuffer . my/ibuffer-projectile))
+
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(global-set-key (kbd "C-x |") 'toggle-window-split)
 
 (use-package dashboard
   :preface
@@ -178,6 +216,13 @@
   :defer 2
   :delight
   :hook (prog-mode))
+
+(use-package autorevert
+  :ensure nil
+  :delight auto-revert-mode
+  :bind ("C-x R" . revert-buffer)
+  :custom (auto-revert-verbose nil)
+  :config (global-auto-revert-mode 1))
 
 (use-package undo-tree
   :delight
@@ -369,9 +414,7 @@
 (use-package reftex :after auctex)
 
 (use-package cobol-mode
-  :mode ("\\.cbl\\'"
-          "\\.cpy\\'"
-          "\\.pco\\'"))
+ :mode ("\\.cbl\\'" "\\.cpy\\'" "\\.pco\\'"))
 
 ;; (eval-after-load 'proof-script
 ;;   '(progn
@@ -398,6 +441,9 @@
 ;; (add-to-list 'load-path
 ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
 ;; (require 'ocp-indent)
+
+(use-package antlr-mode
+  :mode ("\\.g4\\'")
 
 (use-package org
   :ensure org-plus-contrib

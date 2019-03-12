@@ -111,8 +111,8 @@
               "Personal"
               "Volim"
               "Activitad"
-              "Activitad/Désarçonnée"
-              "Activitad/AtelierSoudé"
+              "Activitad/Desarconnee"
+              "Activitad/AtelierSoude"
               )
              ("Admin"
               "Administrativo"
@@ -129,7 +129,7 @@
               "Universidad"
               )
              ("Other"
-              "Misceláneo"
+              "Miscelaneo"
               )
              ("Misc"; the key of topic
               "nnset.2019"
@@ -153,12 +153,12 @@
               "nnimap+outlook:Archivo"
               "nnimap+outlook:Archivo/bobcanard@hotmail.fr"
               "nnimap+outlook:Deleted/bordel a trier"
-              "nnimap+outlook:église"
+              "nnimap+outlook:eglise"
               "nnimap+outlook:Archive"
-              "nnimap+outlook:Envoyés"
+              "nnimap+outlook:Envoyes"
               "nnimap+outlook:bordel a trier"
               "nnimap+outlook:famillia"
-              "nnimap+outlook:éclais"
+              "nnimap+outlook:eclais"
               "nnimap+outlook:Notes"
               "nnimap+outlook:Outbox"
               "nnimap+outlook:famille"
