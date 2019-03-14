@@ -13,6 +13,7 @@
  '(TeX-view-program-selection (quote ((output-pdf "Evince") (output-html "xdg-open"))) t)
  '(abbrev-file-name "~/.emacs.d/abbrev_defs")
  '(aggressive-indent-comments-too nil)
+ '(auto-revert-verbose nil)
  '(backup-directory-alist (quote (("." . "~/.emacs.d/backup"))))
  '(blink-cursor-mode nil)
  '(company-begin-commands (quote (self-insert-command)))
@@ -61,7 +62,7 @@
      ("WAITING" :foreground "red" :weight bold))))
  '(package-selected-packages
    (quote
-    (org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
+    (gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
  '(paradox-column-width-package 27)
  '(paradox-column-width-version 13)
  '(paradox-execute-asynchronously t)
@@ -76,6 +77,7 @@
  '(savehist-file "~/.emacs.d/history")
  '(savehist-save-minibuffer-history 1)
  '(set-mark-command-repeat-pop t)
+ '(sml/theme (quote respectful))
  '(undo-tree-visualizer-diff t)
  '(undo-tree-visualizer-timestamps t)
  '(vc-make-backup-files t)
@@ -85,4 +87,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(erc-action-face ((t (:foreground "#8fbcbb"))))
+ '(erc-error-face ((t (:foreground "#bf616a"))))
+ '(erc-input-face ((t (:foreground "#ebcb8b"))))
+ '(erc-notice-face ((t (:foreground "#ebcb8b"))))
+ '(erc-timestamp-face ((t (:foreground "#a3be8c")))))

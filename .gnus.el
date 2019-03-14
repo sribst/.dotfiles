@@ -113,6 +113,7 @@
               "Activitad"
               "Activitad/Desarconnee"
               "Activitad/AtelierSoude"
+              "Activitad/MonteeCoinche"
               )
              ("Admin"
               "Administrativo"

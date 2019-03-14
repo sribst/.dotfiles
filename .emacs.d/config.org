@@ -1,7 +1,7 @@
 #+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
 
-* table of content :TOC:
+* table of content :TOC@3:
 - [[#emacs-initialization][Emacs Initialization]]
   - [[#packages-sources][Packages Sources]]
   - [[#use-package][use-package]]
@@ -16,32 +16,68 @@
   - [[#auto-completion-company][Auto-Completion (company)]]
   - [[#backups][Backups]]
   - [[#browser-firefox][Browser (Firefox)]]
+    - [[#engine-mode][=engine-mode=]]
   - [[#buffers][Buffers]]
   - [[#calculator][Calculator]]
   - [[#calendar][Calendar]]
   - [[#dashboard][Dashboard]]
-  - [[#ending-up][Ending Up]]
   - [[#spelling][Spelling]]
+    - [[#abbreviations][Abbreviations]]
+    - [[#fly-spell][Fly Spell]]
+    - [[#grammar-checker][Grammar Checker]]
   - [[#history][History]]
   - [[#hydra][Hydra]]
   - [[#general][General]]
+    - [[#aggressive-indent][=aggressive-indent=]]
+    - [[#move-text][=move-text=]]
+    - [[#paradox][=paradox=]]
+    - [[#rainbow-mode][=rainbow-mode=]]
+    - [[#try][=try=]]
+    - [[#undo-tree][=undo-tree=]]
+    - [[#wiki-summary][=wiki-summary=]]
   - [[#which-key][=which-key=]]
   - [[#irc][IRC]]
   - [[#ivy][Ivy]]
   - [[#navigation][Navigation]]
   - [[#parenthesis][Parenthesis]]
+    - [[#rainbow-delimiters][=rainbow-delimiters=]]
+    - [[#smartparens][=smartparens=]]
   - [[#pdf][PDF]]
   - [[#point-and-region][Point and Region]]
   - [[#projectile][Projectile]]
   - [[#recent-files][Recent Files]]
   - [[#whitespaces][Whitespaces]]
+    - [[#hungry-delete][=hungry-delete=]]
   - [[#windows][Windows]]
+    - [[#switch-window][=switch-window=]]
+    - [[#windmove][=windmove=]]
+    - [[#winner][=winner=]]
   - [[#word-wrap][Word Wrap]]
   - [[#yasnippet][YASnippet]]
   - [[#smex][smex]]
 - [[#major-mode][Major mode]]
   - [[#languages][Languages]]
+    - [[#emacs-lisp][Emacs Lisp]]
+    - [[#markdown][Markdown]]
+    - [[#latex][LaTeX]]
+    - [[#cobol][Cobol]]
+    - [[#coq][COQ]]
+    - [[#ocaml][OCaml]]
+    - [[#antlr][Antlr]]
+    - [[#groovy-gradle][Groovy (gradle)]]
+    - [[#yaml][Yaml]]
+    - [[#config][config]]
   - [[#org][Org]]
+    - [[#table-of-content][Table of Content]]
+    - [[#cleaner-indentation][cleaner indentation]]
+    - [[#agenda][Agenda]]
+    - [[#bullets][Bullets]]
+    - [[#capture][Capture]]
+    - [[#clock][Clock]]
+    - [[#contacts][Contacts]]
+    - [[#custormization][Custormization]]
+    - [[#journal][Journal]]
+    - [[#languages-1][Languages]]
   - [[#mail-gnus][Mail (Gnus)]]
   - [[#git-magit][Git (Magit)]]
   - [[#file-explorer-dired][File Explorer (Dired)]]
@@ -399,11 +435,11 @@ Always good to have a dashboard.
     :preface
     :init
     (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-    (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
+    ;; (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
     :custom (dashboard-startup-banner 'logo)
     :config (dashboard-setup-startup-hook))
 #+END_SRC
-** Ending Up :notused:
+** COMMENT Ending Up                                                        :notused:
 
 
 not-sur to understand how it works
@@ -537,7 +573,7 @@ radical function, it is part of a good user experience.
     :config (savehist-mode 1))
 #+END_SRC
 
-** Hydra :notused:
+** Hydra :notused:noexport_1:
 
 maybe I should start using it
 
@@ -1097,103 +1133,103 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
 
 ** IRC :notused:
 
-# # IRC is the best way for me to get a quick answer to a simple question and to
-# # learn from more competent people than me on a subject. I'd rather use =erc= than
-# # =rcirc= because I find =rcirc= very minimal.
+IRC is the best way for me to get a quick answer to a simple question and to
+learn from more competent people than me on a subject. I'd rather use =erc= than
+=rcirc= because I find =rcirc= very minimal.
 
-# # Besides, for people like me, who want to store your password in a /GPG/ file,
-# # you just need to specify a file priority list with =auth-sources=, to tell =erc=
-# # where to start looking for your password first.
+Besides, for people like me, who want to store your password in a /GPG/ file,
+you just need to specify a file priority list with =auth-sources=, to tell =erc=
+where to start looking for your password first.
 
-# # Of course, don't forget to add this line in your =.authinfo.gpg= file, where
-# # /<nickname>/ and /<password>/ match your real information:
+Of course, don't forget to add this line in your =.authinfo.gpg= file, where
+/<nickname>/ and /<password>/ match your real information:
 
-# # #+BEGIN_EXAMPLE
-# #   machine irc.freenode.net login <nickname> password <password>
-# # #+END_EXAMPLE
+#+BEGIN_EXAMPLE
+  machine irc.freenode.net login <nickname> password <password>
+#+END_EXAMPLE
 
-# # Then encrypt that file with =gpg -c .authinfo= and don't forget to delete the
-# # =.authinfo= file.
+Then encrypt that file with =gpg -c .authinfo= and don't forget to delete the
+=.authinfo= file.
 
-# # Finally, specify to =erc= that you use a =.authinfo= file with:
-# # =(setq erc-prompt-for-nickserv-password nil)=.
+Finally, specify to =erc= that you use a =.authinfo= file with:
+=(setq erc-prompt-for-nickserv-password nil)=.
 
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package erc
-# #     :defer 3
-# #     :delight "ε "
-# #     :preface
-# #     (defun my/erc-start-or-switch ()
-# #       "Connects to ERC, or switch to last active buffer."
-# #       (interactive)
-# #       (if (get-buffer "irc.freenode.net:6667")
-# #           (erc-track-switch-buffer 1)
-# #         (erc :server "irc.freenode.net" :port 6667 :nick "rememberYou")))
+# #+BEGIN_SRC emacs-lisp :tangle yes
+#   (use-package erc
+#     :defer 3
+#     :delight "ε "
+#     :preface
+#     (defun my/erc-start-or-switch ()
+#       "Connects to ERC, or switch to last active buffer."
+#       (interactive)
+#       (if (get-buffer "irc.freenode.net:6667")
+#           (erc-track-switch-buffer 1)
+#         (erc :server "irc.freenode.net" :port 6667 :nick "rememberYou")))
 
-# #     (defun my/erc-count-users ()
-# #       "Displays the number of users connected on the current channel."
-# #       (interactive)
-# #       (if (get-buffer "irc.freenode.net:6667")
-# #           (let ((channel (erc-default-target)))
-# #             (if (and channel (erc-channel-p channel))
-# #                 (message "%d users are online on %s"
-# #                          (hash-table-count erc-channel-users)
-# #                          channel)
-# #               (user-error "The current buffer is not a channel")))
-# #         (user-error "You must first start ERC")))
+#     (defun my/erc-count-users ()
+#       "Displays the number of users connected on the current channel."
+#       (interactive)
+#       (if (get-buffer "irc.freenode.net:6667")
+#           (let ((channel (erc-default-target)))
+#             (if (and channel (erc-channel-p channel))
+#                 (message "%d users are online on %s"
+#                          (hash-table-count erc-channel-users)
+#                          channel)
+#               (user-error "The current buffer is not a channel")))
+#         (user-error "You must first start ERC")))
 
-# #     (defun my/erc-notify (nickname message)
-# #       "Displays a notification message for ERC."
-# #       (let* ((channel (buffer-name))
-# #              (nick (erc-hl-nicks-trim-irc-nick nickname))
-# #              (title (if (string-match-p (concat "^" nickname) channel)
-# #                         nick
-# #                       (concat nick " (" channel ")")))
-# #              (msg (s-trim (s-collapse-whitespace message))))
-# #         (alert (concat nick ": " msg) :title title)))
+#     (defun my/erc-notify (nickname message)
+#       "Displays a notification message for ERC."
+#       (let* ((channel (buffer-name))
+#              (nick (erc-hl-nicks-trim-irc-nick nickname))
+#              (title (if (string-match-p (concat "^" nickname) channel)
+#                         nick
+#                       (concat nick " (" channel ")")))
+#              (msg (s-trim (s-collapse-whitespace message))))
+#         (alert (concat nick ": " msg) :title title)))
 
-# #     (defun my/erc-preprocess (string)
-# #       "Avoids channel flooding."
-# #       (setq str
-# #             (string-trim
-# #              (replace-regexp-in-string "\n+" " " str))))
-# #     :hook ((ercn-notify . my/erc-notify)
-# #            (erc-send-pre . my/erc-preprocess))
-# #     :custom-face
-# #     (erc-action-face ((t (:foreground "#8fbcbb"))))
-# #     (erc-error-face ((t (:foreground "#bf616a"))))
-# #     (erc-input-face ((t (:foreground "#ebcb8b"))))
-# #     (erc-notice-face ((t (:foreground "#ebcb8b"))))
-# #     (erc-timestamp-face ((t (:foreground "#a3be8c"))))
-# #     :custom
-# #     (erc-autojoin-channels-alist '(("freenode.net" "#archlinux" "#bash" "##c++"
-# #                                     "#emacs""#i3" "#latex" "#org-mode" "#python"
-# #                                     "#qutebrowser" "#reactjs" "#sway")))
-# #     (erc-autojoin-timing 'ident)
-# #     (erc-fill-function 'erc-fill-static)
-# #     (erc-fill-static-center 22)
-# #     (erc-header-line-format "%n on %t (%m)")
-# #     (erc-hide-list '("JOIN" "PART" "QUIT"))
-# #     (erc-join-buffer 'bury)
-# #     (erc-kill-buffer-on-part t)
-# #     (erc-kill-queries-on-quit t)
-# #     (erc-kill-server-buffer-on-quit t)
-# #     (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
-# #     (erc-lurker-threshold-time 43200)
-# #     (erc-prompt-for-nickserv-password nil)
-# #     (erc-server-reconnect-attempts 5)
-# #     (erc-server-reconnect-timeout 3)
-# #     (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-# #                                "324" "329" "332" "333" "353" "477"))
-# #     :config
-# #     (add-to-list 'erc-modules 'notifications)
-# #     (add-to-list 'erc-modules 'spelling)
-# #     (erc-services-mode 1)
-# #     (erc-update-modules))
+#     (defun my/erc-preprocess (string)
+#       "Avoids channel flooding."
+#       (setq str
+#             (string-trim
+#              (replace-regexp-in-string "\n+" " " str))))
+#     :hook ((ercn-notify . my/erc-notify)
+#            (erc-send-pre . my/erc-preprocess))
+#     :custom-face
+#     (erc-action-face ((t (:foreground "#8fbcbb"))))
+#     (erc-error-face ((t (:foreground "#bf616a"))))
+#     (erc-input-face ((t (:foreground "#ebcb8b"))))
+#     (erc-notice-face ((t (:foreground "#ebcb8b"))))
+#     (erc-timestamp-face ((t (:foreground "#a3be8c"))))
+#     :custom
+#     (erc-autojoin-channels-alist '(("freenode.net" "#archlinux" "#bash" "##c++"
+#                                     "#emacs""#i3" "#latex" "#org-mode" "#python"
+#                                     "#qutebrowser" "#reactjs" "#sway")))
+#     (erc-autojoin-timing 'ident)
+#     (erc-fill-function 'erc-fill-static)
+#     (erc-fill-static-center 22)
+#     (erc-header-line-format "%n on %t (%m)")
+#     (erc-hide-list '("JOIN" "PART" "QUIT"))
+#     (erc-join-buffer 'bury)
+#     (erc-kill-buffer-on-part t)
+#     (erc-kill-queries-on-quit t)
+#     (erc-kill-server-buffer-on-quit t)
+#     (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+#     (erc-lurker-threshold-time 43200)
+#     (erc-prompt-for-nickserv-password nil)
+#     (erc-server-reconnect-attempts 5)
+#     (erc-server-reconnect-timeout 3)
+#     (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+#                                "324" "329" "332" "333" "353" "477"))
+#     :config
+#     (add-to-list 'erc-modules 'notifications)
+#     (add-to-list 'erc-modules 'spelling)
+#     (erc-services-mode 1)
+#     (erc-update-modules))
 
-# #   (use-package erc-hl-nicks :after erc)
-# #   (use-package erc-image :after erc)
-# # #+END_SRC
+#   (use-package erc-hl-nicks :after erc)
+#   (use-package erc-image :after erc)
+# #+END_SRC
 
 ** Ivy
 
@@ -1500,23 +1536,23 @@ hiding its contents.
 
 *** =winner=
 
-# # I often undo's and redo's with window configurations.
+I often undo's and redo's with window configurations.
 
-# # #+BEGIN_QUOTE
-# # Winner mode is a global minor mode that records the changes in the window
-# # configuration (i.e. how the frames are partitioned into windows) so that the
-# # changes can be "undone" using the command =winner-undo=. By default this one is
-# # bound to the key sequence ctrl-c left. If you change your mind (while undoing),
-# # you can press ctrl-c right (calling =winner-redo=).
+#+BEGIN_QUOTE
+Winner mode is a global minor mode that records the changes in the window
+configuration (i.e. how the frames are partitioned into windows) so that the
+changes can be "undone" using the command =winner-undo=. By default this one is
+bound to the key sequence ctrl-c left. If you change your mind (while undoing),
+you can press ctrl-c right (calling =winner-redo=).
 
-# # [[https://github.com/emacs-mirror/emacs/blob/master/lisp/winner.el][Ivar Rummelhoff]]
-# # #+END_QUOTE
+[[https://github.com/emacs-mirror/emacs/blob/master/lisp/winner.el][Ivar Rummelhoff]]
+#+END_QUOTE
 
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package winner
-# #     :defer 2
-# #     :config (winner-mode 1))
-# # #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package winner
+    :defer 2
+    :config (winner-mode 1))
+#+END_SRC
 
 ** Word Wrap
 
@@ -1686,7 +1722,26 @@ a better M-x command
 *** Antlr
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package antlr-mode
-     :mode ("\\.g4\\'")
+     :mode ("\\.g4\\'"))
+ #+END_SRC
+
+*** Groovy (gradle)
+    langage de "script" de java
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package groovy-mode
+     :mode ("\\.gradle\\'"))
+ #+END_SRC
+
+*** Yaml
+    Yet another marked langage
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package yaml-mode
+     :mode ("\\.yml\\'"))
+ #+END_SRC
+*** config
+**** Git config file
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package gitignore-mode)
  #+END_SRC
 
 ** COMMENT Ledger                                                           :notused:
@@ -1855,7 +1910,7 @@ a better M-x command
      ;; (org-clock-persistence-insinuate)
      ;; (org-load-modules-maybe t))
  #+END_SRC
-
+*** Table of Content
  If like me, you're tired of manually updating your tables of contents, =toc-org=
  will maintain a table of contents at the first heading that has a =:TOC:= tag.
 
@@ -1864,6 +1919,7 @@ a better M-x command
      :after org
      :hook (org-mode . toc-org-enable))
  #+END_SRC
+*** cleaner indentation
 
  For a cleaner online mode.
 

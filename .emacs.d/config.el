@@ -141,7 +141,7 @@
   :preface
   :init
   (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-  (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
+  ;; (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
   :custom (dashboard-startup-banner 'logo)
   :config (dashboard-setup-startup-hook))
 
@@ -352,6 +352,10 @@
   :bind (("C-x o" . switch-window)
          ("C-x w" . switch-window-then-swap-buffer)))
 
+(use-package winner
+  :defer 2
+  :config (winner-mode 1))
+
 (use-package simple
   :ensure nil
   :delight (auto-fill-function)
@@ -443,7 +447,15 @@
 ;; (require 'ocp-indent)
 
 (use-package antlr-mode
-  :mode ("\\.g4\\'")
+  :mode ("\\.g4\\'"))
+
+(use-package groovy-mode
+    :mode ("\\.gradle\\'"))
+
+(use-package yaml-mode
+    :mode ("\\.yml\\'"))
+
+(use-package gitignore-mode)
 
 (use-package org
   :ensure org-plus-contrib
