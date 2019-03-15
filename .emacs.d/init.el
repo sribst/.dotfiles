@@ -38,23 +38,10 @@
 (setq gc-cons-threshold (* 2 1000 1000))
 
 ;;; All behond this line should disappear on config.el
-;;-------------------------------------;;
-;;                CONFIG               ;;
-;;-------------------------------------;;
-;; describe all keybinding possible from current buffer
-;; (require 'helm-descbinds)
-;; (helm-descbinds-mode)
-;; del arrow in front
-;; (if (not (and (boundp 'window-system) window-system))
-;;     (setq overlay-arrow-string nil))
-
 ;; compile key
 (global-set-key "\C-cn" 'next-error)
 (global-set-key "\C-cp" 'previous-error)
 
-;;-------------------------------------;;
-;;                FONCTION             ;;
-;;-------------------------------------;;
 
 ;; revert all open file buffer
 (defun revert-all-buffers ()
@@ -71,6 +58,23 @@
   "reload your .emacs file without restarting Emacs"
   (interactive)
   (load-file "~/.emacs.d/init.el"))
+
+(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+
+;;-------------------------------------;;
+;;                CONFIG               ;;
+;;-------------------------------------;;
+;; describe all keybinding possible from current buffer
+;; (require 'helm-descbinds)
+;; (helm-descbinds-mode)
+;; del arrow in front
+;; (if (not (and (boundp 'window-system) window-system))
+;;     (setq overlay-arrow-string nil))
+
+
+;;-------------------------------------;;
+;;                FONCTION             ;;
+;;-------------------------------------;;
 
 ;;-------------------------------------;;
 ;;               company               ;;
@@ -110,25 +114,20 @@
 
 ;; (global-set-key (kbd "C-x |") 'toggle-window-split)
 
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
 
 ;;-------------------------------------;;
 ;;                ORG                  ;;
 ;;-------------------------------------;;
-(setq org-agenda-files '("~/org/"))
+;; (setq org-agenda-files '("~/org/"))
 ;; Global key for quick orgmod access
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-switchb)
+;; (global-set-key "\C-cl" 'org-store-link)
+;; (global-set-key "\C-ca" 'org-agenda)
+;; (global-set-key "\C-cc" 'org-capture)
+;; (global-set-key "\C-cb" 'org-switchb)
 
 ;; ;; orgmod automatic closed option in TODO note
 ;; (setq org-log-done 'time)
-
-;; org-gcal
-;; (setq package-check-signature nil)
-;; (require 'org-gcal)
-;; (setq org-gcal-client-id "617324877547-rilbu0tbmqbr4imaeq43vloq14cs2n8a.apps.googleusercontent.com"
+; (setq org-gcal-client-id "617324877547-rilbu0tbmqbr4imaeq43vloq14cs2n8a.apps.googleusercontent.com"
 ;;       org-gcal-client-secret "GrT12sPB9vOoAzmUqYmn8DRU"
 ;;       org-gcal-file-alist '(("sylvain.ribstein@gmail.com" .  "~/org/gcal.org")))
 
@@ -172,89 +171,89 @@
 ;;          ((org-agenda-tag-filter-preset
 ;;            ("-hidden" "-volim"))))))
 
-(setq org-capture-templates
-      '(
-        ;; (c) Contact template
-        ("c" "New contact" entry
-         (file+headline "contact.org" "Contact")
-         " * %^{First} %^{Last}%?
-   :PROPERTIES:
-   :First:    %\\1
-   :Middle:
-   :Last:     %\\2
-   :Birthday: %^{Birth Date}u
-   :Phone:    %^{Phone}
-   :Email:    %^{Email}
-   :Website:
-   :Address:  %^{Address}
-   :City:     %^{City}
-   :Country:  %^{Country}
-   :Zip:      %^{Zip}
-   :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-   :Company:
-   :W-Group:
-   :W-Title:
-   :W-Phone:
-   :W-Email:
-   :W-Website:
-   :W-Address:
-   :W-Office:
-   :W-City:
-   :W-State:
-   :W-Zip:
-   :W-Map:
-   :Facebook:
-   :Github:
-   :Linkedin:
-   :YouTube:
-   :Note:
-   :END:
-   :LOGBOOK:
-   - State \"\"           from \"\"           %U
-   :END:"
-         )
+;; (setq org-capture-templates
+;;       '(
+;;         ;; (c) Contact template
+;;         ("c" "New contact" entry
+;;          (file+headline "contact.org" "Contact")
+;;          "** %^{First} %^{Last}%?
+;;    :PROPERTIES:
+;;    :First:    %\\1
+;;    :Middle:
+;;    :Last:     %\\2
+;;    :Birthday: %^{Birth Date}u
+;;    :Phone:    %^{Phone}
+;;    :Email:    %^{Email}
+;;    :Website:
+;;    :Address:  %^{Address}
+;;    :City:     %^{City}
+;;    :Country:  %^{Country}
+;;    :Zip:      %^{Zip}
+;;    :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+;;    :Company:
+;;    :W-Group:
+;;    :W-Title:
+;;    :W-Phone:
+;;    :W-Email:
+;;    :W-Website:
+;;    :W-Address:
+;;    :W-Office:
+;;    :W-City:
+;;    :W-State:
+;;    :W-Zip:
+;;    :W-Map:
+;;    :Facebook:
+;;    :Github:
+;;    :Linkedin:
+;;    :YouTube:
+;;    :Note:
+;;    :END:
+;;    :LOGBOOK:
+;;    - State \"\"           from \"\"           %U
+;;    :END:"
+;;          )
 
-        ("a" "Agenda")
-        ("ab" "Basic entry" entry
-         (file+headline "agenda.org" "Tosort")
-         "* %^{} %^{Last}%?
-   :PROPERTIES:
-   :First:    %\\1
-   :Middle:
-   :Last:     %\\2
-   :Birthday: %^{Birth Date}u
-   :Phone:    %^{Phone}
-   :Email:    %^{Email}
-   :Website:
-   :Address:  %^{Address}
-   :City:     %^{City}
-   :Country:  %^{Country}
-   :Zip:      %^{Zip}
-   :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-   :Company:
-   :W-Group:
-   :W-Title:
-   :W-Phone:
-   :W-Email:
-   :W-Website:
-   :W-Address:
-   :W-Office:
-   :W-City:
-   :W-State:
-   :W-Zip:
-   :W-Map:
-   :Facebook:
-   :Github:
-   :Linkedin:
-   :YouTube:
-   :Note:
-   :END:
-   :LOGBOOK:
-   - State \"\"           from \"\"           %U
-   :END:"
-         )
-        )
-      )
+;;         ("a" "Agenda")
+;;         ("ab" "Basic entry" entry
+;;          (file+headline "agenda.org" "Tosort")
+;;          "* %^{} %^{Last}%?
+;;    :PROPERTIES:
+;;    :First:    %\\1
+;;    :Middle:
+;;    :Last:     %\\2
+;;    :Birthday: %^{Birth Date}u
+;;    :Phone:    %^{Phone}
+;;    :Email:    %^{Email}
+;;    :Website:
+;;    :Address:  %^{Address}
+;;    :City:     %^{City}
+;;    :Country:  %^{Country}
+;;    :Zip:      %^{Zip}
+;;    :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+;;    :Company:
+;;    :W-Group:
+;;    :W-Title:
+;;    :W-Phone:
+;;    :W-Email:
+;;    :W-Website:
+;;    :W-Address:
+;;    :W-Office:
+;;    :W-City:
+;;    :W-State:
+;;    :W-Zip:
+;;    :W-Map:
+;;    :Facebook:
+;;    :Github:
+;;    :Linkedin:
+;;    :YouTube:
+;;    :Note:
+;;    :END:
+;;    :LOGBOOK:
+;;    - State \"\"           from \"\"           %U
+;;    :END:"
+;;          )
+;;         )
+;;       )
 ;; (setq org-capture-templates
 ;;       '(
 ;;         ;; Templates for the TASKS keyword sequence
@@ -1053,5 +1052,3 @@
 ;;   :END:
 ;; %^T" :empty-lines 1)
 ;;    ))
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)

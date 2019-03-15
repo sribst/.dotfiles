@@ -45,6 +45,8 @@
  (global-hl-line-mode)                            ; Hightlight current line
  (set-default-coding-systems 'utf-8)              ; Default to utf-8 encoding
  (show-paren-mode 1)                              ; Show the parenthesis
+ (put 'upcase-region 'disabled nil)               ; Allow C-x C-u
+ (put 'downcase-region 'disabled nil)             ; Allow C-x C-l
 
 (setq-default custom-file (expand-file-name "~/.emacs.d/custom.el"))
 (when (file-exists-p custom-file)
@@ -135,7 +137,7 @@
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
-(global-set-key (kbd "C-x |") 'toggle-window-split)
+  (global-set-key (kbd "C-x |") 'toggle-window-split)
 
 (use-package dashboard
   :preface
@@ -463,102 +465,7 @@
   :bind
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
-   ("C-c c" . org-capture)
-   :custom
-   (org-agenda-files '("~/org/"))
-   )
-
-  ;; :preface
-  ;; (defun my/org-compare-times (clocked estimated)
-  ;;   "Gets the ratio between the timed time and the estimated time."
-  ;;   (if (and (> (length clocked) 0) estimated)
-  ;;       (format "%.2f"
-  ;;               (/ (* 1.0 (org-hh:mm-string-to-minutes clocked))
-  ;;                  (org-hh:mm-string-to-minutes estimated)))
-  ;;     "")
-    ;; )
-
-
-  ;; (defun my/org-archive-done-tasks ()
-  ;;   "Archives finished or cancelled tasks."
-  ;;   (interactive)
-  ;;   (org-map-entries
-  ;;    (lambda ()
-  ;;      (org-archive-subtree)
-  ;;      (setq org-map-continue-from (outline-previous-heading)))
-  ;;    "TODO=\"DONE\"|TODO=\"CANCELLED\"" (if (org-before-first-heading-p) 'file 'tree)))
-
-  ;; (defun my/org-jump ()
-  ;;   "Jumps to a specific task."
-  ;;   (interactive)
-  ;;   (let ((current-prefix-arg '(4)))
-  ;;     (call-interactively 'org-refile)))
-
-  ;; (defun my/org-use-speed-commands-for-headings-and-lists ()
-  ;;   "Activates speed commands on list items too."
-  ;;   (or (and (looking-at org-outline-regexp) (looking-back "^\**"))
-  ;;       (save-excursion (and (looking-at (org-item-re)) (looking-back "^[ \t]*")))))
-  ;; :hook ((after-save . my/config-tangle)
-  ;;        (auto-save . org-save-all-org-buffer)
-  ;;        (org-mode . org-indent-mode))
-  ;; :custom
-  ;; (org-archive-location "~/.personal/archives/%s::")
-  ;; (org-blank-before-new-entry '((heading . t)
-  ;;                               (plain-list-item . t)))
-  ;; (org-cycle-include-plain-lists 'integrate)
-  ;; (org-ditaa-jar-path "~/.local/lib/ditaa0_9.jar")
-  ;; (org-expiry-inactive-timestamps t)
-  ;; (org-export-backends '(ascii beamer html icalendar latex man md org texinfo))
-  ;; (org-log-done 'time)
-  ;; (org-log-into-drawer "LOGBOOK")
-  ;; (org-modules '(org-crypt
-  ;;                org-habit
-  ;;                org-info
-  ;;                org-irc
-  ;;                org-mouse
-  ;;                org-protocol))
-  ;; (org-refile-allow-creating-parent-nodes 'confirm)
-  ;; (org-refile-use-cache nil)
-  ;; (org-refile-use-outline-path nil)
-  ;; (org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
-  ;; (org-startup-folded nil)
-  ;; (org-startup-with-inline-images t)
-  ;; (org-tag-alist '(("@coding" . ?c)
-  ;;                  ("@computer" . ?l)
-  ;;                  ("@errands" . ?e)
-  ;;                  ("@home" . ?h)
-  ;;                  ("@phone" . ?p)
-  ;;                  ("@reading" . ?r)
-  ;;                  ("@school" . ?s)
-  ;;                  ("@work" . ?b)
-  ;;                  ("@writing" . ?w)
-  ;;                  ("crypt" . ?C)
-  ;;                  ("fuzzy" . ?0)
-  ;;                  ("highenergy" . ?1)))
-  ;; (org-tags-exclude-from-inheritance '("crypt" "project"))
-  ;; (org-todo-keywords '((sequence "TODO(t)"
-  ;;                                "STARTED(s)"
-  ;;                                "WAITING(w@/!)"
-  ;;                                "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")
-  ;;                      (sequence "TOBUY"
-  ;;                                "TOSHRINK"
-  ;;                                "TOCUT"
-  ;;                                "TOSEW" "|" "DONE(x)")))
-  ;; (org-use-effective-time t)
-  ;; (org-use-speed-commands 'my/org-use-speed-commands-for-headings-and-lists)
-  ;; (org-yank-adjusted-subtrees t)
-  ;; :config
-  ;; (add-to-list 'org-global-properties '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
-  ;; (add-to-list 'org-speed-commands-user '("!" my/org-clock-in-and-track))
-  ;; (add-to-list 'org-speed-commands-user '("$" call-interactively 'org-archive-subtree))
-  ;; (add-to-list 'org-speed-commands-user '("d" my/org-move-line-to-destination))
-  ;; (add-to-list 'org-speed-commands-user '("i" call-interactively 'org-clock-in))
-  ;; (add-to-list 'org-speed-commands-user '("o" call-interactively 'org-clock-out))
-  ;; (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
-  ;; (add-to-list 'org-speed-commands-user '("x" org-todo "DONE"))
-  ;; (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
-  ;; (org-clock-persistence-insinuate)
-  ;; (org-load-modules-maybe t))
+   ("C-c c" . org-capture))
 
 (use-package toc-org
   :after org
@@ -566,9 +473,99 @@
 
 (use-package org-indent :after org :ensure nil :delight)
 
+(use-package org-agenda
+  :ensure nil
+  :after org
+  :custom
+  (org-directory "~/org")
+  (org-agenda-files '("~/org/")
+  (org-agenda-dim-blocked-tasks t)
+  (org-agenda-inhibit-startup t)
+  (org-agenda-show-log t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-span 2)
+  ;; (org-agenda-start-on-weekday 6)
+  (org-agenda-sticky nil)
+  (org-agenda-tags-column -100)
+  (org-agenda-time-grid '((daily today require-timed)))
+  (org-agenda-use-tag-inheritance t)
+  ;; (org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS")
+  (org-enforce-todo-dependencies t)
+  (org-habit-graph-column 80)
+  (org-habit-show-habits-only-for-today nil)
+  (org-track-ordered-property-with-tag t)))
+
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
   :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
+
+(use-package org-capture
+  :ensure nil
+  :after org
+  :preface
+  (defun org-capture-template-goto-link ()
+       "Set point for capturing at what capture target file+headline with headline set to %l would do."
+       (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target))
+                                                            (org-capture-get :annotation)))
+       (org-capture-put-target-region-and-position)
+       (widen)
+       (let ((hd (nth 2 (org-capture-get :target))))
+            (goto-char (point-min))
+            (if (re-search-forward
+                (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
+            (goto-char (point-at-bol))
+            (goto-char (point-max))
+            (or (bolp) (insert "\n"))
+            (insert "* " hd "\n")
+            (beginning-of-line 0))))
+  (defvar my/org-people-template "** %^{First} %^{Last}%?
+:PROPERTIES:
+:First:    %\\1
+:Last:     %\\2
+:Birthday: %^{Birth Date}u
+:Phone:    %^{Phone}
+:Email:    %^{Email}
+:Address:  %^{Address}
+:City:     %^{City}
+:Country:  %^{Country}
+:Zip:      %^{Zip}
+:Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+:Note:
+:END:
+:LOGBOOK:
+- State \"\"           from \"\"           %U
+:END:"
+)
+
+(defvar my/org-adress-template "** %^{Name}
+:PROPERTIES:
+:Name:    %\\1
+:Phone:    %^{Phone}
+:Email:    %^{Email}
+:Address:  %^{Address}
+:City:     %^{City}
+:Country:  %^{Country}
+:Zip:      %^{Zip}
+:Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+:Note:
+:END:
+:LOGBOOK:
+- State \"\"           from \"\"           %U
+:END:"
+)
+
+:custom
+(org-capture-templates `(
+("c" "Contact")
+   ("cp" "People" entry (file+headline "~/org/contacts.org" "People"),
+        my/org-people-template :empty-lines 1)
+   ("ca" "Adress" entry (file+headline "~/org/contacts.org" "Adress"),
+        my/org-people-template :empty-lines 1)
+;; ("s" "Spectacle")
+
+    )))
 
 (use-package org-contacts
   :ensure nil

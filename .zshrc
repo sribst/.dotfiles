@@ -47,38 +47,38 @@ if [ -f '/etc/profile.d/prll.sh' ]; then
     . "/etc/profile.d/prll.sh"
 fi
 
-run_under_tmux() {
-    # Run $1 under session or attach if such session already exist.
-    # $2 is optional path, if no specified, will use $1 from $PATH.
-    # If you need to pass extra variables, use $2 for it as in example below..
-    # Example usage:
-    # 	torrent() { run_under_tmux 'rtorrent' '/usr/local/rtorrent-git/bin/rtorrent'; }
-    #	mutt() { run_under_tmux 'mutt'; }
-    #	irc() { run_under_tmux 'irssi' "TERM='screen' command irssi"; }
+# run_under_tmux() {
+#     # Run $1 under session or attach if such session already exist.
+#     # $2 is optional path, if no specified, will use $1 from $PATH.
+#     # If you need to pass extra variables, use $2 for it as in example below..
+#     # Example usage:
+#     # 	torrent() { run_under_tmux 'rtorrent' '/usr/local/rtorrent-git/bin/rtorrent'; }
+#     #	mutt() { run_under_tmux 'mutt'; }
+#     #	irc() { run_under_tmux 'irssi' "TERM='screen' command irssi"; }
 
 
-    # There is a bug in linux's libevent...
-    # export EVENT_NOEPOLL=1
+#     # There is a bug in linux's libevent...
+#     # export EVENT_NOEPOLL=1
 
-    command -v tmux >/dev/null 2>&1 || return 1
+#     command -v tmux >/dev/null 2>&1 || return 1
 
-    if [ -z "$1" ]; then return 1; fi
-    local name="$1"
-    if [ -n "$2" ]; then
-	local file_path="$2"
-    else
-	local file_path="command ${name}"
-    fi
+#     if [ -z "$1" ]; then return 1; fi
+#     local name="$1"
+#     if [ -n "$2" ]; then
+# 	local file_path="$2"
+#     else
+# 	local file_path="command ${name}"
+#     fi
 
-    if tmux has-session -t "${name}" 2>/dev/null; then
-	tmux attach -d -t "${name}"
-    else
-	tmux new-session -s "${name}" "${file_path}" \; set-option status \; set set-titles-string "${name} (tmux@${HOST})"
-    fi
-}
+#     if tmux has-session -t "${name}" 2>/dev/null; then
+# 	tmux attach -d -t "${name}"
+#     else
+# 	tmux new-session -s "${name}" "${file_path}" \; set-option status \; set set-titles-string "${name} (tmux@${HOST})"
+#     fi
+# }
 
-t() { run_under_tmux rtorrent; }
-irc() { run_under_tmux irssi "TERM='screen' command irssi"; }
+# t() { run_under_tmux rtorrent; }
+# irc() { run_under_tmux irssi "TERM='screen' command irssi"; }
 
 over_ssh() {
     if [ -n "${SSH_CLIENT}" ]; then
@@ -328,34 +328,12 @@ else
     unset remote_prompt
 fi
 
-# Check if we started zsh in git worktree, useful with tmux when your new zsh may spawn in source dir.
-# git_check_if_worktree
-# if [ "${git_pwd_is_worktree}" = 'true' ]; then
-#     git_branch
-#     git_dirty
-#     git_prompt="qdsfsdf$git_dirty$git_branch"
-#     dir_prompt="$ssh_prompt:%0~ $git_prompt"
-# else
-#     dir_prompt="$ssh_prompt:%0~"
-# fi
-
 #Smiley depending of last command
 smiley='%(?,%B%F{green}:)%f,%B%F{red}:(%f)%b'
 
 PROMPT='${ifroot}╭--${op}${smiley}${cp}%(?..--${op}%?${cp})--${op}${is_git}${remote_prompt}%~${cp}
 ${ifroot}╰--${op}%n%f${cp}-->%b%f%k'
 PROMPT2='${op}%_${cp}>'
-
-# case $USER in
-# 	root)
-# 	;;
-#         PROMPT='%B%F{cyan}%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{blue}%1~${git_prompt}%F{blue} %# %b%f%k'
-
-# 	*)
-# 	  PROMPT='%B%F{blue}%n@%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{cyan}%1~${git_prompt}%F{cyan} %# %b%f%k'
-
-# 	;;
-# esac
 
 # Ignore lines prefixed with '#'.
 setopt interactivecomments
@@ -370,12 +348,12 @@ setopt hist_ignore_space
 #stty -ixon
 setopt noflowcontrol
 
-# Fix for tmux on linux.
-case "$(uname -o)" in
-    'GNU/Linux')
-	export EVENT_NOEPOLL=1
-	;;
-esac
+# # Fix for tmux on linux.
+# case "$(uname -o)" in
+#     'GNU/Linux')
+# 	export EVENT_NOEPOLL=1
+# 	;;
+# esac
 
 # Aliases
 
