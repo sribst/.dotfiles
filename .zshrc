@@ -394,7 +394,7 @@ alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias ls='ls --color=auto --human-readable --group-directories-first --classify'
 
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME'
+alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 typeset -A key
 
