@@ -49,7 +49,6 @@
   - [[#whitespaces][Whitespaces]]
     - [[#hungry-delete][=hungry-delete=]]
   - [[#windows][Windows]]
-    - [[#switch-window][=switch-window=]]
     - [[#windmove][=windmove=]]
     - [[#winner][=winner=]]
   - [[#word-wrap][Word Wrap]]
@@ -1506,21 +1505,6 @@ Don't ask before killing a buffer. I know what I'm doing.
   (global-set-key [remap kill-buffer] #'kill-this-buffer)
 #+END_SRC
 
-*** =switch-window=
-
-Displays an overlay in each window showing a unique key, then asks the user
-where to move in the window.
-
-Most people use =ace-window=, but I prefer =switch-window= because I find this
-package more ergonomic by using the fact of displaying the buffer number by
-hiding its contents.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package switch-window
-    :defer 0.2
-    :bind (("C-x o" . switch-window)
-           ("C-x w" . switch-window-then-swap-buffer)))
-#+END_SRC
 
 *** =windmove=
 
@@ -1639,38 +1623,36 @@ a better M-x command
  #+END_SRC
 
 *** LaTeX
-
  I use LaTeX for my reports, CVs, summaries, etc.
 
  #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package tex
-     :ensure auctex
-     :hook (LaTeX-mode . reftex-mode)
-     :custom
-     (TeX-PDF-mode t)
-     (TeX-auto-save t)
-     (TeX-byte-compile t)
-     (TeX-clean-confirm nil)
-     (TeX-master 'dwim)
-     (TeX-parse-self t)
-     (TeX-source-correlate-mode t)
-     (TeX-view-program-selection '((output-pdf "Evince")
-                                   (output-html "xdg-open"))))
+      (use-package tex
+        :ensure auctex
+        :hook (LaTeX-mode . reftex-mode)
+        :custom
+        (TeX-PDF-mode t)
+        (TeX-auto-save t)
+        (TeX-byte-compile t)
+        (TeX-clean-confirm nil)
+        (TeX-master 'dwim)
+        (TeX-parse-self t)
+        (TeX-source-correlate-mode t)
+        (TeX-view-program-selection '((output-pdf "Evince")
+                                      (output-html "xdg-open"))))
 
-   (use-package bibtex
-     :after auctex
-     :hook (bibtex-mode . my/bibtex-fill-column)
-     :preface
-     (defun my/bibtex-fill-column ()
-       "Ensures that each entry does not exceed 120 characters."
-       (setq fill-column 120)))
+      (use-package bibtex
+        :after auctex
+        :hook (bibtex-mode . my/bibtex-fill-column))
 
-   (use-package company-auctex
-     :after (auctex company)
-     :config (company-auctex-init))
+      ;; (use-package company-auctex
+      ;;   :after (auctex company)
+      ;;   :config (company-auctex-init))
 
-   (use-package company-math :after (auctex company))
+      ;; (use-package company-math
+      ;;     :after (auctex company))
  #+END_SRC
+
+ #+RESULTS:
 
  I want a TeX engine that can deal with Unicode and use any font I like.
 

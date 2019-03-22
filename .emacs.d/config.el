@@ -388,32 +388,55 @@
          "\\.md\\'"))
 
 (use-package tex
-  :ensure auctex
-  :hook (LaTeX-mode . reftex-mode)
-  :custom
-  (TeX-PDF-mode t)
-  (TeX-auto-save t)
-  (TeX-byte-compile t)
-  (TeX-clean-confirm nil)
-  (TeX-master 'dwim)
-  (TeX-parse-self t)
-  (TeX-source-correlate-mode t)
-  (TeX-view-program-selection '((output-pdf "Evince")
-                                (output-html "xdg-open"))))
+     :ensure auctex
+     :hook (LaTeX-mode . reftex-mode)
+     :custom
+     (TeX-PDF-mode t)
+     (TeX-auto-save t)
+     (TeX-byte-compile t)
+     (TeX-clean-confirm nil)
+     (TeX-master 'dwim)
+     (TeX-parse-self t)
+     (TeX-source-correlate-mode t)
+     (TeX-view-program-selection '((output-pdf "Evince")
+                                   (output-html "xdg-open"))))
 
-(use-package bibtex
-  :after auctex
-  :hook (bibtex-mode . my/bibtex-fill-column)
-  :preface
-  (defun my/bibtex-fill-column ()
-    "Ensures that each entry does not exceed 120 characters."
-    (setq fill-column 120)))
+   (use-package bibtex
+     :after auctex
+     :hook (bibtex-mode . my/bibtex-fill-column)
+     :preface
+     (defun my/bibtex-fill-column ()
+       "Ensures that each entry does not exceed 120 characters."
+       (setq fill-column 120)))
 
-(use-package company-auctex
-  :after (auctex company)
-  :config (company-auctex-init))
+   ;; (use-package company-auctex
+   ;;   :after (auctex company)
+   ;;   :config (company-auctex-init))
 
-(use-package company-math :after (auctex company))
+   ;; (use-package company-math
+   ;;     :after (auctex company))
+
+;; (use-package auctex
+;;   :mode ("\\.tex\\'" . TeX-latex-mode)
+;;   :config
+;;   (defun latex-help-get-cmd-alist ()    ;corrected version:
+;;     "Scoop up the commands in the index of the latex info manual.
+;;    The values are saved in `latex-help-cmd-alist' for speed."
+;;     ;; mm, does it contain any cached entries
+;;     (if (not (assoc "\\begin" latex-help-cmd-alist))
+;;         (save-window-excursion
+;;           (setq latex-help-cmd-alist nil)
+;;           (Info-goto-node (concat latex-help-file "Command Index"))
+;;           (goto-char (point-max))
+;;           (while (re-search-backward "^\\* \\(.+\\): *\\(.+\\)\\." nil t)
+;;             (let ((key (buffer-substring (match-beginning 1) (match-end 1)))
+;;                   (value (buffer-substring (match-beginning 2)
+;;                                            (match-end 2))))
+;;               (add-to-list 'latex-help-cmd-alist (cons key value))))))
+;;     latex-help-cmd-alist)
+
+;;   (add-hook 'TeX-after-compilation-finished-functions
+;; #'TeX-revert-document-buffer))
 
 (setq-default TeX-engine 'xetex)
 
