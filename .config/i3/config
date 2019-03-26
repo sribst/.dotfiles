@@ -195,10 +195,12 @@ client.placeholder      #000000 #0c0c0c #ffffff #000000
 client.background       #2B2C2B
 
 # volume controls
-bindsym Pause exec amixer -D pulse sset Master toggle
+bindsym Pause                exec amixer -D pulse sset Master toggle
 bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 5%-
 bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+
-bindsym XF86AudioPlay exec amixer -D pulse sset Master toggle
+bindsym XF86AudioPlay        exec amixer -D pulse sset Master toggle
+bindsym XF86AudioMute        exec amixer -D pulse sset Master toggle
+bindsym XF86MicMute          exec amixer -D pulse sset Master toggle
 
 # Lock screen
 bindsym $mod+twosuperior exec --no-startup-id i3lock
@@ -214,10 +216,10 @@ assign [class="^Evolution"] → $ws4
 # Order screen
 exec --no-startup-id xrandr-start
 
-
 # start firefox ranger emacs urxvt
 exec --no-startup-id firefox
 exec --no-startup-id slack
+exec --no-startup-id skypeforlinux
 exec --no-startup-id evolution
 exec --no-startup-id dropbox start
 exec --no-startup-id eclipse
