@@ -122,7 +122,7 @@
               "Compra"
               "Compra/Google play"
               "Apartamento"
-              "Transporto"
+              "Transporte"
               "Salud"
               )
              ("Pro"
