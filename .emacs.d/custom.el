@@ -53,7 +53,49 @@
          ("-volim" "-hidden"))))))))
  '(org-agenda-files (quote ("~/org/")))
  '(org-bullets-bullet-list (quote ("●" "▲" "■" "✶" "◉" "○" "○")))
+ '(org-capture-templates
+   (quote
+    (("c" "Contact")
+     ("cp" "People" entry
+      (file+headline "~/org/contacts.org" "People")
+      "** %^{First} %^{Last}%?
+:PROPERTIES:
+:First:    %\\1
+:Last:     %\\2
+:Birthday: %^{Birth Date}u
+:Phone:    %^{Phone}
+:Email:    %^{Email}
+:Address:  %^{Address}
+:City:     %^{City}
+:Country:  %^{Country}
+:Zip:      %^{Zip}
+:Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+:Note:
+:END:
+:LOGBOOK:
+- State \"\"           from \"\"           %U
+:END:" :empty-lines 1)
+     ("ca" "Adress" entry
+      (file+headline "~/org/contacts.org" "Adress")
+      "** %^{First} %^{Last}%?
+:PROPERTIES:
+:First:    %\\1
+:Last:     %\\2
+:Birthday: %^{Birth Date}u
+:Phone:    %^{Phone}
+:Email:    %^{Email}
+:Address:  %^{Address}
+:City:     %^{City}
+:Country:  %^{Country}
+:Zip:      %^{Zip}
+:Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+:Note:
+:END:
+:LOGBOOK:
+- State \"\"           from \"\"           %U
+:END:" :empty-lines 1))))
  '(org-contacts-files (quote ("~/org/contacts.org")))
+ '(org-directory "~/org")
  '(org-todo-keyword-faces
    (quote
     (("DONE" :foreground "cyan" :weight bold)
@@ -62,7 +104,7 @@
      ("WAITING" :foreground "red" :weight bold))))
  '(package-selected-packages
    (quote
-    (gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
+    (alert gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
  '(paradox-column-width-package 27)
  '(paradox-column-width-version 13)
  '(paradox-execute-asynchronously t)

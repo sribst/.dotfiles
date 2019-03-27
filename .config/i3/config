@@ -200,7 +200,8 @@ bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 5%-
 bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+
 bindsym XF86AudioPlay        exec amixer -D pulse sset Master toggle
 bindsym XF86AudioMute        exec amixer -D pulse sset Master toggle
-bindsym XF86MicMute          exec amixer -D pulse sset Master toggle
+bindsym XF86MicMute          exec amixer set Capture toggle
+
 
 # Lock screen
 bindsym $mod+twosuperior exec --no-startup-id i3lock
