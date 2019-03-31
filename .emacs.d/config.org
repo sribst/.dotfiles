@@ -1456,7 +1456,7 @@ Provides fast access to the recent files.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package recentf
     :defer 2
-    :bind ("C-c r" . recentf-open-files)
+    :bind ("C-x r" . recentf-open-files)
     :init (recentf-mode)
     :custom
     (recentf-exclude (list "COMMIT_EDITMSG"

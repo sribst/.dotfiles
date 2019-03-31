@@ -329,7 +329,7 @@
 
 (use-package recentf
   :defer 2
-  :bind ("C-c r" . recentf-open-files)
+  :bind ("C-x r" . recentf-open-files)
   :init (recentf-mode)
   :custom
   (recentf-exclude (list "COMMIT_EDITMSG"
@@ -348,11 +348,6 @@
   :hook (before-save . delete-trailing-whitespace))
 
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
-
-(use-package switch-window
-  :defer 0.2
-  :bind (("C-x o" . switch-window)
-         ("C-x w" . switch-window-then-swap-buffer)))
 
 (use-package winner
   :defer 2
@@ -388,55 +383,29 @@
          "\\.md\\'"))
 
 (use-package tex
-     :ensure auctex
-     :hook (LaTeX-mode . reftex-mode)
-     :custom
-     (TeX-PDF-mode t)
-     (TeX-auto-save t)
-     (TeX-byte-compile t)
-     (TeX-clean-confirm nil)
-     (TeX-master 'dwim)
-     (TeX-parse-self t)
-     (TeX-source-correlate-mode t)
-     (TeX-view-program-selection '((output-pdf "Evince")
-                                   (output-html "xdg-open"))))
+  :ensure auctex
+  :hook (LaTeX-mode . reftex-mode)
+  :custom
+  (TeX-PDF-mode t)
+  (TeX-auto-save t)
+  (TeX-byte-compile t)
+  (TeX-clean-confirm nil)
+  (TeX-master 'dwim)
+  (TeX-parse-self t)
+  (TeX-source-correlate-mode t)
+  (TeX-view-program-selection '((output-pdf "Evince")
+                                (output-html "xdg-open"))))
 
-   (use-package bibtex
-     :after auctex
-     :hook (bibtex-mode . my/bibtex-fill-column)
-     :preface
-     (defun my/bibtex-fill-column ()
-       "Ensures that each entry does not exceed 120 characters."
-       (setq fill-column 120)))
+(use-package bibtex
+  :after auctex
+  :hook (bibtex-mode . my/bibtex-fill-column))
 
-   ;; (use-package company-auctex
-   ;;   :after (auctex company)
-   ;;   :config (company-auctex-init))
+;; (use-package company-auctex
+;;   :after (auctex company)
+;;   :config (company-auctex-init))
 
-   ;; (use-package company-math
-   ;;     :after (auctex company))
-
-;; (use-package auctex
-;;   :mode ("\\.tex\\'" . TeX-latex-mode)
-;;   :config
-;;   (defun latex-help-get-cmd-alist ()    ;corrected version:
-;;     "Scoop up the commands in the index of the latex info manual.
-;;    The values are saved in `latex-help-cmd-alist' for speed."
-;;     ;; mm, does it contain any cached entries
-;;     (if (not (assoc "\\begin" latex-help-cmd-alist))
-;;         (save-window-excursion
-;;           (setq latex-help-cmd-alist nil)
-;;           (Info-goto-node (concat latex-help-file "Command Index"))
-;;           (goto-char (point-max))
-;;           (while (re-search-backward "^\\* \\(.+\\): *\\(.+\\)\\." nil t)
-;;             (let ((key (buffer-substring (match-beginning 1) (match-end 1)))
-;;                   (value (buffer-substring (match-beginning 2)
-;;                                            (match-end 2))))
-;;               (add-to-list 'latex-help-cmd-alist (cons key value))))))
-;;     latex-help-cmd-alist)
-
-;;   (add-hook 'TeX-after-compilation-finished-functions
-;; #'TeX-revert-document-buffer))
+;; (use-package company-math
+;;     :after (auctex company))
 
 (setq-default TeX-engine 'xetex)
 
@@ -543,39 +512,51 @@
             (or (bolp) (insert "\n"))
             (insert "* " hd "\n")
             (beginning-of-line 0))))
-  (defvar my/org-people-template "** %^{First} %^{Last}%?
+  (defvar my/org-people-template "** %^{Nombre} %^{Apellido}%?
 :PROPERTIES:
-:First:    %\\1
-:Last:     %\\2
-:Birthday: %^{Birth Date}u
-:Phone:    %^{Phone}
-:Email:    %^{Email}
-:Address:  %^{Address}
-:City:     %^{City}
-:Country:  %^{Country}
-:Zip:      %^{Zip}
+:Nombre:        %\\1
+:Apellido:      %\\2
+:Compleanos:    %^{Fecha de nacimiento}u
+:Telefono:      %^{Telefono}
+:Correo:        %^{Correo}
+:Direccion:     %^{Direccion}
+:Ciudad:        %^{Ciudad}
+:Pais:          %^{Pais}
+:Codigo postal: %^{Codigo postal}
 :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-:Note:
+:Nota:
 :END:
 :LOGBOOK:
-- State \"\"           from \"\"           %U
+- estado \"\"           desde \"\"           %U
 :END:"
 )
 
-(defvar my/org-adress-template "** %^{Name}
+(defvar my/org-adress-template "** %^{Nombre}
 :PROPERTIES:
-:Name:    %\\1
-:Phone:    %^{Phone}
-:Email:    %^{Email}
-:Address:  %^{Address}
-:City:     %^{City}
-:Country:  %^{Country}
-:Zip:      %^{Zip}
+:Nombre:        %\\1
+:Telefono:      %^{Telefono}
+:Correo:        %^{Correo}
+:Direccion:     %^{Direccion}
+:Ciudad:        %^{Ciudad}
+:Pais:          %^{Pais}
+:Codigo postal: %^{Codigo postal}
 :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-:Note:
 :END:
 :LOGBOOK:
-- State \"\"           from \"\"           %U
+- estado \"\"           desde \"\"           %U
+:END:"
+)
+
+(defvar my/org-theater-template "** %^{Nombre}
+:PROPERTIES:
+:Nombre:    %\\1
+:Teatro: %^{Teatro}
+:Con:     %^{Con}
+:Hora:    %^{Hora}
+:Nota:
+:END:
+:LOGBOOK:
+- estado \"\"           desde \"\"           %U
 :END:"
 )
 
@@ -586,7 +567,7 @@
         my/org-people-template :empty-lines 1)
    ("ca" "Adress" entry (file+headline "~/org/contacts.org" "Adress"),
         my/org-people-template :empty-lines 1)
-;; ("s" "Spectacle")
+("e" "Spectacle")
 
     )))
 

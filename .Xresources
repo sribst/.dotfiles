@@ -1,7 +1,7 @@
 ! Font settings
 URxvt.font: xft:monaco:size=10
 Emacs.FontBackend: xft,x
-Emacs.font: DejaVuSansMono-12
+Emacs.font: DejaVuSansMono-11
 ! *.font: xft:*:size=12
 ! *.letterSpace:-2
 URxvt.scrollBar: false

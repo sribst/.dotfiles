@@ -202,6 +202,10 @@ bindsym XF86AudioPlay        exec amixer -D pulse sset Master toggle
 bindsym XF86AudioMute        exec amixer -D pulse sset Master toggle
 bindsym XF86MicMute          exec amixer set Capture toggle
 
+# backlight
+bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+
 
 # Lock screen
 bindsym $mod+twosuperior exec --no-startup-id i3lock
