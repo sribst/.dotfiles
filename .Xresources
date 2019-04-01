@@ -1,46 +1,11 @@
 ! Font settings
 URxvt.font: xft:monaco:size=10
 Emacs.FontBackend: xft,x
+URxvt*letterSpace: -1
 Emacs.font: DejaVuSansMono-12
 ! *.font: xft:*:size=12
 ! *.letterSpace:-2
 URxvt.scrollBar: false
-! special
-*.foreground:   #eceff1
-*.background:   #263238
-*.cursorColor:  #eceff1
-
-! black
-*.color0:       #263238
-*.color8:       #37474f
-
-! red
-*.color1:       #ff9800
-*.color9:       #ffa74d
-
-! green
-*.color2:       #8bc34a
-*.color10:      #9ccc65
-
-! yellow
-*.color3:       #ffc107
-*.color11:      #ffa000
-
-! blue
-*.color4:       #03a9f4
-*.color12:      #81d4fa
-
-! magenta
-*.color5:       #e91e63
-*.color13:      #ad1457
-
-! cyan
-*.color6:       #009688
-*.color14:      #26a69a
-
-! white
-*.color7:       #cfd8dc
-*.color15:      #eceff1
 
 ! desactivate iso-mode
 URxvt.iso14755: false
@@ -49,3 +14,76 @@ URxvt.iso14755_52: false
 ! add copy-past
 URxvt.keysym.Shift-Control-V: eval:paste_clipboard
 URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+
+! special
+*.foreground:   #f8f8f2
+*.background:   #272822
+*.cursorColor:  #f8f8f2
+
+! black
+*.color0:       #272822
+*.color8:       #75715e
+
+! red
+*.color1:       #f92672
+*.color9:       #f92672
+
+! green
+*.color2:       #a6e22e
+*.color10:      #a6e22e
+
+! yellow
+*.color3:       #f4bf75
+*.color11:      #f4bf75
+
+! blue
+*.color4:       #66d9ef
+*.color12:      #66d9ef
+
+! magenta
+*.color5:       #ae81ff
+*.color13:      #ae81ff
+
+! cyan
+*.color6:       #a1efe4
+*.color14:      #a1efe4
+
+! white
+*.color7:       #f8f8f2
+*.color15:      #f9f8f5
+! special
+! *.foreground:   #eceff1
+! *.background:   #263238
+! *.cursorColor:  #eceff1
+
+! ! black
+! *.color0:       #263238
+! *.color8:       #37474f
+
+! ! red
+! *.color1:       #ff9800
+! *.color9:       #ffa74d
+
+! ! green
+! *.color2:       #8bc34a
+! *.color10:      #9ccc65
+
+! ! yellow
+! *.color3:       #ffc107
+! *.color11:      #ffa000
+
+! ! blue
+! *.color4:       #03a9f4
+! *.color12:      #81d4fa
+
+! ! magenta
+! *.color5:       #e91e63
+! *.color13:      #ad1457
+
+! ! cyan
+! *.color6:       #009688
+! *.color14:      #26a69a
+
+! ! white
+! *.color7:       #cfd8dc
+! *.color15:      #eceff1

@@ -9,7 +9,7 @@ ZSHDDIR="${HOME}/.config/zsh.d"
 HISTFILE="${ZDOTDIR}/.zsh_history"
 HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
-export EDITOR="/usr/bin/vim"
+export EDITOR="/usr/bin/emacs"
 export TMP="$HOME/tmp"
 export TEMP="$TMP"
 export TMPDIR="$TMP"
@@ -41,6 +41,20 @@ PURPLE='\e[1;35m'
 cyan='\e[0;36m'
 CYAN='\e[1;36m'
 NC='\e[0m'
+
+# red=xrdb.color1
+# RED=xrdb.color
+# green=xrdb.color
+# GREEN=xrdb.color
+# yellow=xrdb.color
+# YELLOW=xrdb.color
+# blue=xrdb.color
+# BLUE=xrdb.color
+# purple=xrdb.color
+# PURPLE=xrdb.color
+# cyan=xrdb.color
+# CYAN=xrdb.color
+# NC='\e[0m'
 
 # Functions
 if [ -f '/etc/profile.d/prll.sh' ]; then
