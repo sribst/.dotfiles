@@ -201,6 +201,7 @@ bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+
 bindsym XF86AudioPlay        exec amixer -D pulse sset Master toggle
 bindsym XF86AudioMute        exec amixer -D pulse sset Master toggle
 bindsym XF86MicMute          exec amixer set Capture toggle
+bindsym XF86AudioMicMute     exec amixer set Capture toggle
 
 # backlight
 bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
@@ -213,9 +214,10 @@ bindsym $mod+twosuperior exec --no-startup-id i3lock
 #bepo
 bindsym $mod+Menu exec --no-startup-id bepo_switch
 
-assign [class="^Eclipse"] → $ws1
-assign [class="^Firefox"] → $ws2
-assign [class="^Slack"] → $ws4
+assign [class="^Eclipse"]   → $ws1
+assign [class="^Firefox"]   → $ws2
+assign [class="^Slack"]     → $ws4
+assign [class="^Skype"]     → $ws4
 assign [class="^Evolution"] → $ws4
 
 # Order screen

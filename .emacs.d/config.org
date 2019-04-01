@@ -8,9 +8,7 @@
   - [[#delight][delight]]
   - [[#authentification][Authentification]]
   - [[#defaults-values][defaults values]]
-  - [[#xdg][XDG]]
   - [[#customization][Customization]]
-  - [[#theme][Theme]]
   - [[#turn-off-mouse-interface][Turn off mouse interface]]
 - [[#advanced-configuration][Advanced Configuration]]
   - [[#auto-completion-company][Auto-Completion (company)]]
@@ -18,33 +16,24 @@
   - [[#browser-firefox][Browser (Firefox)]]
     - [[#engine-mode][=engine-mode=]]
   - [[#buffers][Buffers]]
-  - [[#calculator][Calculator]]
-  - [[#calendar][Calendar]]
   - [[#dashboard][Dashboard]]
+  - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#spelling][Spelling]]
-    - [[#abbreviations][Abbreviations]]
     - [[#fly-spell][Fly Spell]]
-    - [[#grammar-checker][Grammar Checker]]
   - [[#history][History]]
-  - [[#hydra][Hydra]]
+  - [[#improved-package-menu-paradox][improved package menu =paradox=]]
   - [[#general][General]]
     - [[#aggressive-indent][=aggressive-indent=]]
     - [[#move-text][=move-text=]]
-    - [[#paradox][=paradox=]]
     - [[#rainbow-mode][=rainbow-mode=]]
-    - [[#try][=try=]]
-    - [[#undo-tree][=undo-tree=]]
     - [[#wiki-summary][=wiki-summary=]]
   - [[#which-key][=which-key=]]
-  - [[#irc][IRC]]
   - [[#ivy][Ivy]]
   - [[#navigation][Navigation]]
   - [[#parenthesis][Parenthesis]]
     - [[#rainbow-delimiters][=rainbow-delimiters=]]
-    - [[#smartparens][=smartparens=]]
   - [[#pdf][PDF]]
   - [[#point-and-region][Point and Region]]
-  - [[#projectile][Projectile]]
   - [[#recent-files][Recent Files]]
   - [[#whitespaces][Whitespaces]]
     - [[#hungry-delete][=hungry-delete=]]
@@ -52,8 +41,7 @@
     - [[#windmove][=windmove=]]
     - [[#winner][=winner=]]
   - [[#word-wrap][Word Wrap]]
-  - [[#yasnippet][YASnippet]]
-  - [[#smex][smex]]
+  - [[#custom-fonction][custom fonction]]
 - [[#major-mode][Major mode]]
   - [[#languages][Languages]]
     - [[#emacs-lisp][Emacs Lisp]]
@@ -62,8 +50,7 @@
     - [[#cobol][Cobol]]
     - [[#coq][COQ]]
     - [[#ocaml][OCaml]]
-    - [[#antlr][Antlr]]
-    - [[#groovy-gradle][Groovy (gradle)]]
+    - [[#java][Java]]
     - [[#yaml][Yaml]]
     - [[#config][config]]
   - [[#org][Org]]
@@ -77,6 +64,7 @@
     - [[#custormization][Custormization]]
     - [[#journal][Journal]]
     - [[#languages-1][Languages]]
+    - [[#other-improvment][Other improvment]]
   - [[#mail-gnus][Mail (Gnus)]]
   - [[#git-magit][Git (Magit)]]
   - [[#file-explorer-dired][File Explorer (Dired)]]
@@ -106,7 +94,8 @@
 #+END_SRC
 
 ** delight
-   delight is a way of showing wich major/minor is currently ope
+   delight is a way of showing wich major/minor is currently open
+   It's show which mode on the main bar
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package delight :ensure t)
 #+END_SRC
@@ -153,70 +142,19 @@ For a better user experience of GNU Emacs, here are the default values I use.
  (put 'downcase-region 'disabled nil)             ; Allow C-x C-l
 #+END_SRC
 
-** XDG                                                              :notused:
-
-*NOTE:* I'm not using that config yet. Need to understand why doing it in emacs
-
-# To keep the user's home and the =~/.emacs.d= folder as clean as possible, I
-# follow the [[https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html][XDG base directory specification]].
-
-# Be careful that GNU Emacs will not create the appropriate folders if they do not
-# exist. Therefore, it is necessary to create them yourself:
-
-# #+BEGIN_SRC bash
-#   mkdir ~/.cache/emacs ~/.local/share/emacs/
-# #+END_SRC
-
-*NOTE:* you can find out more by going to my [[https://github.com/rememberYou/dotfiles][dotfiles]].
-
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (defvar xdg-bin (getenv "XDG_BIN_HOME")
-#   "The XDG bin base directory.")
-
-#   (defvar xdg-cache (getenv "XDG_CACHE_HOME")
-#     "The XDG cache base directory.")
-
-#   (defvar xdg-config (getenv "XDG_CONFIG_HOME")
-#     "The XDG config base directory.")
-
-#   (defvar xdg-data (getenv "XDG_DATA_HOME")
-#     "The XDG data base directory.")
-
-#   (defvar xdg-lib (getenv "XDG_LIB_HOME")
-#     "The XDG lib base directory.")
-# #+END_SRC
-
 ** Customization
-
-To avoid overloading the GNU Emacs custormization =init.el= file made by the
-user with the UI, I add the generated code in a separate file.
-
-
+   To avoid overloading the GNU Emacs custormization =init.el= file made by the
+   user with the UI, I add the generated code in a separate file.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq-default custom-file (expand-file-name "~/.emacs.d/custom.el"))
   (when (file-exists-p custom-file)
     (load custom-file t))
 #+END_SRC
 
-** Theme :notused:
-   *NOTE:* I prefer to use the default .Xressources file
-   I like the light on dark because I find it to be more restful.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package nord-theme
-    :config
-(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-     (load-theme 'nord t))
-   (use-package smart-mode-line
-    :defer 0.1
-    :custom (sml/theme 'respectful)
-    :config (sml/setup))
-#+END_SRC
-
 ** Turn off mouse interface
- Since I never use the mouse with GNU Emacs, I prefer not to use certain
- graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
- I find invasive.
+   Since I never use the mouse with GNU Emacs, I prefer not to use certain
+   graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
+   I find invasive.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (when window-system
@@ -227,23 +165,6 @@ user with the UI, I add the generated code in a separate file.
 #+END_SRC
 
 * Advanced Configuration
-** COMMENT Alert :notused:
-
-# Most packages use =alerts= to make notifications with =libnotify=. Don't forget
-# to first install a notification daemon, like =dunst=.
-
-# #+BEGIN_QUOTE
-# Alert is a Growl-workalike for Emacs which uses a common notification interface
-# and multiple, selectable "styles", whose use is fully customizable by the user.
-
-# [[https://github.com/jwiegley/alert][John Wiegley]]
-# #+END_QUOTE
-
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package alert
-#     :custom (alert-default-style 'libnotify))
-# #+END_SRC
-
 ** Auto-Completion (company)
 
 =company= provides auto-completion at point and to Displays a small pop-in
@@ -280,9 +201,8 @@ completion candidates.
 # #+END_SRC
 
 ** Backups
-
-It is important to have a stable backup environment. Don't hesitate to save a
-lot.
+   It is important to have a stable backup environment. Don't hesitate to save a
+   lot.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package files
     :ensure nil
@@ -314,25 +234,20 @@ lot.
 ** Buffers
   ace window allow to simply switch when only 2 buffer or to choose
   which buffer with key when multiple buff
+
+  ibuffer is a better buffer mode
+
+  toggle-window-split : switch layout when two buffers are open
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ace-window
     :bind
-      (("C-x o" . ace-window)
-      ("M-o" . ace-window))
+    (("C-x o" . ace-window)
+    ("M-o" . ace-window))
     :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
     (use-package ibuffer
       :defer 0.2
       :bind ("C-x C-b" . ibuffer))
-  ;;  (use-package ibuffer-projectile
-  ;;   :after ibuffer
-  ;;   :preface
-  ;;   (defun my/ibuffer-projectile ()
-  ;;     (ibuffer-projectile-set-filter-groups)
-  ;;    (unless (eq ibuffer-sorting-mode 'alphabetic)
-  ;;        (ibuffer-do-sort-by-alphabetic)))
-  ;;    :hook (ibuffer . my/ibuffer-projectile))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp :tangle yes
+
 (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
@@ -360,88 +275,17 @@ lot.
 
   (global-set-key (kbd "C-x |") 'toggle-window-split)
 #+END_SRC
-** Calculator :notused:
-
-# # May be useful in a timely manner.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package calc
-# #     :defer t
-# #     :custom
-# #     (math-additional-units
-# #      '((GiB "1024 * MiB" "Giga Byte")
-# #        (MiB "1024 * KiB" "Mega Byte")
-# #        (KiB "1024 * B" "Kilo Byte")
-# #        (B nil "Byte")
-# #        (Gib "1024 * Mib" "Giga Bit")
-# #        (Mib "1024 * Kib" "Mega Bit")
-# #        (Kib "1024 * b" "Kilo Bit")
-# #        (b "B / 8" "Bit")))
-# #     (math-units-table nil))
-# # #+END_SRC
-
-** Calendar :notused:
-
-# # Remembering all the dates is not obvious, especially since some varies every
-# # year. In order to remember each important date, I recorded the list of important
-# # dates according to my country, Belgium. It is very likely that some dates are
-# # different in your country, therefore, adapt the configuration below accordingly.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package calendar
-# #     :custom (calendar-mark-holidays-flag t))
-
-# #   (use-package holidays
-# #     :ensure nil
-# #     :custom
-# #     (holiday-bahai-holidays nil)
-# #     (holiday-christian-holidays
-# #      '((holiday-fixed 1 6 "Epiphany")
-# #        (holiday-fixed 2 2 "Candlemas")
-# #        (holiday-easter-etc -47 "Mardi Gras")
-# #        (holiday-easter-etc 0 "Easter Day")
-# #        (holiday-easter-etc 1 "Easter Monday")
-# #        (holiday-easter-etc 39 "Ascension")
-# #        (holiday-easter-etc 49 "Pentecost")
-# #        (holiday-fixed 8 15 "Assumption")
-# #        (holiday-fixed 11 1 "All Saints' Day")
-# #        (holiday-fixed 11 2 "Day of the Dead")
-# #        (holiday-fixed 11 22 "Saint Cecilia's Day")
-# #        (holiday-fixed 12 1 "Saint Eloi's Day")
-# #        (holiday-fixed 12 4 "Saint Barbara")
-# #        (holiday-fixed 12 6 "Saint Nicholas Day")
-# #        (holiday-fixed 12 25 "Christmas Day")))
-# #     (holiday-general-holidays
-# #      '((holiday-fixed 1 1 "New Year's Day")
-# #        (holiday-fixed 2 14 "Valentine's Day")
-# #        (holiday-fixed 3 8 "International Women's Day")
-# #        (holiday-fixed 10 31 "Halloween")
-# #        (holiday-fixed 11 11 "Armistice of 1918")))
-# #     (holiday-hebrew-holidays nil)
-# #     (holiday-islamic-holidays nil)
-# #     (holiday-local-holidays
-# #      '((holiday-fixed 5 1 "Labor Day")
-# #        (holiday-float 3 0 0 "Grandmothers' Day")
-# #        (holiday-float 4 4 3 "Secretary's Day")
-# #        (holiday-float 5 0 2 "Mother's Day")
-# #        (holiday-float 6 0 3 "Father's Day")))
-# #     (holiday-oriental-holidays nil))
-# # #+END_SRC
-
 ** Dashboard
 Always good to have a dashboard.
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
     :preface
     :init
     (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-    ;; (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
     :custom (dashboard-startup-banner 'logo)
     :config (dashboard-setup-startup-hook))
 #+END_SRC
-** COMMENT Ending Up                                                        :notused:
-
+** reset config when config.org changes
 
 not-sur to understand how it works
 I'm using an =.org= file to maintain my GNU Emacs configuration. However, at his
@@ -450,68 +294,48 @@ launch, it will loads the =config.el= source file for a faster loading.
 The code below, executes =org-babel-tangle= asynchronously when
 =config.org= is saved.
 
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package async)
-
-#   (defvar *config-file* (expand-file-name "config.org" user-emacs-directory)
-#     "The configuration file.")
-
-#   (defvar *config-last-change* (nth 5 (file-attributes *config-file*))
-#     "Last modification time of the configuration file.")
-
-#   (defvar *show-async-tangle-results* nil
-#     "Keeps *emacs* async buffers around for later inspection.")
-
-#   (defun my/config-updated ()
-#     "Checks if the configuration file has been updated since the last time."
-#     (time-less-p *config-last-change*
-#                  (nth 5 (file-attributes *config-file*))))
-
-#   (defun my/config-tangle ()
-#     "Tangles the org file asynchronously."
-#     (when (my/config-updated)
-#       (setq *config-last-change*
-#             (nth 5 (file-attributes *config-file*)))
-#       (my/async-babel-tangle *config-file*)))
-
-#   (defun my/async-babel-tangle (org-file)
-#     "Tangles the org file asynchronously."
-#     (let ((init-tangle-start-time (current-time))
-#           (file (buffer-file-name))
-#           (async-quiet-switch "-q"))
-#       (async-start
-#        `(lambda ()
-#           (require 'org)
-#           (org-babel-tangle-file ,org-file))
-#        (unless *show-async-tangle-results*
-#          `(lambda (result)
-#             (if result
-#                 (message "SUCCESS: %s successfully tangled (%.2fs)."
-#                          ,org-file
-#                          (float-time (time-subtract (current-time)
-#                                                     ',init-tangle-start-time)))
-#               (message "ERROR: %s as tangle failed." ,org-file)))))))
-# #+END_SRC
-
-** Spelling
-*** Abbreviations
-
-According to a list of misspelled words, =abbrev= auto-correct these words on
-the fly.
-*NOTE:* Should add my file
-a way to generate it ?
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package abbrev
-    :defer 1
-    :ensure nil
-    :delight
-    :hook (text-mode . abbrev-mode)
-    :custom (abbrev-file-name "~/.emacs.d/abbrev_defs")
-    :config
-    (if (file-exists-p abbrev-file-name)
-        (quietly-read-abbrev-file)))
+  (use-package async)
+
+  (defvar *config-file* ".emacs.d/config.org" "The configuration file.")
+
+  (defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+    "Last modification time of the configuration file.")
+
+  (defvar *show-async-tangle-results* nil "Keeps *emacs* async buffers around for later inspection.")
+
+  (defun my/config-updated ()
+    "Checks if the configuration file has been updated since the last time."
+    (time-less-p *config-last-change*
+                 (nth 5 (file-attributes *config-file*))))
+
+  (defun my/config-tangle ()
+    "Tangles the org file asynchronously."
+    (when (my/config-updated)
+      (setq *config-last-change*
+            (nth 5 (file-attributes *config-file*)))
+      (my/async-babel-tangle *config-file*)))
+
+  (defun my/async-babel-tangle (org-file)
+    "Tangles the org file asynchronously."
+    (let ((init-tangle-start-time (current-time))
+          (file (buffer-file-name))
+          (async-quiet-switch "-q"))
+      (async-start
+       `(lambda ()
+          (require 'org)
+          (org-babel-tangle-file ,org-file))
+       (unless *show-async-tangle-results*
+         `(lambda (result)
+            (if result
+                (message "SUCCESS: %s successfully tangled (%.2fs)."
+                         ,org-file
+                         (float-time (time-subtract (current-time)
+                                                    ',init-tangle-start-time)))
+              (message "ERROR: %s as tangle failed." ,org-file)))))))
 #+END_SRC
 
+** Spelling
 *** Fly Spell
 
 For the other words that would not be in my list of abbreviations, =flyspell=
@@ -527,31 +351,14 @@ enables spell checking on-the-fly in GNU Emacs.
     (flyspell-issue-welcome-flag nil)
     (flyspell-mode 1))
 
-  (use-package flyspell-correct-ivy
-    :after flyspell
-    :bind (:map flyspell-mode-map
-                ("C-;" . flyspell-correct-word-generic))
-    :custom (flyspell-correct-interface 'flyspell-correct-ivy))
-
+    (use-package flyspell-correct-ivy
+      :bind ("C-M-;" . flyspell-correct-wrapper)
+      :init
+        (setq flyspell-correct-interface #'flyspell-correct-ivy))
   (use-package ispell
     :custom
     (ispell-silently-savep t))
 #+END_SRC
-
-*** Grammar Checker :notused:
-*NOTE:* Need to install some stuff
-[[https://languagetool.org/][LanguageTool]] is great for correcting your grammar. Combined with =abbrev-mode=
-and =flyspell=, you will have better documents. In order to be able to use it
-locally, download the desktop version and change the paths indicated below.
-
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package langtool
-#     :defer 2
-#     :delight
-#     :custom
-#     (langtool-language-tool-jar "~/.local/lib/LangueageTool-4.2/languagetool-commandline.jar")
-#     (langtool-language-tool-server-jar "~/.local/lib/LanguageTool-4.2/languagetool-server.jar"))
-# #+END_SRC
 
 ** History
 
@@ -574,411 +381,30 @@ radical function, it is part of a good user experience.
     :config (savehist-mode 1))
 #+END_SRC
 
-** Hydra :notused:noexport_1:
+** improved package menu =paradox=
 
-maybe I should start using it
+Improved GNU Emacs standard package menu.
 
-# # Hydra allows me to display a list of all the commands implemented in the echo
-# # area and easily interact with them.
+#+BEGIN_QUOTE
+Project for modernizing Emacs' Package Menu. With improved appearance, mode-line
+information. Github integration, customizability, asynchronous upgrading, and
+more.
 
-# # #+BEGIN_QUOTE
-# # Once you summon the Hydra through the prefixed binding (the body + any one
-# # head), all heads can be called in succession with only a short extension.
+[[https://github.com/Malabarba/paradox][Artur Malabarba]]
+#+END_QUOTE
 
-# # The Hydra is vanquished once Hercules, any binding that isn't the Hydra's head,
-# # arrives. Note that Hercules, besides vanquishing the Hydra, will still serve his
-# # original purpose, calling his proper command. This makes the Hydra very
-# # seamless, it's like a minor mode that disables itself auto-magically.
-
-# # [[https://github.com/abo-abo/hydra][Oleh Krehel]]
-# # #+END_QUOTE
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package hydra
-# #     :defer 0.5
-# #     :bind (("C-c L" . hydra-ledger/body)
-# #            ("C-c P" . hydra-projectile/body)
-# #            ("C-c b" . hydra-buffer/body)
-# #            ("C-c c" . hydra-clock/body)
-# #            ("C-c e" . hydra-erc/body)
-# #            ("C-c f" . hydra-flycheck/body)
-# #            ("C-c g" . hydra-go-to-file/body)
-# #            ("C-c m" . hydra-magit/body)
-# #            ("C-c o" . hydra-org/body)
-# #            ("C-c s" . hydra-spelling/body)
-# #            ("C-c p t" . hydra-typescript/body)
-# #            ("C-c y" . hydra-yasnippet/body)
-# #            ("C-c w" . hydra-windows/body)))
-# # #+END_SRC
-
-*** Hydra / Buffer
-
-# # Group Buffer commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-buffer (:color blue)
-# #     "
-# #     ^
-# #     ^Buffer^             ^Do^
-# #     ^──────^─────────────^──^──────────
-# #     _q_ quit             _k_ kill
-# #     ^^                   _l_ list
-# #     ^^                   _n_ next
-# #     ^^                   _p_ previous
-# #     ^^                   ^^
-# #     "
-# #     ("q" nil)
-# #     ("k" kill-buffer)
-# #     ("l" ibuffer)
-# #     ("n" next-buffer)
-# #     ("p" previous-buffer))
-# # #+END_SRC
-
-*** Hydra / Clock
-
-# # Group clock commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-clock (:color blue)
-# #     "
-# #     ^
-# #     ^Clock^             ^Do^
-# #     ^─────^─────────────^──^─────────
-# #     _q_ quit            _c_ cancel
-# #     ^^                  _d_ display
-# #     ^^                  _e_ effort
-# #     ^^                  _i_ in
-# #     ^^                  _j_ jump
-# #     ^^                  _o_ out
-# #     ^^                  _r_ report
-# #     ^^                  ^^
-# #     "
-# #     ("q" nil)
-# #     ("c" org-clock-cancel)
-# #     ("d" org-clock-display)
-# #     ("e" org-clock-modify-effort-estimate)
-# #     ("i" org-clock-in)
-# #     ("j" org-clock-goto)
-# #     ("o" org-clock-out)
-# #     ("r" org-clock-report))
-# # #+END_SRC
-
-*** Hydra / ERC
-
-# # Group ERC commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-erc (:color blue)
-# #     "
-# #     ^
-# #     ^ERC^             ^Do^
-# #     ^───^─────────────^──^────────────
-# #     _q_ quit          _c_ connect
-# #     ^^                _d_ disconnect
-# #     ^^                _j_ join
-# #     ^^                _n_ names
-# #     ^^                _u_ users
-# #     ^^                ^^
-# #     "
-# #     ("q" nil)
-# #     ("c" my/erc-start-or-switch)
-# #     ("d" erc-quit-server)
-# #     ("j" erc-join-channel)
-# #     ("n" erc-channel-names)
-# #     ("u" my/erc-count-users))
-# # #+END_SRC
-
-*** Hydra / Flycheck
-
-# # Group Flycheck commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-flycheck (:color blue)
-# #     "
-# #     ^
-# #     ^Flycheck^          ^Errors^            ^Checker^
-# #     ^────────^──────────^──────^────────────^───────^─────
-# #     _q_ quit            _<_ previous        _?_ describe
-# #     _M_ manual          _>_ next            _d_ disable
-# #     _v_ verify setup    _f_ check           _m_ mode
-# #     ^^                  _l_ list            _s_ select
-# #     ^^                  ^^                  ^^
-# #     "
-# #     ("q" nil)
-# #     ("<" flycheck-previous-error :color pink)
-# #     (">" flycheck-next-error :color pink)
-# #     ("?" flycheck-describe-checker)
-# #     ("M" flycheck-manual)
-# #     ("d" flycheck-disable-checker)
-# #     ("f" flycheck-buffer)
-# #     ("l" flycheck-list-errors)
-# #     ("m" flycheck-mode)
-# #     ("s" flycheck-select-checker)
-# #     ("v" flycheck-verify-setup))
-# # #+END_SRC
-
-*** Hydra / Go To
-
-# # Group jump-to-files commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-go-to-file (:color blue)
-# #     "
-# #     ^
-# #     ^Go To^           ^Config^            ^Agenda             ^Other^
-# #     ^─────^───────────^──────^────────────^──────^────────────^─────^────────
-# #     _q_ quit          _ca_ alacritty      _ac_ contacts       _ob_ book
-# #     ^^                _cd_ dunst          _af_ findmycat      _ol_ learning
-# #     ^^                _ce_ emacs          _ao_ organizer      _om_ movies
-# #     ^^                _ci_ i3             _ap_ people         _op_ purchases
-# #     ^^                _cn_ neofetch       _ar_ routine        _ou_ usb
-# #     ^^                _cp_ polybar        _as_ school         ^^
-# #     ^^                _cq_ qutebrowser    ^^                  ^^
-# #     ^^                _cR_ rofi           ^^                  ^^
-# #     ^^                _cr_ ranger         ^^                  ^^
-# #     ^^                _cs_ sway           ^^                  ^^
-# #     ^^                _ct_ tmux           ^^                  ^^
-# #     ^^                ^^                  ^^                  ^^
-# #     "
-# #     ("q" nil)
-# #     ("ac" (find-file "~/.personal/agenda/contacts.org"))
-# #     ("af" (find-file "~/.personal/agenda/findmycat.org"))
-# #     ("ao" (find-file "~/.personal/agenda/organizer.org"))
-# #     ("ap" (find-file "~/.personal/agenda/people.org"))
-# #     ("ar" (find-file "~/.personal/agenda/routine.org"))
-# #     ("as" (find-file "~/.personal/agenda/school.org"))
-# #     ("ca" (find-file (format "%s/alacritty/alacritty.yml" xdg-config)))
-# #     ("cd" (find-file (format "%s/dunst/dunstrc" xdg-config)))
-# #     ("ce" (find-file "~/.emacs.d/config.org"))
-# #     ("ci" (find-file (format "%s/i3/config" xdg-config)))
-# #     ("cn" (find-file (format "%s/neofetch/config.conf" xdg-config)))
-# #     ("cp" (find-file (format "%s/polybar/config" xdg-config)))
-# #     ("cq" (find-file (format "%s/qutebrowser/config.py" xdg-config)))
-# #     ("cR" (find-file (format "%s/rofi/config.rasi" xdg-config)))
-# #     ("cr" (find-file (format "%s/ranger/rc.conf" xdg-config)))
-# #     ("cs" (find-file (format "%s/sway/config" xdg-config)))
-# #     ("ct" (find-file (format "%s/tmux/tmux.conf" xdg-config)))
-# #     ("ob" (find-file "~/.personal/other/books.org"))
-# #     ("ol" (find-file "~/.personal/other/learning.org"))
-# #     ("om" (find-file "~/.personal/other/movies.org"))
-# #     ("op" (find-file "~/.personal/other/purchases.org"))
-# #     ("ou" (find-file "~/.personal/other/usb.org")))
-# # #+END_SRC
-
-*** Hydra / Ledger
-
-# # Group Ledger commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-ledger (:color blue)
-# #     "
-# #     ^
-# #     ^Ledger^             ^Do^
-# #     ^──────^─────────────^──^────────
-# #     _q_ quit             _a_ add
-# #     ^^                   _c_ clear
-# #     ^^                   _C_ copy
-# #     ^^                   _d_ delete
-# #     ^^                   _r_ report
-# #     ^^                   ^^
-# #     "
-# #     ("q" nil)
-# #     ("a" ledger-add-transaction)
-# #     ("c" ledger-mode-clean-buffer)
-# #     ("C" ledger-copy-transaction-at-point)
-# #     ("d" ledger-delete-current-transaction)
-# #     ("r" ledger-report))
-# # #+END_SRC
-
-*** Hydra / Magit
-
-# # Group Magit commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-magit (:color blue)
-# #     "
-# #     ^
-# #     ^Magit^             ^Do^
-# #     ^─────^─────────────^──^────────
-# #     _q_ quit            _b_ blame
-# #     ^^                  _c_ clone
-# #     ^^                  _i_ init
-# #     ^^                  _s_ status
-# #     ^^                  ^^
-# #     "
-# #     ("q" nil)
-# #     ("b" magit-blame)
-# #     ("c" magit-clone)
-# #     ("i" magit-init)
-# #     ("s" magit-status))
-# # #+END_SRC
-
-*** Hydra / Org
-
-# # Group Org commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-org (:color blue)
-# #     "
-# #     ^
-# #     ^Org^             ^Do^
-# #     ^───^─────────────^──^─────────────
-# #     _q_ quit          _A_ archive
-# #     ^^                _a_ agenda
-# #     ^^                _c_ capture
-# #     ^^                _d_ decrypt
-# #     ^^                _i_ insert-link
-# #     ^^                _j_ jump-task
-# #     ^^                _k_ cut-subtree
-# #     ^^                _o_ open-link
-# #     ^^                _r_ refile
-# #     ^^                _s_ store-link
-# #     ^^                _t_ todo-tree
-# #     ^^                ^^
-# #     "
-# #     ("q" nil)
-# #     ("A" my/org-archive-done-tasks)
-# #     ("a" org-agenda)
-# #     ("c" org-capture)
-# #     ("d" org-decrypt-entry)
-# #     ("k" org-cut-subtree)
-# #     ("i" org-insert-link-global)
-# #     ("j" my/org-jump)
-# #     ("o" org-open-at-point-global)
-# #     ("r" org-refile)
-# #     ("s" org-store-link)
-# #     ("t" org-show-todo-tree))
-# # #+END_SRC
-
-*** Hydra / Projectile
-
-# # Group Projectile commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-projectile (:color blue)
-# #     "
-# #     ^
-# #     ^Projectile^        ^Buffers^           ^Find^              ^Search^
-# #     ^──────────^────────^───────^───────────^────^──────────────^──────^────────────
-# #     _q_ quit            _b_ list            _d_ directory       _r_ replace
-# #     _i_ reset cache     _K_ kill all        _D_ root            _R_ regexp replace
-# #     ^^                  _S_ save all        _f_ file            _s_ search
-# #     ^^                  ^^                  _p_ project         ^^
-# #     ^^                  ^^                  ^^                  ^^
-# #     "
-# #     ("q" nil)
-# #     ("b" counsel-projectile-switch-to-buffer)
-# #     ("d" counsel-projectile-find-dir)
-# #     ("D" projectile-dired)
-# #     ("f" counsel-projectile-find-file)
-# #     ("i" projectile-invalidate-cache :color red)
-# #     ("K" projectile-kill-buffers)
-# #     ("p" counsel-projectile-switch-project)
-# #     ("r" projectile-replace)
-# #     ("R" projectile-replace-regexp)
-# #     ("s" counsel-projectile-git-grep)
-# #     ("S" projectile-save-project-buffers))
-# # #+END_SRC
-
-*** Hydra / Spelling
-
-# # Group spelling commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-spelling (:color blue)
-# #     "
-# #     ^
-# #     ^Spelling^          ^Errors^            ^Checker^
-# #     ^────────^──────────^──────^────────────^───────^───────
-# #     _q_ quit            _<_ previous        _c_ correction
-# #     ^^                  _>_ next            _d_ dictionary
-# #     ^^                  _f_ check           _m_ mode
-# #     ^^                  ^^                  ^^
-# #     "
-# #     ("q" nil)
-# #     ("<" flyspell-correct-previous :color pink)
-# #     (">" flyspell-correct-next :color pink)
-# #     ("c" ispell)
-# #     ("d" ispell-change-dictionary)
-# #     ("f" flyspell-buffer)
-# #     ("m" flyspell-mode))
-# # #+END_SRC
-
-*** Hydra / TypeScript
-
-# # Group TypeScript commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-typescript (:color blue)
-# #     "
-# #     ^
-# #     ^TypeScript^          ^Do^
-# #     ^──────────^──────────^──^────────
-# #     _q_ quit             _b_ back
-# #     ^^                   _e_ errors
-# #     ^^                   _j_ jump
-# #     ^^                   _r_ references
-# #     ^^                   _R_ restart
-# #     ^^                   ^^
-# #     "
-# #     ("q" nil)
-# #     ("b" tide-jump-back)
-# #     ("e" tide-project-errors)
-# #     ("j" tide-jump-to-definition)
-# #     ("r" tide-references)
-# #     ("R" tide-restart-server))
-# # #+END_SRC
-
-*** Hydra / YASnippet
-
-# # Group YASnippet commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-yasnippet (:color blue)
-# #     "
-# #     ^
-# #     ^YASnippet^          ^Do^
-# #     ^─────────^──────────^──^────────
-# #     _q_ quit             _i_ insert
-# #     ^^                   _m_ mode
-# #     ^^                   _n_ new
-# #     ^^                   ^^
-# #     "
-# #     ("q" nil)
-# #     ("i" ivy-yasnippet)
-# #     ("m" yas-minor-mode)
-# #     ("n" yas-new-snippet))
-# # #+END_SRC
-
-*** Hydra / Windows
-
-# # Group window-related commands.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (defhydra hydra-windows (:color pink)
-# #     "
-# #     ^
-# #     ^Windows^           ^Window^            ^Zoom^
-# #     ^───────^───────────^──────^────────────^────^──────
-# #     _q_ quit            _b_ balance         _-_ out
-# #     ^^                  _i_ heighten        _+_ in
-# #     ^^                  _j_ narrow          _=_ reset
-# #     ^^                  _k_ lower           ^^
-# #     ^^                  _l_ widen           ^^
-# #     ^^                  _s_ swap            ^^
-# #     ^^                  ^^                  ^^
-# #     "
-# #     ("q" nil)
-# #     ("b" balance-windows)
-# #     ("i" enlarge-window)
-# #     ("j" shrink-window-horizontally)
-# #     ("k" shrink-window)
-# #     ("l" enlarge-window-horizontally)
-# #     ("s" switch-window-then-swap-buffer :color blue)
-# #     ("-" text-scale-decrease)
-# #     ("+" text-scale-increase)
-# #     ("=" (text-scale-increase 0)))
-# # #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package paradox
+    :defer 1
+    :custom
+    (paradox-column-width-package 27)
+    (paradox-column-width-version 13)
+    (paradox-execute-asynchronously t)
+    (paradox-hide-wiki-packages t)
+    :config
+    (paradox-enable)
+    (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
+#+END_SRC
 
 ** General
 *** =aggressive-indent=
@@ -1019,31 +445,6 @@ electric-indent-mode.
     :config (move-text-default-bindings))
 #+END_SRC
 
-*** =paradox=
-
-Improved GNU Emacs standard package menu.
-
-#+BEGIN_QUOTE
-Project for modernizing Emacs' Package Menu. With improved appearance, mode-line
-information. Github integration, customizability, asynchronous upgrading, and
-more.
-
-[[https://github.com/Malabarba/paradox][Artur Malabarba]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package paradox
-    :defer 1
-    :custom
-    (paradox-column-width-package 27)
-    (paradox-column-width-version 13)
-    (paradox-execute-asynchronously t)
-    (paradox-hide-wiki-packages t)
-    :config
-    (paradox-enable)
-    (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
-#+END_SRC
-
 *** =rainbow-mode=
 
 Colorize colors as text with their value.
@@ -1071,27 +472,19 @@ Avoids call the function or reload Emacs.
 #+RESULTS:
 : revert-buffer
 
-*** =try= :notused:
-
-Useful to temporary use a package.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package try :defer 5)
-# # #+END_SRC
-
-*** =undo-tree=
+*** COMMENT =undo-tree=
 
 GNU Emacs's undo system allows you to recover any past state of a buffer. To do
 this, Emacs treats "undo itself as another editing that can be undone".
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package undo-tree
-    :delight
-    :bind ("C--" . undo-tree-redo)
-    :init (global-undo-tree-mode)
-    :custom
-    (undo-tree-visualizer-timestamps t)
-    (undo-tree-visualizer-diff t))
+  ;; (use-package undo-tree
+  ;;   :delight
+  ;;   :bind ("C--" . undo-tree-redo)
+  ;;   :init (global-undo-tree-mode)
+  ;;   :custom
+  ;;   (undo-tree-visualizer-timestamps t)
+  ;;   (undo-tree-visualizer-diff t))
 #+END_SRC
 
 *** =wiki-summary=
@@ -1131,106 +524,6 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
     :delight
     :config (which-key-mode))
 #+END_SRC
-
-** IRC :notused:
-
-IRC is the best way for me to get a quick answer to a simple question and to
-learn from more competent people than me on a subject. I'd rather use =erc= than
-=rcirc= because I find =rcirc= very minimal.
-
-Besides, for people like me, who want to store your password in a /GPG/ file,
-you just need to specify a file priority list with =auth-sources=, to tell =erc=
-where to start looking for your password first.
-
-Of course, don't forget to add this line in your =.authinfo.gpg= file, where
-/<nickname>/ and /<password>/ match your real information:
-
-#+BEGIN_EXAMPLE
-  machine irc.freenode.net login <nickname> password <password>
-#+END_EXAMPLE
-
-Then encrypt that file with =gpg -c .authinfo= and don't forget to delete the
-=.authinfo= file.
-
-Finally, specify to =erc= that you use a =.authinfo= file with:
-=(setq erc-prompt-for-nickserv-password nil)=.
-
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package erc
-#     :defer 3
-#     :delight "ε "
-#     :preface
-#     (defun my/erc-start-or-switch ()
-#       "Connects to ERC, or switch to last active buffer."
-#       (interactive)
-#       (if (get-buffer "irc.freenode.net:6667")
-#           (erc-track-switch-buffer 1)
-#         (erc :server "irc.freenode.net" :port 6667 :nick "rememberYou")))
-
-#     (defun my/erc-count-users ()
-#       "Displays the number of users connected on the current channel."
-#       (interactive)
-#       (if (get-buffer "irc.freenode.net:6667")
-#           (let ((channel (erc-default-target)))
-#             (if (and channel (erc-channel-p channel))
-#                 (message "%d users are online on %s"
-#                          (hash-table-count erc-channel-users)
-#                          channel)
-#               (user-error "The current buffer is not a channel")))
-#         (user-error "You must first start ERC")))
-
-#     (defun my/erc-notify (nickname message)
-#       "Displays a notification message for ERC."
-#       (let* ((channel (buffer-name))
-#              (nick (erc-hl-nicks-trim-irc-nick nickname))
-#              (title (if (string-match-p (concat "^" nickname) channel)
-#                         nick
-#                       (concat nick " (" channel ")")))
-#              (msg (s-trim (s-collapse-whitespace message))))
-#         (alert (concat nick ": " msg) :title title)))
-
-#     (defun my/erc-preprocess (string)
-#       "Avoids channel flooding."
-#       (setq str
-#             (string-trim
-#              (replace-regexp-in-string "\n+" " " str))))
-#     :hook ((ercn-notify . my/erc-notify)
-#            (erc-send-pre . my/erc-preprocess))
-#     :custom-face
-#     (erc-action-face ((t (:foreground "#8fbcbb"))))
-#     (erc-error-face ((t (:foreground "#bf616a"))))
-#     (erc-input-face ((t (:foreground "#ebcb8b"))))
-#     (erc-notice-face ((t (:foreground "#ebcb8b"))))
-#     (erc-timestamp-face ((t (:foreground "#a3be8c"))))
-#     :custom
-#     (erc-autojoin-channels-alist '(("freenode.net" "#archlinux" "#bash" "##c++"
-#                                     "#emacs""#i3" "#latex" "#org-mode" "#python"
-#                                     "#qutebrowser" "#reactjs" "#sway")))
-#     (erc-autojoin-timing 'ident)
-#     (erc-fill-function 'erc-fill-static)
-#     (erc-fill-static-center 22)
-#     (erc-header-line-format "%n on %t (%m)")
-#     (erc-hide-list '("JOIN" "PART" "QUIT"))
-#     (erc-join-buffer 'bury)
-#     (erc-kill-buffer-on-part t)
-#     (erc-kill-queries-on-quit t)
-#     (erc-kill-server-buffer-on-quit t)
-#     (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
-#     (erc-lurker-threshold-time 43200)
-#     (erc-prompt-for-nickserv-password nil)
-#     (erc-server-reconnect-attempts 5)
-#     (erc-server-reconnect-timeout 3)
-#     (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-#                                "324" "329" "332" "333" "353" "477"))
-#     :config
-#     (add-to-list 'erc-modules 'notifications)
-#     (add-to-list 'erc-modules 'spelling)
-#     (erc-services-mode 1)
-#     (erc-update-modules))
-
-#   (use-package erc-hl-nicks :after erc)
-#   (use-package erc-image :after erc)
-# #+END_SRC
 
 ** Ivy
 
@@ -1329,73 +622,32 @@ statements are at a given depth.
     :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
 
-*** =smartparens= :notused:
-*NOTE:* autocreate parenthesis -> I don't like that
-In my opinion, it is the most powerful package to deal with the
-parenthesis. Anyway, if you don't like it, you can try taking a look at
-=paredit= or =autopair=.
-
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package smartparens
-#     :defer 1
-#     :delight
-#     :custom (sp-escape-quotes-after-insert nil)
-#     :config (smartparens-global-mode 1))
-
-# #+END_SRC
-
-** COMMENT Paste                                                            :notused:
-
-#+BEGIN_QUOTE
-This mode allows to paste whole buffers or parts of buffers to pastebin-like
-services. It supports more than one service and will failover if one service
-fails.
-
-[[https://github.com/etu/webpaste.el][Elis Hirwing]]
-#+END_QUOTE
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package webpaste
-# #     :defer 3
-# #     :bind (("C-c C-p C-b" . webpaste-paste-buffer)
-# #            ("C-c C-p C-r" . webpaste-paste-region)))
-# # #+END_SRC
-
-# # Same principle for images with =imgbb=. This package selects an image
-# # and upload it to [[https://imgbb.com/][imgbb]], making sure to display the URL of the image in
-# # the minibuffer and place it in the kill ring.
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package imgbb :defer 2)
-# # #+END_SRC
-
-** PDF :notused:
+** PDF
 #+BEGIN_QUOTE
 PDF Tools is, among other things, a replacement of DocView for PDF files. The
 key difference is that pages are not pre-rendered by e.g. ghostscript and stored
 in the file-system, but rather created on-demand and stored in memory.
-
 [[https://github.com/politza/pdf-tools][Andras Politz]]
 #+END_QUOTE
 
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#   (use-package pdf-tools
-#     :defer 1
-#     :init (pdf-tools-install :no-query))
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package pdf-tools
+     :defer 1
+     :init (pdf-tools-install :no-query))
 
-#   (use-package pdf-view
-#     :ensure nil
-#     :after pdf-tools
-#     :bind (:map pdf-view-mode-map
-#                 ("C-s" . isearch-forward)
-#                 ("d" . pdf-annot-delete)
-#                 ("h" . pdf-annot-add-highlight-markup-annotation)
-#                 ("t" . pdf-annot-add-text-annotation))
-#     :custom
-#     (pdf-view-display-size 'fit-page)
-#     (pdf-view-resize-factor 1.1)
-#     (pdf-view-use-unicode-ligther nil))
-# #+END_SRC
+   (use-package pdf-view
+     :ensure nil
+     :after pdf-tools
+     :bind (:map pdf-view-mode-map
+                 ("C-s" . isearch-forward)
+                 ("d" . pdf-annot-delete)
+                 ("h" . pdf-annot-add-highlight-markup-annotation)
+                 ("t" . pdf-annot-add-text-annotation))
+     :custom
+     (pdf-view-display-size 'fit-page)
+     (pdf-view-resize-factor 1.1)
+     (pdf-view-use-unicode-ligther nil))
+ #+END_SRC
 
 ** Point and Region
 
@@ -1419,35 +671,6 @@ I find useful to delete a line and a region with only =C-w=.
        (list (line-beginning-position)
              (line-beginning-position 2)))))
 #+END_SRC
-
-** Projectile :notused:
-
-# # #+BEGIN_QUOTE
-# # Projectile is a project interaction library for Emacs. Its goal is to provide a
-# # nice set of features operating on a project level without introducing external
-# # dependencies (when feasible). For instance - finding project files has a
-# # portable implementation written in pure Emacs Lisp without the use of GNU find
-# # (but for performance sake an indexing mechanism backed by external commands
-# # exists as well).
-
-# # [[https://github.com/bbatsov/projectile][Bozhidar Batsov]]
-# # #+END_QUOTE
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package projectile
-# #     :defer 1
-# #     :custom
-# #     (projectile-cache-file (expand-file-name "~/.emacs.d/projectile.cache" ))
-# #     (projectile-completion-system 'ivy)
-# #     (projectile-enable-caching t)
-# #     (projectile-known-projects-file (expand-file-name "~/.emacs.d/projectile-bookmarks.eld" ))
-# #     (projectile-mode-line '(:eval (projectile-project-name)))
-# #     :config (projectile-global-mode))
-
-# #   (use-package counsel-projectile
-# #     :after (counsel projectile)
-# #     :config (counsel-projectile-mode 1))
-# # #+END_SRC
 
 ** Recent Files
 
@@ -1483,19 +706,19 @@ It is often annoying to see unnecessary blank spaces at the end of a line or fil
 
 *** =hungry-delete=
 
-# # #+BEGIN_QUOTE
-# # Deleting a whitespace character will delete all whitespace until the next
-# # non-whitespace character.
+#+BEGIN_QUOTE
+Deleting a whitespace character will delete all whitespace until the next
+non-whitespace character.
 
-# # [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
-# # #+END_QUOTE
+# [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
+#+END_QUOTE
 
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package hungry-delete
-# #     :defer 0.7
-# #     :delight
-# #     :config (global-hungry-delete-mode))
-# # #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package hungry-delete
+    :defer 0.7
+    :delight
+    :config (global-hungry-delete-mode))
+#+END_SRC
 
 ** Windows
 
@@ -1554,42 +777,25 @@ I like to have lines of the same length.
     :custom (set-mark-command-repeat-pop t))
 #+END_SRC
 
-** YASnippet
 
-# # #+BEGIN_QUOTE
-# # YASnippet is a template system for Emacs. It allows you to type an abbreviation
-# # and automatically expand it into function templates.
-
-# # [[https://github.com/joaotavora/yasnippet][João Távora]]
-# # #+END_QUOTE
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package yasnippet
-# #     :defer 1
-# #     :delight yas-minor-mode " υ"
-# #     :hook (yas-minor-mode . my/disable-yas-if-no-snippets)
-# #     :config (yas-global-mode)
-# #     :preface
-# #     (defun my/disable-yas-if-no-snippets ()
-# #       (when (and yas-minor-mode (null (yas--get-snippet-tables)))
-# #         (yas-minor-mode -1))))
-
-# #   (use-package yasnippet-snippets
-# #     :after yasnippet
-# #     :config (yasnippet-snippets-initialize))
-
-# #   (use-package ivy-yasnippet :after yasnippet)
-# #   (use-package react-snippets :after yasnippet)
-# # #+END_SRC
-
-** smex
-a better M-x command
+** custom fonction
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package smex
-      :bind (("M-x" . smex)
-             ("M-X" . smex-major-mode-commands)
-             ("C-c C-c M-x"))
-             )
+;; revert all open file buffer
+(defun revert-all-buffers ()
+  "Refreshes all open buffers from their respective files."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (buffer-file-name) (file-exists-p (buffer-file-name)) (not (buffer-modified-p)))
+        (revert-buffer t t t) )))
+  (message "Refreshed open files.") )
+
+;; reload emacs config
+(defun reload-dotemacs-file ()
+  "reload your .emacs file without restarting Emacs"
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
+
 #+END_SRC
 
 * Major mode
@@ -1702,19 +908,35 @@ a better M-x command
 ;; (add-to-list 'load-path
 ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
 ;; (require 'ocp-indent)
+   (setq utop-command "opam config exec -- utop -emacs")
+   (add-to-list 'load-path
+                "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
+   (require 'ocp-indent)
 #+END_SRC
-*** Antlr
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package antlr-mode
-     :mode ("\\.g4\\'"))
- #+END_SRC
+*** Java
+**** Antlr
+     lexer/parser generator LL(*) for java langage
+  #+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package antlr-mode
+      :mode ("\\.g4\\'"))
+  #+END_SRC
 
-*** Groovy (gradle)
-    langage de "script" de java
- #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package groovy-mode
-     :mode ("\\.gradle\\'"))
- #+END_SRC
+**** Groovy
+     Script version of java
+     run on jvm
+  #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package groovy-mode
+      :mode ("\\.groovy\\'" "\\.gvy\\'" "\\.gy\\'""\\.gsh\\'" )
+      :hook gradle-mode)
+  #+END_SRC
+**** Gradle
+     Gradle is a dependency manager
+  #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package gradle-mode
+      :mode ("\\.gradle\\'")
+      )
+
+  #+END_SRC
 
 *** Yaml
     Yet another marked langage
@@ -1728,7 +950,8 @@ a better M-x command
  (use-package gitignore-mode)
  #+END_SRC
 
-** COMMENT Ledger                                                           :notused:
+
+** COMMENT Ledger
  # #+BEGIN_QUOTE
  # Ledger is a powerful, double-entry accounting system that is accessed from the
  # UNIX command-line.
@@ -1796,7 +1019,9 @@ a better M-x command
      :bind
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
-      ("C-c c" . org-capture))
+      ("C-c c" . org-capture)
+     :custom
+      (org-use-extra-keys t))
  #+END_SRC
 *** Table of Content
  If like me, you're tired of manually updating your tables of contents, =toc-org=
@@ -1861,7 +1086,6 @@ a better M-x command
  #+END_SRC
 
 *** Capture
-
  =org-capture= templates saves you a lot of time when adding new entries. I use
  it to quickly record tasks, ledger entries, notes and other semi-structured
  information.
@@ -1899,9 +1123,6 @@ a better M-x command
    :Codigo postal: %^{Codigo postal}
    :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
    :Nota:
-   :END:
-   :LOGBOOK:
-   - estado \"\"           desde \"\"           %U
    :END:"
    )
 
@@ -1915,33 +1136,36 @@ a better M-x command
    :Pais:          %^{Pais}
    :Codigo postal: %^{Codigo postal}
    :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-   :END:
-   :LOGBOOK:
-   - estado \"\"           desde \"\"           %U
    :END:"
    )
 
-   (defvar my/org-theater-template "** %^{Nombre}
+   (defvar my/org-spectacle-template "** %^{Nombre}
    :PROPERTIES:
    :Nombre:    %\\1
-   :Teatro: %^{Teatro}
+   :Lugar: %^{Lugar}
    :Con:     %^{Con}
-   :Hora:    %^{Hora}
-   :Nota:
-   :END:
-   :LOGBOOK:
-   - estado \"\"           desde \"\"           %U
+   :Cuando:    %^{Cuando}t
    :END:"
    )
 
    :custom
    (org-capture-templates `(
    ("c" "Contact")
-      ("cp" "People" entry (file+headline "~/org/contacts.org" "People"),
+      ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
            my/org-people-template :empty-lines 1)
-      ("ca" "Adress" entry (file+headline "~/org/contacts.org" "Adress"),
+      ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
            my/org-people-template :empty-lines 1)
-   ("e" "Spectacle")
+   ("e" "Evento")
+      ("ec" "Concert" entry (file+headline "~/org/agenda.org" "concert"),
+           my/org-spectacle-template :empty-lines 1)
+      ("es" "Spectacle")
+         ("est" "Theatro" entry (file+headline "~/org/agenda.org" "théâtre"),
+             my/org-spectacle-template :empty-lines 1)
+         ("esd" "Danse" entry (file+headline "~/org/agenda.org" "danse"),
+             my/org-spectacle-template :empty-lines 1)
+         ("esc" "Circo" entry (file+headline "~/org/agenda.org" "cirque"),
+             my/org-spectacle-template :empty-lines 1)
+
 
        )))
  #+END_SRC
@@ -2088,6 +1312,15 @@ a better M-x command
    ;; (use-package ob-ruby :ensure nil :after org)
    (use-package ob-shell :ensure nil :after org)
    (use-package ob-sql :ensure nil :after org)
+ #+END_SRC
+
+*** Other improvment
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (defun org-convert-csv-table (beg end)
+ (interactive (list (mark) (point)))
+ (org-table-convert-region beg end ";")
+  )
+
  #+END_SRC
 
 ** Mail (Gnus)
