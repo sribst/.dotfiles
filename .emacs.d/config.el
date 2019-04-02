@@ -52,15 +52,6 @@
 (when (file-exists-p custom-file)
   (load custom-file t))
 
-(use-package nord-theme
-    :config
-(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-     (load-theme 'nord t))
-   (use-package smart-mode-line
-    :defer 0.1
-    :custom (sml/theme 'respectful)
-    :config (sml/setup))
-
 (when window-system
   (menu-bar-mode -1)                              ; Disable the menu bar
   (scroll-bar-mode -1)                            ; Disable the scroll bar
@@ -96,21 +87,13 @@
     :keybinding "d"))
 
 (use-package ace-window
-  :bind
+    :bind
     (("C-x o" . ace-window)
     ("M-o" . ace-window))
-  :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
-  (use-package ibuffer
-    :defer 0.2
-    :bind ("C-x C-b" . ibuffer))
-;;  (use-package ibuffer-projectile
-;;   :after ibuffer
-;;   :preface
-;;   (defun my/ibuffer-projectile ()
-;;     (ibuffer-projectile-set-filter-groups)
-;;    (unless (eq ibuffer-sorting-mode 'alphabetic)
-;;        (ibuffer-do-sort-by-alphabetic)))
-;;    :hook (ibuffer . my/ibuffer-projectile))
+    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
+    (use-package ibuffer
+      :defer 0.2
+      :bind ("C-x C-b" . ibuffer))
 
 (defun toggle-window-split ()
   (interactive)
@@ -143,19 +126,47 @@
   :preface
   :init
   (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-  ;; (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
   :custom (dashboard-startup-banner 'logo)
   :config (dashboard-setup-startup-hook))
 
-(use-package abbrev
-  :defer 1
-  :ensure nil
-  :delight
-  :hook (text-mode . abbrev-mode)
-  :custom (abbrev-file-name "~/.emacs.d/abbrev_defs")
-  :config
-  (if (file-exists-p abbrev-file-name)
-      (quietly-read-abbrev-file)))
+(use-package async)
+
+(defvar *config-file* ".emacs.d/config.org" "The configuration file.")
+
+(defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+  "Last modification time of the configuration file.")
+
+(defvar *show-async-tangle-results* nil "Keeps *emacs* async buffers around for later inspection.")
+
+(defun my/config-updated ()
+  "Checks if the configuration file has been updated since the last time."
+  (time-less-p *config-last-change*
+               (nth 5 (file-attributes *config-file*))))
+
+(defun my/config-tangle ()
+  "Tangles the org file asynchronously."
+  (when (my/config-updated)
+    (setq *config-last-change*
+          (nth 5 (file-attributes *config-file*)))
+    (my/async-babel-tangle *config-file*)))
+
+(defun my/async-babel-tangle (org-file)
+  "Tangles the org file asynchronously."
+  (let ((init-tangle-start-time (current-time))
+        (file (buffer-file-name))
+        (async-quiet-switch "-q"))
+    (async-start
+     `(lambda ()
+        (require 'org)
+        (org-babel-tangle-file ,org-file))
+     (unless *show-async-tangle-results*
+       `(lambda (result)
+          (if result
+              (message "SUCCESS: %s successfully tangled (%.2fs)."
+                       ,org-file
+                       (float-time (time-subtract (current-time)
+                                                  ',init-tangle-start-time)))
+            (message "ERROR: %s as tangle failed." ,org-file)))))))
 
 (use-package flyspell
   :defer 1
@@ -166,12 +177,10 @@
   (flyspell-issue-welcome-flag nil)
   (flyspell-mode 1))
 
-(use-package flyspell-correct-ivy
-  :after flyspell
-  :bind (:map flyspell-mode-map
-              ("C-;" . flyspell-correct-word-generic))
-  :custom (flyspell-correct-interface 'flyspell-correct-ivy))
-
+  (use-package flyspell-correct-ivy
+    :bind ("C-M-;" . flyspell-correct-wrapper)
+    :init
+      (setq flyspell-correct-interface #'flyspell-correct-ivy))
 (use-package ispell
   :custom
   (ispell-silently-savep t))
@@ -189,6 +198,17 @@
   (savehist-save-minibuffer-history 1)
   :config (savehist-mode 1))
 
+(use-package paradox
+  :defer 1
+  :custom
+  (paradox-column-width-package 27)
+  (paradox-column-width-version 13)
+  (paradox-execute-asynchronously t)
+  (paradox-hide-wiki-packages t)
+  :config
+  (paradox-enable)
+  (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
+
 (use-package aggressive-indent
   :defer 2
   :hook ((css-mode . aggressive-indent-mode)
@@ -203,17 +223,6 @@
          ("M-n" . move-text-down))
   :config (move-text-default-bindings))
 
-(use-package paradox
-  :defer 1
-  :custom
-  (paradox-column-width-package 27)
-  (paradox-column-width-version 13)
-  (paradox-execute-asynchronously t)
-  (paradox-hide-wiki-packages t)
-  :config
-  (paradox-enable)
-  (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
-
 (use-package rainbow-mode
   :defer 2
   :delight
@@ -225,14 +234,6 @@
   :bind ("C-x R" . revert-buffer)
   :custom (auto-revert-verbose nil)
   :config (global-auto-revert-mode 1))
-
-(use-package undo-tree
-  :delight
-  :bind ("C--" . undo-tree-redo)
-  :init (global-undo-tree-mode)
-  :custom
-  (undo-tree-visualizer-timestamps t)
-  (undo-tree-visualizer-diff t))
 
 (use-package wiki-summary
   :defer 1
@@ -315,6 +316,23 @@
   :defer 1
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(use-package pdf-tools
+  :defer 1
+  :init (pdf-tools-install :no-query))
+
+(use-package pdf-view
+  :ensure nil
+  :after pdf-tools
+  :bind (:map pdf-view-mode-map
+              ("C-s" . isearch-forward)
+              ("d" . pdf-annot-delete)
+              ("h" . pdf-annot-add-highlight-markup-annotation)
+              ("t" . pdf-annot-add-text-annotation))
+  :custom
+  (pdf-view-display-size 'fit-page)
+  (pdf-view-resize-factor 1.1)
+  (pdf-view-use-unicode-ligther nil))
+
 (use-package expand-region
   :defer 2
   :bind (("C-+" . er/contract-region)
@@ -347,6 +365,11 @@
   :defer 1
   :hook (before-save . delete-trailing-whitespace))
 
+(use-package hungry-delete
+  :defer 0.7
+  :delight
+  :config (global-hungry-delete-mode))
+
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
 
 (use-package winner
@@ -361,11 +384,21 @@
          (text-mode . turn-on-auto-fill))
   :custom (set-mark-command-repeat-pop t))
 
-(use-package smex
-  :bind (("M-x" . smex)
-         ("M-X" . smex-major-mode-commands)
-         ("C-c C-c M-x"))
-         )
+;; revert all open file buffer
+(defun revert-all-buffers ()
+  "Refreshes all open buffers from their respective files."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (buffer-file-name) (file-exists-p (buffer-file-name)) (not (buffer-modified-p)))
+        (revert-buffer t t t) )))
+  (message "Refreshed open files.") )
+
+;; reload emacs config
+(defun reload-dotemacs-file ()
+  "reload your .emacs file without restarting Emacs"
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
 
 (use-package elisp-mode :ensure nil :delight "ξ ")
 
@@ -439,12 +472,21 @@
 ;; (add-to-list 'load-path
 ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
 ;; (require 'ocp-indent)
+   (setq utop-command "opam config exec -- utop -emacs")
+   (add-to-list 'load-path
+                "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
+   (require 'ocp-indent)
 
 (use-package antlr-mode
   :mode ("\\.g4\\'"))
 
 (use-package groovy-mode
-    :mode ("\\.gradle\\'"))
+    :mode ("\\.groovy\\'" "\\.gvy\\'" "\\.gy\\'""\\.gsh\\'" )
+    :hook gradle-mode)
+
+(use-package gradle-mode
+    :mode ("\\.gradle\\'")
+    )
 
 (use-package yaml-mode
     :mode ("\\.yml\\'"))
@@ -457,7 +499,9 @@
   :bind
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
-   ("C-c c" . org-capture))
+   ("C-c c" . org-capture)
+  :custom
+   (org-use-extra-keys t))
 
 (use-package toc-org
   :after org
@@ -525,9 +569,6 @@
 :Codigo postal: %^{Codigo postal}
 :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
 :Nota:
-:END:
-:LOGBOOK:
-- estado \"\"           desde \"\"           %U
 :END:"
 )
 
@@ -541,33 +582,36 @@
 :Pais:          %^{Pais}
 :Codigo postal: %^{Codigo postal}
 :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-:END:
-:LOGBOOK:
-- estado \"\"           desde \"\"           %U
 :END:"
 )
 
-(defvar my/org-theater-template "** %^{Nombre}
+(defvar my/org-spectacle-template "** %^{Nombre}
 :PROPERTIES:
 :Nombre:    %\\1
-:Teatro: %^{Teatro}
+:Lugar: %^{Lugar}
 :Con:     %^{Con}
-:Hora:    %^{Hora}
-:Nota:
-:END:
-:LOGBOOK:
-- estado \"\"           desde \"\"           %U
+:Cuando:    %^{Cuando}t
 :END:"
 )
 
 :custom
 (org-capture-templates `(
 ("c" "Contact")
-   ("cp" "People" entry (file+headline "~/org/contacts.org" "People"),
+   ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
         my/org-people-template :empty-lines 1)
-   ("ca" "Adress" entry (file+headline "~/org/contacts.org" "Adress"),
+   ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
         my/org-people-template :empty-lines 1)
-("e" "Spectacle")
+("e" "Evento")
+   ("ec" "Concert" entry (file+headline "~/org/agenda.org" "concert"),
+        my/org-spectacle-template :empty-lines 1)
+   ("es" "Spectacle")
+      ("est" "Theatro" entry (file+headline "~/org/agenda.org" "théâtre"),
+          my/org-spectacle-template :empty-lines 1)
+      ("esd" "Danse" entry (file+headline "~/org/agenda.org" "danse"),
+          my/org-spectacle-template :empty-lines 1)
+      ("esc" "Circo" entry (file+headline "~/org/agenda.org" "cirque"),
+          my/org-spectacle-template :empty-lines 1)
+
 
     )))
 
@@ -608,6 +652,11 @@
 ;; (use-package ob-ruby :ensure nil :after org)
 (use-package ob-shell :ensure nil :after org)
 (use-package ob-sql :ensure nil :after org)
+
+(defun org-convert-csv-table (beg end)
+(interactive (list (mark) (point)))
+(org-table-convert-region beg end ";")
+ )
 
 (use-package gnus
     :bind ("C-x e" . gnus)
