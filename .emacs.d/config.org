@@ -521,7 +521,7 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package which-key
     :defer 0.2
-    :delight
+    :delight1
     :config (which-key-mode))
 #+END_SRC
 
@@ -950,7 +950,6 @@ I like to have lines of the same length.
  (use-package gitignore-mode)
  #+END_SRC
 
-
 ** COMMENT Ledger
  # #+BEGIN_QUOTE
  # Ledger is a powerful, double-entry accounting system that is accessed from the
@@ -1165,7 +1164,6 @@ I like to have lines of the same length.
              my/org-spectacle-template :empty-lines 1)
          ("esc" "Circo" entry (file+headline "~/org/agenda.org" "cirque"),
              my/org-spectacle-template :empty-lines 1)
-
 
        )))
  #+END_SRC
