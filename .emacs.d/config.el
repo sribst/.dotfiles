@@ -612,7 +612,6 @@
       ("esc" "Circo" entry (file+headline "~/org/agenda.org" "cirque"),
           my/org-spectacle-template :empty-lines 1)
 
-
     )))
 
 (use-package org-contacts
@@ -700,6 +699,8 @@
   (dired-auto-revert-buffer t)
   (dired-dwim-target t)
   (dired-hide-details-hide-symlink-targets nil)
+  (dired-omit-files "^\\...+$")
+  (direh-omit-mode t)
   (dired-listing-switches "-alh")
   (dired-ls-F-marks-symlinks nil)
   (dired-recursive-copies 'always))

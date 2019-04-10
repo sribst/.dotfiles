@@ -521,9 +521,11 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package which-key
     :defer 0.2
-    :delight1
+    :delight
     :config (which-key-mode))
 #+END_SRC
+
+#+RESULTS:
 
 ** Ivy
 
@@ -1396,6 +1398,8 @@ For those who didn't know, GNU Emacs is also a file explorer.
     (dired-auto-revert-buffer t)
     (dired-dwim-target t)
     (dired-hide-details-hide-symlink-targets nil)
+    (dired-omit-files "^\\...+$")
+    (direh-omit-mode t)
     (dired-listing-switches "-alh")
     (dired-ls-F-marks-symlinks nil)
     (dired-recursive-copies 'always))
