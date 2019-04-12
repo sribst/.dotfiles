@@ -355,7 +355,8 @@
                          "/scp:"
                          "/ssh:"
                          "/sudo:"
-                         "/tmp/"))
+                         "/tmp/"
+                         "recentf"))
   (recentf-max-menu-items 15)
   (recentf-max-saved-items 200)
   (recentf-save-file "~/.emacs.d/recentf" )
@@ -500,8 +501,7 @@
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture)
-  :custom
-   (org-use-extra-keys t))
+  :custom (org-use-extra-keys t))
 
 (use-package toc-org
   :after org
@@ -658,18 +658,13 @@
  )
 
 (use-package gnus
-    :bind ("C-x e" . gnus)
-    :custom
-    (gnus-fetch-old-headers t))
-  ;;(use-package nnir
-  ;;  :after gnus
-  ;;  :config
-  ;;  (gnus-save-newsrc-file 'nil)
-  (use-package bbdb
-    :after gnus
-    ;; :custom
-    ;; bbdb/news-auto-create-p t)         ;; doesn't work
-)
+  :bind (("C-x e" . gnus)
+        :map gnus-group-mode-map
+        ("C-c C-f" . gnus-summary-mail-forward))
+  :custom
+  (gnus-fetch-old-headers t))
+(use-package bbdb
+  :after gnus)
 
 (use-package magit
    :defer 0.3
@@ -700,14 +695,13 @@
   (dired-dwim-target t)
   (dired-hide-details-hide-symlink-targets nil)
   (dired-omit-files "^\\...+$")
-  (direh-omit-mode t)
+  (dired-omit-mode t)
   (dired-listing-switches "-alh")
   (dired-ls-F-marks-symlinks nil)
   (dired-recursive-copies 'always))
 
 (use-package dired-x
-  :ensure nil
-  :preface
-  (defun my/dired-revert-after-cmd (command &optional output error)
-    (revert-buffer))
-  :config (advice-add 'dired-smart-shell-command :after #'my/dired-revert-after-cmd))
+  :ensure nil )
+
+(use-package pass
+  :delight "Pass ")

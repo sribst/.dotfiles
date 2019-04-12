@@ -65,9 +65,10 @@
     - [[#journal][Journal]]
     - [[#languages-1][Languages]]
     - [[#other-improvment][Other improvment]]
-  - [[#mail-gnus][Mail (Gnus)]]
-  - [[#git-magit][Git (Magit)]]
-  - [[#file-explorer-dired][File Explorer (Dired)]]
+  - [[#mail-gnus][Mail ==gnus==]]
+  - [[#git-magit][Git ==magit==]]
+  - [[#file-explorer-dired][File Explorer ==dired==]]
+  - [[#password-store-pass][password-store ==pass==]]
 
 * Emacs Initialization
 ** Packages Sources
@@ -689,7 +690,10 @@ Provides fast access to the recent files.
                            "/scp:"
                            "/ssh:"
                            "/sudo:"
-                           "/tmp/"))
+                           "/tmp/"
+                           "recentf"
+                           ".newsrc-dribble"
+                           ))
     (recentf-max-menu-items 15)
     (recentf-max-saved-items 200)
     (recentf-save-file "~/.emacs.d/recentf" )
@@ -953,57 +957,96 @@ I like to have lines of the same length.
  #+END_SRC
 
 ** COMMENT Ledger
- # #+BEGIN_QUOTE
- # Ledger is a powerful, double-entry accounting system that is accessed from the
- # UNIX command-line.
+*** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
+    You need a budged : four simple rule to control you budged
+**** Give Every Dollar a Job
+     As soon as you get money, you’ll decide what it needs to do—whatever is most
+     important to you. Then, instead of deciding to buy something based on your
+    mood, or the big (or small?) pile of money in your checking account, you’ll
+    decide based on a rock-solid plan.
 
- # [[https://github.com/ledger/ledger][John Wiegley]]
- # #+END_QUOTE
+     1. Get some dollars.
+     2. Prioritize those dollars (give ‘em jobs!).
+     3. Follow your plan.
+****  Embrace Your True Expenses
+     Take those large, less-frequent expenses (that usually send you into a financial
+     tailspin) and break them into manageable, monthly “bills.” Good-bye, Financial
+     Crisis Roller Coaster! You just won a free ticket on the Financial Peace
+     Express!
 
- # Before you can use this configuration, make sure you install =ledger= on your
- # operating system.
+     1. Find a big, infrequent expense.
+     2. Create a goal to fund it monthly.
+     3. When that expense arrives, just pay it!
+**** Roll With The Punches
+     When you overspend in a budget category, just adjust. No guilt necessary. If you
+     plan to take the kids to the beach but it’s pouring down rain, do you still go?
+     Of course not! Circumstances change and plans change with them. Your budget is
+     no different. If you overspend in one category, free up money from another
+     category and move along. Remember, you’re the boss!
 
- # Now all we have to do is configure =ledger-mode=:
+     1. Choose a category with overspending.
+     2. Move funds from another category to cover it.
+     3. Move on with your life—no guilt!
+**** Age Your Money
+     With the help of the other three rules, you’ll be more purposeful about your
+     spending, consistently spend less than you earn, and be more than prepared for
+     the future. Eventually, you’ll be able to cover May’s rent with dollars from
+     April. Your money will be at least 30 days old and you’ll wonder how you ever
+     lived without the Four Rules.
 
- # #+BEGIN_SRC emacs-lisp :tangle yes
- #   (use-package ledger-mode
- #     :ensure-system-package (ledger . "trizen -S --noconfirm ledger")
- #     :mode ("\\.dat\\'"
- #            "\\.ledger\\'")
- #     :bind (:map ledger-mode-map
- #                 ("C-x C-s" . my/ledger-save))
- #     :hook (ledger-mode . ledger-flymake-enable)
- #     :preface
- #     (defun my/ledger-save ()
- #       "Automatically clean the ledger buffer at each save."
- #       (interactive)
- #       (ledger-mode-clean-buffer)
- #       (save-buffer))
- #     :custom
- #     (ledger-clear-whole-transactions t)
- #     (ledger-reconcile-default-commodity "EUR")
- #     (ledger-reports
- #      '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
- #        ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
- #        ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
- #        ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
- #        ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
- #        ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
- #        ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
- #        ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
- #        ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
- #      (ledger-report-use-header-line nil)))
+     1. Be purposeful in your spending.
+     2. Consistently spend less than you earn.
+     3. Watch that Age of Money grow!
 
- #      (use-package flycheck-ledger :after ledger-mode)
- # #+END_SRC
 
- # *NOTE:* by default, =ledger= uses the [[ https://xkcd.com/1179/][ISO 8601]] format to write dates, which is the recommended
- # # # format.
+ #+BEGIN_QUOTE
+ Ledger is a powerful, double-entry accounting system that is accessed from the
+ UNIX command-line.
+
+ [[https://github.com/ledger/ledger][John Wiegley]]
+ #+END_QUOTE
+
+ Before you can use this configuration, make sure you install =ledger= on your
+ operating system.
+
+ Now all we have to do is configure =ledger-mode=:
+
+ #+begin_SRC emacs-lisp :tangle yes
+   (use-package ledger-mode
+     :ensure-system-package (ledger . "trizen -S --noconfirm ledger")
+     :mode ("\\.dat\\'" "\\.ledger\\'")
+     :bind (:map ledger-mode-map ("c-x c-s" . my/ledger-save))
+     :hook (ledger-mode . ledger-flymake-enable)
+     :preface
+     (defun my/ledger-save ()
+       "automatically clean the ledger buffer at each save."
+       (interactive)
+       (ledger-mode-clean-buffer)
+       (save-buffer))
+     :custom
+     (ledger-clear-whole-transactions t)
+     (ledger-reconcile-default-commodity "eur")
+     (ledger-reports
+      '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
+        ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
+        ("budget" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
+        ("budget goals" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
+        ("budget obligations" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
+        ("budget debts" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
+        ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
+        ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
+        ("income statement" "%(binary) --invert --real -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
+      (ledger-report-use-header-line nil)))
+
+      (use-package flycheck-ledger :after ledger-mode)
+ #+end_src
+ *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
+ format.
 
 ** Org
 
- One of my favorite modes in GNU Emacs. I mainly use it to organize my life, take
- notes and make my presentations, but you can do lots of things with
+ One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
+ take notes and make my presentations, but you can do lots of things with
  it. =org-mode= it's like the sky, without limits.
 
  #+BEGIN_QUOTE
@@ -1021,8 +1064,7 @@ I like to have lines of the same length.
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
       ("C-c c" . org-capture)
-     :custom
-      (org-use-extra-keys t))
+     :custom (org-use-extra-keys t))
  #+END_SRC
 *** Table of Content
  If like me, you're tired of manually updating your tables of contents, =toc-org=
@@ -1323,23 +1365,18 @@ I like to have lines of the same length.
 
  #+END_SRC
 
-** Mail (Gnus)
+** Mail ==gnus==
 #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package gnus
-      :bind ("C-x e" . gnus)
+      :bind (("C-x e" . gnus)
+            :map gnus-group-mode-map
+            ("C-c C-f" . gnus-summary-mail-forward))
       :custom
       (gnus-fetch-old-headers t))
-    ;;(use-package nnir
-    ;;  :after gnus
-    ;;  :config
-    ;;  (gnus-save-newsrc-file 'nil)
     (use-package bbdb
-      :after gnus
-      ;; :custom
-      ;; bbdb/news-auto-create-p t)         ;; doesn't work
-  )
+      :after gnus)
 #+END_SRC
-** Git (Magit)
+** Git ==magit==
 
 It is quite common to work on Git repositories, so it is important to have a
 configuration that we like.
@@ -1387,9 +1424,11 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package git-timemachine :defer 1 :delight)
 #+END_SRC
-** File Explorer (Dired)
-
-For those who didn't know, GNU Emacs is also a file explorer.
+** File Explorer ==dired==
+   Dired is a major mode for exploring file
+   dired-x is a minor that brings a lot to dired like hidding
+   - uninteresting file
+   - guessing which command to call...
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dired
     :ensure nil
@@ -1399,15 +1438,17 @@ For those who didn't know, GNU Emacs is also a file explorer.
     (dired-dwim-target t)
     (dired-hide-details-hide-symlink-targets nil)
     (dired-omit-files "^\\...+$")
-    (direh-omit-mode t)
+    (dired-omit-mode t)
     (dired-listing-switches "-alh")
     (dired-ls-F-marks-symlinks nil)
     (dired-recursive-copies 'always))
 
   (use-package dired-x
-    :ensure nil
-    :preface
-    (defun my/dired-revert-after-cmd (command &optional output error)
-      (revert-buffer))
-    :config (advice-add 'dired-smart-shell-command :after #'my/dired-revert-after-cmd))
+    :ensure nil )
+#+END_SRC
+** password-store ==pass==
+   Pass helps me to be a bit more secure on my password management
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package pass
+    :delight "Pass ")
 #+END_SRC

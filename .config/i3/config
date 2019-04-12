@@ -230,6 +230,6 @@ exec --no-startup-id skypeforlinux
 exec --no-startup-id evolution
 exec --no-startup-id dropbox start
 exec --no-startup-id eclipse
-exec --no-startup-id i3-msg workspace $ws3 ; emacs -f gnus; workspace $ws1
+exec --no-startup-id i3-msg workspace $ws3 ; emacs
 
 exec_always --no-startup-id apodFetch -r; feh --no-fehbg --bg-center ~/.config/apod/apod.png ~/.config/apod/apod.png
