@@ -207,7 +207,6 @@ bindsym XF86AudioMicMute     exec amixer set Capture toggle
 bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
-
 # Lock screen
 bindsym $mod+twosuperior exec --no-startup-id i3lock
 
@@ -228,7 +227,6 @@ exec --no-startup-id firefox
 exec --no-startup-id slack
 exec --no-startup-id skypeforlinux
 exec --no-startup-id evolution
-exec --no-startup-id dropbox start
 exec --no-startup-id eclipse
 exec --no-startup-id i3-msg workspace $ws3 ; emacs
 
