@@ -356,7 +356,9 @@
                          "/ssh:"
                          "/sudo:"
                          "/tmp/"
-                         "recentf"))
+                         "recentf"
+                         ".newsrc-dribble"
+                         ))
   (recentf-max-menu-items 15)
   (recentf-max-saved-items 200)
   (recentf-save-file "~/.emacs.d/recentf" )
@@ -556,6 +558,7 @@
             (or (bolp) (insert "\n"))
             (insert "* " hd "\n")
             (beginning-of-line 0))))
+
   (defvar my/org-people-template "** %^{Nombre} %^{Apellido}%?
 :PROPERTIES:
 :Nombre:        %\\1
@@ -582,16 +585,27 @@
 :Pais:          %^{Pais}
 :Codigo postal: %^{Codigo postal}
 :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-:END:"
+:END: "
 )
 
-(defvar my/org-spectacle-template "** %^{Nombre}
+(defvar my/org-espectaculo-template "*** %\\1
 :PROPERTIES:
-:Nombre:    %\\1
-:Lugar: %^{Lugar}
-:Con:     %^{Con}
-:Cuando:    %^{Cuando}t
-:END:"
+:nombre:   %^{Nombre}
+:tipo:     %^{tipo}p
+:lugar:    %^{Lugar}
+:con:      %^{Con}
+:cuando:   %^{Cuando}t
+:END: "
+)
+
+(defvar my/org-transporte-template "** %\\1 -> %\\2
+:PROPERTIES:
+:de:       %^{de}
+:a:        %^{a}
+:tipo:     %^{tipo}p
+:con:      %^{Con}
+:cuando:   %^{Cuando}t
+:END: "
 )
 
 :custom
@@ -602,16 +616,10 @@
    ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
         my/org-people-template :empty-lines 1)
 ("e" "Evento")
-   ("ec" "Concert" entry (file+headline "~/org/agenda.org" "concert"),
-        my/org-spectacle-template :empty-lines 1)
-   ("es" "Spectacle")
-      ("est" "Theatro" entry (file+headline "~/org/agenda.org" "théâtre"),
-          my/org-spectacle-template :empty-lines 1)
-      ("esd" "Danse" entry (file+headline "~/org/agenda.org" "danse"),
-          my/org-spectacle-template :empty-lines 1)
-      ("esc" "Circo" entry (file+headline "~/org/agenda.org" "cirque"),
-          my/org-spectacle-template :empty-lines 1)
-
+   ("es" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
+        my/org-espectaculo-template :empty-lines 1)
+("t" "Transporte" entry (file+headline "~/org/diario.org" "Transporte"),
+        my/org-transporte-template :empty-lines 1)
     )))
 
 (use-package org-contacts
