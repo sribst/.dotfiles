@@ -1154,10 +1154,10 @@ I like to have lines of the same length.
                (insert "* " hd "\n")
                (beginning-of-line 0))))
 
-     (defvar my/org-people-template "** %^{Nombre} %^{Apellido}%?
+     (defvar my/org-people-template "** %\\1 %\\2
    :PROPERTIES:
-   :Nombre:        %\\1
-   :Apellido:      %\\2
+   :Nombre:        %^{Nombre}
+   :Apellido:      %^{Apellido}%?
    :Compleanos:    %^{Fecha de nacimiento}u
    :Telefono:      %^{Telefono}
    :Correo:        %^{Correo}
@@ -1170,9 +1170,9 @@ I like to have lines of the same length.
    :END:"
    )
 
-   (defvar my/org-adress-template "** %^{Nombre}
+   (defvar my/org-adress-template "** %\\1
    :PROPERTIES:
-   :Nombre:        %\\1
+   :Nombre:        %^{Nombre}
    :Telefono:      %^{Telefono}
    :Correo:        %^{Correo}
    :Direccion:     %^{Direccion}
