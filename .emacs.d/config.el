@@ -512,28 +512,34 @@
 (use-package org-indent :after org :ensure nil :delight)
 
 (use-package org-agenda
-  :ensure nil
-  :after org
-  :custom
-  (org-directory "~/org")
-  (org-agenda-files '("~/org/")
-  (org-agenda-dim-blocked-tasks t)
-  (org-agenda-inhibit-startup t)
-  (org-agenda-show-log t)
-  (org-agenda-skip-deadline-if-done t)
-  (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-  (org-agenda-skip-scheduled-if-done t)
-  (org-agenda-span 2)
-  ;; (org-agenda-start-on-weekday 6)
-  (org-agenda-sticky nil)
-  (org-agenda-tags-column -100)
-  (org-agenda-time-grid '((daily today require-timed)))
-  (org-agenda-use-tag-inheritance t)
-  ;; (org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS")
-  (org-enforce-todo-dependencies t)
-  (org-habit-graph-column 80)
-  (org-habit-show-habits-only-for-today nil)
-  (org-track-ordered-property-with-tag t)))
+   :ensure nil
+   :after org
+   :custom
+   (org-directory "~/org")
+   (org-agenda-files '("~/org/")
+   (org-agenda-dim-blocked-tasks t)
+   (org-agenda-inhibit-startup t)
+   (org-agenda-show-log t)
+   (org-agenda-skip-deadline-if-done t)
+   (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+   (org-agenda-skip-scheduled-if-done t)
+   (org-agenda-span 2)
+   (org-agenda-sticky nil)
+   (org-agenda-tags-column -100)
+   (org-agenda-time-grid '((daily today require-timed)))
+   (org-agenda-use-tag-inheritance t)
+   (org-enforce-todo-dependencies t)
+   (org-habit-graph-column 80)
+   (org-habit-show-habits-only-for-today nil)
+   (org-track-ordered-property-with-tag t)))
+
+(use-package calfw
+   :after org-agenda)
+(use-package calfw-org
+   :after calfw
+   :bind ("C-c z" . cfw:open-org-calendar)
+   :custom
+   cfw:org-overwrite-default-keybinding t)
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
@@ -598,6 +604,15 @@
 :END: "
 )
 
+(defvar my/org-personal-template "*** %\\1
+:PROPERTIES:
+:nombre:   %^{Nombre}
+:lugar:    %^{Lugar}
+:con:      %^{Con}
+:cuando:   %^{Cuando}t
+:END: "
+)
+
 (defvar my/org-transporte-template "** %\\1 -> %\\2
 :PROPERTIES:
 :de:       %^{de}
@@ -606,6 +621,34 @@
 :con:      %^{Con}
 :cuando:   %^{Cuando}t
 :END: "
+)
+
+(defvar my/org-ida-vuelta-template "** %\\1 -> %\\2
+:PROPERTIES:
+:de:       %^{de}
+:a:        %^{a}
+:tipo:     %^{tipo}p
+:con:      %^{Con}
+:cuando:   %^{Cuando}t
+:END:
+** %\\2 -> %\\1
+:PROPERTIES:
+:de:       %\\2
+:a:        %\\1
+:tipo:     %^{tipo}p
+:con:      %^{Con}
+:cuando:   %^{Cuando}t
+:END: "
+)
+
+(defvar my/org-administrativo-template "** %^{Que}
+SCHEDULED:   %^{Programado}t
+DEADLINE:   %^{Fecha tope}t
+:PROPERTIES:
+:cuando:   %^{Cuando}t
+:END:
+
+"
 )
 
 :custom
@@ -618,8 +661,16 @@
 ("e" "Evento")
    ("es" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
         my/org-espectaculo-template :empty-lines 1)
-("t" "Transporte" entry (file+headline "~/org/diario.org" "Transporte"),
+   ("ep" "Personal" entry (file+headline "~/org/diario.org" "Personal"),
+        my/org-personal-template :empty-lines 1)
+("v" "Viaje")
+   ("vi" "Viaje individual" entry (file+headline "~/org/diario.org" "Transporte"),
         my/org-transporte-template :empty-lines 1)
+   ("vv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
+        my/org-ida-vuelta-template :empty-lines 1)
+("a" "Administrativo" entry (file+headline "~/org/diario.org" "Administrativo"),
+        my/org-administrativo-template :empty-lines 1)
+
     )))
 
 (use-package org-contacts
