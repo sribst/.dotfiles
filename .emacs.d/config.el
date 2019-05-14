@@ -491,6 +491,9 @@
     :mode ("\\.gradle\\'")
     )
 
+(use-package typescript-mode
+   :mode ("\\.ts\\'"))
+
 (use-package yaml-mode
     :mode ("\\.yml\\'"))
 
@@ -503,7 +506,10 @@
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture)
-  :custom (org-use-extra-keys t))
+  :custom
+     (org-use-extra-keys t)
+     (org-catch-invisible-edits 'show-and-error)
+     (org-cycle-separator-lines 0))
 
 (use-package toc-org
   :after org
@@ -533,8 +539,8 @@
    (org-habit-show-habits-only-for-today nil)
    (org-track-ordered-property-with-tag t)))
 
-(use-package calfw
-   :after org-agenda)
+(use-package calfw :after org-agenda)
+
 (use-package calfw-org
    :after calfw
    :bind ("C-c z" . cfw:open-org-calendar)
@@ -641,15 +647,18 @@
 :END: "
 )
 
-(defvar my/org-administrativo-template "** %^{Que}
-SCHEDULED:   %^{Programado}t
+(defvar my/org-administrativod-template "** %^{Que}
 DEADLINE:   %^{Fecha tope}t
+")
+
+(defvar my/org-administrativos-template "** %^{Que}
+SCHEDULED:   %^{Programado}t
+")
+
+(defvar my/org-administrativo-template  "** %^{Que}
 :PROPERTIES:
 :cuando:   %^{Cuando}t
-:END:
-
-"
-)
+:END:")
 
 :custom
 (org-capture-templates `(
@@ -668,10 +677,13 @@ DEADLINE:   %^{Fecha tope}t
         my/org-transporte-template :empty-lines 1)
    ("vv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
         my/org-ida-vuelta-template :empty-lines 1)
-("a" "Administrativo" entry (file+headline "~/org/diario.org" "Administrativo"),
+("a" "Administrativo")
+   ("am" "meeting" entry (file+headline "~/org/diario.org" "Administrativo"),
         my/org-administrativo-template :empty-lines 1)
-
-    )))
+   ("as" "scheduled" entry (file+headline "~/org/diario.org" "Administrativo"),
+        my/org-administrativos-template :empty-lines 1)
+   ("ad" "deadline" entry (file+headline "~/org/diario.org" "Administrativo"),
+        my/org-administrativod-template :empty-lines 1))))
 
 (use-package org-contacts
   :ensure nil
@@ -722,8 +734,14 @@ DEADLINE:   %^{Fecha tope}t
         ("C-c C-f" . gnus-summary-mail-forward))
   :custom
   (gnus-fetch-old-headers t))
+
 (use-package bbdb
   :after gnus)
+(use-package bbdb-vcard
+  :after bbdb)
+;; (use-package vdirel
+;;   :custom
+;;   (vdirel-repository ~/Contacts))
 
 (use-package magit
    :defer 0.3

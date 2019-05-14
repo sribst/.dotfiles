@@ -51,6 +51,7 @@
     - [[#coq][COQ]]
     - [[#ocaml][OCaml]]
     - [[#java][Java]]
+    - [[#typescript][Typescript]]
     - [[#yaml][Yaml]]
     - [[#config][config]]
   - [[#org][Org]]
@@ -66,6 +67,7 @@
     - [[#languages-1][Languages]]
     - [[#other-improvment][Other improvment]]
   - [[#mail-gnus][Mail ==gnus==]]
+  - [[#contact-bbdb][Contact ==bbdb==]]
   - [[#git-magit][Git ==magit==]]
   - [[#file-explorer-dired][File Explorer ==dired==]]
   - [[#password-store-pass][password-store ==pass==]]
@@ -806,6 +808,7 @@ I like to have lines of the same length.
 
 * Major mode
 ** Languages
+   test test
 *** Emacs Lisp
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package elisp-mode :ensure nil :delight "ξ ")
@@ -944,6 +947,12 @@ I like to have lines of the same length.
 
   #+END_SRC
 
+*** Typescript
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package typescript-mode
+    :mode ("\\.ts\\'"))
+ #+END_SRC
+
 *** Yaml
     Yet another marked langage
  #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1064,11 +1073,14 @@ I like to have lines of the same length.
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
       ("C-c c" . org-capture)
-     :custom (org-use-extra-keys t))
+     :custom
+        (org-use-extra-keys t)
+        (org-catch-invisible-edits 'show-and-error)
+        (org-cycle-separator-lines 0))
  #+END_SRC
 *** Table of Content
- If like me, you're tired of manually updating your tables of contents, =toc-org=
- will maintain a table of contents at the first heading that has a =:TOC:= tag.
+    If like me, you're tired of manually updating your tables of contents, =toc-org=
+    will maintain a table of contents at the first heading that has a =:TOC:= tag.
 
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package toc-org
@@ -1115,8 +1127,8 @@ I like to have lines of the same length.
      (org-habit-show-habits-only-for-today nil)
      (org-track-ordered-property-with-tag t)))
 
-  (use-package calfw
-     :after org-agenda)
+  (use-package calfw :after org-agenda)
+
   (use-package calfw-org
      :after calfw
      :bind ("C-c z" . cfw:open-org-calendar)
@@ -1227,7 +1239,7 @@ I like to have lines of the same length.
    :con:      %^{Con}
    :cuando:   %^{Cuando}t
    :END:
-   ** %\\2 -> %\\1
+   ,** %\\2 -> %\\1
    :PROPERTIES:
    :de:       %\\2
    :a:        %\\1
@@ -1237,15 +1249,18 @@ I like to have lines of the same length.
    :END: "
    )
 
-   (defvar my/org-administrativo-template "** %^{Que}
-   SCHEDULED:   %^{Programado}t
+   (defvar my/org-administrativod-template "** %^{Que}
    DEADLINE:   %^{Fecha tope}t
+   ")
+
+   (defvar my/org-administrativos-template "** %^{Que}
+   SCHEDULED:   %^{Programado}t
+   ")
+
+   (defvar my/org-administrativo-template  "** %^{Que}
    :PROPERTIES:
    :cuando:   %^{Cuando}t
-   :END:
-
-   "
-   )
+   :END:")
 
    :custom
    (org-capture-templates `(
@@ -1264,10 +1279,13 @@ I like to have lines of the same length.
            my/org-transporte-template :empty-lines 1)
       ("vv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
            my/org-ida-vuelta-template :empty-lines 1)
-   ("a" "Administrativo" entry (file+headline "~/org/diario.org" "Administrativo"),
+   ("a" "Administrativo")
+      ("am" "meeting" entry (file+headline "~/org/diario.org" "Administrativo"),
            my/org-administrativo-template :empty-lines 1)
-
-       )))
+      ("as" "scheduled" entry (file+headline "~/org/diario.org" "Administrativo"),
+           my/org-administrativos-template :empty-lines 1)
+      ("ad" "deadline" entry (file+headline "~/org/diario.org" "Administrativo"),
+           my/org-administrativod-template :empty-lines 1))))
 
  #+END_SRC
 
@@ -1308,11 +1326,9 @@ I like to have lines of the same length.
  # # #+END_SRC
 
 *** Contacts
-
- The best solution to maintain your contacts. I tend to use =org-contacts= to
- remember their birthdays so I can be the first to wish them that. Be careful
- that to install it, this one is available with =org-plus-contrib=.
-
+    The best solution to maintain your contacts. I tend to use =org-contacts= to
+    remember their birthdays so I can be the first to wish them that. Be careful
+    that to install it, this one is available with =org-plus-contrib=.
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org-contacts
      :ensure nil
@@ -1432,9 +1448,20 @@ I like to have lines of the same length.
             ("C-c C-f" . gnus-summary-mail-forward))
       :custom
       (gnus-fetch-old-headers t))
-    (use-package bbdb
-      :after gnus)
 #+END_SRC
+
+** Contact ==bbdb==
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package bbdb
+    :after gnus)
+  (use-package bbdb-vcard
+    :after bbdb)
+  ;; (use-package vdirel
+  ;;   :custom
+  ;;   (vdirel-repository ~/Contacts))
+#+END_SRC
+
 ** Git ==magit==
 
 It is quite common to work on Git repositories, so it is important to have a

@@ -119,6 +119,8 @@
               "Administrativo"
               "Administrativo/Caf"
               "Administrativo/Contrato/"
+              "Administrativo/AirLiquide/"
+              "Administrativo/Banco/"
               "Compra"
               "Compra/Google play"
               "Apartamento"
