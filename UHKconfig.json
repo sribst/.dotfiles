@@ -178,8 +178,8 @@
                 },
                 {
                   "keyActionType": "switchLayer",
-                  "layer": "mod",
-                  "switchLayerMode": "holdAndDoubleTapToggle"
+                  "layer": "mouse",
+                  "switchLayerMode": "toggle"
                 },
                 {
                   "keyActionType": "keystroke",
@@ -275,7 +275,7 @@
                 {
                   "keyActionType": "switchLayer",
                   "layer": "mouse",
-                  "switchLayerMode": "holdAndDoubleTapToggle"
+                  "switchLayerMode": "hold"
                 },
                 {
                   "keyActionType": "keystroke",
@@ -359,9 +359,9 @@
                   "modifierMask": 4
                 },
                 {
-                  "keyActionType": "keystroke",
-                  "type": "basic",
-                  "scancode": 44
+                  "keyActionType": "switchLayer",
+                  "layer": "mod",
+                  "switchLayerMode": "toggle"
                 },
                 {
                   "keyActionType": "keystroke",
@@ -481,11 +481,6 @@
                 },
                 null,
                 null,
-                {
-                  "keyActionType": "switchLayer",
-                  "layer": "mod",
-                  "switchLayerMode": "holdAndDoubleTapToggle"
-                },
                 null,
                 null,
                 null,
@@ -493,7 +488,8 @@
                   "keyActionType": "keystroke",
                   "type": "basic",
                   "modifierMask": 16
-                }
+                },
+                null
               ]
             },
             {
@@ -587,11 +583,23 @@
                 null,
                 null,
                 null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "modifierMask": 1
+                },
                 null,
                 null,
-                null,
-                null,
-                null,
+                {
+                  "keyActionType": "switchLayer",
+                  "layer": "mod",
+                  "switchLayerMode": "toggle"
+                },
+                {
+                  "keyActionType": "switchLayer",
+                  "layer": "mod",
+                  "switchLayerMode": "holdAndDoubleTapToggle"
+                },
                 null
               ]
             }
@@ -814,8 +822,9 @@
                   "mouseAction": "rightClick"
                 },
                 {
-                  "keyActionType": "mouse",
-                  "mouseAction": "middleClick"
+                  "keyActionType": "switchLayer",
+                  "layer": "mouse",
+                  "switchLayerMode": "toggle"
                 },
                 null,
                 null,
@@ -870,14 +879,24 @@
                 null,
                 null,
                 null,
-                null,
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 43,
+                  "modifierMask": 3
+                },
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 43,
+                  "modifierMask": 1
+                },
                 null,
                 null,
                 {
                   "keyActionType": "switchLayer",
                   "layer": "mouse",
-                  "switchLayerMode": "holdAndDoubleTapToggle"
+                  "switchLayerMode": "hold"
                 },
                 null,
                 null,
@@ -910,7 +929,10 @@
                 },
                 null,
                 null,
-                null,
+                {
+                  "keyActionType": "mouse",
+                  "mouseAction": "middleClick"
+                },
                 {
                   "keyActionType": "mouse",
                   "mouseAction": "leftClick"

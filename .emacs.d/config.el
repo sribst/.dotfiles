@@ -647,15 +647,15 @@
 :END: "
 )
 
-(defvar my/org-administrativod-template "** %^{Que}
+(defvar my/org-administrativod-template "** TODO %^{Que}
 DEADLINE:   %^{Fecha tope}t
 ")
 
-(defvar my/org-administrativos-template "** %^{Que}
+(defvar my/org-administrativos-template "** TODO %^{Que}
 SCHEDULED:   %^{Programado}t
 ")
 
-(defvar my/org-administrativo-template  "** %^{Que}
+(defvar my/org-administrativo-template  "** TODO %^{Que}
 :PROPERTIES:
 :cuando:   %^{Cuando}t
 :END:")
