@@ -537,7 +537,13 @@
    (org-enforce-todo-dependencies t)
    (org-habit-graph-column 80)
    (org-habit-show-habits-only-for-today nil)
-   (org-track-ordered-property-with-tag t)))
+   (org-track-ordered-property-with-tag t))
+   (org-agenda-custom-commands
+     (quote
+     (("z" "Clean agenda" agenda ""
+     ((org-agenda-tag-filter-preset
+       (quote  ("-volim" "-hidden")))))))))
+
 
 (use-package calfw :after org-agenda)
 
