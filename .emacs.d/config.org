@@ -911,16 +911,17 @@ I like to have lines of the same length.
 ;; (require 'proof-site "~/.emacs.d/lisp/PG/generic/proof-site")
  #+END_SRC
 
-*** OCaml
+*** OCamla
  #+BEGIN_SRC emacs-lisp :tangle yes
-;; (setq utop-command "opam config exec -- utop -emacs")
-;; (add-to-list 'load-path
-;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-;; (require 'ocp-indent)
-   (setq utop-command "opam config exec -- utop -emacs")
-   (add-to-list 'load-path
-                "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-   (require 'ocp-indent)
+   ;; (setq utop-command "opam config exec -- utop -emacs")
+   ;; (add-to-list 'load-path
+   ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
+   ;; (require 'ocp-indent)
+      (setq utop-command "opam config exec -- utop -emacs")
+      (add-to-list 'load-path
+                   "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
+       ;; (use-package ocp-indent
+      ;; after:)
 #+END_SRC
 *** Java
 **** Antlr

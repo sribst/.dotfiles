@@ -478,7 +478,8 @@
    (setq utop-command "opam config exec -- utop -emacs")
    (add-to-list 'load-path
                 "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-   (require 'ocp-indent)
+    ;; (use-package ocp-indent
+   ;; after:)
 
 (use-package antlr-mode
   :mode ("\\.g4\\'"))

@@ -26,7 +26,6 @@
 ;; but delete all the mails on server is scary
 (setq pop3-leave-mail-on-server t)
 
-
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-default-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587
@@ -121,6 +120,7 @@
               "Administrativo/Contrato/"
               "Administrativo/AirLiquide/"
               "Administrativo/Banco/"
+              "Administrativo/Impot/"
               "Compra"
               "Compra/Google play"
               "Apartamento"
