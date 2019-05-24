@@ -223,6 +223,7 @@ assign [class="^Evolution"] → $ws4
 exec --no-startup-id xrandr-start
 
 # start firefox ranger emacs urxvt
+exec --no-startup-id xrandr-start
 exec --no-startup-id firefox
 exec --no-startup-id slack
 exec --no-startup-id skypeforlinux

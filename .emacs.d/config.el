@@ -52,11 +52,10 @@
 (when (file-exists-p custom-file)
   (load custom-file t))
 
-(when window-system
-  (menu-bar-mode -1)                              ; Disable the menu bar
-  (scroll-bar-mode -1)                            ; Disable the scroll bar
-  (tool-bar-mode -1)                              ; Disable the tool bar
-  (tooltip-mode -1))                              ; Disable the tooltips
+(setq menu-bar-mode nil)                              ; Disable the menu bar
+(setq scroll-bar-mode nil)                            ; Disable the scroll bar
+(setq tool-bar-mode nil)                              ; Disable the tool bar
+(setq tooltip-mode nil)                              ; Disable the tooltips
 
 (use-package company
   :defer 0.5
@@ -125,7 +124,8 @@
 (use-package dashboard
   :preface
   :init
-  (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+  ;; (add-hook 'after-make-frame-functions 'dashboard-refresh-buffer)
+  ;; (add-hook 'after-init-hook 'dashboard-refresh-buffer)
   :custom (dashboard-startup-banner 'logo)
   :config (dashboard-setup-startup-hook))
 

@@ -117,9 +117,8 @@
 ;; message.
 ;; `gnus-thread-ignore-subject' will ignore the subject and
 ;; look at 'In-Reply-To:' and 'References:' headers.
-(setq gnus-thread-hide-subtree t)
+;; (setq gnus-thread-hide-subtree t)
 (setq gnus-thread-ignore-subject t)
-
 
 (setq user-mail-address "sylvain.ribstein@gmail.com"
       user-full-name "Sylvain Ribstein")
@@ -134,7 +133,7 @@
 (eval-after-load 'gnus-topic
   '(progn
      (setq gnus-message-archive-group
-           '((format-time-string "sent.%Y")))
+           '((format-time-string " sent.%Y")))
      (setq gnus-server-alist
            '(("Archivo" nnfolder "archive"
               (nnfolder-directory "~/Mail/archive")
@@ -194,12 +193,11 @@
               "Miscelaneo"
               )
              ("Misc"; the key of topic
-              "nnset.2019"
+              "sent.2019"
               "nndraft:drafts"
               "[Gmail]"
               "[Gmail]/Enviados"
               "[Gmail]/Borradores"
-              "nnfolder+archive:sent.2019"
               )
              ("Junk"; the key of topic
               "[Gmail]/Spam"
