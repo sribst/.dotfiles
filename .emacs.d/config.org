@@ -49,11 +49,14 @@
     - [[#latex][LaTeX]]
     - [[#cobol][Cobol]]
     - [[#coq][COQ]]
-    - [[#ocaml][OCaml]]
+    - [[#ocamla][OCamla]]
     - [[#java][Java]]
     - [[#typescript][Typescript]]
     - [[#yaml][Yaml]]
     - [[#config][config]]
+  -  [[#ledger][Ledger]]
+    - [[#ynab][YNAB]]
+    - [[#ledger-capture][ledger capture]]
   - [[#org][Org]]
     - [[#table-of-content][Table of Content]]
     - [[#cleaner-indentation][cleaner indentation]]
@@ -966,7 +969,7 @@ I like to have lines of the same length.
  (use-package gitignore-mode)
  #+END_SRC
 
-** COMMENT Ledger
+**  Ledger
 *** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
     You need a budged : four simple rule to control you budged
 **** Give Every Dollar a Job
@@ -1012,7 +1015,7 @@ I like to have lines of the same length.
  #+BEGIN_QUOTE
  Ledger is a powerful, double-entry accounting system that is accessed from the
  UNIX command-line.
-
+*** ledger capture
  [[https://github.com/ledger/ledger][John Wiegley]]
  #+END_QUOTE
 
@@ -1023,7 +1026,6 @@ I like to have lines of the same length.
 
  #+begin_SRC emacs-lisp :tangle yes
    (use-package ledger-mode
-     :ensure-system-package (ledger . "trizen -S --noconfirm ledger")
      :mode ("\\.dat\\'" "\\.ledger\\'")
      :bind (:map ledger-mode-map ("c-x c-s" . my/ledger-save))
      :hook (ledger-mode . ledger-flymake-enable)
@@ -1455,6 +1457,8 @@ I like to have lines of the same length.
             ("C-c C-f" . gnus-summary-mail-forward))
       :custom
       (gnus-fetch-old-headers t))
+    (use-package w3m
+      :after gnus)
 #+END_SRC
 
 ** Contact ==bbdb==

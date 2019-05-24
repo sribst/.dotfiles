@@ -21,16 +21,76 @@
            (nnmail-expiry-target "nnimap+outlook:Junk")
            (nnmail-expiry-wait immediate))))
 
+(setq
+ gnus-secondary-select-methods
+ '((nnimap "movesol"
+           (nnimap-address "mail.movesol.com")
+           (nnimap-server-port "imaps")
+           (nnimap-stream ssl)
+           (nnir-search-engine imap)
+           (nnmail-expiry-target "nnimap+movesol:Trash")
+           (nnmail-expiry-wait immediate))))
+
+;; (setq message-send-mail-function 'smtpmail-send-it
+;;       smtpmail-default-smtp-server "smtp.movesol.com"
+;;       smtpmail-smtp-service 587
+;;       smtpmail-local-domain "homepc")
+;; (setq message-send-mail-function 'smtpmail-send-it
+;;       smtpmail-default-smtp-server "smtp.gmail.com"
+;;       smtpmail-smtp-service 587
+;;       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
+;;       smtpmail-local-domain "homepc")
+
+;;To set the yahoo smtp details
+(defun setOutlook ()
+  (interactive)
+  (message "from outlook")
+  (setq user-mail-address "sribst_baroud@outlook.com")
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-auth-credentials '(("smtp.office365.com" 587 "sribst_baroud@outlook.om" nil))
+        smtpmail-default-smtp-server "smtp.office365.com"
+        smtpmail-smtp-server "smtp.office365.com"
+        smtpmail-smtp-service 587
+        smtpmail-local-domain "outlook.com"))
+
+;;To set gmail smtp details
+(defun setGmail ()
+  (interactive)
+  (message "from gmail")
+  (setq user-mail-address "sylvain.ribstein@gmail.com")
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+        smtpmail-auth-credentials '(("smtp.gmail.com" 587 "sylvain.ribstein@gmail.com" nil))
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587
+        smtpmail-local-domain "gmail.com"))
+
+;;To set gmail smtp details
+(defun setMovesol ()
+  (interactive)
+  (message "from movesol")
+  (setq user-mail-address "sylvain.ribstein@movesol.com")
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-starttls-credentials '(("mail.movesol.com" 587 nil nil))
+        smtpmail-auth-credentials '(("mail.movesol.com" 587 "sylvain.ribstein@movesol.com" nil))
+        smtpmail-default-smtp-server "mail.movesol.com"
+        smtpmail-smtp-server "mail.movesol.com"
+        smtpmail-smtp-service 587
+        smtpmail-local-domain "movesol.com"))
+
+;;Select automatically while replying
+;;(add-hook 'message-mode-hook 'showMsg)
+(add-hook 'message-mode-hook
+          '(lambda ()
+             (cond ((string-match "outlook" gnus-newsgroup-name) (setOutlook))
+                   ((string-match "movesol" gnus-newsgroup-name) (setMovesol))
+                   (t (setGmail)))))
+
 ;; gnus+davmail bug, so I have to use pop3 for DavMail
 ;; http://permalink.gmane.org/gmane.emacs.gnus.general/83301
 ;; but delete all the mails on server is scary
 (setq pop3-leave-mail-on-server t)
-
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587
-      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
-      smtpmail-local-domain "homepc")
 
 (setq gnus-thread-sort-functions
       '(gnus-thread-sort-by-most-recent-date
@@ -66,9 +126,7 @@
 
 (setq mm-text-html-renderer 'w3m) ; OPTIONAL
 
-
 (setq gnus-use-correct-string-widths nil)
-
 
 (setq gnus-summary-line-format "%U%R%z %4i %([%4L: %-25,25f]%) %I%s\n")
 (setq gnus-summary-same-subject "-||-")
@@ -97,6 +155,7 @@
               (("Misc" invisible ))
               (("Junk" invisible))
               )
+             (("Move" visible))
              (("Outlook" invisible))
              ))
 
@@ -168,4 +227,10 @@
               "nnimap+outlook:Junk"
               "nnimap+outlook:Corbeille"
               "nnimap+outlook:Deleted"
+              )
+             ("Move"
+              "nnimap+movesol:INBOX"
+              "nnimap+movesol:Brouillons"
+              "nnimap+movesol:Trash"
+              "nnimap+movesol:Send"
               )))))

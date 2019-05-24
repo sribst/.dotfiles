@@ -9,7 +9,7 @@ ZSHDDIR="${HOME}/.config/zsh.d"
 HISTFILE="${ZDOTDIR}/.zsh_history"
 HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
-export EDITOR="/usr/bin/emacs"
+export EDITOR="/usr/bin/emacsclient"
 export TMP="$HOME/tmp"
 export TEMP="$TMP"
 export TMPDIR="$TMP"
@@ -385,7 +385,7 @@ alias ln='ln -v'
 alias chmod="chmod -c"
 alias chown="chown -c"
 
-alias e="emacs"
+alias e="emacsclient -c"
 
 alias sudo='sudo'
 alias suspend='systemctl suspend'
@@ -396,7 +396,7 @@ alias reboot='systemctl reboot'
 alias meteo='curl wttr.in/Rome?lang=it'
 alias moon='curl wttr.in/moon'
 alias clock='tty-clock -c -C 1 -B -s -x'
-alias email='emacs gnus'
+alias email='emacsclient -c --eval "(gnus)"'
 
 if command -v colordiff > /dev/null 2>&1; then
     alias diff="colordiff -Nuar"
