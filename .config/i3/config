@@ -208,10 +208,10 @@ bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # Lock screen
-bindsym $mod+twosuperior exec --no-startup-id i3lock
+bindsym $mod+twosuperior exec --no-startup-id i3lock-fancy-rapid 0 0 -u -p win
 
 #bepo
-bindsym $mod+Menu exec --no-startup-id bepo_switch
+# bindsym $mod+Menu exec --no-startup-id bepo_switch
 
 assign [class="^Eclipse"]   → $ws1
 assign [class="^Firefox"]   → $ws2
