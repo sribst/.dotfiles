@@ -9,6 +9,7 @@ ZSHDDIR="${HOME}/.config/zsh.d"
 HISTFILE="${ZDOTDIR}/.zsh_history"
 HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
+
 export EDITOR="/usr/bin/emacsclient"
 export TMP="$HOME/tmp"
 export TEMP="$TMP"
@@ -20,7 +21,7 @@ if [ ! -d "${TMP}" ]; then mkdir "${TMP}"; fi
 if ! [[ "${PATH}" =~ "^${HOME}/bin" ]]; then
     export PATH="${HOME}/bin:${PATH}"
 fi
-export PATH="${HOME}/miniconda2/bin:${PATH}"
+
 
 # Not all servers have terminfo for rxvt-256color. :<
 if [ "${TERM}" = 'rxvt-256color' ] && ! [ -f '/usr/share/terminfo/r/rxvt-256color' ] && ! [ -f '/lib/terminfo/r/rxvt-256color' ] && ! [ -f "${HOME}/.terminfo/r/rxvt-256color" ]; then
@@ -42,57 +43,10 @@ cyan='\e[0;36m'
 CYAN='\e[1;36m'
 NC='\e[0m'
 
-# red=xrdb.color1
-# RED=xrdb.color
-# green=xrdb.color
-# GREEN=xrdb.color
-# yellow=xrdb.color
-# YELLOW=xrdb.color
-# blue=xrdb.color
-# BLUE=xrdb.color
-# purple=xrdb.color
-# PURPLE=xrdb.color
-# cyan=xrdb.color
-# CYAN=xrdb.color
-# NC='\e[0m'
-
 # Functions
 if [ -f '/etc/profile.d/prll.sh' ]; then
     . "/etc/profile.d/prll.sh"
 fi
-
-# run_under_tmux() {
-#     # Run $1 under session or attach if such session already exist.
-#     # $2 is optional path, if no specified, will use $1 from $PATH.
-#     # If you need to pass extra variables, use $2 for it as in example below..
-#     # Example usage:
-#     # 	torrent() { run_under_tmux 'rtorrent' '/usr/local/rtorrent-git/bin/rtorrent'; }
-#     #	mutt() { run_under_tmux 'mutt'; }
-#     #	irc() { run_under_tmux 'irssi' "TERM='screen' command irssi"; }
-
-
-#     # There is a bug in linux's libevent...
-#     # export EVENT_NOEPOLL=1
-
-#     command -v tmux >/dev/null 2>&1 || return 1
-
-#     if [ -z "$1" ]; then return 1; fi
-#     local name="$1"
-#     if [ -n "$2" ]; then
-# 	local file_path="$2"
-#     else
-# 	local file_path="command ${name}"
-#     fi
-
-#     if tmux has-session -t "${name}" 2>/dev/null; then
-# 	tmux attach -d -t "${name}"
-#     else
-# 	tmux new-session -s "${name}" "${file_path}" \; set-option status \; set set-titles-string "${name} (tmux@${HOST})"
-#     fi
-# }
-
-# t() { run_under_tmux rtorrent; }
-# irc() { run_under_tmux irssi "TERM='screen' command irssi"; }
 
 over_ssh() {
     if [ -n "${SSH_CLIENT}" ]; then
@@ -104,56 +58,6 @@ over_ssh() {
 
 reload () {
     exec "${SHELL}" "$@"
-}
-
-confirm() {
-    local answer
-    echo -ne "zsh: sure you want to run '${YELLOW}$@${NC}' [yN]? "
-    read -q answer
-    echo
-    if [[ "${answer}" =~ ^[Yy]$ ]]; then
-	command "${=1}" "${=@:2}"
-    else
-	return 1
-    fi
-}
-
-confirm_wrapper() {
-    if [ "$1" = '--root' ]; then
-	local as_root='true'
-	shift
-    fi
-
-    local runcommand="$1"; shift
-
-    if [ "${as_root}" = 'true' ] && [ "${USER}" != 'root' ]; then
-	runcommand="sudo ${runcommand}"
-    fi
-    confirm "${runcommand}" "$@"
-}
-
-# poweroff() { confirm_wrapper --root $0 "$@"; }
-# reboot() { confirm_wrapper --root $0 "$@"; }
-# hibernate() { confirm_wrapper --root $0 "$@"; }
-
-detox() {
-    if [ "$#" -ge 1 ]; then
-	confirm detox "$@"
-    else
-	command detox "$@"
-    fi
-}
-
-has() {
-    local string="${1}"
-    shift
-    local element=''
-    for element in "$@"; do
-	if [ "${string}" = "${element}" ]; then
-	    return 0
-	fi
-    done
-    return 1
 }
 
 begin_with() {
@@ -362,15 +266,7 @@ setopt hist_ignore_space
 #stty -ixon
 setopt noflowcontrol
 
-# # Fix for tmux on linux.
-# case "$(uname -o)" in
-#     'GNU/Linux')
-# 	export EVENT_NOEPOLL=1
-# 	;;
-# esac
-
 # Aliases
-
 alias l="ls -v"
 alias ll="l -l"
 alias la="l -a"
@@ -385,15 +281,15 @@ alias ln='ln -v'
 alias chmod="chmod -c"
 alias chown="chown -c"
 
-alias e="emacsclient -c"
+alias e="emacsclient"
 
-alias sudo='sudo'
+alias sudo='sudo'               # to have alias within sudo
 alias suspend='systemctl suspend'
 alias poweroff='systemctl poweroff'
 alias halt='systemctl halt'
 alias reboot='systemctl reboot'
 
-alias meteo='curl wttr.in/Rome?lang=it'
+alias meteo='curl wttr.in/Lyon'
 alias moon='curl wttr.in/moon'
 alias clock='tty-clock -c -C 1 -B -s -x'
 alias email='emacsclient -c --eval "(gnus)"'

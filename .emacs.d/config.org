@@ -163,10 +163,10 @@ For a better user experience of GNU Emacs, here are the default values I use.
    I find invasive.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq menu-bar-mode nil)                              ; Disable the menu bar
+  (setq menu-bar-mode   nil)                            ; Disable the menu bar
   (setq scroll-bar-mode nil)                            ; Disable the scroll bar
-  (setq tool-bar-mode nil)                              ; Disable the tool bar
-  (setq tooltip-mode nil)                              ; Disable the tooltips
+  (setq tool-bar-mode   nil)                            ; Disable the tool bar
+  (setq tooltip-mode    nil)                            ; Disable the tooltips
 #+END_SRC
 
 * Advanced Configuration
