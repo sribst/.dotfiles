@@ -89,7 +89,9 @@
     :bind
     (("C-x o" . ace-window)
     ("M-o" . ace-window))
-    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
+    :init
+      (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+      (setq aw-scope 'frame))
     (use-package ibuffer
       :defer 0.2
       :bind ("C-x C-b" . ibuffer))
@@ -120,14 +122,6 @@
           (if this-win-2nd (other-window 1))))))
 
   (global-set-key (kbd "C-x |") 'toggle-window-split)
-
-(use-package dashboard
-  :preface
-  :init
-  ;; (add-hook 'after-make-frame-functions 'dashboard-refresh-buffer)
-  ;; (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-  :custom (dashboard-startup-banner 'logo)
-  :config (dashboard-setup-startup-hook))
 
 (use-package async)
 
@@ -780,7 +774,7 @@ SCHEDULED:   %^{Programado}t
 ;;   (vdirel-repository ~/Contacts))
 
 (use-package magit
-   :defer 0.3
+   ;; :defer 0.3
    :bind ("C-x g" . magit-status)
 )
 (use-package git-commit
@@ -798,7 +792,9 @@ SCHEDULED:   %^{Programado}t
   :delight
   :init (global-git-gutter-mode +1))
 
-(use-package git-timemachine :defer 1 :delight)
+(use-package git-timemachine
+ :defer 1
+ :delight)
 
 (use-package dired
   :ensure nil
@@ -817,4 +813,14 @@ SCHEDULED:   %^{Programado}t
   :ensure nil )
 
 (use-package pass
-  :delight "Pass ")
+  :delight "Pass")
+
+;; (use-package erc
+;;   :commands (erc erc-tls)
+;;   :bind (:map erc-mode-map))
+;; (use-package erc-join
+;;  :after erc
+;;  :custom
+;;  (erc-autojoin-mode 1)
+;;  (setq erc-autojoin-channels-alist
+;;         '(("freenode.net" "#emacs" "#gnus" "#latex" "#freestream"))))

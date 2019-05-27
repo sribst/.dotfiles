@@ -1,7 +1,7 @@
 #+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
 
-* table of content :TOC@3:
+* table of content                                                    :TOC@3:
 - [[#emacs-initialization][Emacs Initialization]]
   - [[#packages-sources][Packages Sources]]
   - [[#use-package][use-package]]
@@ -16,7 +16,6 @@
   - [[#browser-firefox][Browser (Firefox)]]
     - [[#engine-mode][=engine-mode=]]
   - [[#buffers][Buffers]]
-  - [[#dashboard][Dashboard]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#spelling][Spelling]]
     - [[#fly-spell][Fly Spell]]
@@ -54,7 +53,7 @@
     - [[#typescript][Typescript]]
     - [[#yaml][Yaml]]
     - [[#config][config]]
-  -  [[#ledger][Ledger]]
+  - [[#ledger][Ledger]]
     - [[#ynab][YNAB]]
     - [[#ledger-capture][ledger capture]]
   - [[#org][Org]]
@@ -74,6 +73,7 @@
   - [[#git-magit][Git ==magit==]]
   - [[#file-explorer-dired][File Explorer ==dired==]]
   - [[#password-store-pass][password-store ==pass==]]
+  - [[#irc-erc][IRC ==erc==]]
 
 * Emacs Initialization
 ** Packages Sources
@@ -248,7 +248,9 @@ completion candidates.
     :bind
     (("C-x o" . ace-window)
     ("M-o" . ace-window))
-    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
+    :init
+      (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+      (setq aw-scope 'frame))
     (use-package ibuffer
       :defer 0.2
       :bind ("C-x C-b" . ibuffer))
@@ -280,16 +282,17 @@ completion candidates.
 
   (global-set-key (kbd "C-x |") 'toggle-window-split)
 #+END_SRC
-** Dashboard
-Always good to have a dashboard.
+** COMMENT Dashboard
+   Seems to cause problem when used with emacs server
+   Always good to have a dashboard.
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dashboard
-    :preface
-    :init
-    (add-hook 'after-make-frame-functions 'dashboard-refresh-buffer)
-    ;; (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-    :custom (dashboard-startup-banner 'logo)
-    :config (dashboard-setup-startup-hook))
+  ;; (use-package dashboard
+  ;;   :preface
+  ;;   :init
+  ;;   (add-hook 'after-make-frame-functions 'dashboard-refresh-buffer)
+  ;;   ;; (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+  ;;   :custom (dashboard-startup-banner 'logo)
+  ;;   :config (dashboard-setup-startup-hook))
 #+END_SRC
 ** reset config when config.org changes
 
@@ -969,7 +972,7 @@ I like to have lines of the same length.
  (use-package gitignore-mode)
  #+END_SRC
 
-**  Ledger
+** Ledger
 *** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
     You need a budged : four simple rule to control you budged
 **** Give Every Dollar a Job
@@ -1491,7 +1494,7 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit
-     :defer 0.3
+     ;; :defer 0.3
      :bind ("C-x g" . magit-status)
   )
   (use-package git-commit
@@ -1519,8 +1522,11 @@ Finally, one last package that I like to use with Git to easily see the changes
 made by previous commits.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package git-timemachine :defer 1 :delight)
+  (use-package git-timemachine
+   :defer 1
+   :delight)
 #+END_SRC
+
 ** File Explorer ==dired==
    Dired is a major mode for exploring file
    dired-x is a minor that brings a lot to dired like hidding
@@ -1547,5 +1553,17 @@ made by previous commits.
    Pass helps me to be a bit more secure on my password management
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pass
-    :delight "Pass ")
+    :delight "Pass")
+#+END_SRC
+** IRC ==erc==
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package erc
+  ;;   :commands (erc erc-tls)
+  ;;   :bind (:map erc-mode-map))
+  ;; (use-package erc-join
+  ;;  :after erc
+  ;;  :custom
+  ;;  (erc-autojoin-mode 1)
+  ;;  (setq erc-autojoin-channels-alist
+  ;;         '(("freenode.net" "#emacs" "#gnus" "#latex" "#freestream"))))
 #+END_SRC
