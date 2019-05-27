@@ -1,52 +1,64 @@
 (setq package-archives '(
      ("melpa" . "http://melpa.org/packages/")
-     ("gnu" . "http://elpa.gnu.org/packages/") ;; is it still used ?
+     ("gnu" . "http://elpa.gnu.org/packages/")
      ("org" . "http://orgmode.org/elpa/")
-     ("marmalade" . "http://marmalade-repo.org/packages/")
-     ))
+     ("marmalade" . "http://marmalade-repo.org/packages/")))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(use-package use-package-ensure-system-package :ensure t)
+(use-package use-package-ensure-system-package
+ :ensure t
+ :config
+ (setq use-package-always-ensure t)); Avoid the :ensure keyword for each package
 
-(use-package delight :ensure t)
+(use-package auto-package-update
+:config
+(setq auto-package-update-delete-old-versions t)
+(setq auto-package-update-hide-results t)
+(auto-package-update-maybe))
+
+(use-package delight)
 
 (setq auth-sources '( "~/.authinfo.gpg" ))
 
-(setq-default
-  ad-redefinition-action 'accept                   ; Silence warnings for redefinition
-  cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
-  display-time-default-load-average nil            ; Don't display load average
-  fill-column 80                                   ; Set width for automatic line breaks
-  help-window-select t                             ; Focus new help windows when opened
-  inhibit-startup-screen t                         ; Disable start-up screen
-  initial-scratch-message ""                       ; Empty the initial *scratch* buffer
-  kill-ring-max 128                                ; Maximum length of kill ring
-  load-prefer-newer t                              ; Prefers the newest version of a file
-  mark-ring-max 128                                ; Maximum length of mark ring
-  scroll-conservatively most-positive-fixnum       ; Always scroll by one line
-  select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
-  x-select-enable-clipboard t                      ; enable copy pas to classic clipboard
-  tab-width 4                                      ; Set width for tabs
-  use-package-always-ensure t                      ; Avoid the :ensure keyword for each package
-  user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
-  user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
-  vc-follow-symlinks t                             ; Always follow the symlinks
-  view-read-only t                                 ; Always open read-only buffers in view-mode
-  blink-cursor-mode nil                            ; the cursor wont blink
-  indent-tabs-mode nil)                            ; use space instead of tab to indent
- (delete-selection-mode t)                        ; when writing into marked region delete it
- (transient-mark-mode t)                          ; same mark mouse or keyboard
- (cd "~/")                                        ; Move to the user directory
- (column-number-mode 1)                           ; Show the column number
- (display-time-mode 1)                            ; Enable time in the mode-line
- (fset 'yes-or-no-p 'y-or-n-p)                    ; Replace yes/no prompts with y/n
- (global-hl-line-mode)                            ; Hightlight current line
- (set-default-coding-systems 'utf-8)              ; Default to utf-8 encoding
- (show-paren-mode 1)                              ; Show the parenthesis
- (put 'upcase-region 'disabled nil)               ; Allow C-x C-u
- (put 'downcase-region 'disabled nil)             ; Allow C-x C-l
+(use-package emacs
+ :delight
+  (auto-fill-function " AF")
+  (visual-line-mode)
+ :config
+  (setq-default
+    ad-redefinition-action 'accept                   ; Silence warnings  redefinition
+    cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
+    display-time-default-load-average nil            ; Don't display load average
+    fill-column 80                                   ; Set width for automatic line breaks
+    help-window-select t                             ; Focus new help windows when opened
+    inhibit-startup-screen t                         ; Disable start-up screen
+    initial-scratch-message ""                       ; Empty the initial *scratch* buffer
+    kill-ring-max 128                                ; Maximum length of kill ring
+    load-prefer-newer t                              ; Prefers the newest version of a file
+    mark-ring-max 128                                ; Maximum length of mark ring
+    scroll-conservatively most-positive-fixnum       ; Always scroll by one line
+    select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
+    x-select-enable-clipboard t                      ; enable copy pas to classic clipboard
+    tab-width 4                                      ; Set width for tabs
+    user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
+    user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
+    vc-follow-symlinks t                             ; Always follow the symlinks
+    view-read-only t                                 ; Always open read-only buffers in view-mode
+    blink-cursor-mode nil                            ; the cursor wont blink
+    indent-tabs-mode nil)                            ; use space instead of tab to indent
+    (delete-selection-mode t)                        ; when writing into marked region delete it
+    (transient-mark-mode t)                          ; same mark mouse or keyboard
+    (cd "~/")                                        ; Move to the user directory
+    (column-number-mode 1)                           ; Show the column number
+    (display-time-mode 1)                            ; Enable time in the mode-line
+    (fset 'yes-or-no-p 'y-or-n-p)                    ; Replace yes/no prompts with y/n
+    (global-hl-line-mode)                            ; Hightlight current line
+    (set-default-coding-systems 'utf-8)              ; Default to utf-8 encoding
+    (show-paren-mode 1)                              ; Show the parenthesis
+    (put 'upcase-region 'disabled nil)               ; Allow C-x C-u
+    (put 'downcase-region 'disabled nil))             ; Allow C-x C-l
 
 (setq-default custom-file (expand-file-name "~/.emacs.d/custom.el"))
 (when (file-exists-p custom-file)
@@ -55,10 +67,10 @@
 (setq menu-bar-mode nil)                              ; Disable the menu bar
 (setq scroll-bar-mode nil)                            ; Disable the scroll bar
 (setq tool-bar-mode nil)                              ; Disable the tool bar
-(setq tooltip-mode nil)                              ; Disable the tooltips
+(setq tooltip-mode nil)                               ; Disable the tooltips
 
 (use-package company
-  :defer 0.5
+  ;; :defer 0.5
   :delight
   :custom
   (company-begin-commands '(self-insert-command))
@@ -79,49 +91,48 @@
 (setq browse-url-browser-function 'browse-url-firefox)
 
 (use-package engine-mode
-  :defer 3
   :config
   (defengine duckduckgo
     "https://duckduckgo.com/?q=%s"
-    :keybinding "d"))
+    :keybinding "d")
+  :bind ("C-x /" . engine/search-duckduckgo))
 
 (use-package ace-window
-    :bind
-    (("C-x o" . ace-window)
-    ("M-o" . ace-window))
-    :init
-      (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
-      (setq aw-scope 'frame))
-    (use-package ibuffer
-      :defer 0.2
-      :bind ("C-x C-b" . ibuffer))
+  :bind
+  (("C-x o" . ace-window)
+   ("M-o" . ace-window))
+  :init
+    (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+    (setq aw-scope 'frame))
 
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
+ (use-package ibuffer
+    :bind ("C-x C-b" . ibuffer))
 
-  (global-set-key (kbd "C-x |") 'toggle-window-split)
+ (defun toggle-window-split ()
+   (interactive)
+   (if (= (count-windows) 2)
+     (let* ((this-win-buffer (window-buffer))
+           (next-win-buffer (window-buffer (next-window)))
+           (this-win-edges (window-edges (selected-window)))
+           (next-win-edges (window-edges (next-window)))
+           (this-win-2nd (not (and (<= (car this-win-edges)
+                                       (car next-win-edges))
+                                   (<= (cadr this-win-edges)
+                                       (cadr next-win-edges)))))
+           (splitter
+            (if (= (car this-win-edges)
+                   (car (window-edges (next-window))))
+                'split-window-horizontally
+              'split-window-vertically)))
+      (delete-other-windows)
+      (let ((first-win (selected-window)))
+        (funcall splitter)
+        (if this-win-2nd (other-window 1))
+        (set-window-buffer (selected-window) this-win-buffer)
+        (set-window-buffer (next-window) next-win-buffer)
+        (select-window first-win)
+        (if this-win-2nd (other-window 1))))))
+(global-set-key (kbd "C-x |") 'toggle-window-split)
 
 (use-package async)
 
@@ -204,21 +215,19 @@
   (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
 
 (use-package aggressive-indent
-  :defer 2
-  :hook ((css-mode . aggressive-indent-mode)
+  :hook (prog-mode
+         (css-mode . aggressive-indent-mode)
          (emacs-lisp-mode . aggressive-indent-mode)
          (js-mode . aggressive-indent-mode)
          (lisp-mode . aggressive-indent-mode))
   :custom (aggressive-indent-comments-too))
 
 (use-package move-text
-  :defer 2
   :bind (("M-p" . move-text-up)
          ("M-n" . move-text-down))
   :config (move-text-default-bindings))
 
 (use-package rainbow-mode
-  :defer 2
   :delight
   :hook (prog-mode))
 
@@ -247,7 +256,6 @@
 (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
 
 (use-package which-key
-  :defer 0.2
   :delight
   :config (which-key-mode))
 
@@ -257,13 +265,12 @@
   :config (counsel-mode))
 
 (use-package ivy
-  :defer 0.1
   :delight
   :bind (("C-c C-r" . ivy-resume)
          ("C-x B" . ivy-switch-buffer-other-window))
   :custom
-  (ivy-count-format "(%d/%d) ")
-  (ivy-use-virtual-buffers t)
+    (ivy-count-format "(%d/%d) ")
+    (ivy-use-virtual-buffers t)
   :config (ivy-mode))
 
 (use-package ivy-pass
@@ -307,13 +314,11 @@
 (global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
 
 (use-package rainbow-delimiters
-  :defer 1
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package pdf-tools
-  :defer 1
+  :magic ("%PDF" . pdf-view-mode)
   :init (pdf-tools-install :no-query))
-
 (use-package pdf-view
   :ensure nil
   :after pdf-tools
@@ -328,7 +333,6 @@
   (pdf-view-use-unicode-ligther nil))
 
 (use-package expand-region
-  :defer 2
   :bind (("C-+" . er/contract-region)
          ("C-=" . er/expand-region)))
 
@@ -359,11 +363,10 @@
   :config (run-at-time nil (* 5 60) 'recentf-save-list))
 
 (use-package whitespace
-  :defer 1
-  :hook (before-save . delete-trailing-whitespace))
+  :commands delete-trailing-whitespace
+  :hook before-save)
 
 (use-package hungry-delete
-  :defer 0.7
   :delight
   :config (global-hungry-delete-mode))
 

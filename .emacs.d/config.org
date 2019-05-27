@@ -9,13 +9,13 @@
   - [[#authentification][Authentification]]
   - [[#defaults-values][defaults values]]
   - [[#customization][Customization]]
-  - [[#turn-off-mouse-interface][Turn off mouse interface]]
+  - [[#turn-off-menu-toolbar-and-stuff][Turn off menu, toolbar and stuff]]
 - [[#advanced-configuration][Advanced Configuration]]
-  - [[#auto-completion-company][Auto-Completion (company)]]
+  - [[#auto-completion-company][Auto-Completion =company=]]
   - [[#backups][Backups]]
   - [[#browser-firefox][Browser (Firefox)]]
-    - [[#engine-mode][=engine-mode=]]
-  - [[#buffers][Buffers]]
+    - [[#online-search-engine-mode][Online search =engine-mode=]]
+  - [[#buffers-ace-window-ibuffer-toggle-window-split][Buffers ==ace-window== ==ibuffer== =toggle-window-split==]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#spelling][Spelling]]
     - [[#fly-spell][Fly Spell]]
@@ -25,12 +25,12 @@
     - [[#aggressive-indent][=aggressive-indent=]]
     - [[#move-text][=move-text=]]
     - [[#rainbow-mode][=rainbow-mode=]]
+    -  [[#undo-tree][=undo-tree=]]
     - [[#wiki-summary][=wiki-summary=]]
   - [[#which-key][=which-key=]]
   - [[#ivy][Ivy]]
   - [[#navigation][Navigation]]
-  - [[#parenthesis][Parenthesis]]
-    - [[#rainbow-delimiters][=rainbow-delimiters=]]
+  - [[#parenthesis-rainbow-delimiters][Parenthesis =rainbow-delimiters=]]
   - [[#pdf][PDF]]
   - [[#point-and-region][Point and Region]]
   - [[#recent-files][Recent Files]]
@@ -81,10 +81,9 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq package-archives '(
      ("melpa" . "http://melpa.org/packages/")
-     ("gnu" . "http://elpa.gnu.org/packages/") ;; is it still used ?
+     ("gnu" . "http://elpa.gnu.org/packages/")
      ("org" . "http://orgmode.org/elpa/")
-     ("marmalade" . "http://marmalade-repo.org/packages/")
-     ))
+     ("marmalade" . "http://marmalade-repo.org/packages/")))
 #+END_SRC
 ** use-package
    To be able to manage its configuration with =use-package= it is necessary to
@@ -96,14 +95,22 @@
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
-  (use-package use-package-ensure-system-package :ensure t)
-#+END_SRC
+  (use-package use-package-ensure-system-package
+   :ensure t
+   :config
+   (setq use-package-always-ensure t)); Avoid the :ensure keyword for each package
 
+  (use-package auto-package-update
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
+#+END_SRC
 ** delight
    delight is a way of showing wich major/minor is currently open
    It's show which mode on the main bar
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package delight :ensure t)
+  (use-package delight)
 #+END_SRC
 ** Authentification
    In which file the authentification is save
@@ -113,39 +120,43 @@
 ** defaults values
 For a better user experience of GNU Emacs, here are the default values I use.
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq-default
-  ad-redefinition-action 'accept                   ; Silence warnings for redefinition
-  cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
-  display-time-default-load-average nil            ; Don't display load average
-  fill-column 80                                   ; Set width for automatic line breaks
-  help-window-select t                             ; Focus new help windows when opened
-  inhibit-startup-screen t                         ; Disable start-up screen
-  initial-scratch-message ""                       ; Empty the initial *scratch* buffer
-  kill-ring-max 128                                ; Maximum length of kill ring
-  load-prefer-newer t                              ; Prefers the newest version of a file
-  mark-ring-max 128                                ; Maximum length of mark ring
-  scroll-conservatively most-positive-fixnum       ; Always scroll by one line
-  select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
-  x-select-enable-clipboard t                      ; enable copy pas to classic clipboard
-  tab-width 4                                      ; Set width for tabs
-  use-package-always-ensure t                      ; Avoid the :ensure keyword for each package
-  user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
-  user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
-  vc-follow-symlinks t                             ; Always follow the symlinks
-  view-read-only t                                 ; Always open read-only buffers in view-mode
-  blink-cursor-mode nil                            ; the cursor wont blink
-  indent-tabs-mode nil)                            ; use space instead of tab to indent
- (delete-selection-mode t)                        ; when writing into marked region delete it
- (transient-mark-mode t)                          ; same mark mouse or keyboard
- (cd "~/")                                        ; Move to the user directory
- (column-number-mode 1)                           ; Show the column number
- (display-time-mode 1)                            ; Enable time in the mode-line
- (fset 'yes-or-no-p 'y-or-n-p)                    ; Replace yes/no prompts with y/n
- (global-hl-line-mode)                            ; Hightlight current line
- (set-default-coding-systems 'utf-8)              ; Default to utf-8 encoding
- (show-paren-mode 1)                              ; Show the parenthesis
- (put 'upcase-region 'disabled nil)               ; Allow C-x C-u
- (put 'downcase-region 'disabled nil)             ; Allow C-x C-l
+  (use-package emacs
+   :delight
+    (auto-fill-function " AF")
+    (visual-line-mode)
+   :config
+    (setq-default
+      ad-redefinition-action 'accept                   ; Silence warnings  redefinition
+      cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
+      display-time-default-load-average nil            ; Don't display load average
+      fill-column 80                                   ; Set width for automatic line breaks
+      help-window-select t                             ; Focus new help windows when opened
+      inhibit-startup-screen t                         ; Disable start-up screen
+      initial-scratch-message ""                       ; Empty the initial *scratch* buffer
+      kill-ring-max 128                                ; Maximum length of kill ring
+      load-prefer-newer t                              ; Prefers the newest version of a file
+      mark-ring-max 128                                ; Maximum length of mark ring
+      scroll-conservatively most-positive-fixnum       ; Always scroll by one line
+      select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
+      x-select-enable-clipboard t                      ; enable copy pas to classic clipboard
+      tab-width 4                                      ; Set width for tabs
+      user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
+      user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
+      vc-follow-symlinks t                             ; Always follow the symlinks
+      view-read-only t                                 ; Always open read-only buffers in view-mode
+      blink-cursor-mode nil                            ; the cursor wont blink
+      indent-tabs-mode nil)                            ; use space instead of tab to indent
+      (delete-selection-mode t)                        ; when writing into marked region delete it
+      (transient-mark-mode t)                          ; same mark mouse or keyboard
+      (cd "~/")                                        ; Move to the user directory
+      (column-number-mode 1)                           ; Show the column number
+      (display-time-mode 1)                            ; Enable time in the mode-line
+      (fset 'yes-or-no-p 'y-or-n-p)                    ; Replace yes/no prompts with y/n
+      (global-hl-line-mode)                            ; Hightlight current line
+      (set-default-coding-systems 'utf-8)              ; Default to utf-8 encoding
+      (show-paren-mode 1)                              ; Show the parenthesis
+      (put 'upcase-region 'disabled nil)               ; Allow C-x C-u
+      (put 'downcase-region 'disabled nil))             ; Allow C-x C-l
 #+END_SRC
 
 ** Customization
@@ -157,20 +168,19 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (load custom-file t))
 #+END_SRC
 
-** Turn off mouse interface
+** Turn off menu, toolbar and stuff
    Since I never use the mouse with GNU Emacs, I prefer not to use certain
-   graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
-   I find invasive.
-
+   graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip
+   that I find invasive.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq menu-bar-mode nil)                              ; Disable the menu bar
   (setq scroll-bar-mode nil)                            ; Disable the scroll bar
   (setq tool-bar-mode nil)                              ; Disable the tool bar
-  (setq tooltip-mode nil)                              ; Disable the tooltips
+  (setq tooltip-mode nil)                               ; Disable the tooltips
 #+END_SRC
 
 * Advanced Configuration
-** Auto-Completion (company)
+** Auto-Completion =company=
 
 =company= provides auto-completion at point and to Displays a small pop-in
 containing the candidates.
@@ -185,7 +195,6 @@ completion candidates.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package company
-    :defer 0.5
     :delight
     :custom
     (company-begin-commands '(self-insert-command))
@@ -222,21 +231,18 @@ completion candidates.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq browse-url-browser-function 'browse-url-firefox)
 #+END_SRC
-
-*** =engine-mode=
-	With it I can start a search from within emacs.
-	I use duckduckgo and bang
+*** Online search =engine-mode=
+	With it I can start a search from within emacs,I use duckduckgo and bang.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package engine-mode
-    :defer 3
     :config
     (defengine duckduckgo
       "https://duckduckgo.com/?q=%s"
-      :keybinding "d"))
+      :keybinding "d")
+    :bind ("C-x /" . engine/search-duckduckgo))
 #+END_SRC
-
-** Buffers
+** Buffers ==ace-window== ==ibuffer== =toggle-window-split==
   ace window allow to simply switch when only 2 buffer or to choose
   which buffer with key when multiple buff
 
@@ -247,18 +253,18 @@ completion candidates.
   (use-package ace-window
     :bind
     (("C-x o" . ace-window)
-    ("M-o" . ace-window))
+     ("M-o" . ace-window))
     :init
       (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
       (setq aw-scope 'frame))
-    (use-package ibuffer
-      :defer 0.2
+
+   (use-package ibuffer
       :bind ("C-x C-b" . ibuffer))
 
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
+   (defun toggle-window-split ()
+     (interactive)
+     (if (= (count-windows) 2)
+       (let* ((this-win-buffer (window-buffer))
              (next-win-buffer (window-buffer (next-window)))
              (this-win-edges (window-edges (selected-window)))
              (next-win-edges (window-edges (next-window)))
@@ -279,7 +285,6 @@ completion candidates.
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
-
   (global-set-key (kbd "C-x |") 'toggle-window-split)
 #+END_SRC
 ** COMMENT Dashboard
@@ -352,21 +357,18 @@ enables spell checking on-the-fly in GNU Emacs.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package flyspell
-    :defer 1
     :delight
     :custom
-    (flyspell-abbrev-p t)
-    (flyspell-issue-message-flag nil)
-    (flyspell-issue-welcome-flag nil)
-    (flyspell-mode 1))
-
-    (use-package flyspell-correct-ivy
-      :bind ("C-M-;" . flyspell-correct-wrapper)
-      :init
-        (setq flyspell-correct-interface #'flyspell-correct-ivy))
+      (flyspell-abbrev-p t)
+      (flyspell-issue-message-flag nil)
+      (flyspell-issue-welcome-flag nil)
+      (flyspell-mode 1))
+  (use-package flyspell-correct-ivy
+    :bind ("C-M-;" . flyspell-correct-wrapper)
+    :init
+      (setq flyspell-correct-interface #'flyspell-correct-ivy))
   (use-package ispell
-    :custom
-    (ispell-silently-savep t))
+    :custom (ispell-silently-savep t))
 #+END_SRC
 
 ** History
@@ -404,7 +406,6 @@ more.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package paradox
-    :defer 1
     :custom
     (paradox-column-width-package 27)
     (paradox-column-width-version 13)
@@ -434,8 +435,8 @@ electric-indent-mode.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package aggressive-indent
-    :defer 2
-    :hook ((css-mode . aggressive-indent-mode)
+    :hook (prog-mode
+           (css-mode . aggressive-indent-mode)
            (emacs-lisp-mode . aggressive-indent-mode)
            (js-mode . aggressive-indent-mode)
            (lisp-mode . aggressive-indent-mode))
@@ -448,7 +449,6 @@ electric-indent-mode.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package move-text
-    :defer 2
     :bind (("M-p" . move-text-up)
            ("M-n" . move-text-down))
     :config (move-text-default-bindings))
@@ -460,7 +460,6 @@ Colorize colors as text with their value.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rainbow-mode
-    :defer 2
     :delight
     :hook (prog-mode))
 #+END_SRC
@@ -481,19 +480,22 @@ Avoids call the function or reload Emacs.
 #+RESULTS:
 : revert-buffer
 
-*** COMMENT =undo-tree=
+***  =undo-tree=
 
 GNU Emacs's undo system allows you to recover any past state of a buffer. To do
 this, Emacs treats "undo itself as another editing that can be undone".
 
+
+qsdfqsdfqsdf  fdsqfds
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package undo-tree
-  ;;   :delight
-  ;;   :bind ("C--" . undo-tree-redo)
-  ;;   :init (global-undo-tree-mode)
-  ;;   :custom
-  ;;   (undo-tree-visualizer-timestamps t)
-  ;;   (undo-tree-visualizer-diff t))
+  (use-package undo-tree
+    :delight
+    :bind ("C--" . undo-tree-redo)
+    :init (global-undo-tree-mode)
+    :custom
+    (undo-tree-visualizer-timestamps t)
+    (undo-tree-visualizer-diff t))
 #+END_SRC
 
 *** =wiki-summary=
@@ -529,7 +531,6 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package which-key
-    :defer 0.2
     :delight
     :config (which-key-mode))
 #+END_SRC
@@ -555,13 +556,12 @@ smaller, simpler, and smoother to use yet highly customizable.
     :config (counsel-mode))
 
   (use-package ivy
-    :defer 0.1
     :delight
     :bind (("C-c C-r" . ivy-resume)
            ("C-x B" . ivy-switch-buffer-other-window))
     :custom
-    (ivy-count-format "(%d/%d) ")
-    (ivy-use-virtual-buffers t)
+      (ivy-count-format "(%d/%d) ")
+      (ivy-use-virtual-buffers t)
     :config (ivy-mode))
 
   (use-package ivy-pass
@@ -613,9 +613,7 @@ From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
 #+END_SRC
 
-** Parenthesis
-
-*** =rainbow-delimiters=
+** Parenthesis =rainbow-delimiters=
 
 #+BEGIN_QUOTE
 rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
@@ -629,7 +627,6 @@ statements are at a given depth.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rainbow-delimiters
-    :defer 1
     :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
 
@@ -643,9 +640,8 @@ in the file-system, but rather created on-demand and stored in memory.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package pdf-tools
-     :defer 1
+     :magic ("%PDF" . pdf-view-mode)
      :init (pdf-tools-install :no-query))
-
    (use-package pdf-view
      :ensure nil
      :after pdf-tools
@@ -661,13 +657,11 @@ in the file-system, but rather created on-demand and stored in memory.
  #+END_SRC
 
 ** Point and Region
-
 Increase region by semantic units. It tries to be smart about it and adapt to
 the structure of the current major mode.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package expand-region
-    :defer 2
     :bind (("C-+" . er/contract-region)
            ("C-=" . er/expand-region)))
 #+END_SRC
@@ -714,8 +708,8 @@ It is often annoying to see unnecessary blank spaces at the end of a line or fil
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package whitespace
-    :defer 1
-    :hook (before-save . delete-trailing-whitespace))
+    :commands delete-trailing-whitespace
+    :hook before-save)
 #+END_SRC
 
 *** =hungry-delete=
@@ -729,13 +723,11 @@ non-whitespace character.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package hungry-delete
-    :defer 0.7
     :delight
     :config (global-hungry-delete-mode))
 #+END_SRC
 
 ** Windows
-
 Don't ask before killing a buffer. I know what I'm doing.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
