@@ -227,11 +227,8 @@ exec --no-startup-id xrandr-start
 exec --no-startup-id firefox
 exec --no-startup-id slack
 exec --no-startup-id skypeforlinux
-exec --no-startup-id evolution
 exec --no-startup-id eclipse
-exec --no-startup-id owncloud
-exec --no-startup-id syncthing
 exec --no-startup-id nextcloud
-exec --no-startup-id i3-msg workspace $ws3 ; emacs
+exec --no-startup-id i3-msg workspace $ws3 ; emacsclient -c
 
 exec_always --no-startup-id apodFetch -r; feh --no-fehbg --bg-center ~/.config/apod/apod.png ~/.config/apod/apod.png
