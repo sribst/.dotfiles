@@ -1,7 +1,7 @@
 #+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
 
-* table of content :TOC@3:
+* table of content                                                    :TOC@3:
 - [[#emacs-initialization][Emacs Initialization]]
   - [[#packages-sources][Packages Sources]]
   - [[#use-package][use-package]]
@@ -13,32 +13,30 @@
 - [[#advanced-configuration][Advanced Configuration]]
   - [[#auto-completion-company][Auto-Completion (company)]]
   - [[#backups][Backups]]
-  - [[#browser-firefox][Browser (Firefox)]]
+  - [[#internet-interface][Internet interface]]
+    - [[#wiki-summary][=wiki-summary=]]
     - [[#engine-mode][=engine-mode=]]
-  - [[#buffers][Buffers]]
   - [[#dashboard][Dashboard]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#spelling][Spelling]]
     - [[#fly-spell][Fly Spell]]
   - [[#history][History]]
   - [[#improved-package-menu-paradox][improved package menu =paradox=]]
-  - [[#general][General]]
+  - [[#general-text-formatting][General text formatting]]
     - [[#aggressive-indent][=aggressive-indent=]]
     - [[#move-text][=move-text=]]
     - [[#rainbow-mode][=rainbow-mode=]]
-    - [[#wiki-summary][=wiki-summary=]]
-  - [[#which-key][=which-key=]]
-  - [[#ivy][Ivy]]
+    - [[#parenthesis-rainbow-delimiters][Parenthesis =rainbow-delimiters=]]
+  - [[#keystroke-which-key][keystroke =which-key=]]
+  - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#navigation][Navigation]]
-  - [[#parenthesis][Parenthesis]]
-    - [[#rainbow-delimiters][=rainbow-delimiters=]]
   - [[#pdf][PDF]]
   - [[#point-and-region][Point and Region]]
   - [[#recent-files][Recent Files]]
   - [[#whitespaces][Whitespaces]]
     - [[#hungry-delete][=hungry-delete=]]
-  - [[#windows][Windows]]
-    - [[#windmove][=windmove=]]
+  - [[#buffer-and-windows][Buffer and Windows]]
+    - [[#move-around-buffers-ace-window][move around buffers =ace-window=]]
     - [[#winner][=winner=]]
   - [[#word-wrap][Word Wrap]]
   - [[#custom-fonction][custom fonction]]
@@ -69,11 +67,11 @@
     - [[#journal][Journal]]
     - [[#languages-1][Languages]]
     - [[#other-improvment][Other improvment]]
-  - [[#mail-gnus][Mail ==gnus==]]
-  - [[#contact-bbdb][Contact ==bbdb==]]
-  - [[#git-magit][Git ==magit==]]
-  - [[#file-explorer-dired][File Explorer ==dired==]]
-  - [[#password-store-pass][password-store ==pass==]]
+  - [[#mail-gnus][Mail =gnus=]]
+  - [[#contact-bbdb][Contact =bbdb=]]
+  - [[#git-magit][Git =magit=]]
+  - [[#file-explorer-dired][File Explorer =dired=]]
+  - [[#password-store-pass][password-store =pass=]]
 
 * Emacs Initialization
 ** Packages Sources
@@ -219,9 +217,33 @@ completion candidates.
     (version-control t))
 #+END_SRC
 
-** Browser (Firefox)
+** Internet interface
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq browse-url-browser-function 'browse-url-firefox)
+#+END_SRC
+*** =wiki-summary=
+
+It is impossible to know everything, which is why a quick description
+of a term, without breaking its workflow, is ideal.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package wiki-summary
+    :defer 1
+    :bind ("C-c W" . wiki-summary)
+    :preface
+    (defun my/format-summary-in-buffer (summary)
+      "Given a summary, stick it in the *wiki-summary* buffer and display the buffer"
+      (let ((buf (generate-new-buffer "*wiki-summary*")))
+        (with-current-buffer buf
+          (princ summary buf)
+          (fill-paragraph)
+          (goto-char (point-min))
+          (text-mode)
+          (view-mode))
+        (pop-to-buffer buf))))
+
+  (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
 #+END_SRC
 
 *** =engine-mode=
@@ -237,50 +259,6 @@ completion candidates.
       :keybinding "d"))
 #+END_SRC
 
-** Buffers
-  ace window allow to simply switch when only 2 buffer or to choose
-  which buffer with key when multiple buff
-
-  ibuffer is a better buffer mode
-
-  toggle-window-split : switch layout when two buffers are open
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ace-window
-    :bind
-    (("C-x o" . ace-window)
-    ("M-o" . ace-window))
-    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
-    (use-package ibuffer
-      :defer 0.2
-      :bind ("C-x C-b" . ibuffer))
-
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-  (global-set-key (kbd "C-x |") 'toggle-window-split)
-#+END_SRC
 ** Dashboard
 Always good to have a dashboard.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -412,7 +390,7 @@ more.
     (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
 #+END_SRC
 
-** General
+** General text formatting
 *** =aggressive-indent=
 
 Auto-indent code as you write.
@@ -478,7 +456,24 @@ Avoids call the function or reload Emacs.
 #+RESULTS:
 : revert-buffer
 
-*** COMMENT =undo-tree=
+*** Parenthesis =rainbow-delimiters=
+
+#+BEGIN_QUOTE
+rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
+delimiters such as parentheses, brackets or braces according to their
+depth. Each successive level is highlighted in a different color. This makes it
+easy to spot matching delimiters, orient yourself in the code, and tell which
+statements are at a given depth.
+
+[[https://github.com/Fanael/rainbow-delimiters][Fanael Linithien]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rainbow-delimiters
+    :defer 1
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+END_SRC
+** COMMENT Undo-redo =undo-tree=
 
 GNU Emacs's undo system allows you to recover any past state of a buffer. To do
 this, Emacs treats "undo itself as another editing that can be undone".
@@ -493,31 +488,7 @@ this, Emacs treats "undo itself as another editing that can be undone".
   ;;   (undo-tree-visualizer-diff t))
 #+END_SRC
 
-*** =wiki-summary=
-
-It is impossible to know everything, which is why a quick description
-of a term, without breaking its workflow, is ideal.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package wiki-summary
-    :defer 1
-    :bind ("C-c W" . wiki-summary)
-    :preface
-    (defun my/format-summary-in-buffer (summary)
-      "Given a summary, stick it in the *wiki-summary* buffer and display the buffer"
-      (let ((buf (generate-new-buffer "*wiki-summary*")))
-        (with-current-buffer buf
-          (princ summary buf)
-          (fill-paragraph)
-          (goto-char (point-min))
-          (text-mode)
-          (view-mode))
-        (pop-to-buffer buf))))
-
-  (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
-#+END_SRC
-
-** =which-key=
+** keystroke =which-key=
 
 It's difficult to remember all the keyboard shortcuts. The =which-key= package
 helps to solve this.
@@ -533,7 +504,7 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
 
 #+RESULTS:
 
-** Ivy
+** autocompletion =Ivy=
 
 I used =helm= before, but I find =ivy= faster and lighter.
 
@@ -610,25 +581,6 @@ From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
 #+END_SRC
 
-** Parenthesis
-
-*** =rainbow-delimiters=
-
-#+BEGIN_QUOTE
-rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
-delimiters such as parentheses, brackets or braces according to their
-depth. Each successive level is highlighted in a different color. This makes it
-easy to spot matching delimiters, orient yourself in the code, and tell which
-statements are at a given depth.
-
-[[https://github.com/Fanael/rainbow-delimiters][Fanael Linithien]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-delimiters
-    :defer 1
-    :hook (prog-mode . rainbow-delimiters-mode))
-#+END_SRC
 
 ** PDF
 #+BEGIN_QUOTE
@@ -731,28 +683,57 @@ non-whitespace character.
     :config (global-hungry-delete-mode))
 #+END_SRC
 
-** Windows
+** Buffer and Windows
 
-Don't ask before killing a buffer. I know what I'm doing.
+   Don't ask before killing a buffer. I know what I'm doing.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key [remap kill-buffer] #'kill-this-buffer)
+   #+END_SRC
+*** move around buffers =ace-window=
+  ace window allow to simply switch when only 2 buffer or to choose
+  which buffer with key when multiple buff
+
+  ibuffer is a better buffer mode
+
+  toggle-window-split : switch layout when two buffers are open
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ace-window
+    :bind
+    (("C-x o" . ace-window)
+    ("M-o" . ace-window))
+    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
+    (use-package ibuffer
+      :defer 0.2
+      :bind ("C-x C-b" . ibuffer))
+
+(defun toggle-window-split ()
+  (interactive)
+p  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+  (global-set-key (kbd "C-x |") 'toggle-window-split)
 #+END_SRC
-
-
-*** =windmove=
-
-# # Allows you to move from one window to another with something more natural than
-# # cycling through =C-x o= (=other-window=).
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package windmove
-# #     :defer 0.2
-# #     :bind (("C-c h" . windmove-left)
-# #            ("C-c j" . windmove-down)
-# #            ("C-c k" . windmove-up)
-# #            ("C-c l" . windmove-right)))
-# # #+END_SRC
 
 *** =winner=
 
@@ -1449,7 +1430,7 @@ I like to have lines of the same length.
 
  #+END_SRC
 
-** Mail ==gnus==
+** Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package gnus
       :bind (("C-x e" . gnus)
@@ -1461,7 +1442,7 @@ I like to have lines of the same length.
       :after gnus)
 #+END_SRC
 
-** Contact ==bbdb==
+** Contact =bbdb=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package bbdb
@@ -1473,7 +1454,7 @@ I like to have lines of the same length.
   ;;   (vdirel-repository ~/Contacts))
 #+END_SRC
 
-** Git ==magit==
+** Git =magit=
 
 It is quite common to work on Git repositories, so it is important to have a
 configuration that we like.
@@ -1521,11 +1502,17 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package git-timemachine :defer 1 :delight)
 #+END_SRC
-** File Explorer ==dired==
+
+
+** File Explorer =dired=
    Dired is a major mode for exploring file
    dired-x is a minor that brings a lot to dired like hidding
    - uninteresting file
    - guessing which command to call...
+
+   dired-du give the size of directory using du or lisp
+   dired-du should be customize more than that
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dired
     :ensure nil
@@ -1542,8 +1529,12 @@ made by previous commits.
 
   (use-package dired-x
     :ensure nil )
+
+  (use-package dired-du
+    :hook  (dired-mode-hook . dired-du-mode))
+
 #+END_SRC
-** password-store ==pass==
+** password-store =pass=
    Pass helps me to be a bit more secure on my password management
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pass

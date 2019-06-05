@@ -816,5 +816,8 @@ SCHEDULED:   %^{Programado}t
 (use-package dired-x
   :ensure nil )
 
+(use-package dired-du
+  :hook  (dired-mode-hook . dired-du-mode))
+
 (use-package pass
   :delight "Pass ")
