@@ -52,19 +52,19 @@
     - [[#typescript][Typescript]]
     - [[#yaml][Yaml]]
     - [[#config][config]]
-  -  [[#ledger][Ledger]]
+  - [[#ledger][Ledger]]
     - [[#ynab][YNAB]]
     - [[#ledger-capture][ledger capture]]
-  - [[#org][Org]]
-    - [[#table-of-content][Table of Content]]
+  - [[#todo-agenda-org][Todo, agenda =org=]]
+    - [[#generate-toc-automaticaly][generate TOC automaticaly]]
     - [[#cleaner-indentation][cleaner indentation]]
     - [[#agenda][Agenda]]
     - [[#bullets][Bullets]]
     - [[#capture][Capture]]
     - [[#clock][Clock]]
     - [[#contacts][Contacts]]
-    - [[#custormization][Custormization]]
-    - [[#journal][Journal]]
+    - [[#customization-1][Customization]]
+    - [[#sync][sync]]
     - [[#languages-1][Languages]]
     - [[#other-improvment][Other improvment]]
   - [[#mail-gnus][Mail =gnus=]]
@@ -950,7 +950,7 @@ I like to have lines of the same length.
  (use-package gitignore-mode)
  #+END_SRC
 
-**  Ledger
+** Ledger
 *** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
     You need a budged : four simple rule to control you budged
 **** Give Every Dollar a Job
@@ -1036,18 +1036,11 @@ I like to have lines of the same length.
  *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
  format.
 
-** Org
+** Todo, agenda =org=
 
  One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
  take notes and make my presentations, but you can do lots of things with
  it. =org-mode= it's like the sky, without limits.
-
- #+BEGIN_QUOTE
- Org mode is for keeping notes, maintaining TODO lists, planning projects, and
- authoring documents with a fast and effective plain-text system.
-
- [[http://orgmode.org/][Carsten Dominik]]
- #+END_QUOTE
 
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org
@@ -1062,32 +1055,25 @@ I like to have lines of the same length.
         (org-catch-invisible-edits 'show-and-error)
         (org-cycle-separator-lines 0))
  #+END_SRC
-*** Table of Content
+*** generate TOC automaticaly
     If like me, you're tired of manually updating your tables of contents, =toc-org=
     will maintain a table of contents at the first heading that has a =:TOC:= tag.
-
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package toc-org
      :after org
      :hook (org-mode . toc-org-enable))
  #+END_SRC
 *** cleaner indentation
-
  For a cleaner online mode.
-
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org-indent :after org :ensure nil :delight)
  #+END_SRC
-
 *** Agenda
-
  Nowadays, it is crucial to be organized. Even more than before. That is why it
  is important to take the time to make a configuration that is simple to use and
  that makes your life easier with an irreproachable organization.
-
  =org-agenda= allows me to be organized with daily tasks. As a result, I can use
  my time to the fullest.
-
  #+BEGIN_SRC emacs-lisp :tangle yes
       (use-package org-agenda
         :ensure nil
@@ -1116,7 +1102,6 @@ I like to have lines of the same length.
           ((org-agenda-tag-filter-preset
             (quote  ("-volim" "-hidden")))))))))
 
-
      (use-package calfw :after org-agenda)
 
      (use-package calfw-org
@@ -1124,13 +1109,9 @@ I like to have lines of the same length.
         :bind ("C-c z" . cfw:open-org-calendar)
         :custom
         cfw:org-overwrite-default-keybinding t)
-
  #+END_SRC
-
 *** Bullets
-
  Prettier [[https://github.com/sabof/org-bullets][bullets]] in org-mode.
-
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org-bullets
      :hook (org-mode . org-bullets-mode)
@@ -1239,18 +1220,24 @@ I like to have lines of the same length.
    :END: "
    )
 
-   (defvar my/org-administrativod-template "** TODO %^{Que}
+   (defvar my/org-todod-template "* TODO %^{Que} %^g
    DEADLINE:   %^{Fecha tope}t
    ")
 
-   (defvar my/org-administrativos-template "** TODO %^{Que}
+   (defvar my/org-todos-template "* TODO %^{Que} %^g
    SCHEDULED:   %^{Programado}t
    ")
 
-   (defvar my/org-administrativo-template  "** TODO %^{Que}
+   (defvar my/org-todo-template  "* TODO %^{Que}  %^g
    :PROPERTIES:
    :cuando:   %^{Cuando}t
    :END:")
+
+   (defvar my/org-someday-template  "* SOMEDAY %^{Que} %^g
+   ")
+
+   (defvar my/org-media-template  "* %^{Que} %^g
+   ")
 
    :custom
    (org-capture-templates `(
@@ -1258,7 +1245,7 @@ I like to have lines of the same length.
       ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
            my/org-people-template :empty-lines 1)
       ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
-           my/org-people-template :empty-lines 1)
+           my/org-adress-template :empty-lines 1)
    ("e" "Evento")
       ("es" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
            my/org-espectaculo-template :empty-lines 1)
@@ -1269,13 +1256,15 @@ I like to have lines of the same length.
            my/org-transporte-template :empty-lines 1)
       ("vv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
            my/org-ida-vuelta-template :empty-lines 1)
-   ("a" "Administrativo")
-      ("am" "meeting" entry (file+headline "~/org/diario.org" "Administrativo"),
-           my/org-administrativo-template :empty-lines 1)
-      ("as" "scheduled" entry (file+headline "~/org/diario.org" "Administrativo"),
-           my/org-administrativos-template :empty-lines 1)
-      ("ad" "deadline" entry (file+headline "~/org/diario.org" "Administrativo"),
-           my/org-administrativod-template :empty-lines 1))))
+   ("t" "todo")
+      ("tl" "someday" entry (file+headline "~/org/todo.org" ""),
+           my/org-someday-template :empty-lines 1)
+      ("tm" "meeting" entry (file+headline "~/org/todo.org" ""),
+           my/org-todo-template :empty-lines 1)
+      ("ts" "scheduled" entry (file+headline "~/org/todo.org" ""),
+           my/org-todos-template :empty-lines 1)
+      ("td" "deadline" entry (file+headline "~/org/todo.org" ""),
+           my/org-todod-template :empty-lines 1))))
 
  #+END_SRC
 
@@ -1326,7 +1315,7 @@ I like to have lines of the same length.
      :custom (org-contacts-files '("~/org/contacts.org")))
  #+END_SRC
 
-*** Custormization
+*** Customization
 
  Let's change the foreground and the weight of each keywords.
 
@@ -1336,12 +1325,30 @@ I like to have lines of the same length.
      :after org
      :custom
      (org-todo-keyword-faces
-      '(("DONE" . (:foreground "cyan" :weight bold))
-        ("SOMEDAY" . (:foreground "gray" :weight bold))
-        ("TODO" . (:foreground "green" :weight bold))
-        ("WAITING" . (:foreground "red" :weight bold)))))
+      '(("DONE" . (:foreground "green" :weight bold))
+        ("SOMEDAY" . (:foreground "orange" :weight bold))
+        ("TODO" . (:foreground "red" :weight bold))
+        ("WAITING" . (:foreground "yellow" :weight bold))
+        ("ABORDED" . (:foreground "grey" :weight bold)))))
  #+END_SRC
 
+*** sync
+**** calendar
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package org-caldav
+     :after org
+     :custom
+     (org-caldav-url "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+     (org-caldav-calendar-id "personal")
+     (org-caldav-inbox "~/org/sync2.org")
+     (org-caldav-files '(
+         "~/org/diario.org"
+         "~/org/agenda.org"
+     ))
+     (org-icalendar-timezone "Europe/Paris"))
+ #+END_SRC
+
+**** contact
 *** COMMENT Encryption / Decryption
 
  To be able to enable encryption and decryption of =.gpg= files with =org-mode=,
@@ -1361,7 +1368,7 @@ I like to have lines of the same length.
  #     :custom (org-crypt-key "E9AADC36E94A672D1A07D49B208FCDBB98190562"))
  # #+END_SRC
 
-*** Journal
+*** COMMENT Journal
 
  # # Recently, I started writing a journal about my daily life as I read that
  # # journals improve mental claritym, help solve problems, improve overall focus,
@@ -1446,9 +1453,10 @@ I like to have lines of the same length.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package bbdb
-    :after gnus)
-  (use-package bbdb-vcard
-    :after bbdb)
+    :after gnus
+    :config (setq bbdb-file "~/Document/contact.el" ))
+  ;; (use-package bbdb-vcard
+  ;;   :after bbdb)
   ;; (use-package vdirel
   ;;   :custom
   ;;   (vdirel-repository ~/Contacts))
