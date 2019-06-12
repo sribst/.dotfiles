@@ -1144,6 +1144,7 @@ I like to have lines of the same length.
 
     (defvar my/org-people-template "** %\\1 %\\2
   :PROPERTIES:
+  :Creado:        %U
   :Nombre:        %^{Nombre}
   :Apellido:      %^{Apellido}%?
   :Compleanos:    %^{Fecha de nacimiento}u
@@ -1160,6 +1161,7 @@ I like to have lines of the same length.
 
   (defvar my/org-adress-template "** %\\1
   :PROPERTIES:
+  :Creado:        %U
   :Nombre:        %^{Nombre}
   :Telefono:      %^{Telefono}
   :Correo:        %^{Correo}
@@ -1173,6 +1175,7 @@ I like to have lines of the same length.
 
   (defvar my/org-espectaculo-template "*** %\\1
   :PROPERTIES:
+  :Creado:     %U
   :nombre:   %^{Nombre}
   :tipo:     %^{tipo}p
   :lugar:    %^{Lugar}
@@ -1183,6 +1186,7 @@ I like to have lines of the same length.
 
   (defvar my/org-personal-template "*** %\\1 %^g
   :PROPERTIES:
+  :Creado:     %U
   :nombre:   %^{Nombre}
   :lugar:    %^{Lugar}
   :con:      %^{Con}
@@ -1215,20 +1219,37 @@ I like to have lines of the same length.
   :tipo:     %^{tipo}p
   :con:      %^{Con}
   :cuando:   %^{Cuando}t
-  :END: "
-  )
+  :END: ")
+
 
   (defvar my/org-todod-template "* TODO %^{Que} %^g
   DEADLINE:   %^{Fecha tope}t
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
   ")
 
   (defvar my/org-todos-template "* TODO %^{Que} %^g
   SCHEDULED:   %^{Programado}t
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
   ")
 
   (defvar my/org-todo-template  "* TODO %^{Que}  %^g")
 
   (defvar my/org-someday-template  "* SOMEDAY %^{Que} %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
+  ")
+
+  (defvar my/org-voucher-template  "* TOUSE %^{Valor}
+  DEADLINE:%^{Antes de}t
+  :PROPERTIES:
+  :Tipo:     %^{TIPO}p
+  :Cuanto:   %^{Cuanto}
+  :END:
   ")
 
   ;; (defvar my/org-media-template  "* %^{Nombre}
@@ -1255,7 +1276,7 @@ I like to have lines of the same length.
               my/org-transporte-template :empty-lines 1)
             ("dvv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
               my/org-ida-vuelta-template :empty-lines 1)
-       ("t" "todo")
+      ("t" "todo")
          ("to" "oneday" entry (file "~/org/todo.org"),
               my/org-someday-template)
          ("tt" "todo" entry (file "~/org/todo.org"),
@@ -1263,7 +1284,10 @@ I like to have lines of the same length.
          ("ts" "scheduled" entry (file "~/org/todo.org"),
               my/org-todos-template)
          ("td" "deadline" entry (file "~/org/todo.org"),
-              my/org-todod-template))))
+              my/org-todod-template)
+      ("v" "voucher" entry (file "~/org/voucher.org"),
+            my/org-voucher-template)
+   )))
 #+END_SRC
 
 *** COMMENT Clock
