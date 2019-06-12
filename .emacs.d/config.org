@@ -61,7 +61,6 @@
     - [[#agenda][Agenda]]
     - [[#bullets][Bullets]]
     - [[#capture][Capture]]
-    - [[#clock][Clock]]
     - [[#contacts][Contacts]]
     - [[#customization-1][Customization]]
     - [[#sync][sync]]
@@ -264,8 +263,7 @@ Always good to have a dashboard.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
     :preface
-    :init
-    (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+    :hook (after-init-hook . dashboard-refresh-buffer)
     :custom (dashboard-startup-banner 'logo)
     :config (dashboard-setup-startup-hook))
 #+END_SRC
@@ -1123,152 +1121,152 @@ I like to have lines of the same length.
  it to quickly record tasks, ledger entries, notes and other semi-structured
  information.
 
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org-capture
-     :ensure nil
-     :after org
-     :preface
-     (defun org-capture-template-goto-link ()
-          "Set point for capturing at what capture target file+headline with headline set to %l would do."
-          (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target))
-                                                               (org-capture-get :annotation)))
-          (org-capture-put-target-region-and-position)
-          (widen)
-          (let ((hd (nth 2 (org-capture-get :target))))
-               (goto-char (point-min))
-               (if (re-search-forward
-                   (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
-               (goto-char (point-at-bol))
-               (goto-char (point-max))
-               (or (bolp) (insert "\n"))
-               (insert "* " hd "\n")
-               (beginning-of-line 0))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-capture
+    :ensure nil
+    :after org
+    :preface
+    (defun org-capture-template-goto-link ()
+         "Set point for capturing at what capture target file+headline with headline set to %l would do."
+         (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target))
+                                                              (org-capture-get :annotation)))
+         (org-capture-put-target-region-and-position)
+         (widen)
+         (let ((hd (nth 2 (org-capture-get :target))))
+              (goto-char (point-min))
+              (if (re-search-forward
+                  (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
+              (goto-char (point-at-bol))
+              (goto-char (point-max))
+              (or (bolp) (insert "\n"))
+              (insert "* " hd "\n")
+              (beginning-of-line 0))))
 
-     (defvar my/org-people-template "** %\\1 %\\2
-   :PROPERTIES:
-   :Nombre:        %^{Nombre}
-   :Apellido:      %^{Apellido}%?
-   :Compleanos:    %^{Fecha de nacimiento}u
-   :Telefono:      %^{Telefono}
-   :Correo:        %^{Correo}
-   :Direccion:     %^{Direccion}
-   :Ciudad:        %^{Ciudad}
-   :Pais:          %^{Pais}
-   :Codigo postal: %^{Codigo postal}
-   :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-   :Nota:
-   :END:"
-   )
+    (defvar my/org-people-template "** %\\1 %\\2
+  :PROPERTIES:
+  :Nombre:        %^{Nombre}
+  :Apellido:      %^{Apellido}%?
+  :Compleanos:    %^{Fecha de nacimiento}u
+  :Telefono:      %^{Telefono}
+  :Correo:        %^{Correo}
+  :Direccion:     %^{Direccion}
+  :Ciudad:        %^{Ciudad}
+  :Pais:          %^{Pais}
+  :Codigo postal: %^{Codigo postal}
+  :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+  :Nota:
+  :END:"
+  )
 
-   (defvar my/org-adress-template "** %\\1
-   :PROPERTIES:
-   :Nombre:        %^{Nombre}
-   :Telefono:      %^{Telefono}
-   :Correo:        %^{Correo}
-   :Direccion:     %^{Direccion}
-   :Ciudad:        %^{Ciudad}
-   :Pais:          %^{Pais}
-   :Codigo postal: %^{Codigo postal}
-   :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-   :END: "
-   )
+  (defvar my/org-adress-template "** %\\1
+  :PROPERTIES:
+  :Nombre:        %^{Nombre}
+  :Telefono:      %^{Telefono}
+  :Correo:        %^{Correo}
+  :Direccion:     %^{Direccion}
+  :Ciudad:        %^{Ciudad}
+  :Pais:          %^{Pais}
+  :Codigo postal: %^{Codigo postal}
+  :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+  :END: "
+  )
 
-   (defvar my/org-espectaculo-template "*** %\\1
-   :PROPERTIES:
-   :nombre:   %^{Nombre}
-   :tipo:     %^{tipo}p
-   :lugar:    %^{Lugar}
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-espectaculo-template "*** %\\1
+  :PROPERTIES:
+  :nombre:   %^{Nombre}
+  :tipo:     %^{tipo}p
+  :lugar:    %^{Lugar}
+  :con:      %^{Con}
+  :cuando:   %^{Cuando}t
+  :END: "
+  )
 
-   (defvar my/org-personal-template "*** %\\1
-   :PROPERTIES:
-   :nombre:   %^{Nombre}
-   :lugar:    %^{Lugar}
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-personal-template "*** %\\1 %^g
+  :PROPERTIES:
+  :nombre:   %^{Nombre}
+  :lugar:    %^{Lugar}
+  :con:      %^{Con}
+  :cuando:   %^{Cuando}t
+  :END: "
+  )
 
-   (defvar my/org-transporte-template "** %\\1 -> %\\2
-   :PROPERTIES:
-   :de:       %^{de}
-   :a:        %^{a}
-   :tipo:     %^{tipo}p
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-transporte-template "** %\\1 -> %\\2
+  :PROPERTIES:
+  :de:       %^{de}
+  :a:        %^{a}
+  :tipo:     %^{tipo}p
+  :con:      %^{Con}
+  :cuando:   %^{Cuando}t
+  :END: "
+  )
 
-   (defvar my/org-ida-vuelta-template "** %\\1 -> %\\2
-   :PROPERTIES:
-   :de:       %^{de}
-   :a:        %^{a}
-   :tipo:     %^{tipo}p
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END:
-   ,** %\\2 -> %\\1
-   :PROPERTIES:
-   :de:       %\\2
-   :a:        %\\1
-   :tipo:     %^{tipo}p
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-ida-vuelta-template "** %\\1 -> %\\2
+  :PROPERTIES:
+  :de:       %^{de}
+  :a:        %^{a}
+  :tipo:     %^{tipo}p
+  :con:      %^{Con}
+  :cuando:   %^{Cuando}t
+  :END:
+  ,** %\\2 -> %\\1
+  :PROPERTIES:
+  :de:       %\\2
+  :a:        %\\1
+  :tipo:     %^{tipo}p
+  :con:      %^{Con}
+  :cuando:   %^{Cuando}t
+  :END: "
+  )
 
-   (defvar my/org-todod-template "* TODO %^{Que} %^g
-   DEADLINE:   %^{Fecha tope}t
-   ")
+  (defvar my/org-todod-template "* TODO %^{Que} %^g
+  DEADLINE:   %^{Fecha tope}t
+  ")
 
-   (defvar my/org-todos-template "* TODO %^{Que} %^g
-   SCHEDULED:   %^{Programado}t
-   ")
+  (defvar my/org-todos-template "* TODO %^{Que} %^g
+  SCHEDULED:   %^{Programado}t
+  ")
 
-   (defvar my/org-todo-template  "* TODO %^{Que}  %^g
-   :PROPERTIES:
-   :cuando:   %^{Cuando}t
-   :END:")
+  (defvar my/org-todo-template  "* TODO %^{Que}  %^g")
 
-   (defvar my/org-someday-template  "* SOMEDAY %^{Que} %^g
-   ")
+  (defvar my/org-someday-template  "* SOMEDAY %^{Que} %^g
+  ")
 
-   (defvar my/org-media-template  "* %^{Que} %^g
-   ")
+  ;; (defvar my/org-media-template  "* %^{Nombre}
+  ;; :PROPERTIES:
+  ;; :tipo:     %^{tipo}p
+  ;; :END:
+  ;; ")
 
-   :custom
-   (org-capture-templates `(
-   ("c" "Contact")
-      ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
-           my/org-people-template :empty-lines 1)
-      ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
-           my/org-adress-template :empty-lines 1)
-   ("e" "Evento")
-      ("es" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
-           my/org-espectaculo-template :empty-lines 1)
-      ("ep" "Personal" entry (file+headline "~/org/diario.org" "Personal"),
-           my/org-personal-template :empty-lines 1)
-   ("v" "Viaje")
-      ("vi" "Viaje individual" entry (file+headline "~/org/diario.org" "Transporte"),
-           my/org-transporte-template :empty-lines 1)
-      ("vv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
-           my/org-ida-vuelta-template :empty-lines 1)
-   ("t" "todo")
-      ("tl" "someday" entry (file+headline "~/org/todo.org" ""),
-           my/org-someday-template :empty-lines 1)
-      ("tm" "meeting" entry (file+headline "~/org/todo.org" ""),
-           my/org-todo-template :empty-lines 1)
-      ("ts" "scheduled" entry (file+headline "~/org/todo.org" ""),
-           my/org-todos-template :empty-lines 1)
-      ("td" "deadline" entry (file+headline "~/org/todo.org" ""),
-           my/org-todod-template :empty-lines 1))))
+  :custom
+  (org-capture-templates `(
+      ("c" "Contact")
+         ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
+              my/org-people-template :empty-lines 1)
+         ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
+              my/org-adress-template :empty-lines 1)
+      ("d" "diario")
+         ("de" "Evento")
+            ("des" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
+              my/org-espectaculo-template :empty-lines 1)
+            ("dep" "Personal" entry (file+headline "~/org/diario.org" "Personal"),
+              my/org-personal-template :empty-lines 1)
+         ("dv" "Viaje")
+            ("dvi" "Viaje individual" entry (file+headline "~/org/diario.org" "Transporte"),
+              my/org-transporte-template :empty-lines 1)
+            ("dvv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
+              my/org-ida-vuelta-template :empty-lines 1)
+       ("t" "todo")
+         ("to" "oneday" entry (file "~/org/todo.org"),
+              my/org-someday-template)
+         ("tt" "todo" entry (file "~/org/todo.org"),
+              my/org-todo-template)
+         ("ts" "scheduled" entry (file "~/org/todo.org"),
+              my/org-todos-template)
+         ("td" "deadline" entry (file "~/org/todo.org"),
+              my/org-todod-template))))
+#+END_SRC
 
- #+END_SRC
-
-*** Clock
+*** COMMENT Clock
 
  # # Being organized is one thing, but being optimal is another. =org-clock= allows
  # # you to estimate your tasks and time them. This is useful, since with experience,
@@ -1539,7 +1537,7 @@ made by previous commits.
     :ensure nil )
 
   (use-package dired-du
-    :hook  (dired-mode-hook . dired-du-mode))
+    :hook  (dired-mode . dired-du-mode))
 
 #+END_SRC
 ** password-store =pass=

@@ -9,7 +9,8 @@ ZSHDDIR="${HOME}/.config/zsh.d"
 HISTFILE="${ZDOTDIR}/.zsh_history"
 HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
-export EDITOR="/usr/bin/emacsclient"
+export EDITOR="/usr/bin/emacsclient -nw"
+export ALTERNATE_EDITOR="/usr/bin/emacs -nw"
 export TMP="$HOME/tmp"
 export TEMP="$TMP"
 export TMPDIR="$TMP"
@@ -454,3 +455,26 @@ setopt inc_append_history
 
 #To retrieve the history file everytime history is called upon.
 setopt share_history
+
+# clipboard
+
+x-copy-region-as-kill () {
+  zle copy-region-as-kill
+  print -rn $CUTBUFFER | xsel -i -b
+}
+zle -N x-copy-region-as-kill
+
+x-kill-region () {
+  zle kill-region
+  print -rn $CUTBUFFER | xsel -i -b
+}
+zle -N x-kill-region
+
+x-yank () {
+  CUTBUFFER=$(xsel -o -b </dev/null)
+  zle yank
+}
+zle -N x-yank
+bindkey -e '\ew' x-copy-region-as-kill
+bindkey -e '^W' x-kill-region
+bindkey -e '^Y' x-yank
