@@ -1,0 +1,8 @@
+#!/bin/bash
+cd $HOME
+pass git pull
+pass git push
+/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME pull
+/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME add -u
+/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME commit -m "sync"
+/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME push
