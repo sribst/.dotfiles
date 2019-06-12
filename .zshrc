@@ -400,8 +400,8 @@ else
 fi
 
 alias grep='grep --colour=auto'
+alias ls='ls --color=auto -h --group-directories-first'
 alias egrep='egrep --colour=auto'
-alias ls='ls --color=auto --human-readable --group-directories-first --classify'
 
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 

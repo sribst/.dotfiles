@@ -36,6 +36,9 @@
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+;; ## added by OPAM user-setup for emacs / base ##
+;; ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
+(setq opam-file (expand-file-name "opam-user-setup.el" user-emacs-directory))
+(when (file-exists-p opam-file)
+  (require 'opam-user-setup opam-file))
 ;; ## end of OPAM user-setup addition for emacs / base ## keep this line
