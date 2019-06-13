@@ -1262,6 +1262,13 @@ I like to have lines of the same length.
   ;; :END:
   ;; ")
 
+  (defvar my/org-work-move-template  "* TODO %^{Que} %^g
+  DEADLINE:%^{Antes de}t
+  :PROPERTIES:
+  :mission:     %^{mission}p
+  :END:
+  ")
+
   :custom
   (org-capture-templates `(
       ("c" "Contact")
@@ -1291,6 +1298,9 @@ I like to have lines of the same length.
               my/org-todod-template)
       ("v" "voucher" entry (file "~/org/voucher.org"),
             my/org-voucher-template)
+      ("w" "work")
+         ("wm" "move" entry (file+headline "~/org/work.org" "Move"),
+              my/org-work-move-template)
    )))
 #+END_SRC
 
