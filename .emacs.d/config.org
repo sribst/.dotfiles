@@ -696,41 +696,45 @@ non-whitespace character.
 
   toggle-window-split : switch layout when two buffers are open
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ace-window
-    :bind
-    (("C-x o" . ace-window)
-    ("M-o" . ace-window))
-    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
-    (use-package ibuffer
-      :defer 0.2
-      :bind ("C-x C-b" . ibuffer))
+    (use-package ace-window
+      :bind
+      (("C-x o" . ace-window)
+      ("M-o" . ace-window))
+      :init
+      (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+      (setq aw-scope 'frame)
+    )
 
-(defun toggle-window-split ()
-  (interactive)
-p  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
+      (use-package ibuffer
+        :defer 0.2
+        :bind ("C-x C-b" . ibuffer))
 
-  (global-set-key (kbd "C-x |") 'toggle-window-split)
+  (defun toggle-window-split ()
+    (interactive)
+  p  (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+
+    (global-set-key (kbd "C-x |") 'toggle-window-split)
 #+END_SRC
 
 *** =winner=
