@@ -1192,8 +1192,8 @@ I like to have lines of the same length.
   :tipo:     %^{tipo}p
   :lugar:    %^{Lugar}
   :con:      %^{Con}
-  :cuando:   %^{Cuando}t
-  :END: "
+  :END:
+  %^{Cuando}t"
   )
 
   (defvar my/org-personal-template "*** %\\1 %^g
@@ -1202,8 +1202,8 @@ I like to have lines of the same length.
   :nombre:   %^{Nombre}
   :lugar:    %^{Lugar}
   :con:      %^{Con}
-  :cuando:   %^{Cuando}t
-  :END: "
+  :END:
+  %^{Cuando}t"
   )
 
   (defvar my/org-transporte-template "** %\\1 -> %\\2
@@ -1212,8 +1212,8 @@ I like to have lines of the same length.
   :a:        %^{a}
   :tipo:     %^{tipo}p
   :con:      %^{Con}
-  :cuando:   %^{Cuando}t
-  :END: "
+  :END:
+  %^{Cuando}t"
   )
 
   (defvar my/org-ida-vuelta-template "** %\\1 -> %\\2
@@ -1222,16 +1222,17 @@ I like to have lines of the same length.
   :a:        %^{a}
   :tipo:     %^{tipo}p
   :con:      %^{Con}
-  :cuando:   %^{Cuando}t
   :END:
+  %^{Cuando}t
   ,** %\\2 -> %\\1
   :PROPERTIES:
   :de:       %\\2
   :a:        %\\1
   :tipo:     %^{tipo}p
   :con:      %^{Con}
-  :cuando:   %^{Cuando}t
-  :END: ")
+  :END:
+  %^{Cuando}t"
+  )
 
 
   (defvar my/org-todod-template "* TODO %^{Que} %^g
@@ -1260,9 +1261,9 @@ I like to have lines of the same length.
   DEADLINE:%^{Antes de}t
   :PROPERTIES:
   :Tipo:     %^{TIPO}p
-  :Cuanto:   %^{Cuanto}
   :END:
-  ")
+  %^{Cuando}t"
+  )
 
   ;; (defvar my/org-media-template  "* %^{Nombre}
   ;; :PROPERTIES:
