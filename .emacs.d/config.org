@@ -429,21 +429,37 @@ For a better user experience of GNU Emacs, here are the default values I use.
          :custom
          (org-directory "~/org")
          (org-agenda-files '("~/org/")
-         (org-agenda-dim-blocked-tasks t)
-         (org-agenda-inhibit-startup t)
-         (org-agenda-show-log t)
-         (org-agenda-skip-deadline-if-done t)
-         (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-         (org-agenda-skip-scheduled-if-done t)
-         (org-agenda-span 2)
-         (org-agenda-sticky nil)
-         (org-agenda-tags-column -100)
-         (org-agenda-time-grid '((daily today require-timed)))
-         (org-agenda-use-tag-inheritance t)
-         (org-enforce-todo-dependencies t)
-         (org-habit-graph-column 80)
-         (org-habit-show-habits-only-for-today nil)
-         (org-track-ordered-property-with-tag t))
+          (org-agenda-dim-blocked-tasks t)
+          (org-agenda-inhibit-startup t)
+          (org-agenda-show-log t)
+          (org-agenda-skip-deadline-if-done t)
+          (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+          (org-agenda-skip-scheduled-if-done t)
+          (org-agenda-span 2)
+          (org-agenda-sticky nil)
+          (org-agenda-tags-column -100)
+          (org-agenda-time-grid '((daily today require-timed)))
+          (org-agenda-use-tag-inheritance t)
+          (org-enforce-todo-dependencies t)
+          (org-habit-graph-column 80)
+          (org-habit-show-habits-only-for-today nil)
+          (org-track-ordered-property-with-tag t))
+          (org-agenda-todo-ignore-scheduled 'future)
+         (org-agenda-custom-commands
+          '(("z" "Main Agenda View"
+             ((todo "TODO|INPROGRESS"
+               ((org-agenda-overriding-header "Personnal Todo ")
+                (org-agenda-sorting-strategy '(time-up todo-state-up))
+                (org-agenda-files '("~/org/todo.org"))))
+              (alltodo ""
+                ((org-agenda-overriding-header "Work Todo")
+                 (org-agenda-files
+                  '("~/org/work.org"))))
+              (agenda ""
+               ((org-agenda-overriding-header "Agenda")
+                (org-agenda-tag-filter-preset '("-hidden" "-volim"))
+                (org-agenda-span '3))))
+                nil nil)))
    ;;       (org-agenda-custom-commands
    ;;         '(("z" "Main agenda" agenda ""
    ;;            ((org-agenda-tag-filter-preset
@@ -458,6 +474,22 @@ For a better user experience of GNU Emacs, here are the default values I use.
    ;;     )
    )
 
+#+END_SRC
+**** Agenda =org-super-agenda=
+    Org super agenda allows a more readible agenda by grouping the todo item
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package org-super-agenda
+ :custom
+ (org-super-agenda-groups
+   '(
+     (:name "Today"
+     :time-grid t
+     :date today
+     ))))
+#+END_SRC
+**** Agenda "square view"  =calfw=
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
       (use-package calfw :after org-agenda)
 
       (use-package calfw-org
@@ -465,7 +497,9 @@ For a better user experience of GNU Emacs, here are the default values I use.
          :bind ("C-c z" . cfw:open-org-calendar)
          :custom
          cfw:org-overwrite-default-keybinding t)
+
  #+END_SRC
+
 *** Bullets
  Prettier [[https://github.com/sabof/org-bullets][bullets]] in org-mode.
  #+BEGIN_SRC emacs-lisp :tangle yes
@@ -580,22 +614,11 @@ For a better user experience of GNU Emacs, here are the default values I use.
   %^{Cuando}t"
   )
 
-
-  (defvar my/org-todod-template "* TODO %^{Que} %^g
-  DEADLINE:   %^{Fecha tope}t
+  (defvar my/org-todo-template  "* TODO %^{Que}  %^g
   :PROPERTIES:
   :Creado:     %U
   :END:
   ")
-
-  (defvar my/org-todos-template "* TODO %^{Que} %^g
-  SCHEDULED:   %^{Programado}t
-  :PROPERTIES:
-  :Creado:     %U
-  :END:
-  ")
-
-  (defvar my/org-todo-template  "* TODO %^{Que}  %^g")
 
   (defvar my/org-someday-template  "* SOMEDAY %^{Que} %^g
   :PROPERTIES:
@@ -618,19 +641,23 @@ For a better user experience of GNU Emacs, here are the default values I use.
   ;; ")
 
   (defvar my/org-work-move-template  "* TODO %^{Que} %^g
-  DEADLINE:%^{Antes de}t
   :PROPERTIES:
+  :Creado:     %U
   :mission:     %^{mission}p
   :END:
   ")
 
   (defvar my/org-stuff-buy-template  "* TOBUY %^{Que} %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
   ")
 
   (defvar my/org-stuff-gift-template  "* TOBUY %^{Que}  %^g
   :PROPERTIES:
   :por: %^{Por}
   :cuando: %^{Cuando}t
+  :Creado:     %U
   :END:
   ")
 
@@ -657,15 +684,10 @@ For a better user experience of GNU Emacs, here are the default values I use.
               my/org-someday-template)
          ("tt" "todo" entry (file "~/org/todo.org"),
               my/org-todo-template)
-         ("ts" "scheduled" entry (file "~/org/todo.org"),
-              my/org-todos-template)
-         ("td" "deadline" entry (file "~/org/todo.org"),
-              my/org-todod-template)
+         ("tw" "work" entry (file+headline "~/org/work.org" "Move"),
+              my/org-work-move-template)
       ("v" "voucher" entry (file "~/org/voucher.org"),
             my/org-voucher-template)
-      ("w" "work")
-         ("wm" "move" entry (file+headline "~/org/work.org" "Move"),
-              my/org-work-move-template)
       ("s" "stuff")
          ("sb" "buy" entry (file+headline "~/org/stuff.org" "objet"),
               my/org-stuff-buy-template)
@@ -781,36 +803,45 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #     :custom (org-crypt-key "E9AADC36E94A672D1A07D49B208FCDBB98190562"))
  # #+END_SRC
 
-*** COMMENT Journal
+*** Journal
 
- # # Recently, I started writing a journal about my daily life as I read that
- # # journals improve mental claritym, help solve problems, improve overall focus,
- # # insight and understanding, track the overall development and facilitate personal
- # # growth.
+ Recently, I started writing a journal about my daily life as I read that
+ journals improve mental claritym, help solve problems, improve overall focus,
+ insight and understanding, track the overall development and facilitate personal
+ growth.
 
- # # #+BEGIN_SRC emacs-lisp :tangle yes
- # #   (use-package org-journal
- # #     :after org
- # #     :bind (("C-c t" . org-journal-new-entry)
- # #            ("C-c Y" . journal-file-yesterday))
- # #     :preface
- # #     (defun get-journal-file-yesterday ()
- # #       "Gets filename for yesterday's journal entry."
- # #       (let* ((yesterday (time-subtract (current-time) (days-to-time 1)))
- # #              (daily-name (format-time-string "%Y%m%d" yesterday)))
- # #         (expand-file-name (concat org-journal-dir daily-name))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-journal
+    :after org
+    ;; :bind (:map (org-journal-map))
+    :bind (("C-c C-f" . org-journal-open-next-entry)
+           ("C-c C-b" . org-journal-open-previous-entry)
+           ("C-c C-j" . org-journal-new-entry)
+           ("C-c C-s" . org-journal-search)
+           ("C-c t" . org-journal-new-entry))
 
- # #     (defun journal-file-yesterday ()
- # #       "Creates and load a file based on yesterday's date."
- # #       (interactive)
- # #       (find-file (get-journal-file-yesterday)))
- # #     :custom
- # #     (org-journal-date-format "%e %b %Y (%A)")
- # #     (org-journal-dir "~/.personal/journal/2018/")
- # #     (org-journal-enable-encryption t)
- # #     (org-journal-file-format "%Y%m%d")
- # #     (org-journal-time-format ""))
- # # #+END_SRC
+    :custom
+    (org-journal-dir "~/org/journal/")
+    (org-journal-file-format "%Y%m%d")
+    (org-journal-enable-agenda-integration t))
+    ;; :preface
+    ;; (defun get-journal-file-yesterday ()
+    ;;   "Gets filename for yesterday's journal entry."
+    ;;   (let* ((yesterday (time-subtract (current-time) (days-to-time 1)))
+    ;;          (daily-name (format-time-string "%Y%m%d" yesterday)))
+    ;;     (expand-file-name (concat org-journal-dir daily-name))))
+
+    ;; (defun journal-file-yesterday ()
+    ;;   "Creates and load a file based on yesterday's date."
+    ;;   (interactive)
+    ;;   (find-file (get-journal-file-yesterday)))
+    ;; :custom
+    ;; (org-journal-date-format "%e %b %Y (%A)")
+    ;; (org-journal-dir "~/org/journal/2019/")
+    ;; (org-journal-enable-encryption t)
+    ;; (org-journal-file-format "%Y%m%d")
+    ;; (org-journal-time-format "")
+#+END_SRC
 
 *** Languages
 

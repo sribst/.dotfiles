@@ -8,15 +8,15 @@
   "alphanumericSegmentsBrightness": 255,
   "keyBacklightBrightness": 255,
   "mouseMoveInitialSpeed": 11,
-  "mouseMoveAcceleration": 68,
+  "mouseMoveAcceleration": 82,
   "mouseMoveDeceleratedSpeed": 8,
   "mouseMoveBaseSpeed": 32,
-  "mouseMoveAcceleratedSpeed": 64,
+  "mouseMoveAcceleratedSpeed": 82,
   "mouseScrollInitialSpeed": 20,
   "mouseScrollAcceleration": 32,
   "mouseScrollDeceleratedSpeed": 10,
   "mouseScrollBaseSpeed": 20,
-  "mouseScrollAcceleratedSpeed": 65,
+  "mouseScrollAcceleratedSpeed": 108,
   "moduleConfigurations": [],
   "keymaps": [
     {
