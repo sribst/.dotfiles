@@ -447,19 +447,20 @@ For a better user experience of GNU Emacs, here are the default values I use.
           (org-agenda-todo-ignore-scheduled 'future)
          (org-agenda-custom-commands
           '(("z" "Main Agenda View"
-             ((todo "TODO|INPROGRESS"
-               ((org-agenda-overriding-header "Personnal Todo ")
-                (org-agenda-sorting-strategy '(time-up todo-state-up))
-                (org-agenda-files '("~/org/todo.org"))))
+             (
               (alltodo ""
                 ((org-agenda-overriding-header "Work Todo")
                  (org-agenda-files
                   '("~/org/work.org"))))
+              (todo "TODO|INPROGRESS"
+               ((org-agenda-overriding-header "Personnal Todo ")
+                (org-agenda-sorting-strategy '(time-up todo-state-up))
+                (org-agenda-files '("~/org/todo.org"))))
               (agenda ""
                ((org-agenda-overriding-header "Agenda")
                 (org-agenda-tag-filter-preset '("-hidden" "-volim"))
-                (org-agenda-span '3))))
-                nil nil)))
+                (org-agenda-span '3)))
+                )nil nil)))
    ;;       (org-agenda-custom-commands
    ;;         '(("z" "Main agenda" agenda ""
    ;;            ((org-agenda-tag-filter-preset
