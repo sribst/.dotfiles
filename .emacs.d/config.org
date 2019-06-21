@@ -396,7 +396,6 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #+end_src
  *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
  format.
-
 ** Todo, agenda =org=
 
  One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
@@ -411,6 +410,9 @@ For a better user experience of GNU Emacs, here are the default values I use.
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
       ("C-c c" . org-capture)
+     :config
+        (org-babel-do-load-languages
+           'org-babel-load-languages '((calc . t)))
      :custom
         (org-use-extra-keys t)
         (org-catch-invisible-edits 'show-and-error)
@@ -441,23 +443,25 @@ For a better user experience of GNU Emacs, here are the default values I use.
          :after org
          :custom
          (org-directory "~/org")
-         (org-agenda-files '("~/org/")
-          (org-agenda-dim-blocked-tasks t)
-          (org-agenda-inhibit-startup t)
-          (org-agenda-show-log t)
-          (org-agenda-skip-deadline-if-done t)
-          (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-          (org-agenda-skip-scheduled-if-done t)
-          (org-agenda-span 2)
-          (org-agenda-sticky nil)
-          (org-agenda-tags-column -100)
-          (org-agenda-time-grid '((daily today require-timed)))
-          (org-agenda-use-tag-inheritance t)
-          (org-enforce-todo-dependencies t)
-          (org-habit-graph-column 80)
-          (org-habit-show-habits-only-for-today nil)
-          (org-track-ordered-property-with-tag t))
-          (org-agenda-todo-ignore-scheduled 'future)
+         (org-agenda-files '("~/org/"))
+         (org-agenda-dim-blocked-tasks t)
+         (org-agenda-inhibit-startup t)
+         (org-agenda-show-log t)
+         (org-agenda-skip-deadline-if-done t)
+         (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+         (org-agenda-skip-scheduled-if-done t)
+         (org-agenda-span 2)
+         (org-agenda-sticky nil)
+         (org-agenda-tags-column -100)
+         (org-agenda-time-grid '((daily today require-timed)))
+         (org-agenda-use-tag-inheritance t)
+         (org-enforce-todo-dependencies t)
+         (org-habit-graph-column 80)
+         (org-habit-show-habits-only-for-today nil)
+         (org-track-ordered-property-with-tag t)
+         (org-agenda-todo-ignore-scheduled 'future)
+         (org-agenda-skip-scheduled-if-done t)
+         (org-agenda-skip-deadline-if-done  t)
          (org-agenda-custom-commands
           '(("z" "Main Agenda View"
              (
@@ -781,6 +785,9 @@ For a better user experience of GNU Emacs, here are the default values I use.
         ("BOUGHT"  . (:foreground "green" :weight bold))
         ("TOBUY"   . (:foreground "red" :weight bold))
         ("IDEA"    . (:foreground "yellow" :weight bold))
+
+        ("USED"    . (:foreground "green"    :weight bold))
+        ("TOUSE"    . (:foreground "red"    :weight bold))
       )))
  #+END_SRC
 
@@ -934,6 +941,11 @@ For a better user experience of GNU Emacs, here are the default values I use.
  (interactive (list (mark) (point)))
  (org-table-convert-region beg end ";")
   )
+
+ #+END_SRC
+
+*** External call
+ #+BEGIN_SRC emacs-lisp :tangle yes
 
  #+END_SRC
 
