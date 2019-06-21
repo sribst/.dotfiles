@@ -11,9 +11,10 @@
   - [[#customization][Customization]]
   - [[#turn-off-mouse-interface][Turn off mouse interface]]
   - [[#theme][Theme]]
+  - [[#backups][Backups]]
 - [[#major-mode][Major mode]]
   - [[#languages][Languages]]
-  - [[#ledger][Ledger]]
+  - [[#budger-ledger][Budger =ledger=]]
   - [[#todo-agenda-org][Todo, agenda =org=]]
   - [[#mail-gnus][Mail =gnus=]]
   - [[#contact-bbdb][Contact =bbdb=]]
@@ -21,8 +22,7 @@
   - [[#file-explorer-dired][File Explorer =dired=]]
   - [[#password-store-pass][password-store =pass=]]
 - [[#minor-mode][Minor mode]]
-  - [[#auto-completion-company][Auto-Completion (company)]]
-  - [[#backups][Backups]]
+  - [[#auto-completion-company][Auto-Completion =company=]]
   - [[#internet-interface][Internet interface]]
   - [[#dashboard][Dashboard]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
@@ -138,6 +138,19 @@ For a better user experience of GNU Emacs, here are the default values I use.
 #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package soothe-theme)
 #+END_SRC
+** Backups
+   It is important to have a stable backup environment. Don't hesitate to save a
+   lot.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package files
+    :ensure nil
+    :custom
+    (backup-directory-alist `(("." . "~/.emacs.d/backup")))
+    (delete-old-versions -1)
+    (vc-make-backup-files t)
+    (version-control t))
+#+END_SRC
+
 * Major mode
 ** Languages
    test test
@@ -298,7 +311,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
  (use-package gitignore-mode)
  #+END_SRC
 
-** Ledger
+** Budger =ledger=
 *** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
     You need a budged : four simple rule to control you budged
 **** Give Every Dollar a Job
@@ -479,14 +492,17 @@ For a better user experience of GNU Emacs, here are the default values I use.
 **** Agenda =org-super-agenda=
     Org super agenda allows a more readible agenda by grouping the todo item
  #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package org-super-agenda
- :custom
- (org-super-agenda-groups
-   '(
-     (:name "Today"
-     :time-grid t
-     :date today
-     ))))
+   (use-package org-super-agenda
+   :custom
+   (org-super-agenda-groups
+     '(
+       (:name "Today"
+       :time-grid t
+       :date today
+       )
+       ;; (:name "Maybe"
+       ;; )
+       )))
 #+END_SRC
 **** Agenda "square view"  =calfw=
 
@@ -577,10 +593,10 @@ For a better user experience of GNU Emacs, here are the default values I use.
   %^{Cuando}t"
   )
 
-  (defvar my/org-personal-template "*** %\\1 %^g
+  (defvar my/org-personal-template "***  %^{Nombre} %^g
   :PROPERTIES:
   :Creado:     %U
-  :nombre:   %^{Nombre}
+  :nombre:   %\\1
   :lugar:    %^{Lugar}
   :con:      %^{Con}
   :END:
@@ -615,18 +631,6 @@ For a better user experience of GNU Emacs, here are the default values I use.
   %^{Cuando}t"
   )
 
-  (defvar my/org-todo-template  "* TODO %^{Que}  %^g
-  :PROPERTIES:
-  :Creado:     %U
-  :END:
-  ")
-
-  (defvar my/org-someday-template  "* SOMEDAY %^{Que} %^g
-  :PROPERTIES:
-  :Creado:     %U
-  :END:
-  ")
-
   (defvar my/org-voucher-template  "* TOUSE %^{Valor}
   DEADLINE:%^{Antes de}t
   :PROPERTIES:
@@ -641,7 +645,19 @@ For a better user experience of GNU Emacs, here are the default values I use.
   ;; :END:
   ;; ")
 
-  (defvar my/org-work-move-template  "* TODO %^{Que} %^g
+  (defvar my/org-todo-template  "* TODO %^{Que} [/] %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
+  ")
+
+  (defvar my/org-someday-template  "* SOMEDAY %^{Que} [/] %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
+  ")
+
+  (defvar my/org-work-move-template  "* TODO %^{Que} [/] %^g
   :PROPERTIES:
   :Creado:     %U
   :mission:     %^{mission}p
@@ -768,20 +784,59 @@ For a better user experience of GNU Emacs, here are the default values I use.
       )))
  #+END_SRC
 
-*** sync
-**** calendar
+*** syncronise
+**** calendar =org-caldav=
  #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org-caldav
-     :after org
-     :custom
-     (org-caldav-url "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-     (org-caldav-calendar-id "personal")
-     (org-caldav-inbox "~/org/sync2.org")
-     (org-caldav-files '(
-         "~/org/diario.org"
-         "~/org/agenda.org"
-     ))
-     (org-icalendar-timezone "Europe/Paris"))
+      (use-package org-caldav
+        :init
+        (defvar org-caldav-sync-timer nil
+                "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+        (defun org-caldav-sync-with-delay (secs)
+          (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+          (setq org-caldav-sync-timer
+                (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+        (setq org-caldav-url
+              "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+        (setq org-caldav-calendar-id "personal")
+        (setq org-caldav-inbox "~/org/sync2.org")
+        (setq org-caldav-files
+              '("~/org/diario.org" "~/org/agenda.org" "~/org/todo.org" "~/org/work.org"))
+        :config
+        (setq org-icalendar-alarm-time 1)
+        (setq org-icalendar-include-todo t)
+        (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+        (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+        :hook ((kill-emacs . org-caldav-sync)
+               (after-save .
+                   (lambda ()
+                   (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
+        ;; (add-hook 'after-save-hook
+        ;;       (lambda ()
+        ;;         (when (eq major-mode 'org-mode)
+        ;;         (org-caldav-sync-with-delay 30))))
+        ;; (add-hook 'kill-emacs-hook 'org-caldav-sync)
+   )
+      ;; (use-package org-caldav
+      ;;   :init
+      ;;   (defvar org-caldav-sync-timer nil "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+      ;;   (defun org-caldav-sync-with-delay (secs)
+      ;;     (when org-caldav-sync-timer
+      ;;       (cancel-timer org-caldav-sync-timer))
+      ;;     (setq org-caldav-sync-timer
+      ;; 	  (run-with-idle-timer
+      ;; 	   (* 1 secs) nil 'org-caldav-sync)))
+      ;;   :custom
+      ;;      (org-caldav-url "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+      ;;      (org-caldav-calendar-id "personal")
+      ;;      (org-caldav-inbox "~/org/sync2.org")
+      ;;      (org-caldav-files '(
+      ;;          "~/org/diario.org"
+      ;;          "~/org/agenda.org"
+      ;;          "~/org/todo.org"
+      ;;          "~/org/work.org"
+      ;;      ))
+      ;;      (org-icalendar-timezone "Europe/Paris")
+      ;;    )
  #+END_SRC
 
 **** contact
@@ -995,7 +1050,7 @@ made by previous commits.
     :delight "Pass ")
 #+END_SRC
 * Minor mode
-** Auto-Completion (company)
+** Auto-Completion =company=
 
 =company= provides auto-completion at point and to Displays a small pop-in
 containing the candidates.
@@ -1030,25 +1085,11 @@ completion candidates.
 #      :hook (company-mode . company-box-mode))
 # #+END_SRC
 
-** Backups
-   It is important to have a stable backup environment. Don't hesitate to save a
-   lot.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package files
-    :ensure nil
-    :custom
-    (backup-directory-alist `(("." . "~/.emacs.d/backup")))
-    (delete-old-versions -1)
-    (vc-make-backup-files t)
-    (version-control t))
-#+END_SRC
-
 ** Internet interface
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq browse-url-browser-function 'browse-url-firefox)
 #+END_SRC
-*** =wiki-summary=
+*** Search wikipage =wiki-summary=
 
 It is impossible to know everything, which is why a quick description
 of a term, without breaking its workflow, is ideal.
@@ -1078,11 +1119,12 @@ of a term, without breaking its workflow, is ideal.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package engine-mode
-    :defer 3
     :config
+    (engine-mode t)
     (defengine duckduckgo
       "https://duckduckgo.com/?q=%s"
       :keybinding "d"))
+
 #+END_SRC
 
 ** Dashboard
@@ -1513,7 +1555,7 @@ non-whitespace character.
    Don't ask before killing a buffer. I know what I'm doing.
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-  (global-set-key [remap kill-buffer] #'kill-this-buffer)
+  (global-set-key [remap kill-buffer] #'kill-current-buffer)
    #+END_SRC
 *** move around buffers =ace-window=
   ace window allow to simply switch when only 2 buffer or to choose
