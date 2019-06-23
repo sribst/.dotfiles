@@ -1,8 +1,8 @@
 #+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
 
-* table of content :TOC@3:
-- [[#emacs-initialization][Emacs Initialization]]
+* table of content                                                    :TOC@2:
+- [[#customisation][Customisation]]
   - [[#packages-sources][Packages Sources]]
   - [[#use-package][use-package]]
   - [[#delight][delight]]
@@ -10,72 +10,38 @@
   - [[#defaults-values][defaults values]]
   - [[#customization][Customization]]
   - [[#turn-off-mouse-interface][Turn off mouse interface]]
-- [[#advanced-configuration][Advanced Configuration]]
-  - [[#auto-completion-company][Auto-Completion (company)]]
+  - [[#theme][Theme]]
   - [[#backups][Backups]]
-  - [[#browser-firefox][Browser (Firefox)]]
-    - [[#engine-mode][=engine-mode=]]
-  - [[#buffers][Buffers]]
+- [[#major-mode][Major mode]]
+  - [[#languages][Languages]]
+  - [[#budger-ledger][Budger =ledger=]]
+  - [[#todo-agenda-org][Todo, agenda =org=]]
+  - [[#mail-gnus][Mail =gnus=]]
+  - [[#contact-bbdb][Contact =bbdb=]]
+  - [[#git-magit][Git =magit=]]
+  - [[#file-explorer-dired][File Explorer =dired=]]
+  - [[#password-store-pass][password-store =pass=]]
+- [[#minor-mode][Minor mode]]
+  - [[#auto-completion-company][Auto-Completion =company=]]
+  - [[#internet-interface][Internet interface]]
   - [[#dashboard][Dashboard]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#spelling][Spelling]]
-    - [[#fly-spell][Fly Spell]]
   - [[#history][History]]
   - [[#improved-package-menu-paradox][improved package menu =paradox=]]
-  - [[#general][General]]
-    - [[#aggressive-indent][=aggressive-indent=]]
-    - [[#move-text][=move-text=]]
-    - [[#rainbow-mode][=rainbow-mode=]]
-    - [[#wiki-summary][=wiki-summary=]]
-  - [[#which-key][=which-key=]]
-  - [[#ivy][Ivy]]
+  - [[#general-text-formatting][General text formatting]]
+  - [[#keystroke-which-key][keystroke =which-key=]]
+  - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#navigation][Navigation]]
-  - [[#parenthesis][Parenthesis]]
-    - [[#rainbow-delimiters][=rainbow-delimiters=]]
   - [[#pdf][PDF]]
   - [[#point-and-region][Point and Region]]
   - [[#recent-files][Recent Files]]
   - [[#whitespaces][Whitespaces]]
-    - [[#hungry-delete][=hungry-delete=]]
-  - [[#windows][Windows]]
-    - [[#windmove][=windmove=]]
-    - [[#winner][=winner=]]
+  - [[#buffer-and-windows][Buffer and Windows]]
   - [[#word-wrap][Word Wrap]]
   - [[#custom-fonction][custom fonction]]
-- [[#major-mode][Major mode]]
-  - [[#languages][Languages]]
-    - [[#emacs-lisp][Emacs Lisp]]
-    - [[#markdown][Markdown]]
-    - [[#latex][LaTeX]]
-    - [[#cobol][Cobol]]
-    - [[#coq][COQ]]
-    - [[#ocamla][OCamla]]
-    - [[#java][Java]]
-    - [[#typescript][Typescript]]
-    - [[#yaml][Yaml]]
-    - [[#config][config]]
-  -  [[#ledger][Ledger]]
-    - [[#ynab][YNAB]]
-    - [[#ledger-capture][ledger capture]]
-  - [[#org][Org]]
-    - [[#table-of-content][Table of Content]]
-    - [[#cleaner-indentation][cleaner indentation]]
-    - [[#agenda][Agenda]]
-    - [[#bullets][Bullets]]
-    - [[#capture][Capture]]
-    - [[#clock][Clock]]
-    - [[#contacts][Contacts]]
-    - [[#custormization][Custormization]]
-    - [[#journal][Journal]]
-    - [[#languages-1][Languages]]
-    - [[#other-improvment][Other improvment]]
-  - [[#mail-gnus][Mail ==gnus==]]
-  - [[#contact-bbdb][Contact ==bbdb==]]
-  - [[#git-magit][Git ==magit==]]
-  - [[#file-explorer-dired][File Explorer ==dired==]]
-  - [[#password-store-pass][password-store ==pass==]]
 
-* Emacs Initialization
+* Customisation
 ** Packages Sources
    In order to install packages, it is useful to configure the package sources.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -161,50 +127,17 @@ For a better user experience of GNU Emacs, here are the default values I use.
    Since I never use the mouse with GNU Emacs, I prefer not to use certain
    graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
    I find invasive.
-
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq menu-bar-mode   nil)                            ; Disable the menu bar
-  (setq scroll-bar-mode nil)                            ; Disable the scroll bar
-  (setq tool-bar-mode   nil)                            ; Disable the tool bar
-  (setq tooltip-mode    nil)                            ; Disable the tooltips
+    (menu-bar-mode -1)                              ; Disable the menu bar
+    (scroll-bar-mode -1)                            ; Disable the scroll bar
+    (tool-bar-mode -1)                              ; Disable the tool bar
+    (tooltip-mode -1)                               ; Disable the tooltips
 #+END_SRC
-
-* Advanced Configuration
-** Auto-Completion (company)
-
-=company= provides auto-completion at point and to Displays a small pop-in
-containing the candidates.
-
-#+BEGIN_QUOTE
-Company is a text completion framework for Emacs. The name stands for "complete
-anything". It uses pluggable back-ends and front-ends to retrieve and display
-completion candidates.
-
-[[http://company-mode.github.io/][Dmitry Gutov]]
-#+END_QUOTE
-
+** Theme
+   [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package company
-    :defer 0.5
-    :delight
-    :custom
-    (company-begin-commands '(self-insert-command))
-    (company-idle-delay .1)
-    (company-minimum-prefix-length 2)
-    (company-show-numbers t)
-    (company-tooltip-align-annotations 't)
-    (global-company-mode t))
+   (use-package soothe-theme)
 #+END_SRC
-
-# I use =company= with =company-box= that allows a company front-end with icons.
-
-# #+BEGIN_SRC emacs-lisp :tangle yes
-#    (use-package company-box
-#      :after company
-#      :delight
-#      :hook (company-mode . company-box-mode))
-# #+END_SRC
-
 ** Backups
    It is important to have a stable backup environment. Don't hesitate to save a
    lot.
@@ -216,597 +149,6 @@ completion candidates.
     (delete-old-versions -1)
     (vc-make-backup-files t)
     (version-control t))
-#+END_SRC
-
-** Browser (Firefox)
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq browse-url-browser-function 'browse-url-firefox)
-#+END_SRC
-
-*** =engine-mode=
-	With it I can start a search from within emacs.
-	I use duckduckgo and bang
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package engine-mode
-    :defer 3
-    :config
-    (defengine duckduckgo
-      "https://duckduckgo.com/?q=%s"
-      :keybinding "d"))
-#+END_SRC
-
-** Buffers
-  ace window allow to simply switch when only 2 buffer or to choose
-  which buffer with key when multiple buff
-
-  ibuffer is a better buffer mode
-
-  toggle-window-split : switch layout when two buffers are open
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ace-window
-    :bind
-    (("C-x o" . ace-window)
-    ("M-o" . ace-window))
-    :init (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l)))
-    (use-package ibuffer
-      :defer 0.2
-      :bind ("C-x C-b" . ibuffer))
-
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-  (global-set-key (kbd "C-x |") 'toggle-window-split)
-#+END_SRC
-** Dashboard
-Always good to have a dashboard.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dashboard
-    :preface
-    :init
-    (add-hook 'after-make-frame-functions 'dashboard-refresh-buffer)
-    ;; (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-    :custom (dashboard-startup-banner 'logo)
-    :config (dashboard-setup-startup-hook))
-#+END_SRC
-** reset config when config.org changes
-
-not-sur to understand how it works
-I'm using an =.org= file to maintain my GNU Emacs configuration. However, at his
-launch, it will loads the =config.el= source file for a faster loading.
-
-The code below, executes =org-babel-tangle= asynchronously when
-=config.org= is saved.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package async)
-
-  (defvar *config-file* ".emacs.d/config.org" "The configuration file.")
-
-  (defvar *config-last-change* (nth 5 (file-attributes *config-file*))
-    "Last modification time of the configuration file.")
-
-  (defvar *show-async-tangle-results* nil "Keeps *emacs* async buffers around for later inspection.")
-
-  (defun my/config-updated ()
-    "Checks if the configuration file has been updated since the last time."
-    (time-less-p *config-last-change*
-                 (nth 5 (file-attributes *config-file*))))
-
-  (defun my/config-tangle ()
-    "Tangles the org file asynchronously."
-    (when (my/config-updated)
-      (setq *config-last-change*
-            (nth 5 (file-attributes *config-file*)))
-      (my/async-babel-tangle *config-file*)))
-
-  (defun my/async-babel-tangle (org-file)
-    "Tangles the org file asynchronously."
-    (let ((init-tangle-start-time (current-time))
-          (file (buffer-file-name))
-          (async-quiet-switch "-q"))
-      (async-start
-       `(lambda ()
-          (require 'org)
-          (org-babel-tangle-file ,org-file))
-       (unless *show-async-tangle-results*
-         `(lambda (result)
-            (if result
-                (message "SUCCESS: %s successfully tangled (%.2fs)."
-                         ,org-file
-                         (float-time (time-subtract (current-time)
-                                                    ',init-tangle-start-time)))
-              (message "ERROR: %s as tangle failed." ,org-file)))))))
-#+END_SRC
-
-** Spelling
-*** Fly Spell
-
-For the other words that would not be in my list of abbreviations, =flyspell=
-enables spell checking on-the-fly in GNU Emacs.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package flyspell
-    :defer 1
-    :delight
-    :custom
-    (flyspell-abbrev-p t)
-    (flyspell-issue-message-flag nil)
-    (flyspell-issue-welcome-flag nil)
-    (flyspell-mode 1))
-
-    (use-package flyspell-correct-ivy
-      :bind ("C-M-;" . flyspell-correct-wrapper)
-      :init
-        (setq flyspell-correct-interface #'flyspell-correct-ivy))
-  (use-package ispell
-    :custom
-    (ispell-silently-savep t))
-#+END_SRC
-
-** History
-
-Provides the ability to have commands and their history saved so that whenever
-you return to work, you can re-run things as you need them. This is not a
-radical function, it is part of a good user experience.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package savehist
-    :ensure nil
-    :custom
-    (history-delete-duplicates t)
-    (history-length t)
-    (savehist-additional-variables
-     '(kill-ring
-       search-ring
-       regexp-search-ring))
-    (savehist-file  "~/.emacs.d/history" )
-    (savehist-save-minibuffer-history 1)
-    :config (savehist-mode 1))
-#+END_SRC
-
-** improved package menu =paradox=
-
-Improved GNU Emacs standard package menu.
-
-#+BEGIN_QUOTE
-Project for modernizing Emacs' Package Menu. With improved appearance, mode-line
-information. Github integration, customizability, asynchronous upgrading, and
-more.
-
-[[https://github.com/Malabarba/paradox][Artur Malabarba]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package paradox
-    :defer 1
-    :custom
-    (paradox-column-width-package 27)
-    (paradox-column-width-version 13)
-    (paradox-execute-asynchronously t)
-    (paradox-hide-wiki-packages t)
-    :config
-    (paradox-enable)
-    (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
-#+END_SRC
-
-** General
-*** =aggressive-indent=
-
-Auto-indent code as you write.
-
-#+BEGIN_QUOTE
-=electric-indent-mode= is enough to keep your code nicely aligned when all you
-do is type. However, once you start shifting blocks around, transposing lines,
-or slurping and barfing sexps, indentation is bound to go wrong.
-
-=aggressive-indent-mode= is a minor mode that keeps your code *always* indented.
-It reindents after every change, making it more reliable than
-electric-indent-mode.
-
-[[https://github.com/Malabarba/aggressive-indent-mode][Artur Malabarba]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package aggressive-indent
-    :defer 2
-    :hook ((css-mode . aggressive-indent-mode)
-           (emacs-lisp-mode . aggressive-indent-mode)
-           (js-mode . aggressive-indent-mode)
-           (lisp-mode . aggressive-indent-mode))
-    :custom (aggressive-indent-comments-too))
-#+END_SRC
-
-*** =move-text=
-
- Moves the current line (or if marked, the current region's, whole lines).
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package move-text
-    :defer 2
-    :bind (("M-p" . move-text-up)
-           ("M-n" . move-text-down))
-    :config (move-text-default-bindings))
-#+END_SRC
-
-*** =rainbow-mode=
-
-Colorize colors as text with their value.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-mode
-    :defer 2
-    :delight
-    :hook (prog-mode))
-#+END_SRC
-
-**** Replace the current file with the saved one :notused:
-
-Avoids call the function or reload Emacs.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package autorevert
-    :ensure nil
-    :delight auto-revert-mode
-    :bind ("C-x R" . revert-buffer)
-    :custom (auto-revert-verbose nil)
-    :config (global-auto-revert-mode 1))
-#+END_SRC
-
-#+RESULTS:
-: revert-buffer
-
-*** COMMENT =undo-tree=
-
-GNU Emacs's undo system allows you to recover any past state of a buffer. To do
-this, Emacs treats "undo itself as another editing that can be undone".
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package undo-tree
-  ;;   :delight
-  ;;   :bind ("C--" . undo-tree-redo)
-  ;;   :init (global-undo-tree-mode)
-  ;;   :custom
-  ;;   (undo-tree-visualizer-timestamps t)
-  ;;   (undo-tree-visualizer-diff t))
-#+END_SRC
-
-*** =wiki-summary=
-
-It is impossible to know everything, which is why a quick description
-of a term, without breaking its workflow, is ideal.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package wiki-summary
-    :defer 1
-    :bind ("C-c W" . wiki-summary)
-    :preface
-    (defun my/format-summary-in-buffer (summary)
-      "Given a summary, stick it in the *wiki-summary* buffer and display the buffer"
-      (let ((buf (generate-new-buffer "*wiki-summary*")))
-        (with-current-buffer buf
-          (princ summary buf)
-          (fill-paragraph)
-          (goto-char (point-min))
-          (text-mode)
-          (view-mode))
-        (pop-to-buffer buf))))
-
-  (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
-#+END_SRC
-
-** =which-key=
-
-It's difficult to remember all the keyboard shortcuts. The =which-key= package
-helps to solve this.
-
-I used =guide-key= in my past days, but =which-key= is a good replacement.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package which-key
-    :defer 0.2
-    :delight
-    :config (which-key-mode))
-#+END_SRC
-
-#+RESULTS:
-
-** Ivy
-
-I used =helm= before, but I find =ivy= faster and lighter.
-
-#+BEGIN_QUOTE
-Ivy is a generic completion mechanism for Emacs. While it operates similarly to
-other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
-smaller, simpler, and smoother to use yet highly customizable.
-
-[[https://github.com/abo-abo/ivy][Oleh Krehel]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package counsel
-    :after ivy
-    :delight
-    :config (counsel-mode))
-
-  (use-package ivy
-    :defer 0.1
-    :delight
-    :bind (("C-c C-r" . ivy-resume)
-           ("C-x B" . ivy-switch-buffer-other-window))
-    :custom
-    (ivy-count-format "(%d/%d) ")
-    (ivy-use-virtual-buffers t)
-    :config (ivy-mode))
-
-  (use-package ivy-pass
-    :after ivy
-    :commands ivy-pass)
-
-  (use-package ivy-rich
-    :after ivy
-    :init (setq ivy-rich-parse-remote-file-path t)
-    :config (ivy-rich-mode 1))
-
-  (use-package swiper
-    :after ivy
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)))
-#+END_SRC
-
-** Navigation
-
-This function is a mix of =C-a= and =M-m=.
-
-From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun my/smarter-move-beginning-of-line (arg)
-  "Moves point back to indentation of beginning of line.
-
-  Move point to the first non-whitespace character on this line.
-  If point is already there, move to the beginning of the line.
-  Effectively toggle between the first non-whitespace character and
-  the beginning of the line.
-
-  If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-  point reaches the beginning or end of the buffer, stop there."
-    (interactive "^p")
-    (setq arg (or arg 1))
-
-    ;; Move lines first
-    (when (/= arg 1)
-      (let ((line-move-visual nil))
-        (forward-line (1- arg))))
-
-    (let ((orig-point (point)))
-      (back-to-indentation)
-      (when (= orig-point (point))
-        (move-beginning-of-line 1))))
-
-(global-set-key [remap org-beginning-of-line] #'my/smarter-move-beginning-of-line)
-(global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
-#+END_SRC
-
-** Parenthesis
-
-*** =rainbow-delimiters=
-
-#+BEGIN_QUOTE
-rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
-delimiters such as parentheses, brackets or braces according to their
-depth. Each successive level is highlighted in a different color. This makes it
-easy to spot matching delimiters, orient yourself in the code, and tell which
-statements are at a given depth.
-
-[[https://github.com/Fanael/rainbow-delimiters][Fanael Linithien]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-delimiters
-    :defer 1
-    :hook (prog-mode . rainbow-delimiters-mode))
-#+END_SRC
-
-** PDF
-#+BEGIN_QUOTE
-PDF Tools is, among other things, a replacement of DocView for PDF files. The
-key difference is that pages are not pre-rendered by e.g. ghostscript and stored
-in the file-system, but rather created on-demand and stored in memory.
-[[https://github.com/politza/pdf-tools][Andras Politz]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package pdf-tools
-     :defer 1
-     :init (pdf-tools-install :no-query))
-
-   (use-package pdf-view
-     :ensure nil
-     :after pdf-tools
-     :bind (:map pdf-view-mode-map
-                 ("C-s" . isearch-forward)
-                 ("d" . pdf-annot-delete)
-                 ("h" . pdf-annot-add-highlight-markup-annotation)
-                 ("t" . pdf-annot-add-text-annotation))
-     :custom
-     (pdf-view-display-size 'fit-page)
-     (pdf-view-resize-factor 1.1)
-     (pdf-view-use-unicode-ligther nil))
- #+END_SRC
-
-** Point and Region
-
-Increase region by semantic units. It tries to be smart about it and adapt to
-the structure of the current major mode.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package expand-region
-    :defer 2
-    :bind (("C-+" . er/contract-region)
-           ("C-=" . er/expand-region)))
-#+END_SRC
-
-I find useful to delete a line and a region with only =C-w=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defadvice kill-region (before slick-cut activate compile)
-    "When called interactively with no active region, kill a single line instead."
-    (interactive
-     (if mark-active (list (region-beginning) (region-end))
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
-#+END_SRC
-
-** Recent Files
-
-Provides fast access to the recent files.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package recentf
-    :defer 2
-    :bind ("C-x r" . recentf-open-files)
-    :init (recentf-mode)
-    :custom
-    (recentf-exclude (list "COMMIT_EDITMSG"
-                           "~$"
-                           "/scp:"
-                           "/ssh:"
-                           "/sudo:"
-                           "/tmp/"
-                           "recentf"
-                           ".newsrc-dribble"
-                           ))
-    (recentf-max-menu-items 15)
-    (recentf-max-saved-items 200)
-    (recentf-save-file "~/.emacs.d/recentf" )
-    :config (run-at-time nil (* 5 60) 'recentf-save-list))
-#+END_SRC
-
-** Whitespaces
-
-It is often annoying to see unnecessary blank spaces at the end of a line or file.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package whitespace
-    :defer 1
-    :hook (before-save . delete-trailing-whitespace))
-#+END_SRC
-
-*** =hungry-delete=
-
-#+BEGIN_QUOTE
-Deleting a whitespace character will delete all whitespace until the next
-non-whitespace character.
-
-# [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package hungry-delete
-    :defer 0.7
-    :delight
-    :config (global-hungry-delete-mode))
-#+END_SRC
-
-** Windows
-
-Don't ask before killing a buffer. I know what I'm doing.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (global-set-key [remap kill-buffer] #'kill-this-buffer)
-#+END_SRC
-
-
-*** =windmove=
-
-# # Allows you to move from one window to another with something more natural than
-# # cycling through =C-x o= (=other-window=).
-
-# # #+BEGIN_SRC emacs-lisp :tangle yes
-# #   (use-package windmove
-# #     :defer 0.2
-# #     :bind (("C-c h" . windmove-left)
-# #            ("C-c j" . windmove-down)
-# #            ("C-c k" . windmove-up)
-# #            ("C-c l" . windmove-right)))
-# # #+END_SRC
-
-*** =winner=
-
-I often undo's and redo's with window configurations.
-
-#+BEGIN_QUOTE
-Winner mode is a global minor mode that records the changes in the window
-configuration (i.e. how the frames are partitioned into windows) so that the
-changes can be "undone" using the command =winner-undo=. By default this one is
-bound to the key sequence ctrl-c left. If you change your mind (while undoing),
-you can press ctrl-c right (calling =winner-redo=).
-
-[[https://github.com/emacs-mirror/emacs/blob/master/lisp/winner.el][Ivar Rummelhoff]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package winner
-    :defer 2
-    :config (winner-mode 1))
-#+END_SRC
-
-** Word Wrap
-
-I like to have lines of the same length.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package simple
-    :ensure nil
-    :delight (auto-fill-function)
-    :bind ("C-x p" . pop-to-mark-command)
-    :hook ((prog-mode . turn-on-auto-fill)
-           (text-mode . turn-on-auto-fill))
-    :custom (set-mark-command-repeat-pop t))
-#+END_SRC
-
-
-** custom fonction
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; revert all open file buffer
-(defun revert-all-buffers ()
-  "Refreshes all open buffers from their respective files."
-  (interactive)
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (and (buffer-file-name) (file-exists-p (buffer-file-name)) (not (buffer-modified-p)))
-        (revert-buffer t t t) )))
-  (message "Refreshed open files.") )
-
-;; reload emacs config
-(defun reload-dotemacs-file ()
-  "reload your .emacs file without restarting Emacs"
-  (interactive)
-  (load-file "~/.emacs.d/init.el"))
-
 #+END_SRC
 
 * Major mode
@@ -969,7 +311,7 @@ I like to have lines of the same length.
  (use-package gitignore-mode)
  #+END_SRC
 
-**  Ledger
+** Budger =ledger=
 *** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
     You need a budged : four simple rule to control you budged
 **** Give Every Dollar a Job
@@ -1054,19 +396,11 @@ I like to have lines of the same length.
  #+end_src
  *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
  format.
-
-** Org
+** Todo, agenda =org=
 
  One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
  take notes and make my presentations, but you can do lots of things with
  it. =org-mode= it's like the sky, without limits.
-
- #+BEGIN_QUOTE
- Org mode is for keeping notes, maintaining TODO lists, planning projects, and
- authoring documents with a fast and effective plain-text system.
-
- [[http://orgmode.org/][Carsten Dominik]]
- #+END_QUOTE
 
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org
@@ -1076,80 +410,119 @@ I like to have lines of the same length.
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
       ("C-c c" . org-capture)
+     :config
+        (org-babel-do-load-languages
+           'org-babel-load-languages '((calc . t)))
      :custom
         (org-use-extra-keys t)
         (org-catch-invisible-edits 'show-and-error)
         (org-cycle-separator-lines 0))
  #+END_SRC
-*** Table of Content
+*** generate TOC automaticaly
     If like me, you're tired of manually updating your tables of contents, =toc-org=
     will maintain a table of contents at the first heading that has a =:TOC:= tag.
-
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package toc-org
      :after org
      :hook (org-mode . toc-org-enable))
  #+END_SRC
 *** cleaner indentation
-
  For a cleaner online mode.
-
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org-indent :after org :ensure nil :delight)
  #+END_SRC
-
 *** Agenda
-
  Nowadays, it is crucial to be organized. Even more than before. That is why it
  is important to take the time to make a configuration that is simple to use and
  that makes your life easier with an irreproachable organization.
-
  =org-agenda= allows me to be organized with daily tasks. As a result, I can use
  my time to the fullest.
+ #+BEGIN_SRC emacs-lisp :tangle yes
+       (use-package org-agenda
+         :ensure nil
+         :after org
+         :custom
+         (org-directory "~/org")
+         (org-agenda-files '("~/org/"))
+         (org-agenda-dim-blocked-tasks t)
+         (org-agenda-inhibit-startup t)
+         (org-agenda-show-log t)
+         (org-agenda-skip-deadline-if-done t)
+         (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+         (org-agenda-skip-scheduled-if-done t)
+         (org-agenda-span 2)
+         (org-agenda-sticky nil)
+         (org-agenda-tags-column -100)
+         (org-agenda-time-grid '((daily today require-timed)))
+         (org-agenda-use-tag-inheritance t)
+         (org-enforce-todo-dependencies t)
+         (org-habit-graph-column 80)
+         (org-habit-show-habits-only-for-today nil)
+         (org-track-ordered-property-with-tag t)
+         (org-agenda-todo-ignore-scheduled 'future)
+         (org-agenda-skip-scheduled-if-done t)
+         (org-agenda-skip-deadline-if-done  t)
+         (org-agenda-custom-commands
+          '(("z" "Main Agenda View"
+             (
+              (alltodo ""
+                ((org-agenda-overriding-header "Work Todo")
+                 (org-agenda-files
+                  '("~/org/work.org"))))
+              (todo "TODO|INPROGRESS"
+               ((org-agenda-overriding-header "Personnal Todo ")
+                (org-agenda-sorting-strategy '(time-up todo-state-up))
+                (org-agenda-files '("~/org/todo.org"))))
+              (agenda ""
+               ((org-agenda-overriding-header "Agenda")
+                (org-agenda-tag-filter-preset '("-hidden" "-volim"))
+                (org-agenda-span '3)))
+                )nil nil)))
+   ;;       (org-agenda-custom-commands
+   ;;         '(("z" "Main agenda" agenda ""
+   ;;            ((org-agenda-tag-filter-preset
+   ;;            '("-volim" "-hidden"))))
+   ;;           ;; ("q" "Main Agenda"
+   ;;           ;;   ((tags "PRIORITY=\"A\""
+   ;;           ;;     ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+   ;;           ;;      (org-agenda-overriding-header "High-priority unfinished tasks:")))
+   ;;           ;;   (agenda "")
+   ;;           ;;   (alltodo ""))
+   ;; )
+   ;;     )
+   )
+
+#+END_SRC
+**** Agenda =org-super-agenda=
+    Org super agenda allows a more readible agenda by grouping the todo item
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package org-super-agenda
+   :custom
+   (org-super-agenda-groups
+     '(
+       (:name "Today"
+       :time-grid t
+       :date today
+       )
+       ;; (:name "Maybe"
+       ;; )
+       )))
+#+END_SRC
+**** Agenda "square view"  =calfw=
 
  #+BEGIN_SRC emacs-lisp :tangle yes
-      (use-package org-agenda
-        :ensure nil
-        :after org
-        :custom
-        (org-directory "~/org")
-        (org-agenda-files '("~/org/")
-        (org-agenda-dim-blocked-tasks t)
-        (org-agenda-inhibit-startup t)
-        (org-agenda-show-log t)
-        (org-agenda-skip-deadline-if-done t)
-        (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-        (org-agenda-skip-scheduled-if-done t)
-        (org-agenda-span 2)
-        (org-agenda-sticky nil)
-        (org-agenda-tags-column -100)
-        (org-agenda-time-grid '((daily today require-timed)))
-        (org-agenda-use-tag-inheritance t)
-        (org-enforce-todo-dependencies t)
-        (org-habit-graph-column 80)
-        (org-habit-show-habits-only-for-today nil)
-        (org-track-ordered-property-with-tag t))
-        (org-agenda-custom-commands
-          (quote
-          (("z" "Clean agenda" agenda ""
-          ((org-agenda-tag-filter-preset
-            (quote  ("-volim" "-hidden")))))))))
+      (use-package calfw :after org-agenda)
 
-
-     (use-package calfw :after org-agenda)
-
-     (use-package calfw-org
-        :after calfw
-        :bind ("C-c z" . cfw:open-org-calendar)
-        :custom
-        cfw:org-overwrite-default-keybinding t)
+      (use-package calfw-org
+         :after calfw
+         :bind ("C-c z" . cfw:open-org-calendar)
+         :custom
+         cfw:org-overwrite-default-keybinding t)
 
  #+END_SRC
 
 *** Bullets
-
  Prettier [[https://github.com/sabof/org-bullets][bullets]] in org-mode.
-
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org-bullets
      :hook (org-mode . org-bullets-mode)
@@ -1161,144 +534,190 @@ I like to have lines of the same length.
  it to quickly record tasks, ledger entries, notes and other semi-structured
  information.
 
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org-capture
-     :ensure nil
-     :after org
-     :preface
-     (defun org-capture-template-goto-link ()
-          "Set point for capturing at what capture target file+headline with headline set to %l would do."
-          (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target))
-                                                               (org-capture-get :annotation)))
-          (org-capture-put-target-region-and-position)
-          (widen)
-          (let ((hd (nth 2 (org-capture-get :target))))
-               (goto-char (point-min))
-               (if (re-search-forward
-                   (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
-               (goto-char (point-at-bol))
-               (goto-char (point-max))
-               (or (bolp) (insert "\n"))
-               (insert "* " hd "\n")
-               (beginning-of-line 0))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-capture
+    :ensure nil
+    :after org
+    :preface
+    (defun org-capture-template-goto-link ()
+         "Set point for capturing at what capture target file+headline with headline set to %l would do."
+         (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target))
+                                                              (org-capture-get :annotation)))
+         (org-capture-put-target-region-and-position)
+         (widen)
+         (let ((hd (nth 2 (org-capture-get :target))))
+              (goto-char (point-min))
+              (if (re-search-forward
+                  (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
+              (goto-char (point-at-bol))
+              (goto-char (point-max))
+              (or (bolp) (insert "\n"))
+              (insert "* " hd "\n")
+              (beginning-of-line 0))))
 
-     (defvar my/org-people-template "** %\\1 %\\2
-   :PROPERTIES:
-   :Nombre:        %^{Nombre}
-   :Apellido:      %^{Apellido}%?
-   :Compleanos:    %^{Fecha de nacimiento}u
-   :Telefono:      %^{Telefono}
-   :Correo:        %^{Correo}
-   :Direccion:     %^{Direccion}
-   :Ciudad:        %^{Ciudad}
-   :Pais:          %^{Pais}
-   :Codigo postal: %^{Codigo postal}
-   :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-   :Nota:
-   :END:"
-   )
+    (defvar my/org-people-template "** %\\1 %\\2
+  :PROPERTIES:
+  :Creado:        %U
+  :Nombre:        %^{Nombre}
+  :Apellido:      %^{Apellido}%?
+  :Compleanos:    %^{Fecha de nacimiento}u
+  :Telefono:      %^{Telefono}
+  :Correo:        %^{Correo}
+  :Direccion:     %^{Direccion}
+  :Ciudad:        %^{Ciudad}
+  :Pais:          %^{Pais}
+  :Codigo postal: %^{Codigo postal}
+  :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+  :Nota:
+  :END:"
+  )
 
-   (defvar my/org-adress-template "** %\\1
-   :PROPERTIES:
-   :Nombre:        %^{Nombre}
-   :Telefono:      %^{Telefono}
-   :Correo:        %^{Correo}
-   :Direccion:     %^{Direccion}
-   :Ciudad:        %^{Ciudad}
-   :Pais:          %^{Pais}
-   :Codigo postal: %^{Codigo postal}
-   :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-   :END: "
-   )
+  (defvar my/org-adress-template "** %\\1
+  :PROPERTIES:
+  :Creado:        %U
+  :Nombre:        %^{Nombre}
+  :Telefono:      %^{Telefono}
+  :Correo:        %^{Correo}
+  :Direccion:     %^{Direccion}
+  :Ciudad:        %^{Ciudad}
+  :Pais:          %^{Pais}
+  :Codigo postal: %^{Codigo postal}
+  :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
+  :END: "
+  )
 
-   (defvar my/org-espectaculo-template "*** %\\1
-   :PROPERTIES:
-   :nombre:   %^{Nombre}
-   :tipo:     %^{tipo}p
-   :lugar:    %^{Lugar}
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-espectaculo-template "*** %\\1
+  :PROPERTIES:
+  :Creado:     %U
+  :nombre:   %^{Nombre}
+  :tipo:     %^{tipo}p
+  :lugar:    %^{Lugar}
+  :con:      %^{Con}
+  :END:
+  %^{Cuando}t"
+  )
 
-   (defvar my/org-personal-template "*** %\\1
-   :PROPERTIES:
-   :nombre:   %^{Nombre}
-   :lugar:    %^{Lugar}
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-personal-template "***  %^{Nombre} %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :nombre:   %\\1
+  :lugar:    %^{Lugar}
+  :con:      %^{Con}
+  :END:
+  %^{Cuando}t"
+  )
 
-   (defvar my/org-transporte-template "** %\\1 -> %\\2
-   :PROPERTIES:
-   :de:       %^{de}
-   :a:        %^{a}
-   :tipo:     %^{tipo}p
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-transporte-template "** %\\1 -> %\\2
+  :PROPERTIES:
+  :de:       %^{de}
+  :a:        %^{a}
+  :tipo:     %^{tipo}p
+  :con:      %^{Con}
+  :END:
+  %^{Cuando}t"
+  )
 
-   (defvar my/org-ida-vuelta-template "** %\\1 -> %\\2
-   :PROPERTIES:
-   :de:       %^{de}
-   :a:        %^{a}
-   :tipo:     %^{tipo}p
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END:
-   ,** %\\2 -> %\\1
-   :PROPERTIES:
-   :de:       %\\2
-   :a:        %\\1
-   :tipo:     %^{tipo}p
-   :con:      %^{Con}
-   :cuando:   %^{Cuando}t
-   :END: "
-   )
+  (defvar my/org-ida-vuelta-template "** %\\1 -> %\\2
+  :PROPERTIES:
+  :de:       %^{de}
+  :a:        %^{a}
+  :tipo:     %^{tipo}p
+  :con:      %^{Con}
+  :END:
+  %^{Cuando}t
+  ,** %\\2 -> %\\1
+  :PROPERTIES:
+  :de:       %\\2
+  :a:        %\\1
+  :tipo:     %^{tipo}p
+  :con:      %^{Con}
+  :END:
+  %^{Cuando}t"
+  )
 
-   (defvar my/org-administrativod-template "** TODO %^{Que}
-   DEADLINE:   %^{Fecha tope}t
-   ")
+  (defvar my/org-voucher-template  "* TOUSE %^{Valor}
+  DEADLINE:%^{Antes de}t
+  :PROPERTIES:
+  :Tipo:     %^{TIPO}p
+  :END:
+  %^{Cuando}t"
+  )
 
-   (defvar my/org-administrativos-template "** TODO %^{Que}
-   SCHEDULED:   %^{Programado}t
-   ")
+  ;; (defvar my/org-media-template  "* %^{Nombre}
+  ;; :PROPERTIES:
+  ;; :tipo:     %^{tipo}p
+  ;; :END:
+  ;; ")
 
-   (defvar my/org-administrativo-template  "** TODO %^{Que}
-   :PROPERTIES:
-   :cuando:   %^{Cuando}t
-   :END:")
+  (defvar my/org-todo-template  "* TODO %^{Que} [/] %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
+  ")
 
-   :custom
-   (org-capture-templates `(
-   ("c" "Contact")
-      ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
-           my/org-people-template :empty-lines 1)
-      ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
-           my/org-people-template :empty-lines 1)
-   ("e" "Evento")
-      ("es" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
-           my/org-espectaculo-template :empty-lines 1)
-      ("ep" "Personal" entry (file+headline "~/org/diario.org" "Personal"),
-           my/org-personal-template :empty-lines 1)
-   ("v" "Viaje")
-      ("vi" "Viaje individual" entry (file+headline "~/org/diario.org" "Transporte"),
-           my/org-transporte-template :empty-lines 1)
-      ("vv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
-           my/org-ida-vuelta-template :empty-lines 1)
-   ("a" "Administrativo")
-      ("am" "meeting" entry (file+headline "~/org/diario.org" "Administrativo"),
-           my/org-administrativo-template :empty-lines 1)
-      ("as" "scheduled" entry (file+headline "~/org/diario.org" "Administrativo"),
-           my/org-administrativos-template :empty-lines 1)
-      ("ad" "deadline" entry (file+headline "~/org/diario.org" "Administrativo"),
-           my/org-administrativod-template :empty-lines 1))))
+  (defvar my/org-someday-template  "* SOMEDAY %^{Que} [/] %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
+  ")
 
- #+END_SRC
+  (defvar my/org-work-move-template  "* TODO %^{Que} [/] %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :mission:     %^{mission}p
+  :END:
+  ")
 
-*** Clock
+  (defvar my/org-stuff-buy-template  "* TOBUY %^{Que} %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :END:
+  ")
+
+  (defvar my/org-stuff-gift-template  "* TOBUY %^{Que}  %^g
+  :PROPERTIES:
+  :por: %^{Por}
+  :cuando: %^{Cuando}t
+  :Creado:     %U
+  :END:
+  ")
+
+  :custom
+  (org-capture-templates `(
+      ("c" "Contact")
+         ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
+              my/org-people-template :empty-lines 1)
+         ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
+              my/org-adress-template :empty-lines 1)
+      ("d" "diario")
+         ("de" "Evento")
+            ("des" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
+              my/org-espectaculo-template :empty-lines 1)
+            ("dep" "Personal" entry (file+headline "~/org/diario.org" "Personal"),
+              my/org-personal-template :empty-lines 1)
+         ("dv" "Viaje")
+            ("dvi" "Viaje individual" entry (file+headline "~/org/diario.org" "Transporte"),
+              my/org-transporte-template :empty-lines 1)
+            ("dvv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
+              my/org-ida-vuelta-template :empty-lines 1)
+      ("t" "todo")
+         ("to" "oneday" entry (file "~/org/todo.org"),
+              my/org-someday-template)
+         ("tt" "todo" entry (file "~/org/todo.org"),
+              my/org-todo-template)
+         ("tw" "work" entry (file+headline "~/org/work.org" "Move"),
+              my/org-work-move-template)
+      ("v" "voucher" entry (file "~/org/voucher.org"),
+            my/org-voucher-template)
+      ("s" "stuff")
+         ("sb" "buy" entry (file+headline "~/org/stuff.org" "objet"),
+              my/org-stuff-buy-template)
+         ("sg" "gift" entry (file+headline "~/org/stuff.org" "objet"),
+              my/org-stuff-gift-template)
+)))
+#+END_SRC
+
+*** COMMENT Clock
 
  # # Being organized is one thing, but being optimal is another. =org-clock= allows
  # # you to estimate your tasks and time them. This is useful, since with experience,
@@ -1345,7 +764,7 @@ I like to have lines of the same length.
      :custom (org-contacts-files '("~/org/contacts.org")))
  #+END_SRC
 
-*** Custormization
+*** Customization
 
  Let's change the foreground and the weight of each keywords.
 
@@ -1355,12 +774,79 @@ I like to have lines of the same length.
      :after org
      :custom
      (org-todo-keyword-faces
-      '(("DONE" . (:foreground "cyan" :weight bold))
-        ("SOMEDAY" . (:foreground "gray" :weight bold))
-        ("TODO" . (:foreground "green" :weight bold))
-        ("WAITING" . (:foreground "red" :weight bold)))))
+      '(
+        ("ABORDED" . (:foreground "grey"   :weight bold))
+        ("DONE"    . (:foreground "green"  :weight bold))
+        ("SOMEDAY" . (:foreground "orange" :weight bold))
+        ("TODO"    . (:foreground "red"    :weight bold))
+        ("WAITING" . (:foreground "yellow" :weight bold))
+
+        ("GIVEN"   . (:foreground "blue" :weight bold))
+        ("BOUGHT"  . (:foreground "green" :weight bold))
+        ("TOBUY"   . (:foreground "red" :weight bold))
+        ("IDEA"    . (:foreground "yellow" :weight bold))
+
+        ("USED"    . (:foreground "green"    :weight bold))
+        ("TOUSE"    . (:foreground "red"    :weight bold))
+      )))
  #+END_SRC
 
+*** syncronise
+**** calendar =org-caldav=
+ #+BEGIN_SRC emacs-lisp :tangle yes
+      (use-package org-caldav
+        :init
+        (defvar org-caldav-sync-timer nil
+                "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+        (defun org-caldav-sync-with-delay (secs)
+          (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+          (setq org-caldav-sync-timer
+                (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+        (setq org-caldav-url
+              "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+        (setq org-caldav-calendar-id "personal")
+        (setq org-caldav-inbox "~/org/sync2.org")
+        (setq org-caldav-files
+              '("~/org/diario.org" "~/org/agenda.org" "~/org/todo.org" "~/org/work.org"))
+        :config
+        (setq org-icalendar-alarm-time 1)
+        (setq org-icalendar-include-todo t)
+        (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+        (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+        :hook ((kill-emacs . org-caldav-sync)
+               (after-save .
+                   (lambda ()
+                   (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
+        ;; (add-hook 'after-save-hook
+        ;;       (lambda ()
+        ;;         (when (eq major-mode 'org-mode)
+        ;;         (org-caldav-sync-with-delay 30))))
+        ;; (add-hook 'kill-emacs-hook 'org-caldav-sync)
+   )
+      ;; (use-package org-caldav
+      ;;   :init
+      ;;   (defvar org-caldav-sync-timer nil "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+      ;;   (defun org-caldav-sync-with-delay (secs)
+      ;;     (when org-caldav-sync-timer
+      ;;       (cancel-timer org-caldav-sync-timer))
+      ;;     (setq org-caldav-sync-timer
+      ;; 	  (run-with-idle-timer
+      ;; 	   (* 1 secs) nil 'org-caldav-sync)))
+      ;;   :custom
+      ;;      (org-caldav-url "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+      ;;      (org-caldav-calendar-id "personal")
+      ;;      (org-caldav-inbox "~/org/sync2.org")
+      ;;      (org-caldav-files '(
+      ;;          "~/org/diario.org"
+      ;;          "~/org/agenda.org"
+      ;;          "~/org/todo.org"
+      ;;          "~/org/work.org"
+      ;;      ))
+      ;;      (org-icalendar-timezone "Europe/Paris")
+      ;;    )
+ #+END_SRC
+
+**** contact
 *** COMMENT Encryption / Decryption
 
  To be able to enable encryption and decryption of =.gpg= files with =org-mode=,
@@ -1382,34 +868,43 @@ I like to have lines of the same length.
 
 *** Journal
 
- # # Recently, I started writing a journal about my daily life as I read that
- # # journals improve mental claritym, help solve problems, improve overall focus,
- # # insight and understanding, track the overall development and facilitate personal
- # # growth.
+ Recently, I started writing a journal about my daily life as I read that
+ journals improve mental claritym, help solve problems, improve overall focus,
+ insight and understanding, track the overall development and facilitate personal
+ growth.
 
- # # #+BEGIN_SRC emacs-lisp :tangle yes
- # #   (use-package org-journal
- # #     :after org
- # #     :bind (("C-c t" . org-journal-new-entry)
- # #            ("C-c Y" . journal-file-yesterday))
- # #     :preface
- # #     (defun get-journal-file-yesterday ()
- # #       "Gets filename for yesterday's journal entry."
- # #       (let* ((yesterday (time-subtract (current-time) (days-to-time 1)))
- # #              (daily-name (format-time-string "%Y%m%d" yesterday)))
- # #         (expand-file-name (concat org-journal-dir daily-name))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org-journal
+    :after org
+    ;; :bind (:map (org-journal-map))
+    :bind (("C-c C-f" . org-journal-open-next-entry)
+           ("C-c C-b" . org-journal-open-previous-entry)
+           ("C-c C-j" . org-journal-new-entry)
+           ("C-c C-s" . org-journal-search)
+           ("C-c t" . org-journal-new-entry))
 
- # #     (defun journal-file-yesterday ()
- # #       "Creates and load a file based on yesterday's date."
- # #       (interactive)
- # #       (find-file (get-journal-file-yesterday)))
- # #     :custom
- # #     (org-journal-date-format "%e %b %Y (%A)")
- # #     (org-journal-dir "~/.personal/journal/2018/")
- # #     (org-journal-enable-encryption t)
- # #     (org-journal-file-format "%Y%m%d")
- # #     (org-journal-time-format ""))
- # # #+END_SRC
+    :custom
+    (org-journal-dir "~/org/journal/")
+    (org-journal-file-format "%Y%m%d")
+    (org-journal-enable-agenda-integration t))
+    ;; :preface
+    ;; (defun get-journal-file-yesterday ()
+    ;;   "Gets filename for yesterday's journal entry."
+    ;;   (let* ((yesterday (time-subtract (current-time) (days-to-time 1)))
+    ;;          (daily-name (format-time-string "%Y%m%d" yesterday)))
+    ;;     (expand-file-name (concat org-journal-dir daily-name))))
+
+    ;; (defun journal-file-yesterday ()
+    ;;   "Creates and load a file based on yesterday's date."
+    ;;   (interactive)
+    ;;   (find-file (get-journal-file-yesterday)))
+    ;; :custom
+    ;; (org-journal-date-format "%e %b %Y (%A)")
+    ;; (org-journal-dir "~/org/journal/2019/")
+    ;; (org-journal-enable-encryption t)
+    ;; (org-journal-file-format "%Y%m%d")
+    ;; (org-journal-time-format "")
+#+END_SRC
 
 *** Languages
 
@@ -1449,7 +944,12 @@ I like to have lines of the same length.
 
  #+END_SRC
 
-** Mail ==gnus==
+*** External call
+ #+BEGIN_SRC emacs-lisp :tangle yes
+
+ #+END_SRC
+
+** Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package gnus
       :bind (("C-x e" . gnus)
@@ -1461,19 +961,20 @@ I like to have lines of the same length.
       :after gnus)
 #+END_SRC
 
-** Contact ==bbdb==
+** Contact =bbdb=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package bbdb
-    :after gnus)
-  (use-package bbdb-vcard
-    :after bbdb)
+    :after gnus
+    :config (setq bbdb-file "~/Document/contact.el" ))
+  ;; (use-package bbdb-vcard
+  ;;   :after bbdb)
   ;; (use-package vdirel
   ;;   :custom
   ;;   (vdirel-repository ~/Contacts))
 #+END_SRC
 
-** Git ==magit==
+** Git =magit=
 
 It is quite common to work on Git repositories, so it is important to have a
 configuration that we like.
@@ -1521,11 +1022,17 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package git-timemachine :defer 1 :delight)
 #+END_SRC
-** File Explorer ==dired==
+
+
+** File Explorer =dired=
    Dired is a major mode for exploring file
    dired-x is a minor that brings a lot to dired like hidding
    - uninteresting file
    - guessing which command to call...
+
+   dired-du give the size of directory using du or lisp
+   dired-du should be customize more than that
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dired
     :ensure nil
@@ -1542,10 +1049,626 @@ made by previous commits.
 
   (use-package dired-x
     :ensure nil )
+  (use-package dired-du
+    :after dired
+    :bind (:map dired-du-mode-map))
+
+
 #+END_SRC
-** password-store ==pass==
+** password-store =pass=
    Pass helps me to be a bit more secure on my password management
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pass
     :delight "Pass ")
+#+END_SRC
+* Minor mode
+** Auto-Completion =company=
+
+=company= provides auto-completion at point and to Displays a small pop-in
+containing the candidates.
+
+#+BEGIN_QUOTE
+Company is a text completion framework for Emacs. The name stands for "complete
+anything". It uses pluggable back-ends and front-ends to retrieve and display
+completion candidates.
+
+[[http://company-mode.github.io/][Dmitry Gutov]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package company
+    :defer 0.5
+    :delight
+    :custom
+    (company-begin-commands '(self-insert-command))
+    (company-idle-delay .1)
+    (company-minimum-prefix-length 2)
+    (company-show-numbers t)
+    (company-tooltip-align-annotations 't)
+    (global-company-mode t))
+#+END_SRC
+
+# I use =company= with =company-box= that allows a company front-end with icons.
+
+# #+BEGIN_SRC emacs-lisp :tangle yes
+#    (use-package company-box
+#      :after company
+#      :delight
+#      :hook (company-mode . company-box-mode))
+# #+END_SRC
+
+** Internet interface
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq browse-url-browser-function 'browse-url-firefox)
+#+END_SRC
+*** Search wikipage =wiki-summary=
+
+It is impossible to know everything, which is why a quick description
+of a term, without breaking its workflow, is ideal.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package wiki-summary
+    :defer 1
+    :bind ("C-c W" . wiki-summary)
+    :preface
+    (defun my/format-summary-in-buffer (summary)
+      "Given a summary, stick it in the *wiki-summary* buffer and display the buffer"
+      (let ((buf (generate-new-buffer "*wiki-summary*")))
+        (with-current-buffer buf
+          (princ summary buf)
+          (fill-paragraph)
+          (goto-char (point-min))
+          (text-mode)
+          (view-mode))
+        (pop-to-buffer buf))))
+
+  (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
+#+END_SRC
+
+*** =engine-mode=
+	With it I can start a search from within emacs.
+	I use duckduckgo and bang
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package engine-mode
+    :config
+    (engine-mode t)
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :keybinding "d"))
+
+#+END_SRC
+
+** Dashboard
+Always good to have a dashboard.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package dashboard
+    :preface
+    :hook (after-init-hook . dashboard-refresh-buffer)
+    :custom (dashboard-startup-banner 'logo)
+    :config (dashboard-setup-startup-hook))
+#+END_SRC
+** reset config when config.org changes
+
+not-sur to understand how it works
+I'm using an =.org= file to maintain my GNU Emacs configuration. However, at his
+launch, it will loads the =config.el= source file for a faster loading.
+
+The code below, executes =org-babel-tangle= asynchronously when
+=config.org= is saved.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package async)
+
+  (defvar *config-file* ".emacs.d/config.org" "The configuration file.")
+
+  (defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+    "Last modification time of the configuration file.")
+
+  (defvar *show-async-tangle-results* nil "Keeps *emacs* async buffers around for later inspection.")
+
+  (defun my/config-updated ()
+    "Checks if the configuration file has been updated since the last time."
+    (time-less-p *config-last-change*
+                 (nth 5 (file-attributes *config-file*))))
+
+  (defun my/config-tangle ()
+    "Tangles the org file asynchronously."
+    (when (my/config-updated)
+      (setq *config-last-change*
+            (nth 5 (file-attributes *config-file*)))
+      (my/async-babel-tangle *config-file*)))
+
+  (defun my/async-babel-tangle (org-file)
+    "Tangles the org file asynchronously."
+    (let ((init-tangle-start-time (current-time))
+          (file (buffer-file-name))
+          (async-quiet-switch "-q"))
+      (async-start
+       `(lambda ()
+          (require 'org)
+          (org-babel-tangle-file ,org-file))
+       (unless *show-async-tangle-results*
+         `(lambda (result)
+            (if result
+                (message "SUCCESS: %s successfully tangled (%.2fs)."
+                         ,org-file
+                         (float-time (time-subtract (current-time)
+                                                    ',init-tangle-start-time)))
+              (message "ERROR: %s as tangle failed." ,org-file)))))))
+#+END_SRC
+
+** Spelling
+*** Fly Spell
+
+For the other words that would not be in my list of abbreviations, =flyspell=
+enables spell checking on-the-fly in GNU Emacs.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package flyspell
+    :defer 1
+    :delight
+    :custom
+    (flyspell-abbrev-p t)
+    (flyspell-issue-message-flag nil)
+    (flyspell-issue-welcome-flag nil)
+    (flyspell-mode 1))
+
+    (use-package flyspell-correct-ivy
+      :bind ("C-M-;" . flyspell-correct-wrapper)
+      :init
+        (setq flyspell-correct-interface #'flyspell-correct-ivy))
+  (use-package ispell
+    :custom
+    (ispell-silently-savep t))
+#+END_SRC
+
+** History
+
+Provides the ability to have commands and their history saved so that whenever
+you return to work, you can re-run things as you need them. This is not a
+radical function, it is part of a good user experience.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package savehist
+    :ensure nil
+    :custom
+    (history-delete-duplicates t)
+    (history-length t)
+    (savehist-additional-variables
+     '(kill-ring
+       search-ring
+       regexp-search-ring))
+    (savehist-file  "~/.emacs.d/history" )
+    (savehist-save-minibuffer-history 1)
+    :config (savehist-mode 1))
+#+END_SRC
+
+** improved package menu =paradox=
+
+Improved GNU Emacs standard package menu.
+
+#+BEGIN_QUOTE
+Project for modernizing Emacs' Package Menu. With improved appearance, mode-line
+information. Github integration, customizability, asynchronous upgrading, and
+more.
+
+[[https://github.com/Malabarba/paradox][Artur Malabarba]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package paradox
+    :defer 1
+    :custom
+    (paradox-column-width-package 27)
+    (paradox-column-width-version 13)
+    (paradox-execute-asynchronously t)
+    (paradox-hide-wiki-packages t)
+    :config
+    (paradox-enable)
+    (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
+#+END_SRC
+
+** General text formatting
+*** =aggressive-indent=
+
+Auto-indent code as you write.
+
+#+BEGIN_QUOTE
+=electric-indent-mode= is enough to keep your code nicely aligned when all you
+do is type. However, once you start shifting blocks around, transposing lines,
+or slurping and barfing sexps, indentation is bound to go wrong.
+
+=aggressive-indent-mode= is a minor mode that keeps your code *always* indented.
+It reindents after every change, making it more reliable than
+electric-indent-mode.
+
+[[https://github.com/Malabarba/aggressive-indent-mode][Artur Malabarba]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package aggressive-indent
+    :defer 2
+    :hook ((css-mode . aggressive-indent-mode)
+           (emacs-lisp-mode . aggressive-indent-mode)
+           (js-mode . aggressive-indent-mode)
+           (lisp-mode . aggressive-indent-mode))
+    :custom (aggressive-indent-comments-too))
+#+END_SRC
+
+*** =move-text=
+
+ Moves the current line (or if marked, the current region's, whole lines).
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package move-text
+    :defer 2
+    :bind (("M-p" . move-text-up)
+           ("M-n" . move-text-down))
+    :config (move-text-default-bindings))
+#+END_SRC
+
+*** =rainbow-mode=
+
+Colorize colors as text with their value.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rainbow-mode
+    :defer 2
+    :delight
+    :hook (prog-mode))
+#+END_SRC
+
+**** Replace the current file with the saved one :notused:
+
+Avoids call the function or reload Emacs.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package autorevert
+    :ensure nil
+    :delight auto-revert-mode
+    :bind ("C-x R" . revert-buffer)
+    :custom (auto-revert-verbose nil)
+    :config (global-auto-revert-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: revert-buffer
+
+*** Parenthesis =rainbow-delimiters=
+
+#+BEGIN_QUOTE
+rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
+delimiters such as parentheses, brackets or braces according to their
+depth. Each successive level is highlighted in a different color. This makes it
+easy to spot matching delimiters, orient yourself in the code, and tell which
+statements are at a given depth.
+
+[[https://github.com/Fanael/rainbow-delimiters][Fanael Linithien]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rainbow-delimiters
+    :defer 1
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+END_SRC
+** COMMENT Undo-redo =undo-tree=
+
+GNU Emacs's undo system allows you to recover any past state of a buffer. To do
+this, Emacs treats "undo itself as another editing that can be undone".
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package undo-tree
+  ;;   :delight
+  ;;   :bind ("C--" . undo-tree-redo)
+  ;;   :init (global-undo-tree-mode)
+  ;;   :custom
+  ;;   (undo-tree-visualizer-timestamps t)
+  ;;   (undo-tree-visualizer-diff t))
+#+END_SRC
+
+** keystroke =which-key=
+
+It's difficult to remember all the keyboard shortcuts. The =which-key= package
+helps to solve this.
+
+I used =guide-key= in my past days, but =which-key= is a good replacement.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package which-key
+    :defer 0.2
+    :delight
+    :config (which-key-mode))
+#+END_SRC
+
+#+RESULTS:
+
+** autocompletion =Ivy=
+
+I used =helm= before, but I find =ivy= faster and lighter.
+
+#+BEGIN_QUOTE
+Ivy is a generic completion mechanism for Emacs. While it operates similarly to
+other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
+smaller, simpler, and smoother to use yet highly customizable.
+
+[[https://github.com/abo-abo/ivy][Oleh Krehel]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package counsel
+    :after ivy
+    :delight
+    :config (counsel-mode))
+
+  (use-package ivy
+    :defer 0.1
+    :delight
+    :bind (("C-c C-r" . ivy-resume)
+           ("C-x B" . ivy-switch-buffer-other-window))
+    :custom
+    (ivy-count-format "(%d/%d) ")
+    (ivy-use-virtual-buffers t)
+    :config (ivy-mode))
+
+  (use-package ivy-pass
+    :after ivy
+    :commands ivy-pass)
+
+  (use-package ivy-rich
+    :after ivy
+    :init (setq ivy-rich-parse-remote-file-path t)
+    :config (ivy-rich-mode 1))
+
+  (use-package swiper
+    :after ivy
+    :bind (("C-s" . swiper)
+           ("C-r" . swiper)))
+#+END_SRC
+
+** Navigation
+
+This function is a mix of =C-a= and =M-m=.
+
+From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun my/smarter-move-beginning-of-line (arg)
+  "Moves point back to indentation of beginning of line.
+
+  Move point to the first non-whitespace character on this line.
+  If point is already there, move to the beginning of the line.
+  Effectively toggle between the first non-whitespace character and
+  the beginning of the line.
+
+  If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+  point reaches the beginning or end of the buffer, stop there."
+    (interactive "^p")
+    (setq arg (or arg 1))
+
+    ;; Move lines first
+    (when (/= arg 1)
+      (let ((line-move-visual nil))
+        (forward-line (1- arg))))
+
+    (let ((orig-point (point)))
+      (back-to-indentation)
+      (when (= orig-point (point))
+        (move-beginning-of-line 1))))
+
+(global-set-key [remap org-beginning-of-line] #'my/smarter-move-beginning-of-line)
+(global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
+#+END_SRC
+
+
+** PDF
+#+BEGIN_QUOTE
+PDF Tools is, among other things, a replacement of DocView for PDF files. The
+key difference is that pages are not pre-rendered by e.g. ghostscript and stored
+in the file-system, but rather created on-demand and stored in memory.
+[[https://github.com/politza/pdf-tools][Andras Politz]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package pdf-tools
+     :defer 1
+     :init (pdf-tools-install :no-query))
+
+   (use-package pdf-view
+     :ensure nil
+     :after pdf-tools
+     :bind (:map pdf-view-mode-map
+                 ("C-s" . isearch-forward)
+                 ("d" . pdf-annot-delete)
+                 ("h" . pdf-annot-add-highlight-markup-annotation)
+                 ("t" . pdf-annot-add-text-annotation))
+     :custom
+     (pdf-view-display-size 'fit-page)
+     (pdf-view-resize-factor 1.1)
+     (pdf-view-use-unicode-ligther nil))
+ #+END_SRC
+
+** Point and Region
+
+Increase region by semantic units. It tries to be smart about it and adapt to
+the structure of the current major mode.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package expand-region
+    :defer 2
+    :bind (("C-+" . er/contract-region)
+           ("C-=" . er/expand-region)))
+#+END_SRC
+
+I find useful to delete a line and a region with only =C-w=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defadvice kill-region (before slick-cut activate compile)
+    "When called interactively with no active region, kill a single line instead."
+    (interactive
+     (if mark-active (list (region-beginning) (region-end))
+       (list (line-beginning-position)
+             (line-beginning-position 2)))))
+#+END_SRC
+
+** Recent Files
+
+Provides fast access to the recent files.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package recentf
+    :defer 2
+    :bind ("C-x r" . recentf-open-files)
+    :init (recentf-mode)
+    :custom
+    (recentf-exclude (list "COMMIT_EDITMSG"
+                           "~$"
+                           "/scp:"
+                           "/ssh:"
+                           "/sudo:"
+                           "/tmp/"
+                           "recentf"
+                           ".newsrc-dribble"
+                           ))
+    (recentf-max-menu-items 15)
+    (recentf-max-saved-items 200)
+    (recentf-save-file "~/.emacs.d/recentf" )
+    :config (run-at-time nil (* 5 60) 'recentf-save-list))
+#+END_SRC
+
+** Whitespaces
+
+It is often annoying to see unnecessary blank spaces at the end of a line or file.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package whitespace
+    :defer 1
+    :hook (before-save . delete-trailing-whitespace))
+#+END_SRC
+
+*** =hungry-delete=
+
+#+BEGIN_QUOTE
+Deleting a whitespace character will delete all whitespace until the next
+non-whitespace character.
+
+# [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package hungry-delete
+    :defer 0.7
+    :delight
+    :config (global-hungry-delete-mode))
+#+END_SRC
+
+** Buffer and Windows
+
+   Don't ask before killing a buffer. I know what I'm doing.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (global-set-key [remap kill-buffer] #'kill-current-buffer)
+   #+END_SRC
+*** move around buffers =ace-window=
+  ace window allow to simply switch when only 2 buffer or to choose
+  which buffer with key when multiple buff
+
+  ibuffer is a better buffer mode
+
+  toggle-window-split : switch layout when two buffers are open
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package ace-window
+      :bind
+      (("C-x o" . ace-window)
+      ("M-o" . ace-window))
+      :init
+      (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+      (setq aw-scope 'frame)
+    )
+
+      (use-package ibuffer
+        :defer 0.2
+        :bind ("C-x C-b" . ibuffer))
+
+  (defun toggle-window-split ()
+    (interactive)
+  p  (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+
+    (global-set-key (kbd "C-x |") 'toggle-window-split)
+#+END_SRC
+
+*** =winner=
+
+I often undo's and redo's with window configurations.
+
+#+BEGIN_QUOTE
+Winner mode is a global minor mode that records the changes in the window
+configuration (i.e. how the frames are partitioned into windows) so that the
+changes can be "undone" using the command =winner-undo=. By default this one is
+bound to the key sequence ctrl-c left. If you change your mind (while undoing),
+you can press ctrl-c right (calling =winner-redo=).
+
+[[https://github.com/emacs-mirror/emacs/blob/master/lisp/winner.el][Ivar Rummelhoff]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package winner
+    :defer 2
+    :config (winner-mode 1))
+#+END_SRC
+
+** Word Wrap
+
+I like to have lines of the same length.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package simple
+    :ensure nil
+    :delight (auto-fill-function)
+    :bind ("C-x p" . pop-to-mark-command)
+    :hook ((prog-mode . turn-on-auto-fill)
+           (text-mode . turn-on-auto-fill))
+    :custom (set-mark-command-repeat-pop t))
+#+END_SRC
+
+
+** custom fonction
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; revert all open file buffer
+(defun revert-all-buffers ()
+  "Refreshes all open buffers from their respective files."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (buffer-file-name) (file-exists-p (buffer-file-name)) (not (buffer-modified-p)))
+        (revert-buffer t t t) )))
+  (message "Refreshed open files.") )
+
+;; reload emacs config
+(defun reload-dotemacs-file ()
+  "reload your .emacs file without restarting Emacs"
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
+
 #+END_SRC

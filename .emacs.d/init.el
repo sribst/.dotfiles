@@ -2,8 +2,8 @@
 ;; Copyright (C) 2014 Terencio Agozzino
 
 ;; Author: Terencio Agozzino <terencio.agozzino@gmail.com>
-;; Created: February 16, 2014
-;; Homepage: https://github.com/rememberYou/.emacs.d
+;; Created: 2018
+;; Homepage: https://github.com/sribst/dotfiles
 ;; Keywords: abbrev, convenience, faces, maint, outlines, vc
 
 ;; This program is free software. You can redistribute it and/or modify it under
@@ -29,9 +29,8 @@
 
 (require 'package)
 (package-initialize)
-
-(if (file-exists-p (expand-file-name "config.el" user-emacs-directory))
-    (load-file (expand-file-name "config.el" user-emacs-directory))
+(setq config-file (expand-file-name "config.el" user-emacs-directory))
+(if (file-exists-p config-file) (load-file config-file)
   (org-babel-load-file (expand-file-name "config.org" user-emacs-directory)))
 
 ;; Make gc pauses faster by decreasing the threshold.
