@@ -8,6 +8,11 @@ URxvt.scrollBar: false
 ! special
 *.foreground:   #eceff1
 *.background:   #263238
+
+*transparent: true
+*shading: 30
+! urxvt*depth: 32
+! urxvt*background: rgba:0000/0000/0200/c800
 *.cursorColor:  #eceff1
 
 ! black

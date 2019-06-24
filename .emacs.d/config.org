@@ -138,6 +138,38 @@ For a better user experience of GNU Emacs, here are the default values I use.
 #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package soothe-theme)
 #+END_SRC
+*** COMMENT transparent
+    Cannot make it work
+    not sur to see why
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;emacs transparency
+(set-frame-parameter (selected-frame) 'alpha '(85 60))
+(add-to-list 'default-frame-alist '(alpha 85 60))
+
+(eval-when-compile (require 'cl))
+(defun toggle-transparency ()
+  (interactive)
+  (if (/=
+       (cadr (frame-parameter nil 'alpha))
+       100)
+      (set-frame-parameter nil 'alpha '(100 100))
+    (set-frame-parameter nil 'alpha '(90 60))))
+(global-set-key (kbd "C-c g") 'toggle-transparency)
+
+;; Set transparency of emacs
+(defun transparency (arg &optional active)
+  "Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (interactive "nEnter alpha value (1-100): \np")
+  (let* ((elt (assoc 'alpha default-frame-alist))
+         (old (frame-parameter nil 'alpha))
+         (new (cond ((atom old)     `(,arg ,arg))
+                    ((eql 1 active) `(,arg ,(cadr old)))
+                    (t              `(,(car old) ,arg)))))
+    (if elt (setcdr elt new) (push `(alpha ,@new) default-frame-alist))
+    (set-frame-parameter nil 'alpha new)))
+(global-set-key (kbd "C-c G") 'transparency)
+#+END_SRC
+
 ** Backups
    It is important to have a stable backup environment. Don't hesitate to save a
    lot.
@@ -150,6 +182,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (vc-make-backup-files t)
     (version-control t))
 #+END_SRC
+
 
 * Major mode
 ** Languages
@@ -652,7 +685,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :con:      %^{Con}
   :END:
   %^{Cuando}t"
-  ")
+  )
 
   (defvar my/org-transporte-template "** %\\1 -> %\\2
   :PROPERTIES:
