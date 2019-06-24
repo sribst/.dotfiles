@@ -644,6 +644,16 @@ For a better user experience of GNU Emacs, here are the default values I use.
   %^{Cuando}t"
   )
 
+  (defvar my/org-move-template  "***  %^{Nombre} %^g
+  :PROPERTIES:
+  :Creado:     %U
+  :nombre:   %\\1
+  :lugar:    %^{Lugar}
+  :con:      %^{Con}
+  :END:
+  %^{Cuando}t"
+  ")
+
   (defvar my/org-transporte-template "** %\\1 -> %\\2
   :PROPERTIES:
   :de:       %^{de}
@@ -731,6 +741,8 @@ For a better user experience of GNU Emacs, here are the default values I use.
             ("des" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
               my/org-espectaculo-template :empty-lines 1)
             ("dep" "Personal" entry (file+headline "~/org/diario.org" "Personal"),
+              my/org-personal-template :empty-lines 1)
+            ("dew" "Work" entry (file+headline "~/org/diario.org" "Work"),
               my/org-personal-template :empty-lines 1)
          ("dv" "Viaje")
             ("dvi" "Viaje individual" entry (file+headline "~/org/diario.org" "Transporte"),
