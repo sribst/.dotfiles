@@ -256,7 +256,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 ;; (require 'proof-site "~/.emacs.d/lisp/PG/generic/proof-site")
  #+END_SRC
 
-*** OCamla
+*** OCaml
  #+BEGIN_SRC emacs-lisp :tangle yes
    ;; (setq utop-command "opam config exec -- utop -emacs")
    ;; (add-to-list 'load-path
@@ -268,15 +268,32 @@ For a better user experience of GNU Emacs, here are the default values I use.
        ;; (use-package ocp-indent
       ;; after:)
 #+END_SRC
-*** Java
-**** Antlr
+*** Java =jdee=
+ #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package jdee
+  :init
+  (custom-set-variables '(jdee-server-dir "~/.emacs.d/jdee-server"))
+  :mode "\\.java\\'"
+  :custom
+  (jdee-server-dir "~/bin/lib/jdee-server")
+)
+   ;; (setq utop-command "opam config exec -- utop -emacs")
+   ;; (add-to-list 'load-path
+   ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
+   ;; (require 'ocp-indent)
+      (setq utop-command "opam config exec -- utop -emacs")
+      (add-to-list 'load-path
+                   "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
+       ;; (use-package ocp-indent
+      ;; after:)
+#+END_SRC
+**** lexer/parser =antlr=
      lexer/parser generator LL(*) for java langage
   #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package antlr-mode
       :mode ("\\.g4\\'"))
   #+END_SRC
-
-**** Groovy
+**** script =groovy=
      Script version of java
      run on jvm
   #+BEGIN_SRC emacs-lisp :tangle yes
@@ -284,7 +301,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
       :mode ("\\.groovy\\'" "\\.gvy\\'" "\\.gy\\'""\\.gsh\\'" )
       :hook gradle-mode)
   #+END_SRC
-**** Gradle
+**** builder =gradle=
      Gradle is a dependency manager
   #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package gradle-mode
@@ -496,17 +513,37 @@ For a better user experience of GNU Emacs, here are the default values I use.
 **** Agenda =org-super-agenda=
     Org super agenda allows a more readible agenda by grouping the todo item
  #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org-super-agenda
-   :custom
-   (org-super-agenda-groups
-     '(
-       (:name "Today"
-       :time-grid t
-       :date today
-       )
-       ;; (:name "Maybe"
-       ;; )
-       )))
+    (use-package org-super-agenda
+    :custom
+   (org-super-agenda-mode t)
+   (add-to-list org-agenda-custom-commands
+     '(("b" "Experimental"
+         ((agenda ""
+           ((org-super-agenda-groups'(
+             (:name "DO NOT MISS"
+              :deadline t)
+             (:name "Today"
+              :time-grid t
+              :date today)
+             (:name "Hidden"
+              :time-grid t
+              :tag "hidden"
+              )
+             ;; (:name "hidden"
+             ;; :tag ("hidden"
+             ;; )
+             ;; (:name "Rest")
+           ))))
+          (alltodo ""
+           ((org-super-agenda-groups '(
+            (:name "Work"
+            :todo "TODO")
+            (:name "tobuy"
+            :todo "TOBUY")
+           )))
+          )
+         ))))
+)
 #+END_SRC
 **** Agenda "square view"  =calfw=
 
@@ -775,19 +812,21 @@ For a better user experience of GNU Emacs, here are the default values I use.
      :custom
      (org-todo-keyword-faces
       '(
-        ("ABORDED" . (:foreground "grey"   :weight bold))
-        ("DONE"    . (:foreground "green"  :weight bold))
-        ("SOMEDAY" . (:foreground "orange" :weight bold))
-        ("TODO"    . (:foreground "red"    :weight bold))
-        ("WAITING" . (:foreground "yellow" :weight bold))
+        ("ABORDED"    . (:foreground "grey"   :weight bold))
+        ("DONE"       . (:foreground "green"  :weight bold))
+        ("SOMEDAY"    . (:foreground "orange" :weight bold))
+        ("TODO"       . (:foreground "red"    :weight bold))
+        ("WAITING"    . (:foreground "yellow" :weight bold))
+        ("INPROGRESS" . (:foreground "yellow" :weight bold))
 
-        ("GIVEN"   . (:foreground "blue" :weight bold))
-        ("BOUGHT"  . (:foreground "green" :weight bold))
-        ("TOBUY"   . (:foreground "red" :weight bold))
-        ("IDEA"    . (:foreground "yellow" :weight bold))
 
-        ("USED"    . (:foreground "green"    :weight bold))
-        ("TOUSE"    . (:foreground "red"    :weight bold))
+        ("GIVEN"  . (:foreground "blue" :weight bold))
+        ("BOUGHT" . (:foreground "green" :weight bold))
+        ("TOBUY"  . (:foreground "red" :weight bold))
+        ("IDEA"   . (:foreground "yellow" :weight bold))
+
+        ("USED"  . (:foreground "green"    :weight bold))
+        ("TOUSE" . (:foreground "red"    :weight bold))
       )))
  #+END_SRC
 
