@@ -690,12 +690,6 @@ For a better user experience of GNU Emacs, here are the default values I use.
   %^{Cuando}t"
   )
 
-  ;; (defvar my/org-media-template  "* %^{Nombre}
-  ;; :PROPERTIES:
-  ;; :tipo:     %^{tipo}p
-  ;; :END:
-  ;; ")
-
   (defvar my/org-todo-template  "* TODO %^{Que} [/] %^g
   :PROPERTIES:
   :Creado:     %U
@@ -724,6 +718,15 @@ For a better user experience of GNU Emacs, here are the default values I use.
   (defvar my/org-stuff-gift-template  "* TOBUY %^{Que}  %^g
   :PROPERTIES:
   :por: %^{Por}
+  :cuando: %^{Cuando}t
+  :Creado:     %U
+  :END:
+  ")
+
+  (defvar my/org-stuff-appartement-template  "* TOBUY %^{Que}
+  :PROPERTIES:
+  :por: %^{Por}
+  :donde: %^{habitation}p
   :cuando: %^{Cuando}t
   :Creado:     %U
   :END:

@@ -20,9 +20,9 @@ export TMPPREFIX="${TMPDIR}/zsh"
 
 if [ ! -d "${TMP}" ]; then mkdir "${TMP}"; fi
 
-if ! [[ "${PATH}" =~ "^${HOME}/bin" ]]; then
-    export PATH="${HOME}/bin:${PATH}"
-fi
+# if ! [[ "${PATH}" =~ "^${HOME}/bin" ]]; then
+#     export PATH="${HOME}/bin:${PATH}"
+# fi
 
 
 # Colors.
@@ -344,8 +344,8 @@ if [ -f ~/.alert ]; then cat ~/.alert; fi
 # opam configuration
 test -r /home/baroud/.opam/opam-init/init.zsh && . /home/baroud/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-path+=~/bin
-path+=.
+# path+=~/bin
+# path+=.
 
 #To save every command before it is executed (this is different from bash's history -a solution):
 setopt inc_append_history
