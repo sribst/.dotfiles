@@ -21,6 +21,8 @@
   - [[#git-magit][Git =magit=]]
   - [[#file-explorer-dired][File Explorer =dired=]]
   - [[#password-store-pass][password-store =pass=]]
+  - [[#game][Game]]
+  - [[#typing-training][Typing training]]
 - [[#minor-mode][Minor mode]]
   - [[#auto-completion-company][Auto-Completion =company=]]
   - [[#internet-interface][Internet interface]]
@@ -758,9 +760,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 
   (defvar my/org-stuff-appartement-template  "* TOBUY %^{Que}
   :PROPERTIES:
-  :por: %^{Por}
-  :donde: %^{habitation}p
-  :cuando: %^{Cuando}t
+  :piece: %^{PIECE}p
   :Creado:     %U
   :END:
   ")
@@ -799,6 +799,9 @@ For a better user experience of GNU Emacs, here are the default values I use.
               my/org-stuff-buy-template)
          ("sg" "gift" entry (file+headline "~/org/stuff.org" "objet"),
               my/org-stuff-gift-template)
+         ("sa" "apartamento" entry (file+headline "~/org/stuff.org" "apartamento"),
+              my/org-stuff-appartement-template)
+
 )))
 #+END_SRC
 
@@ -1148,6 +1151,20 @@ made by previous commits.
   (use-package pass
     :delight "Pass ")
 #+END_SRC
+** Game
+**** =Typing=
+     A game for fast typers
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package typing
+  :defer t)
+#+END_SRC
+** Typing training
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package typing-practice
+  :defer t)
+#+END_SRC
+
+
 * Minor mode
 ** Auto-Completion =company=
 
