@@ -305,22 +305,13 @@ For a better user experience of GNU Emacs, here are the default values I use.
 #+END_SRC
 *** Java =jdee=
  #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package jdee
-  :init
-  (custom-set-variables '(jdee-server-dir "~/.emacs.d/jdee-server"))
-  :mode "\\.java\\'"
-  :custom
-  (jdee-server-dir "~/bin/lib/jdee-server")
-)
-   ;; (setq utop-command "opam config exec -- utop -emacs")
-   ;; (add-to-list 'load-path
-   ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-   ;; (require 'ocp-indent)
-      (setq utop-command "opam config exec -- utop -emacs")
-      (add-to-list 'load-path
-                   "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-       ;; (use-package ocp-indent
-      ;; after:)
+   ;; (use-package jdee
+   ;;   :init
+   ;;   (custom-set-variables '(jdee-server-dir "~/.emacs.d/jdee-server"))
+   ;;   :mode "\\.java\\'"
+   ;;   :custom
+   ;;   (jdee-server-dir "~/bin/lib/jdee-server")
+   ;; )
 #+END_SRC
 **** lexer/parser =antlr=
      lexer/parser generator LL(*) for java langage
@@ -863,22 +854,27 @@ For a better user experience of GNU Emacs, here are the default values I use.
      :custom
      (org-todo-keyword-faces
       '(
-        ("ABORDED"    . (:foreground "grey"   :weight bold))
-        ("DONE"       . (:foreground "green"  :weight bold))
-        ("SOMEDAY"    . (:foreground "orange" :weight bold))
-        ("TODO"       . (:foreground "red"    :weight bold))
-        ("WAITING"    . (:foreground "yellow" :weight bold))
-        ("INPROGRESS" . (:foreground "yellow" :weight bold))
+          ("TORESERVE"  . (:foreground "red" :weight bold))
+          ("TOGO"       . (:foreground "orange" :weight bold))
+
+          ("WENT"       . (:foreground "green" :weight bold))
+          ("CANCELED"   . (:foreground "grey"))
+
+          ("SOMEDAY"    . (:foreground "blue"))
+          ("TODO"       . (:foreground "red" :weight bold))
+          ("INPROGRESS" . (:foreground "orange" :weight bold))
+          ("WAITING"    . (:foreground "yellow" :weight bold))
+          ("DONE"       . (:foreground "green"))
+          ("ABORDED"    . (:foreground "grey" ))
 
 
-        ("GIVEN"  . (:foreground "blue" :weight bold))
-        ("BOUGHT" . (:foreground "green" :weight bold))
-        ("TOBUY"  . (:foreground "red" :weight bold))
-        ("IDEA"   . (:foreground "yellow" :weight bold))
+          ("IDEA"       . (:foreground "blue" :weight bold))
+          ("TOBUY"      . (:foreground "red" :weight bold))
+          ("TOGIVE"     . (:foreground "orange" :weight bold))
 
-        ("USED"  . (:foreground "green"    :weight bold))
-        ("TOUSE" . (:foreground "red"    :weight bold))
-      )))
+          ("BOUGHT"     . (:foreground "green" :weight bold))
+          ("GIVEN"      . (:foreground "green" :weight bold))
+        )))
  #+END_SRC
 
 *** syncronise
@@ -1412,15 +1408,16 @@ electric-indent-mode.
     :config (move-text-default-bindings))
 #+END_SRC
 
-*** =rainbow-mode=
+*** colorize color text =rainbow-mode=
 
 Colorize colors as text with their value.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rainbow-mode
-    :defer 2
     :delight
-    :hook (prog-mode))
+    :config
+    (setq rainbow-x-colors t)
+    (setq rainbow-r-colors t))
 #+END_SRC
 
 **** Replace the current file with the saved one :notused:
@@ -1696,7 +1693,7 @@ non-whitespace character.
 
   (defun toggle-window-split ()
     (interactive)
-  p  (if (= (count-windows) 2)
+      (if (= (count-windows) 2)
         (let* ((this-win-buffer (window-buffer))
                (next-win-buffer (window-buffer (next-window)))
                (this-win-edges (window-edges (selected-window)))
