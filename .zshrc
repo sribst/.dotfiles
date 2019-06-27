@@ -11,7 +11,7 @@ HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
 
 export EDITOR="/usr/bin/emacsclient -nw"
-export ALTERNATE_EDITOR="/usr/bin/emacs -nw"
+export ALTERNATE_EDITOR="/usr/bin/nano"
 
 export TMP="$HOME/tmp"
 export TEMP="$TMP"

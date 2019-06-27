@@ -11,6 +11,7 @@
   - [[#customization][Customization]]
   - [[#turn-off-mouse-interface][Turn off mouse interface]]
   - [[#theme][Theme]]
+  - [[#font-icons-all-the-icons][font icons ==all-the-icons=]]
   - [[#backups][Backups]]
 - [[#major-mode][Major mode]]
   - [[#languages][Languages]]
@@ -170,6 +171,14 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (if elt (setcdr elt new) (push `(alpha ,@new) default-frame-alist))
     (set-frame-parameter nil 'alpha new)))
 (global-set-key (kbd "C-c G") 'transparency)
+#+END_SRC
+** font icons ==all-the-icons=
+#+BEGIN_SRC emacs-lisp :tangle yes
+     (use-package all-the-icons)
+  ;; (use-package all-the-icons-dired :hook dired-mode)
+  ;;   (use-package all-the-icons-gnus
+  ;;   :hook gnus)
+  ;;   (use-package all-the-icons-ivy)
 #+END_SRC
 
 ** Backups
@@ -896,6 +905,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
               '("~/org/diario.org" "~/org/agenda.org" "~/org/todo.org" "~/org/work.org"))
         :config
         (setq org-icalendar-alarm-time 1)
+        (setq org-caldav-show-sync-results nil)
         (setq org-icalendar-include-todo t)
         (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
         (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
