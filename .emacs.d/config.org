@@ -134,7 +134,8 @@ For a better user experience of GNU Emacs, here are the default values I use.
 *** Theme
    [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
 #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package soothe-theme)
+  ;; (use-package soothe-theme)
+  (use-package xresources-theme)
 #+END_SRC
 *** COMMENT transparent
     Cannot make it work not sur to see why
