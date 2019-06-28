@@ -256,7 +256,7 @@ assign [class="^Evolution"] → $ws4
 
 # gaps between windows
 
-for_window [class=".*"] border pixel 5
+for_window [class=".*"] border pixel 1
 
 set $default_gaps_inner 5
 set $default_gaps_outer 5

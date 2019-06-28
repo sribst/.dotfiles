@@ -3,16 +3,12 @@
 
 * table of content                                                    :TOC@2:
 - [[#customisation][Customisation]]
-  - [[#packages-sources][Packages Sources]]
-  - [[#use-package][use-package]]
-  - [[#delight][delight]]
+  - [[#packages][Packages]]
   - [[#authentification][Authentification]]
   - [[#defaults-values][defaults values]]
-  - [[#customization][Customization]]
-  - [[#turn-off-mouse-interface][Turn off mouse interface]]
-  - [[#theme][Theme]]
-  - [[#font-icons-all-the-icons][font icons ==all-the-icons=]]
+  - [[#customization-interface][Customization interface]]
   - [[#backups][Backups]]
+  - [[#apparence][apparence]]
 - [[#major-mode][Major mode]]
   - [[#languages][Languages]]
   - [[#budger-ledger][Budger =ledger=]]
@@ -45,7 +41,8 @@
   - [[#custom-fonction][custom fonction]]
 
 * Customisation
-** Packages Sources
+** Packages
+***  Sources
    In order to install packages, it is useful to configure the package sources.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq package-archives '(
@@ -55,7 +52,7 @@
      ("marmalade" . "http://marmalade-repo.org/packages/")
      ))
 #+END_SRC
-** use-package
+*** package manager =use-package=
    To be able to manage its configuration with =use-package= it is necessary to
    first install it, if you don't already.
    *NOTE:* Need to understand if it use also the package manager of emacs
@@ -68,12 +65,6 @@
   (use-package use-package-ensure-system-package :ensure t)
 #+END_SRC
 
-** delight
-   delight is a way of showing wich major/minor is currently open
-   It's show which mode on the main bar
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package delight :ensure t)
-#+END_SRC
 ** Authentification
    In which file the authentification is save
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -117,7 +108,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
  (put 'downcase-region 'disabled nil)             ; Allow C-x C-l
 #+END_SRC
 
-** Customization
+** Customization interface
    To avoid overloading the GNU Emacs custormization =init.el= file made by the
    user with the UI, I add the generated code in a separate file.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -125,25 +116,28 @@ For a better user experience of GNU Emacs, here are the default values I use.
   (when (file-exists-p custom-file)
     (load custom-file t))
 #+END_SRC
-
-** Turn off mouse interface
-   Since I never use the mouse with GNU Emacs, I prefer not to use certain
-   graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
-   I find invasive.
+** Backups
+   It is important to have a stable backup environment. Don't hesitate to save a
+   lot.
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (menu-bar-mode -1)                              ; Disable the menu bar
-    (scroll-bar-mode -1)                            ; Disable the scroll bar
-    (tool-bar-mode -1)                              ; Disable the tool bar
-    (tooltip-mode -1)                               ; Disable the tooltips
+  (use-package files
+    :ensure nil
+    :custom
+    (backup-directory-alist `(("." . "~/.emacs.d/backup")))
+    (delete-old-versions -1)
+    (vc-make-backup-files t)
+    (version-control t))
 #+END_SRC
-** Theme
+
+
+** apparence
+*** Theme
    [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
 #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package soothe-theme)
 #+END_SRC
 *** COMMENT transparent
-    Cannot make it work
-    not sur to see why
+    Cannot make it work not sur to see why
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;emacs transparency
 (set-frame-parameter (selected-frame) 'alpha '(85 60))
@@ -172,7 +166,23 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (set-frame-parameter nil 'alpha new)))
 (global-set-key (kbd "C-c G") 'transparency)
 #+END_SRC
-** font icons ==all-the-icons=
+*** =delight=
+   delight is a way of showing wich major/minor is currently open
+   It's show which mode on the main bar
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package delight :ensure t)
+#+END_SRC
+*** Turn off mouse interface
+   Since I never use the mouse with GNU Emacs, I prefer not to use certain
+   graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
+   I find invasive.
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (menu-bar-mode -1)                              ; Disable the menu bar
+    (scroll-bar-mode -1)                            ; Disable the scroll bar
+    (tool-bar-mode -1)                              ; Disable the tool bar
+    (tooltip-mode -1)                               ; Disable the tooltips
+#+END_SRC
+*** unicode icons ==all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
      (use-package all-the-icons)
   ;; (use-package all-the-icons-dired :hook dired-mode)
@@ -180,20 +190,6 @@ For a better user experience of GNU Emacs, here are the default values I use.
   ;;   :hook gnus)
   ;;   (use-package all-the-icons-ivy)
 #+END_SRC
-
-** Backups
-   It is important to have a stable backup environment. Don't hesitate to save a
-   lot.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package files
-    :ensure nil
-    :custom
-    (backup-directory-alist `(("." . "~/.emacs.d/backup")))
-    (delete-old-versions -1)
-    (vc-make-backup-files t)
-    (version-control t))
-#+END_SRC
-
 
 * Major mode
 ** Languages
