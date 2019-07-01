@@ -1,4 +1,4 @@
-;;ask encryption password once
+;;ask encryption passw  once
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 
 (setq
