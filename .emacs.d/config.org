@@ -419,7 +419,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
    (use-package ledger-mode
      :mode ("\\.dat\\'" "\\.ledger\\'")
      :bind (:map ledger-mode-map ("c-x c-s" . my/ledger-save))
-     :hook (ledger-mode . ledger-flymake-enable)
+     :hook (ledger-mode . ledger-flymapke-enable)
      :preface
      (defun my/ledger-save ()
        "automatically clean the ledger buffer at each save."
@@ -904,17 +904,13 @@ For a better user experience of GNU Emacs, here are the default values I use.
         (setq org-icalendar-alarm-time 1)
         (setq org-caldav-show-sync-results nil)
         (setq org-icalendar-include-todo t)
-        (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+        (setq org-icalendar-use-deadline  '(event-if-todo event-if-not-todo todo-due))
         (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
-        :hook ((kill-emacs . org-caldav-sync)
+        :hook (
+        ;; (kill-emacs . org-caldav-sync)
                (after-save .
                    (lambda ()
                    (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
-        ;; (add-hook 'after-save-hook
-        ;;       (lambda ()
-        ;;         (when (eq major-mode 'org-mode)
-        ;;         (org-caldav-sync-with-delay 30))))
-        ;; (add-hook 'kill-emacs-hook 'org-caldav-sync)
    )
       ;; (use-package org-caldav
       ;;   :init
@@ -1578,23 +1574,23 @@ in the file-system, but rather created on-demand and stored in memory.
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package pdf-tools
-     :defer 1
-     :init (pdf-tools-install :no-query))
+   ;; (use-package pdf-tools
+   ;;   :mode "\\.pdf\\"
+   ;;   :init (pdf-tools-install :no-query))
 
-   (use-package pdf-view
-     :ensure nil
-     :after pdf-tools
-     :bind (:map pdf-view-mode-map
-                 ("C-s" . isearch-forward)
-                 ("d" . pdf-annot-delete)
-                 ("h" . pdf-annot-add-highlight-markup-annotation)
-                 ("t" . pdf-annot-add-text-annotation))
-     :custom
-     (pdf-view-display-size 'fit-page)
-     (pdf-view-resize-factor 1.1)
-     (pdf-view-use-unicode-ligther nil))
- #+END_SRC
+   ;; (use-package pdf-view
+   ;;   :ensure nil
+   ;;   :after pdf-tools
+   ;;   :bind (:map pdf-view-mode-map
+   ;;               ("C-s" . isearch-forward)
+   ;;               ("d" . pdf-annot-delete)
+   ;;               ("h" . pdf-annot-add-highlight-markup-annotation)
+   ;;               ("t" . pdf-annot-add-text-annotation))
+   ;;   :custom
+   ;;   (pdf-view-display-size 'fit-page)
+   ;;   (pdf-view-resize-factor 1.1)
+   ;;   (pdf-view-use-unicode-ligther nil))
+ #+End_SRC
 
 ** Point and Region
 
