@@ -20,6 +20,7 @@
   - [[#password-store-pass][password-store =pass=]]
   - [[#game][Game]]
   - [[#typing-training][Typing training]]
+  - [[#shell-eshell][Shell =eshell=]]
 - [[#minor-mode][Minor mode]]
   - [[#auto-completion-company][Auto-Completion =company=]]
   - [[#internet-interface][Internet interface]]
@@ -1170,7 +1171,38 @@ made by previous commits.
   (use-package typing-practice
   :defer t)
 #+END_SRC
+** Shell =eshell=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eshell
+  :init
+  (setq ;; eshell-buffer-shorthand t ...  Can't see Bug#19391
+        eshell-scroll-to-bottom-on-input 'all
+        eshell-error-if-no-glob t
+        eshell-hist-ignoredups t
+        eshell-save-history-on-exit t
+        eshell-prefer-lisp-functions nil
+        eshell-destroy-buffer-when-process-dies t)
+  (eshell/alias "e" "find-file $1")
+  (eshell/alias "ff" "find-file $1")
+  (eshell/alias "emacs" "find-file $1")
+  (eshell/alias "ee" "find-file-other-window $1")
+  (eshell/alias "gd" "magit-diff-unstaged")
+  (eshell/alias "gds" "magit-diff-staged")
+  (eshell/alias "d" "dired $1")
+  (eshell/alias "l" "ls")
+  (eshell/alias "la" "ls -a")
+  (eshell/alias "ll" "ls -l")
+  (eshell/alias "cp" "cp -iv")
+  (eshell/alias "rcp" "rsync -v --progress")
+  (eshell/alias "rmv" "rsync -v --progress --remove-source-files")
+  (eshell/alias "mv" "mv -iv")
+  (eshell/alias "rm" "rm -iv")
+  (eshell/alias "rmdir" "rmdir -v")
+  (eshell/alias "ln" "ln -v")
+  (eshell/alias "chmod" "chmod -c")
+  (eshell/alias "chown" "chown -c"))
 
+#+END_SRC
 
 * Minor mode
 ** Auto-Completion =company=
