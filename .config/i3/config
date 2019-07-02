@@ -36,7 +36,7 @@ bindsym $mod+Return exec urxvt
 bindsym $mod+t exec urxvt
 
 # start an emacs client
-bindsym $mod+e exec emacsclient -c -s tmp/emacs1000/server
+bindsym $mod+e exec emacsclient -c
 
 # kill focused window
 bindsym $mod+Shift+A kill

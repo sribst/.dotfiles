@@ -23,7 +23,7 @@
  '(company-tooltip-align-annotations t)
  '(custom-safe-themes
    (quote
-    ("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
+    ("86704574d397606ee1433af037c46611fb0a2787e8b6fd1d6c96361575be72d2" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
  '(dashboard-startup-banner (quote logo) t)
  '(delete-old-versions -1)
  '(dired-auto-revert-buffer t)

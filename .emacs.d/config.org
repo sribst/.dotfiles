@@ -134,10 +134,18 @@ For a better user experience of GNU Emacs, here are the default values I use.
 *** Theme
    [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package soothe-theme)
-  (use-package xresources-theme)
+    ;; (use-package soothe-theme)
+    (use-package xresources-theme
+    ;; :hook 'after-make-frame-functions .
+    ;;        (lambda (frame)
+    ;;           (when (eq (length (frame-list)) 2)
+    ;;              (progn
+    ;;              (select-frame frame)
+    ;;              (load-theme 'xresources))))
+    )
 #+END_SRC
-*** COMMENT transparent
+
+*** transparent
     Cannot make it work not sur to see why
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;emacs transparency
@@ -157,7 +165,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 ;; Set transparency of emacs
 (defun transparency (arg &optional active)
   "Sets the transparency of the frame window. 0=transparent/100=opaque"
-  (interactive "nEnter alpha value (1-100): \np")
+  (interactive "Enter alpha value (1-100): \np")
   (let* ((elt (assoc 'alpha default-frame-alist))
          (old (frame-parameter nil 'alpha))
          (new (cond ((atom old)     `(,arg ,arg))
