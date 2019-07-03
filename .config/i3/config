@@ -48,7 +48,7 @@ bindsym $mod+Shift+A kill
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-bindsym $mod+d exec --no-startup-id rofi -show
+bindsym $mod+d exec --no-startup-id rofi -show combi
 
 # change focus
 bindsym $mod+j focus left
@@ -268,18 +268,20 @@ gaps outer $default_gaps_inner
 smart_gaps on
 smart_borders on
 
-# Order screen
-exec --no-startup-id xrandr-start
+exec_always --no-startup-id apodFetch -r; feh --no-fehbg --bg-center ~/.config/apod/apod.png ~/.config/apod/apod.png
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
-# start firefox emacs urxvt
+#background
+exec --no-startup-id nextcloud
+
+# starting script
+exec --no-startup-id xrandr-start
 exec --no-startup-id my_sync
 exec --no-startup-id my_nextcloud_mount
+
+# start firefox emacs urxvt
 exec --no-startup-id firefox
 exec --no-startup-id slack
 exec --no-startup-id skypeforlinux
 exec --no-startup-id eclipse
 exec --no-startup-id i3-msg workspace $ws3 ; emacsclient -c
-
-exec_always --no-startup-id apodFetch -r; feh --no-fehbg --bg-center ~/.config/apod/apod.png ~/.config/apod/apod.png
-
-exec --no-startup-id $HOME/.config/polybar/launch.shx

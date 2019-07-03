@@ -30,6 +30,7 @@
   - [[#history][History]]
   - [[#improved-package-menu-paradox][improved package menu =paradox=]]
   - [[#general-text-formatting][General text formatting]]
+  - [[#keystroke-which-key][keystroke =which-key=]]
   - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#navigation][Navigation]]
   - [[#pdf][PDF]]
@@ -39,6 +40,7 @@
   - [[#buffer-and-windows][Buffer and Windows]]
   - [[#word-wrap][Word Wrap]]
   - [[#custom-fonction][custom fonction]]
+  - [[#edition][edition]]
 
 * Customisation
 ** Packages
@@ -1307,7 +1309,6 @@ The code below, executes =org-babel-tangle= asynchronously when
               (message "ERROR: %s as tangle failed." ,org-file)))))))
 #+END_SRC
 
-
 ** Spelling
 *** Fly Spell
 
@@ -1478,9 +1479,19 @@ this, Emacs treats "undo itself as another editing that can be undone".
   ;;   (undo-tree-visualizer-diff t))
 #+END_SRC
 
+** keystroke =which-key=
 
+It's difficult to remember all the keyboard shortcuts. The =which-key= package
+helps to solve this.
 
+I used =guide-key= in my past days, but =which-key= is a good replacement.
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package which-key
+    :defer 0.2
+    :delight
+    :config (which-key-mode))
+#+END_SRC
 ** autocompletion =Ivy=
 
 I used =helm= before, but I find =ivy= faster and lighter.
@@ -1507,6 +1518,7 @@ smaller, simpler, and smoother to use yet highly customizable.
     :custom
     (ivy-count-format "(%d/%d) ")
     (ivy-use-virtual-buffers t)
+    (ivy-extra-directories nil)
     :config (ivy-mode))
 
   (use-package ivy-pass
@@ -1615,7 +1627,6 @@ Provides fast access to the recent files.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package recentf
-    :defer 2
     :bind ("C-x r" . recentf-open-files)
     :init (recentf-mode)
     :custom
@@ -1769,4 +1780,9 @@ I like to have lines of the same length.
   (interactive)
   (load-file "~/.emacs.d/init.el"))
 
+#+END_SRC
+** edition
+*** edit all occurence
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package iedit)
 #+END_SRC
