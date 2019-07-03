@@ -746,25 +746,31 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :custom
   (org-capture-templates
    `(("e" "Event")
+      ("es" "Show")
+        ("esr" "To reserve" entry (file+headline "~/org/master.org" "Show"),
+          my/org-toreserve-template)
+        ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
+          my/org-togo-template)
       ("er" "To reserve" entry (file+headline "~/org/master.org" "Agenda"),
-        my/org-toreserve-template :empty-lines 1)
+        my/org-toreserve-template)
       ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
-        my/org-togo-template :empty-lines 1)
-      ("es" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
-        my/org-trip-template :empty-lines 1)
-      ("er" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
-        my/org-roundtrip-template :empty-lines 1)
+        my/org-togo-template)
+      ("et" "Trip")
+      ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+        my/org-trip-template)
+      ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+        my/org-roundtrip-template)
      ("t" "TO-DO")
-      ("tt" "todo" entry (file+headline "~/org/master.org" "todo"),
+      ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
         my/org-todo-template)
-      ("to" "oneday" entry (file "~/org/master.org" "todo"),
+      ("to" "oneday" entry (file "~/org/master.org" "TO-DO"),
         my/org-someday-template)
       ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
         my/org-work-move-template)
-     ("v" "voucher" entry (file+headline "~/org/voucher.org" "Voucher"),
+     ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
         my/org-voucher-template)
      ("s" "stuff")
-      ("sb" "buy" entry (file+headline "~/org/laster.org" "objet"),
+      ("sb" "buy" entry (file+headline "~/org/master.org" "objet"),
         my/org-stuff-buy-template)
       ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
         my/org-stuff-gift-template)
