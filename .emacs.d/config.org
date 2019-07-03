@@ -30,7 +30,6 @@
   - [[#history][History]]
   - [[#improved-package-menu-paradox][improved package menu =paradox=]]
   - [[#general-text-formatting][General text formatting]]
-  - [[#keystroke-which-key][keystroke =which-key=]]
   - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#navigation][Navigation]]
   - [[#pdf][PDF]]
@@ -46,12 +45,12 @@
 ***  Sources
    In order to install packages, it is useful to configure the package sources.
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq package-archives '(
-     ("melpa" . "http://melpa.org/packages/")
+(setq package-archives
+  '(("melpa" . "http://melpa.org/packages/")
      ("gnu" . "http://elpa.gnu.org/packages/") ;; is it still used ?
      ("org" . "http://orgmode.org/elpa/")
      ("marmalade" . "http://marmalade-repo.org/packages/")
-     ))
+  ))
 #+END_SRC
 *** package manager =use-package=
    To be able to manage its configuration with =use-package= it is necessary to
@@ -135,15 +134,20 @@ For a better user experience of GNU Emacs, here are the default values I use.
 *** Theme
    [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
 #+BEGIN_SRC emacs-lisp :tangle yes
-    ;; (use-package soothe-theme)
-    (use-package xresources-theme
-    ;; :hook 'after-make-frame-functions .
-    ;;        (lambda (frame)
-    ;;           (when (eq (length (frame-list)) 2)
-    ;;              (progn
-    ;;              (select-frame frame)
-    ;;              (load-theme 'xresources))))
-    )
+     ;; (use-package soothe-theme)
+   (use-package xresources-theme
+   :when window-system
+     ;; :hook 'after-make-frame-functions .
+     ;;        (lambda (frame)
+     ;;           (when (eq (length (frame-list)) 2)
+     ;;              (progn
+     ;;              (select-frame frame)
+     ;;              (load-theme 'xresources))))
+     :config
+  ;; xresources-theme set hl-line to be the same color as the background...
+     ;; (set-face-background 'hl-line (x-get-resource "color8" ""))
+     )
+
 #+END_SRC
 
 *** transparent
@@ -595,7 +599,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
          :after calfw
          :bind ("C-c z" . cfw:open-org-calendar)
          :custom
-         cfw:org-overwrite-default-keybinding t)
+         (cfw:org-overwrite-default-keybinding t))
 
  #+END_SRC
 
@@ -617,199 +621,158 @@ For a better user experience of GNU Emacs, here are the default values I use.
     :ensure nil
     :after org
     :preface
-    (defun org-capture-template-goto-link ()
-         "Set point for capturing at what capture target file+headline with headline set to %l would do."
-         (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target))
-                                                              (org-capture-get :annotation)))
-         (org-capture-put-target-region-and-position)
-         (widen)
-         (let ((hd (nth 2 (org-capture-get :target))))
-              (goto-char (point-min))
-              (if (re-search-forward
-                  (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
-              (goto-char (point-at-bol))
-              (goto-char (point-max))
-              (or (bolp) (insert "\n"))
-              (insert "* " hd "\n")
-              (beginning-of-line 0))))
+  (defun my/org-timestamp-add-reminder (date day)
+    "add a reminder to a timestamp like : <2019-11-14 -5d>"
+    (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
 
-    (defvar my/org-people-template "** %\\1 %\\2
+  (defvar my/org-toreserve-template
+"* TORESERVE %^{Name} [[google-maps:%\\3][Google Maps]] %^g
+  DEADLINE:%(my/org-timestamp-add-reminder \\5 30)
   :PROPERTIES:
-  :Creado:        %U
-  :Nombre:        %^{Nombre}
-  :Apellido:      %^{Apellido}%?
-  :Compleanos:    %^{Fecha de nacimiento}u
-  :Telefono:      %^{Telefono}
-  :Correo:        %^{Correo}
-  :Direccion:     %^{Direccion}
-  :Ciudad:        %^{Ciudad}
-  :Pais:          %^{Pais}
-  :Codigo postal: %^{Codigo postal}
-  :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-  :Nota:
-  :END:"
-  )
-
-  (defvar my/org-adress-template "** %\\1
-  :PROPERTIES:
-  :Creado:        %U
-  :Nombre:        %^{Nombre}
-  :Telefono:      %^{Telefono}
-  :Correo:        %^{Correo}
-  :Direccion:     %^{Direccion}
-  :Ciudad:        %^{Ciudad}
-  :Pais:          %^{Pais}
-  :Codigo postal: %^{Codigo postal}
-  :Map:      [[google-maps:%\\5+%\\6+%\\7+%\\8][Google Maps]]
-  :END: "
-  )
-
-  (defvar my/org-espectaculo-template "*** %\\1
-  :PROPERTIES:
-  :Creado:     %U
-  :nombre:   %^{Nombre}
-  :tipo:     %^{tipo}p
-  :lugar:    %^{Lugar}
-  :con:      %^{Con}
+  :Created:     %U
+  :Name:     \\1
+  :Type:     %^{Type}p
+  :Place:    %^{Place}
+  :With:      %^{With}
+  :GMap:      [[google-maps:%\\3][Google Maps]]
   :END:
-  %^{Cuando}t"
-  )
+  %^{When}T
+")
 
-  (defvar my/org-personal-template "***  %^{Nombre} %^g
+  (defvar my/org-togo-template
+"* TOGO %\\1 [[google-maps:%\\3][Google Maps]] %^g
   :PROPERTIES:
-  :Creado:     %U
-  :nombre:   %\\1
-  :lugar:    %^{Lugar}
-  :con:      %^{Con}
+  :Created:     %U
+  :Name:   %^{Name}
+  :Type:     %^{Type}p
+  :Place:    %^{Place}
+  :With:      %^{With}
+  :GMap:      [[google-maps:%\\3][Google Maps]]
   :END:
-  %^{Cuando}t"
-  )
+  %^{When}T
+")
 
-  (defvar my/org-move-template  "***  %^{Nombre} %^g
-  :PROPERTIES:
-  :Creado:     %U
-  :nombre:   %\\1
-  :lugar:    %^{Lugar}
-  :con:      %^{Con}
-  :END:
-  %^{Cuando}t"
-  )
 
-  (defvar my/org-transporte-template "** %\\1 -> %\\2
+  (defvar my/org-trip-template
+"* GOTO %\\1 -> %\\2
   :PROPERTIES:
-  :de:       %^{de}
-  :a:        %^{a}
-  :tipo:     %^{tipo}p
-  :con:      %^{Con}
+  :Created: %U
+  :From:    %^{From}
+  :To:      %^{To}
+  :Type:    %^{Type}p
+  :With:    %^{With}
   :END:
-  %^{Cuando}t"
-  )
+  %^{When}T
+")
 
-  (defvar my/org-ida-vuelta-template "** %\\1 -> %\\2
+  (defvar my/org-roundtrip-template
+"* %\\1 -> %\\2
   :PROPERTIES:
-  :de:       %^{de}
-  :a:        %^{a}
-  :tipo:     %^{tipo}p
-  :con:      %^{Con}
+  :Created: %U
+  :From:    %^{From}
+  :To:      %^{To}
+  :Type:    %^{Type}p
+  :With:    %^{With}
   :END:
-  %^{Cuando}t
-  ,** %\\2 -> %\\1
+  %^{When}T\n* %\\2 -> %\\1
   :PROPERTIES:
-  :de:       %\\2
-  :a:        %\\1
-  :tipo:     %^{tipo}p
-  :con:      %^{Con}
+  :Created: %U
+  :de:      %\\2
+  :a:       %\\1
+  :tipo:    %^{tipo|\\3}p
+  :con:     %^{Con|\\4}
   :END:
-  %^{Cuando}t"
-  )
+  %^{When}T
+")
 
-  (defvar my/org-voucher-template  "* TOUSE %^{Valor}
+  (defvar my/org-voucher-template
+"* TOUSE %^{Valor}
   DEADLINE:%^{Antes de}t
   :PROPERTIES:
-  :Tipo:     %^{TIPO}p
+  :Reduction:     %^{Reduction}
+  :Where:     %^{Where|oui.sncf|ouibus|ouigo...}
   :END:
-  %^{Cuando}t"
-  )
+  %^{Cuando}t
+")
 
-  (defvar my/org-todo-template  "* TODO %^{Que} [/] %^g
+  (defvar my/org-todo-template
+"* TODO %^{What} [%] %^g
   :PROPERTIES:
-  :Creado:     %U
+  :Created:     %U
   :END:
-  ")
+")
 
-  (defvar my/org-someday-template  "* SOMEDAY %^{Que} [/] %^g
+  (defvar my/org-someday-template
+"* SOMEDAY %^{What} [%] %^g
   :PROPERTIES:
-  :Creado:     %U
+  :Created:     %U
   :END:
-  ")
+")
 
-  (defvar my/org-work-move-template  "* TODO %^{Que} [/] %^g
+(defvar my/org-work-move-template
+"* TODO %^{What} [%] %^g
   :PROPERTIES:
-  :Creado:     %U
+  :Created:     %U
   :mission:     %^{mission}p
   :END:
-  ")
+")
 
-  (defvar my/org-stuff-buy-template  "* TOBUY %^{Que} %^g
+  (defvar my/org-stuff-buy-template
+"* TOBUY %^{What}
   :PROPERTIES:
-  :Creado:     %U
+  :Created:     %U
   :END:
-  ")
+")
 
-  (defvar my/org-stuff-gift-template  "* TOBUY %^{Que}  %^g
+  (defvar my/org-stuff-gift-template
+"* IDEA %^{What}
   :PROPERTIES:
-  :por: %^{Por}
-  :cuando: %^{Cuando}t
-  :Creado:     %U
+  :Created:     %U
+  :For: %^{For}
+  :When: %^{When}t
   :END:
-  ")
+")
 
-  (defvar my/org-stuff-appartement-template  "* TOBUY %^{Que}
+  (defvar my/org-stuff-flat-template
+"* TOBUY %^{What}
   :PROPERTIES:
-  :piece: %^{PIECE}p
-  :Creado:     %U
+  :Created:     %U
+  :Room: %^{Room}p
   :END:
-  ")
+")
 
   :custom
-  (org-capture-templates `(
-      ("c" "Contact")
-         ("cg" "Gente" entry (file+headline "~/org/contacts.org" "People"),
-              my/org-people-template :empty-lines 1)
-         ("ca" "Lugar" entry (file+headline "~/org/contacts.org" "Adress"),
-              my/org-adress-template :empty-lines 1)
-      ("d" "diario")
-         ("de" "Evento")
-            ("des" "Espectaculo" entry (file+headline "~/org/diario.org" "Espectaculo"),
-              my/org-espectaculo-template :empty-lines 1)
-            ("dep" "Personal" entry (file+headline "~/org/diario.org" "Personal"),
-              my/org-personal-template :empty-lines 1)
-            ("dew" "Work" entry (file+headline "~/org/diario.org" "Work"),
-              my/org-personal-template :empty-lines 1)
-         ("dv" "Viaje")
-            ("dvi" "Viaje individual" entry (file+headline "~/org/diario.org" "Transporte"),
-              my/org-transporte-template :empty-lines 1)
-            ("dvv" "Viaje ida y vulta" entry (file+headline "~/org/diario.org" "Transporte"),
-              my/org-ida-vuelta-template :empty-lines 1)
-      ("t" "todo")
-         ("to" "oneday" entry (file "~/org/todo.org"),
-              my/org-someday-template)
-         ("tt" "todo" entry (file "~/org/todo.org"),
-              my/org-todo-template)
-         ("tw" "work" entry (file+headline "~/org/work.org" "Move"),
-              my/org-work-move-template)
-      ("v" "voucher" entry (file "~/org/voucher.org"),
-            my/org-voucher-template)
-      ("s" "stuff")
-         ("sb" "buy" entry (file+headline "~/org/stuff.org" "objet"),
-              my/org-stuff-buy-template)
-         ("sg" "gift" entry (file+headline "~/org/stuff.org" "objet"),
-              my/org-stuff-gift-template)
-         ("sa" "apartamento" entry (file+headline "~/org/stuff.org" "apartamento"),
-              my/org-stuff-appartement-template)
+  (org-capture-templates
+   `(("e" "Event")
+      ("er" "To reserve" entry (file+headline "~/org/master.org" "Agenda"),
+        my/org-toreserve-template :empty-lines 1)
+      ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
+        my/org-togo-template :empty-lines 1)
+      ("es" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+        my/org-trip-template :empty-lines 1)
+      ("er" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+        my/org-roundtrip-template :empty-lines 1)
+     ("t" "TO-DO")
+      ("tt" "todo" entry (file+headline "~/org/master.org" "todo"),
+        my/org-todo-template)
+      ("to" "oneday" entry (file "~/org/master.org" "todo"),
+        my/org-someday-template)
+      ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
+        my/org-work-move-template)
+     ("v" "voucher" entry (file+headline "~/org/voucher.org" "Voucher"),
+        my/org-voucher-template)
+     ("s" "stuff")
+      ("sb" "buy" entry (file+headline "~/org/laster.org" "objet"),
+        my/org-stuff-buy-template)
+      ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
+        my/org-stuff-gift-template)
+      ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
+        my/org-stuff-flat-template)
 
 )))
 #+END_SRC
+
+***
 
 *** COMMENT Clock
 
@@ -1096,7 +1059,7 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
   (use-package git-commit
     :after magit
     :hook (git-commit-mode . my/git-commit-auto-fill-everywhere)
-    :custom (git-commit-summary-max-length 50)
+    :custom (git-commit-summary-max-length 80)
     :preface
     (defun my/git-commit-auto-fill-everywhere ()
       "Ensures that the commit body does not exceed 72 characters."
@@ -1173,35 +1136,38 @@ made by previous commits.
 #+END_SRC
 ** Shell =eshell=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package eshell
-  :init
-  (setq ;; eshell-buffer-shorthand t ...  Can't see Bug#19391
-        eshell-scroll-to-bottom-on-input 'all
-        eshell-error-if-no-glob t
-        eshell-hist-ignoredups t
-        eshell-save-history-on-exit t
-        eshell-prefer-lisp-functions nil
-        eshell-destroy-buffer-when-process-dies t)
-  (eshell/alias "e" "find-file $1")
-  (eshell/alias "ff" "find-file $1")
-  (eshell/alias "emacs" "find-file $1")
-  (eshell/alias "ee" "find-file-other-window $1")
-  (eshell/alias "gd" "magit-diff-unstaged")
-  (eshell/alias "gds" "magit-diff-staged")
-  (eshell/alias "d" "dired $1")
-  (eshell/alias "l" "ls")
-  (eshell/alias "la" "ls -a")
-  (eshell/alias "ll" "ls -l")
-  (eshell/alias "cp" "cp -iv")
-  (eshell/alias "rcp" "rsync -v --progress")
-  (eshell/alias "rmv" "rsync -v --progress --remove-source-files")
-  (eshell/alias "mv" "mv -iv")
-  (eshell/alias "rm" "rm -iv")
-  (eshell/alias "rmdir" "rmdir -v")
-  (eshell/alias "ln" "ln -v")
-  (eshell/alias "chmod" "chmod -c")
-  (eshell/alias "chown" "chown -c"))
+    (use-package eshell
+     :bind (("C-x t" . eshell)
+           ;; (:map eshell-mode-map
+           ;;  ("<tab>" . completion-at-point))
+           )
+     :init
+      (setq ;; eshell-buffer-shorthand t ...  Can't see Bug#19391
+            eshell-scroll-to-bottom-on-input 'all
+            eshell-error-if-no-glob t
+            eshell-hist-ignoredups t
+            eshell-save-history-on-exit t
+            eshell-prefer-lisp-functions nil
+            eshell-destroy-buffer-when-process-dies t)
 
+      (eshell/alias "e"     "find-file $1")
+      (eshell/alias "ff"    "find-file $1")
+      (eshell/alias "emacs" "find-file $1")
+      (eshell/alias "ee"    "find-file-other-window $1")
+      (eshell/alias "gd"    "magit-diff-unstaged")
+      (eshell/alias "gds"   "magit-diff-staged")
+      (eshell/alias "d"     "dired $1")
+      (eshell/alias "l"     "ls")
+      (eshell/alias "la"    "ls -a")
+      (eshell/alias "ll"    "ls -l")
+      (eshell/alias "cp"    "cp -iv")
+      (eshell/alias "mv"    "mv -iv")
+      (eshell/alias "rm"    "rm -iv")
+      (eshell/alias "rmdir" "rmdir -v")
+      (eshell/alias "ln"    "ln -v")
+      (eshell/alias "chmod" "chmod -c")
+      (eshell/alias "chown" "chown -c")
+  )
 #+END_SRC
 
 * Minor mode
@@ -1340,6 +1306,7 @@ The code below, executes =org-babel-tangle= asynchronously when
                                                     ',init-tangle-start-time)))
               (message "ERROR: %s as tangle failed." ,org-file)))))))
 #+END_SRC
+
 
 ** Spelling
 *** Fly Spell
@@ -1511,21 +1478,8 @@ this, Emacs treats "undo itself as another editing that can be undone".
   ;;   (undo-tree-visualizer-diff t))
 #+END_SRC
 
-** keystroke =which-key=
 
-It's difficult to remember all the keyboard shortcuts. The =which-key= package
-helps to solve this.
 
-I used =guide-key= in my past days, but =which-key= is a good replacement.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package which-key
-    :defer 0.2
-    :delight
-    :config (which-key-mode))
-#+END_SRC
-
-#+RESULTS:
 
 ** autocompletion =Ivy=
 
