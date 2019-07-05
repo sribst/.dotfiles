@@ -12,7 +12,7 @@
 - [[#major-mode][Major mode]]
   - [[#languages][Languages]]
   - [[#budger-ledger][Budger =ledger=]]
-  - [[#todo-agenda-org][Todo, agenda =org=]]
+  - [[#todo-agenda-org-mode][Todo, agenda =org-mode=]]
   - [[#mail-gnus][Mail =gnus=]]
   - [[#contact-bbdb][Contact =bbdb=]]
   - [[#git-magit][Git =magit=]]
@@ -21,6 +21,7 @@
   - [[#game][Game]]
   - [[#typing-training][Typing training]]
   - [[#shell-eshell][Shell =eshell=]]
+  - [[#social-acount][social acount]]
 - [[#minor-mode][Minor mode]]
   - [[#auto-completion-company][Auto-Completion =company=]]
   - [[#internet-interface][Internet interface]]
@@ -462,7 +463,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #+end_src
  *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
  format.
-** Todo, agenda =org=
+** Todo, agenda =org-mode=
 
  One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
  take notes and make my presentations, but you can do lots of things with
@@ -528,67 +529,48 @@ For a better user experience of GNU Emacs, here are the default values I use.
          (org-agenda-todo-ignore-scheduled 'future)
          (org-agenda-skip-scheduled-if-done t)
          (org-agenda-skip-deadline-if-done  t)
-         (org-agenda-custom-commands
-          '(("z" "Main Agenda View"
-             (
-              (todo "TODO|RESERVE|INPROGRESS|WAITING"
-                ((org-agenda-overriding-header "Main todo")))
-              (agenda ""
-               ((org-agenda-overriding-header "Agenda")
-                (org-agenda-tag-filter-preset '("-hidden" "-volim"))
-                (org-agenda-span '3)))
-                )nil nil)))
-   ;;       (org-agenda-custom-commands
-   ;;         '(("z" "Main agenda" agenda ""
-   ;;            ((org-agenda-tag-filter-preset
-   ;;            '("-volim" "-hidden"))))
-   ;;           ;; ("q" "Main Agenda"
-   ;;           ;;   ((tags "PRIORITY=\"A\""
-   ;;           ;;     ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-   ;;           ;;      (org-agenda-overriding-header "High-priority unfinished tasks:")))
-   ;;           ;;   (agenda "")
-   ;;           ;;   (alltodo ""))
-   ;; )
-   ;;     )
+         (org-agenda-skip-scheduled-if-deadline-is-shown t)
    )
 
 #+END_SRC
-**** Agenda =org-super-agenda=
+**** Agenda view =org-super-agenda=
     Org super agenda allows a more readible agenda by grouping the todo item
  #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package org-super-agenda
-    :custom
-   (org-super-agenda-mode t)
-   (add-to-list org-agenda-custom-commands
-     '(("b" "Experimental"
-         ((agenda ""
-           ((org-super-agenda-groups'(
-             (:name "DO NOT MISS"
-              :deadline t)
-             (:name "Today"
-              :time-grid t
-              :date today)
-             (:name "Hidden"
-              :time-grid t
-              :tag "hidden"
-              )
-             ;; (:name "hidden"
-             ;; :tag ("hidden"
-             ;; )
-             ;; (:name "Rest")
-           ))))
-          (alltodo ""
-           ((org-super-agenda-groups '(
-            (:name "Work"
-            :todo "TODO")
-            (:name "tobuy"
-            :todo "TOBUY")
-           )))
-          )
-         ))))
-)
+       (use-package org-super-agenda
+       :init
+       (setq org-super-agenda-mode nil)
+       :custom
+       (org-agenda-custom-commands
+        '(("b" "Experimental"
+            ;; (org-agenda-skip-function
+            ;;   '(org-agenda-skip-entry-if \\='timestamp))
+            ((agenda ""
+              (
+              (org-agenda-span '1)
+              (org-super-agenda-groups
+              '(
+                (:name "To do ASAP" :scheduled t)
+                (:name "do not miss" :deadline t)
+                (:name "Information" :and (:time-grid t :todo nil))
+                (:name "Today" :and (:time-grid t :todo t :date today))
+                ;; (:name "next 2 day" :date t)
+              ))))
+             (alltodo ""
+              ((org-super-agenda-groups
+              '((:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
+                (:name "Next work"     :and(:tag "work" :todo "TODO"))
+                (:name "on pause Work" :todo "WAITING")
+               (:name "Current personal" :todo "INPROGRESS")
+               (:name "Next personnal"   :todo "TODO")
+               (:name "on pause Work"    :todo "WAITING")
+               (:name "tobuy" :todo ("TOBUY" "BUY"))
+               (:name "One day" :todo "SOMEDAY")
+               (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
+              ))))
+             ))))
+   )
 #+END_SRC
-**** Agenda "square view"  =calfw=
+**** Agenda view "square view"  =calfw=
 
  #+BEGIN_SRC emacs-lisp :tangle yes
       (use-package calfw :after org-agenda)
@@ -826,7 +808,6 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #+END_SRC
 
 *** Customization
-
  Let's change the foreground and the weight of each keywords.
 
  #+BEGIN_SRC emacs-lisp :tangle yes
@@ -836,30 +817,36 @@ For a better user experience of GNU Emacs, here are the default values I use.
      :custom
      (org-todo-keyword-faces
       '(
-          ("TORESERVE"  . (:foreground "red" :weight bold))
-          ("TOGO"       . (:foreground "orange" :weight bold))
+          ("RESERVE"  . (:foreground "red" :weight bold))
+          ("GO"       . (:foreground "orange" :weight bold))
 
           ("WENT"       . (:foreground "green" :weight bold))
           ("CANCELED"   . (:foreground "grey"))
+
 
           ("SOMEDAY"    . (:foreground "blue"))
           ("TODO"       . (:foreground "red" :weight bold))
           ("INPROGRESS" . (:foreground "orange" :weight bold))
           ("WAITING"    . (:foreground "yellow" :weight bold))
+
           ("DONE"       . (:foreground "green"))
           ("ABORDED"    . (:foreground "grey" ))
 
 
           ("IDEA"       . (:foreground "blue" :weight bold))
-          ("TOBUY"      . (:foreground "red" :weight bold))
-          ("TOGIVE"     . (:foreground "orange" :weight bold))
+          ("BUY"      . (:foreground "red" :weight bold))
+          ("GIVE"     . (:foreground "orange" :weight bold))
 
           ("BOUGHT"     . (:foreground "green" :weight bold))
           ("GIVEN"      . (:foreground "green" :weight bold))
+
+          ("USE"      . (:foreground "red" :weight bold))
+          ("CONSUMED" . (:foreground "green" :weight bold))
+          ("LOST" . (:foreground "grey"))
         )))
  #+END_SRC
 
-*** syncronise
+*** syncronize
 **** calendar =org-caldav=
  #+BEGIN_SRC emacs-lisp :tangle yes
       (use-package org-caldav
@@ -883,53 +870,12 @@ For a better user experience of GNU Emacs, here are the default values I use.
         (setq org-icalendar-use-deadline  '(event-if-todo event-if-not-todo todo-due))
         (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
         :hook (
-        ;; (kill-emacs . org-caldav-sync)
+        (kill-emacs . org-caldav-sync)
                (after-save .
                    (lambda ()
                    (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
    )
-      ;; (use-package org-caldav
-      ;;   :init
-      ;;   (defvar org-caldav-sync-timer nil "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-      ;;   (defun org-caldav-sync-with-delay (secs)
-      ;;     (when org-caldav-sync-timer
-      ;;       (cancel-timer org-caldav-sync-timer))
-      ;;     (setq org-caldav-sync-timer
-      ;; 	  (run-with-idle-timer
-      ;; 	   (* 1 secs) nil 'org-caldav-sync)))
-      ;;   :custom
-      ;;      (org-caldav-url "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-      ;;      (org-caldav-calendar-id "personal")
-      ;;      (org-caldav-inbox "~/org/sync2.org")
-      ;;      (org-caldav-files '(
-      ;;          "~/org/diario.org"
-      ;;          "~/org/agenda.org"
-      ;;          "~/org/todo.org"
-      ;;          "~/org/work.org"
-      ;;      ))
-      ;;      (org-icalendar-timezone "Europe/Paris")
-      ;;    )
  #+END_SRC
-
-**** contact
-*** COMMENT Encryption / Decryption
-
- To be able to enable encryption and decryption of =.gpg= files with =org-mode=,
- we will need to install =gnupg2=.
-
- Once this is done, we simply configure =org-crypt= to accept our public key
- identifier to allow asymmetric encryption.
-
- *NOTE:* you need to modify the =org-crypt-key= variable to replace my key
- identifier, by yours (or =nil= to allow symmetric encryption).
-
- # #+BEGIN_SRC emacs-lisp :tangle yes
- #   (use-package org-crypt
- #     :ensure nil
- # 	:after org
- #     :init (org-crypt-use-before-save-magic)
- #     :custom (org-crypt-key "E9AADC36E94A672D1A07D49B208FCDBB98190562"))
- # #+END_SRC
 
 *** Journal
 
@@ -947,28 +893,10 @@ For a better user experience of GNU Emacs, here are the default values I use.
            ("C-c C-j" . org-journal-new-entry)
            ("C-c C-s" . org-journal-search)
            ("C-c t" . org-journal-new-entry))
-
     :custom
     (org-journal-dir "~/org/journal/")
     (org-journal-file-format "%Y%m%d")
     (org-journal-enable-agenda-integration t))
-    ;; :preface
-    ;; (defun get-journal-file-yesterday ()
-    ;;   "Gets filename for yesterday's journal entry."
-    ;;   (let* ((yesterday (time-subtract (current-time) (days-to-time 1)))
-    ;;          (daily-name (format-time-string "%Y%m%d" yesterday)))
-    ;;     (expand-file-name (concat org-journal-dir daily-name))))
-
-    ;; (defun journal-file-yesterday ()
-    ;;   "Creates and load a file based on yesterday's date."
-    ;;   (interactive)
-    ;;   (find-file (get-journal-file-yesterday)))
-    ;; :custom
-    ;; (org-journal-date-format "%e %b %Y (%A)")
-    ;; (org-journal-dir "~/org/journal/2019/")
-    ;; (org-journal-enable-encryption t)
-    ;; (org-journal-file-format "%Y%m%d")
-    ;; (org-journal-time-format "")
 #+END_SRC
 
 *** Languages
@@ -1000,7 +928,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
    (use-package ob-sql :ensure nil :after org)
  #+END_SRC
 
-*** Other improvment
+*** Other improvement
  #+BEGIN_SRC emacs-lisp :tangle yes
  (defun org-convert-csv-table (beg end)
  (interactive (list (mark) (point)))
@@ -1173,7 +1101,14 @@ made by previous commits.
       (eshell/alias "chown" "chown -c")
   )
 #+END_SRC
-
+** social acount
+*** twitter =twittering=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package twittering-mode
+  :init
+  (setq twittering-use-master-password t)
+  )
+#+END_SRC
 * Minor mode
 ** Auto-Completion =company=
 
@@ -1701,9 +1636,40 @@ non-whitespace character.
       (setq aw-scope 'frame)
     )
 
-      (use-package ibuffer
-        :defer 0.2
-        :bind ("C-x C-b" . ibuffer))
+    (use-package ibuffer
+     :bind ("C-x C-b" . ibuffer)
+     :custom
+        (ibuffer-saved-filter-groups
+        '(("default"
+               ("dired" (mode . dired-mode))
+               ("org"   (name . "^.*org$"))
+               ("magit" (or (mode . magit-mode)
+                            (name . "^magit.*$" )))
+
+               ("IRC"   (or (mode . circe-channel-mode) (mode . circe-server-mode)))
+               ("web"   (or (mode . web-mode) (mode . js2-mode)))
+               ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
+               ("gnus"  (or (mode . message-mode)
+                            (mode . bbdb-mode)
+                            (mode . mail-mode)
+                            (mode . gnus-group-mode)
+                            (mode . gnus-summary-mode)
+                            (mode . gnus-article-mode)
+                            (name . "^\\.bbdb$")
+                            (name . "^\\.newsrc-dribble")))
+               ("programming" (or
+                               (mode . java-mode)
+                               (mode . groovy-mode)
+                               (mode . conf-space-mode)))
+               ("emacs" (or
+                         (name . "^\\*scratch\\*$")
+                         (name . "^\\*Messages\\*$")))
+               ("Ediff" (name . "^\\*Ediff.*\\*$"))
+               )))
+          :hook ('ibuffer-mode .
+          (lambda ()
+            (ibuffer-auto-mode 1)
+            (ibuffer-switch-to-saved-filter-groups "default"))))
 
   (defun toggle-window-split ()
     (interactive)
