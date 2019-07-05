@@ -32,6 +32,7 @@
   - [[#general-text-formatting][General text formatting]]
   - [[#keystroke-which-key][keystroke =which-key=]]
   - [[#autocompletion-ivy][autocompletion =Ivy=]]
+  - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
   - [[#navigation][Navigation]]
   - [[#pdf][PDF]]
   - [[#point-and-region][Point and Region]]
@@ -40,7 +41,8 @@
   - [[#buffer-and-windows][Buffer and Windows]]
   - [[#word-wrap][Word Wrap]]
   - [[#custom-fonction][custom fonction]]
-  - [[#edition][edition]]
+  - [[#edition-iedit][edition =iedit=]]
+  - [[#specific-search-find-file-in-project][specific search =find-file-in-project=]]
 
 * Customisation
 ** Packages
@@ -529,14 +531,8 @@ For a better user experience of GNU Emacs, here are the default values I use.
          (org-agenda-custom-commands
           '(("z" "Main Agenda View"
              (
-              (alltodo ""
-                ((org-agenda-overriding-header "Work Todo")
-                 (org-agenda-files
-                  '("~/org/work.org"))))
-              (todo "TODO|INPROGRESS"
-               ((org-agenda-overriding-header "Personnal Todo ")
-                (org-agenda-sorting-strategy '(time-up todo-state-up))
-                (org-agenda-files '("~/org/todo.org"))))
+              (todo "TODO|RESERVE|INPROGRESS|WAITING"
+                ((org-agenda-overriding-header "Main todo")))
               (agenda ""
                ((org-agenda-overriding-header "Agenda")
                 (org-agenda-tag-filter-preset '("-hidden" "-volim"))
@@ -636,20 +632,20 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :Type:     %^{Type}p
   :Place:    %^{Place}
   :With:      %^{With}
-  :GMap:      [[google-maps:%\\3][Google Maps]]
+  :GMap:      [[google-maps:%\\2][Google Maps]]
   :END:
   %^{When}T
 ")
 
   (defvar my/org-togo-template
-"* TOGO %\\1 [[google-maps:%\\3][Google Maps]] %^g
+"* TOGO %^{Name} [[google-maps:%\\3][Google Maps]] %^g
   :PROPERTIES:
   :Created:     %U
-  :Name:   %^{Name}
-  :Type:     %^{Type}p
-  :Place:    %^{Place}
-  :With:      %^{With}
-  :GMap:      [[google-maps:%\\3][Google Maps]]
+  :Name:   \\1
+  :Type:   %^{Type}p
+  :Place:  %^{Place}
+  :With:   %^{With}
+  :GMap:   [[google-maps:%\\3][Google Maps]]
   :END:
   %^{When}T
 ")
@@ -763,7 +759,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
      ("t" "TO-DO")
       ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
         my/org-todo-template)
-      ("to" "oneday" entry (file "~/org/master.org" "TO-DO"),
+      ("to" "oneday" entry (file+headline "~/org/master.org" "TO-DO"),
         my/org-someday-template)
       ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
         my/org-work-move-template)
@@ -1541,6 +1537,12 @@ smaller, simpler, and smoother to use yet highly customizable.
     :bind (("C-s" . swiper)
            ("C-r" . swiper)))
 #+END_SRC
+** M-x enhancement =smex=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smex
+  :after counsel)
+#+END_SRC
+
 
 ** Navigation
 
@@ -1678,9 +1680,7 @@ non-whitespace character.
 #+END_SRC
 
 ** Buffer and Windows
-
    Don't ask before killing a buffer. I know what I'm doing.
-
    #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key [remap kill-buffer] #'kill-current-buffer)
    #+END_SRC
@@ -1787,8 +1787,12 @@ I like to have lines of the same length.
   (load-file "~/.emacs.d/init.el"))
 
 #+END_SRC
-** edition
-*** edit all occurence
+** edition =iedit=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package iedit)
+  (use-package iedit
+  :bind ("C-c e" . iedit-mode))
+#+END_SRC
+** specific search =find-file-in-project=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package find-file-in-project)
 #+END_SRC
