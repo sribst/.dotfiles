@@ -549,11 +549,10 @@ For a better user experience of GNU Emacs, here are the default values I use.
               (org-agenda-span '1)
               (org-super-agenda-groups
               '(
-                (:name "To do ASAP" :scheduled t)
-                (:name "do not miss" :deadline t)
+                (:name "Agenda" :and (:time-grid t :todo t))
+                (:name "Scheduled" :scheduled t)
+                (:name "Deadline" :deadline t)
                 (:name "Information" :and (:time-grid t :todo nil))
-                (:name "Today" :and (:time-grid t :todo t :date today))
-                ;; (:name "next 2 day" :date t)
               ))))
              (alltodo ""
               ((org-super-agenda-groups
@@ -570,7 +569,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
              ))))
    )
 #+END_SRC
-**** Agenda view "square view"  =calfw=
+$**** Agenda view "square view"  =calfw=
 
  #+BEGIN_SRC emacs-lisp :tangle yes
       (use-package calfw :after org-agenda)
@@ -606,7 +605,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
 
   (defvar my/org-toreserve-template
-"* TORESERVE %^{Name} [[google-maps:%\\3][Google Maps]] %^g
+"* RESERVE %^{Name} [[google-maps:%\\3][Google Maps]] %^g
   DEADLINE:%(my/org-timestamp-add-reminder \\5 30)
   :PROPERTIES:
   :Created:     %U
@@ -614,13 +613,13 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :Type:     %^{Type}p
   :Place:    %^{Place}
   :With:      %^{With}
-  :GMap:      [[google-maps:%\\2][Google Maps]]
+  :GMap:      [[google-maps:%\\3][Google Maps]]
   :END:
   %^{When}T
 ")
 
   (defvar my/org-togo-template
-"* TOGO %^{Name} [[google-maps:%\\3][Google Maps]] %^g
+"* GO %^{Name} [[google-maps:%\\3][Google Maps]] %^g
   :PROPERTIES:
   :Created:     %U
   :Name:   \\1
@@ -634,7 +633,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 
 
   (defvar my/org-trip-template
-"* GOTO %\\1 -> %\\2
+"* GO %\\1 -> %\\2
   :PROPERTIES:
   :Created: %U
   :From:    %^{From}
@@ -646,7 +645,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 ")
 
   (defvar my/org-roundtrip-template
-"* %\\1 -> %\\2
+"* GO %\\1 -> %\\2
   :PROPERTIES:
   :Created: %U
   :From:    %^{From}
@@ -654,7 +653,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :Type:    %^{Type}p
   :With:    %^{With}
   :END:
-  %^{When}T\n* %\\2 -> %\\1
+  %^{When}T\n* GO %\\2 -> %\\1
   :PROPERTIES:
   :Created: %U
   :de:      %\\2
@@ -666,7 +665,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 ")
 
   (defvar my/org-voucher-template
-"* TOUSE %^{Valor}
+"* USE %^{Valor}
   DEADLINE:%^{Antes de}t
   :PROPERTIES:
   :Reduction:     %^{Reduction}
@@ -698,7 +697,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 ")
 
   (defvar my/org-stuff-buy-template
-"* TOBUY %^{What}
+"* BUY %^{What}
   :PROPERTIES:
   :Created:     %U
   :END:
@@ -714,7 +713,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
 ")
 
   (defvar my/org-stuff-flat-template
-"* TOBUY %^{What}
+"* BUY %^{What}
   :PROPERTIES:
   :Created:     %U
   :Room: %^{Room}p
