@@ -538,9 +538,10 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #+BEGIN_SRC emacs-lisp :tangle yes
        (use-package org-super-agenda
        :init
-       (setq org-super-agenda-mode nil)
+       (setq org-super-agenda-mode t)
        :custom
-       (org-agenda-custom-commands
+
+       (setq org-agenda-custom-commands
         '(("b" "Experimental"
             ;; (org-agenda-skip-function
             ;;   '(org-agenda-skip-entry-if \\='timestamp))
@@ -569,7 +570,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
              ))))
    )
 #+END_SRC
-$**** Agenda view "square view"  =calfw=
+**** Agenda view "square view"  =calfw=
 
  #+BEGIN_SRC emacs-lisp :tangle yes
       (use-package calfw :after org-agenda)
@@ -1080,24 +1081,6 @@ made by previous commits.
             eshell-save-history-on-exit t
             eshell-prefer-lisp-functions nil
             eshell-destroy-buffer-when-process-dies t)
-
-      (eshell/alias "e"     "find-file $1")
-      (eshell/alias "ff"    "find-file $1")
-      (eshell/alias "emacs" "find-file $1")
-      (eshell/alias "ee"    "find-file-other-window $1")
-      (eshell/alias "gd"    "magit-diff-unstaged")
-      (eshell/alias "gds"   "magit-diff-staged")
-      (eshell/alias "d"     "dired $1")
-      (eshell/alias "l"     "ls")
-      (eshell/alias "la"    "ls -a")
-      (eshell/alias "ll"    "ls -l")
-      (eshell/alias "cp"    "cp -iv")
-      (eshell/alias "mv"    "mv -iv")
-      (eshell/alias "rm"    "rm -iv")
-      (eshell/alias "rmdir" "rmdir -v")
-      (eshell/alias "ln"    "ln -v")
-      (eshell/alias "chmod" "chmod -c")
-      (eshell/alias "chown" "chown -c")
   )
 #+END_SRC
 ** social acount
