@@ -485,7 +485,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
         (org-catch-invisible-edits 'show-and-error)
         (org-cycle-separator-lines 0)
         (org-link-abbrev-alist
-          '(("google-map"      . "http://maps.google.com/maps?q=%s")
+          '(("google-maps"      . "http://maps.google.com/maps?q=%s")
             ("open-street-map" . "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
           ))
     )
@@ -562,14 +562,16 @@ For a better user experience of GNU Emacs, here are the default values I use.
              (alltodo ""
               ((org-super-agenda-groups
               '((:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
-                (:name "Next work"     :and(:tag "work" :todo "TODO"))
+                (:name "Next work"
+                 :and(:tag "work" :todo "TODO"))
                 (:name "on pause Work" :todo "WAITING")
                (:name "Current"        :todo "INPROGRESS")
                (:name "Reserve ASAP"   :todo "RESERVE")
                (:name "Next "          :todo "TODO")
                (:name "Buy ASAP"       :todo ("TOBUY" "BUY"))
                (:name "One day"        :todo "SOMEDAY")
-               (:name "on pause "      :todo "WAITING")
+               (:name "on pause"      :todo "WAITING")
+               (:name "recurent"      :tag "recurrent")
                (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
               ))))
              ))))
@@ -618,20 +620,20 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :Type:   %^{Type}p
   :Place:  %^{Place}
   :With:   %^{With}
-  :GMap:   [[google-maps:%\\2[@dress]]
+  :GMap:   [[google-maps:%\\2][@dress]]
   :END:
   %^{When}T
 ")
 
   (defvar my/org-togo-template
-"* GO %^{Name} [[google-maps:%\\2][@dress]] %^g
+"* GO %^{Name} [[:%\\2][@dress]] %^g
   :PROPERTIES:
   :Created:     %U
   :Name:   %\\1
   :Type:   %^{Type}p
   :Place:  %^{Place}
   :With:   %^{With}
-  :GMap:   [[google-maps:%\\2[@dress]]
+  :GMap:   [[google-maps:%\\2][@dress]]
   :END:
   %^{When}T
 ")
@@ -698,6 +700,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :PROPERTIES:
   :Created:     %U
   :mission:     %^{mission}p
+  :CATEGORY: %\\2
   :END:
 ")
 
@@ -722,6 +725,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :PROPERTIES:
   :Created:     %U
   :Room: %^{Room}p
+  :CATEGORY: %\\2
   :END:
 ")
 
