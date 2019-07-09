@@ -483,7 +483,12 @@ For a better user experience of GNU Emacs, here are the default values I use.
      :custom
         (org-use-extra-keys t)
         (org-catch-invisible-edits 'show-and-error)
-        (org-cycle-separator-lines 0))
+        (org-cycle-separator-lines 0)
+        (org-link-abbrev-alist
+          '(("google-map"      . "http://maps.google.com/maps?q=%s")
+            ("open-street-map" . "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
+          ))
+    )
  #+END_SRC
 *** generate TOC automaticaly
     If like me, you're tired of manually updating your tables of contents, =toc-org=
@@ -538,10 +543,9 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #+BEGIN_SRC emacs-lisp :tangle yes
        (use-package org-super-agenda
        :init
-       (setq org-super-agenda-mode t)
+       (org-super-agenda-mode)
        :custom
-
-       (setq org-agenda-custom-commands
+       (org-agenda-custom-commands
         '(("b" "Experimental"
             ;; (org-agenda-skip-function
             ;;   '(org-agenda-skip-entry-if \\='timestamp))
@@ -560,11 +564,12 @@ For a better user experience of GNU Emacs, here are the default values I use.
               '((:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
                 (:name "Next work"     :and(:tag "work" :todo "TODO"))
                 (:name "on pause Work" :todo "WAITING")
-               (:name "Current personal" :todo "INPROGRESS")
-               (:name "Next personnal"   :todo "TODO")
-               (:name "on pause Work"    :todo "WAITING")
-               (:name "tobuy" :todo ("TOBUY" "BUY"))
-               (:name "One day" :todo "SOMEDAY")
+               (:name "Current"        :todo "INPROGRESS")
+               (:name "Reserve ASAP"   :todo "RESERVE")
+               (:name "Next "          :todo "TODO")
+               (:name "Buy ASAP"       :todo ("TOBUY" "BUY"))
+               (:name "One day"        :todo "SOMEDAY")
+               (:name "on pause "      :todo "WAITING")
                (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
               ))))
              ))))
@@ -606,39 +611,38 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
 
   (defvar my/org-toreserve-template
-"* RESERVE %^{Name} [[google-maps:%\\3][Google Maps]] %^g
-  DEADLINE:%(my/org-timestamp-add-reminder \\5 30)
+"* RESERVE %^{Name} [[google-maps:%\\2][@dress]] %^g
   :PROPERTIES:
   :Created:     %U
-  :Name:     \\1
-  :Type:     %^{Type}p
-  :Place:    %^{Place}
-  :With:      %^{With}
-  :GMap:      [[google-maps:%\\3][Google Maps]]
+  :Name:   %\\1
+  :Type:   %^{Type}p
+  :Place:  %^{Place}
+  :With:   %^{With}
+  :GMap:   [[google-maps:%\\2[@dress]]
   :END:
   %^{When}T
 ")
 
   (defvar my/org-togo-template
-"* GO %^{Name} [[google-maps:%\\3][Google Maps]] %^g
+"* GO %^{Name} [[google-maps:%\\2][@dress]] %^g
   :PROPERTIES:
   :Created:     %U
-  :Name:   \\1
+  :Name:   %\\1
   :Type:   %^{Type}p
   :Place:  %^{Place}
   :With:   %^{With}
-  :GMap:   [[google-maps:%\\3][Google Maps]]
+  :GMap:   [[google-maps:%\\2[@dress]]
   :END:
   %^{When}T
 ")
 
 
   (defvar my/org-trip-template
-"* GO %\\1 -> %\\2
+"* GO %\\1 -%\\3-> %\\2
   :PROPERTIES:
   :Created: %U
-  :From:    %^{From}
-  :To:      %^{To}
+  :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+  :To:    %^{To|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
   :Type:    %^{Type}p
   :With:    %^{With}
   :END:
@@ -646,51 +650,51 @@ For a better user experience of GNU Emacs, here are the default values I use.
 ")
 
   (defvar my/org-roundtrip-template
-"* GO %\\1 -> %\\2
+"* GO %\\1 -%\\3-> %\\2
   :PROPERTIES:
   :Created: %U
-  :From:    %^{From}
-  :To:      %^{To}
+  :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+  :To:    %^{to|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
   :Type:    %^{Type}p
   :With:    %^{With}
   :END:
   %^{When}T\n* GO %\\2 -> %\\1
   :PROPERTIES:
   :Created: %U
-  :de:      %\\2
-  :a:       %\\1
-  :tipo:    %^{tipo|\\3}p
-  :con:     %^{Con|\\4}
+  :From:      %\\2
+  :To:       %\\1
+  :Type:    %^{Type}p
+  :With:    %^{With}
   :END:
   %^{When}T
 ")
 
   (defvar my/org-voucher-template
 "* USE %^{Valor}
-  DEADLINE:%^{Antes de}t
+   DEADLINE:%^{Before}t
   :PROPERTIES:
   :Reduction:     %^{Reduction}
-  :Where:     %^{Where|oui.sncf|ouibus|ouigo...}
+  :At:     %^{At|oui.sncf|ouibus|ouigo...}
   :END:
   %^{Cuando}t
 ")
 
   (defvar my/org-todo-template
-"* TODO %^{What} [%] %^g
+"* TODO %^{What} %^g
   :PROPERTIES:
   :Created:     %U
   :END:
 ")
 
   (defvar my/org-someday-template
-"* SOMEDAY %^{What} [%] %^g
+"* SOMEDAY %^{What} %^g
   :PROPERTIES:
   :Created:     %U
   :END:
 ")
 
 (defvar my/org-work-move-template
-"* TODO %^{What} [%] %^g
+"* TODO %^{What} %^g
   :PROPERTIES:
   :Created:     %U
   :mission:     %^{mission}p
