@@ -1,0 +1,104 @@
+[bar/bottombar]
+    monitor = ${env:MONITOR:eDP1}
+    width = 100%
+    height = 18
+    bottom = true
+
+    background = #cc000000
+    foreground = ${xrdb:color6}
+
+    font-0 = Open Sans:pixelsize=10;1
+    font-1 = file\-icons:style=Regular:pixelsize=10;1
+    font-2 = FontAwesome:style=Regular:pixelsize=10;1
+    font-3 = Material Icons:style=Regular:pixelsize=10;1
+    font-4 = octicons:style=Regular:pixelsize=10;1
+    font-5 = github\-octicons:style=Regular:pixelsize=10;1
+    font-6 = Icons:pixelsize:pixelsize=10;1
+
+
+    separator = "  "
+    modules-left   = battery temperature cpu memory alsa
+    modules-center = i3
+    modules-right  = date
+
+    tray-position = left
+    tray-padding = 5
+
+    scroll-up = i3wm-wsnext
+    scroll-down = i3wm-wsprev
+[module/alsa]
+    type = internal/alsa
+    master-soundcard = default
+    speaker-soundcard = default
+    headphone-soundcard = default
+
+    master-mixer = Master
+    interval = 5
+
+    format-volume = <label-volume>
+    label-volume =  %percentage%%
+
+[module/memory]
+    type = internal/memory
+    label =  %percentage_used%%
+    label-padding = 10
+
+[module/cpu]
+    type = internal/cpu
+    format = <label>
+    label =  CPU %percentage%%
+
+[module/temperature]
+    type = internal/temperature
+    interval = 0.5
+    thermal-zone = 0
+    warn-temperature = 60
+    label =  %temperature-c%
+    label-padding = 10
+
+[module/battery]
+    type = internal/battery
+    battery = BAT0
+    adapter = ADP1
+    poll-interval = 5
+    nlabel =  %percentage%
+
+    format-full = <label-full>
+    format-charging = <label-charging>
+    format-discharging = <label-discharging>
+
+    label-full =  %percentage%%
+    label-charging =  %percentage%%
+    label-discharging =  %percentage%%
+
+[module/i3]
+    type = internal/i3
+    index-sort = true
+    wrapping-scroll = true
+    pin-workspaces = true
+
+    # format = <label-state> <label-mode>
+
+    # Separator in between workspaces
+    label-separator = |
+    label-separator-padding = 5
+    label-separator-foreground = ${xrdb:foreground}
+    # label-mode-padding = 5
+
+    label-unfocused-foreground = ${xrdb:color8}
+    label-unfocused-padding    = 1
+    label-visible-foreground   = ${xrdb:color6}
+    label-visible-padding      = 1
+    label-focused-foreground   = ${xrdb:color6}
+    label-focused-padding      = 1
+    label-urgent-foreground   = ${xrdb:color1}
+    label-urgent-padding       = 1
+
+[module/date]
+    type = internal/date
+    interval = 5
+
+    date = "%Y-%m-%d"
+    time = " %H:%M"
+
+    label = %date% %time%

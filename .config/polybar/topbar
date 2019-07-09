@@ -1,0 +1,25 @@
+[bar/topbar]
+monitor = ${env:MONITOR:}
+width = 100%
+height = 20
+offset-x = 0
+offset-y = 7
+padding-right = 7
+padding-left = 7
+
+background = #000000
+foreground = #008b8b
+
+font-0 = Open Sans:pixelsize=10;1
+font-1 = file\-icons:style=Regular:pixelsize=10;1
+font-2 = FontAwesome:style=Regular:pixelsize=10;1
+font-3 = Material Icons:style=Regular:pixelsize=10;1
+font-4 = octicons:style=Regular:pixelsize=10;1
+font-5 = github\-octicons:style=Regular:pixelsize=10;1
+font-6 = Icons:pixelsize:pixelsize=10;1
+
+
+separator = "  "
+modules-left =
+modules-center = i3
+modules-right = date
