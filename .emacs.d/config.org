@@ -15,7 +15,7 @@
   - [[#todo-agenda-org-mode][Todo, agenda =org-mode=]]
   - [[#mail-gnus][Mail =gnus=]]
   - [[#contact-bbdb][Contact =bbdb=]]
-  - [[#git-magit][Git =magit=]]
+  - [[#git][Git]]
   - [[#file-explorer-dired][File Explorer =dired=]]
   - [[#password-store-pass][password-store =pass=]]
   - [[#game][Game]]
@@ -32,7 +32,7 @@
   - [[#improved-package-menu-paradox][improved package menu =paradox=]]
   - [[#general-text-formatting][General text formatting]]
   - [[#keystroke-which-key][keystroke =which-key=]]
-  - [[#autocompletion-ivy][autocompletion =Ivy=]]
+  - [[#autocompletion][autocompletion]]
   - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
   - [[#navigation][Navigation]]
   - [[#pdf][PDF]]
@@ -472,7 +472,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org
      :ensure org-plus-contrib
-     :delight "Θ "
+     :delight "Θ"
      :bind
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
@@ -975,7 +975,8 @@ For a better user experience of GNU Emacs, here are the default values I use.
   ;;   (vdirel-repository ~/Contacts))
 #+END_SRC
 
-** Git =magit=
+** Git
+*** Git =magit=
 
 It is quite common to work on Git repositories, so it is important to have a
 configuration that we like.
@@ -1012,7 +1013,6 @@ while it is being edited.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package git-gutter
-    :defer 0.3
     :delight
     :init (global-git-gutter-mode +1))
 #+END_SRC
@@ -1021,9 +1021,18 @@ Finally, one last package that I like to use with Git to easily see the changes
 made by previous commits.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package git-timemachine :defer 1 :delight)
+  (use-package git-timemachine :delight)
 #+END_SRC
+*** Gitlab =gitlab=
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package gitlab :delight
+    :init
+    (setq gitlab-host "http://cosmos.movesol.fr/gitlab/"
+          gitlab-token-id "ucc1ZKcKGW_1_cEBPz8J"))
 
+    (use-package helm-gitlab :delight
+    :after '(helm gitlab))
+#+END_SRC
 
 ** File Explorer =dired=
    Dired is a major mode for exploring file
@@ -1419,7 +1428,8 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
     :delight
     :config (which-key-mode))
 #+END_SRC
-** autocompletion =Ivy=
+** autocompletion
+*** =Ivy=
 
 I used =helm= before, but I find =ivy= faster and lighter.
 
@@ -1462,6 +1472,11 @@ smaller, simpler, and smoother to use yet highly customizable.
     :bind (("C-s" . swiper)
            ("C-r" . swiper)))
 #+END_SRC
+*** COMMENT =helm=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package helm)
+#+END_SRC
+
 ** M-x enhancement =smex=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smex

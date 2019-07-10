@@ -21,7 +21,7 @@
     modules-center = i3
     modules-right  = date
 
-    tray-position = left
+    tray-position = right
     tray-padding = 5
 
     scroll-up = i3wm-wsnext
