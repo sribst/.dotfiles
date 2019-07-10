@@ -561,17 +561,19 @@ For a better user experience of GNU Emacs, here are the default values I use.
               ))))
              (alltodo ""
               ((org-super-agenda-groups
-              '((:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
+              '(
+                (:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
+                (:name "recurrent Work":and(:tag "work" :tag "recurrent"))
                 (:name "Next work"
                  :and(:tag "work" :todo "TODO"))
                 (:name "on pause Work" :todo "WAITING")
+               (:name "recurrent"      :tag "recurrent")
                (:name "Current"        :todo "INPROGRESS")
                (:name "Reserve ASAP"   :todo "RESERVE")
                (:name "Next "          :todo "TODO")
                (:name "Buy ASAP"       :todo ("TOBUY" "BUY"))
                (:name "One day"        :todo "SOMEDAY")
-               (:name "on pause"      :todo "WAITING")
-               (:name "recurent"      :tag "recurrent")
+               (:name "on pause"       :todo "WAITING")
                (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
               ))))
              ))))
