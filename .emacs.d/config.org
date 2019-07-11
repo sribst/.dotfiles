@@ -27,7 +27,7 @@
   - [[#internet-interface][Internet interface]]
   - [[#dashboard][Dashboard]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
-  - [[#spelling][Spelling]]
+  - [[#spelling--flyspell][Spelling  =flyspell=]]
   - [[#history][History]]
   - [[#improved-package-menu-paradox][improved package menu =paradox=]]
   - [[#general-text-formatting][General text formatting]]
@@ -1247,8 +1247,7 @@ The code below, executes =org-babel-tangle= asynchronously when
               (message "ERROR: %s as tangle failed." ,org-file)))))))
 #+END_SRC
 
-** Spelling
-*** Fly Spell
+** Spelling  =flyspell=
 
 For the other words that would not be in my list of abbreviations, =flyspell=
 enables spell checking on-the-fly in GNU Emacs.
