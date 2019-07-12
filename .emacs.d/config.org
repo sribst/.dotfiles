@@ -702,7 +702,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
   :PROPERTIES:
   :Created:     %U
   :mission:     %^{mission}p
-  :CATEGORY: %\\2
+  :CATEGORY:    %\\2
   :END:
 ")
 
