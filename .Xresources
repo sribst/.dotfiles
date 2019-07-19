@@ -5,8 +5,10 @@ Emacs.font: DejaVuSansMono-11
 ! *.font: xft:*:size=12
 ! *.letterSpace:-2
 URxvt.scrollBar: false
+! urxvt*depth: 32
+! urxvt*background: rgba:0000/0000/0200/c800
 URxvt.transparent: true
-*shading: 30
+*shading: 15
 ! urxvt*depth: 32
 ! urxvt*background: rgba:0000/0000/0200/c800
 
