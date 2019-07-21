@@ -264,9 +264,10 @@ setopt hist_ignore_space
 setopt noflowcontrol
 
 # Aliases
+alias ls='ls --color=auto --human-readable --group-directories-first --classify'
 alias l="ls -v"
-alias ll="l -l"
-alias la="l -a"
+alias ll="ls -l"
+alias la="ls -a"
 
 alias cp='cp -iv'
 alias rcp='rsync -v --progress'
@@ -299,8 +300,7 @@ fi
 
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
-alias ls='ls --color=auto --human-readable --group-directories-first --classify'
-
+alias diff='diff --color=auto'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 typeset -A key

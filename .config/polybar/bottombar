@@ -13,7 +13,7 @@
     font-3 = Material Icons:style=Regular:pixelsize=10;1
     font-4 = octicons:style=Regular:pixelsize=10;1
     font-5 = github\-octicons:style=Regular:pixelsize=10;1
-    font-6 = Icons:pixelsize:pixelsize=10;1
+    font-6 = Icons:style=Regular:pixelsize=10;1
 
 
     separator = "  "
