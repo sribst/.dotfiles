@@ -2,6 +2,7 @@
 cd $HOME
 pass git pull
 pass git push
+rm -f ~/emacs.d/config.el
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME pull
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME add -u
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME commit -m "sync"
