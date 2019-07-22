@@ -402,6 +402,15 @@ in the file-system, but rather created on-demand and stored in memory.
  #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package gitignore-mode)
  #+END_SRC
+*** csv
+ #+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package csv-mode
+ :custom
+ (csv-separators '(";" ","))
+
+
+ #+END_SRC
+
 
 ** Budger =ledger=
 *** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
