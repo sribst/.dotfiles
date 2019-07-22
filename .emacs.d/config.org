@@ -1076,7 +1076,9 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package forge
   :after magit
-  :delight)
+  :delight
+  :config
+  (add-to-list 'forge-alist '("cosmos.movesol.fr:2222"  "cosmos.movesol.fr/gitlab/api/v4" "cosmos.movesol.fr/gitlab/" forge-gitlab-repository)))
 #+END_SRC
 
 
