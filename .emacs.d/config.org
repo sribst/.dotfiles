@@ -601,9 +601,9 @@ in the file-system, but rather created on-demand and stored in memory.
                 (:name "Reserve ASAP"   :todo "RESERVE")
                 (:name "Next "          :todo "TODO")
                 (:name "Daily"
-                 :and(:todo ("TOBUY" "BUY")
+                 :and(:todo ("TOBUY" "FETCH")
                      :tag  "daily"))
-                (:name "Buy ASAP"       :todo ("TOBUY" "BUY"))
+                (:name "FETCH ASAP"       :todo ("TOBUY" "FETCH"))
                 (:name "One day"        :todo "SOMEDAY")
                 (:name "on pause"       :todo "WAITING")
                 (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
@@ -639,8 +639,7 @@ in the file-system, but rather created on-demand and stored in memory.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-capture
-    :ensure nil
-    :after org
+    :after org helm
     :preface
   (defun my/org-timestamp-add-reminder (date day)
     "add a reminder to a timestamp like : <2019-11-14 -5d>"
@@ -739,7 +738,7 @@ in the file-system, but rather created on-demand and stored in memory.
 ")
 
   (defvar my/org-stuff-buy-template
-"* BUY %^{What}
+"* FETCH %^{What}
   :PROPERTIES:
   :Created:     %U
   :END:
@@ -876,10 +875,10 @@ in the file-system, but rather created on-demand and stored in memory.
 
 
           ("IDEA"       . (:foreground "blue" :weight bold))
-          ("BUY"      . (:foreground "red" :weight bold))
+          ("FETCH"      . (:foreground "red" :weight bold))
           ("GIVE"     . (:foreground "orange" :weight bold))
 
-          ("BOUGHT"     . (:foreground "green" :weight bold))
+          ("FETCHED"     . (:foreground "green" :weight bold))
           ("GIVEN"      . (:foreground "green" :weight bold))
 
           ("USE"      . (:foreground "red" :weight bold))
@@ -983,7 +982,6 @@ in the file-system, but rather created on-demand and stored in memory.
  #+BEGIN_SRC emacs-lisp :tangle yes
 
  #+END_SRC
-
 ** Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package gnus
@@ -1057,16 +1055,24 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package git-timemachine :delight)
 #+END_SRC
-*** Gitlab =gitlab=
+*** COMMENT Gitlab =gitlab=
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package gitlab :delight
-    :init
-    (setq gitlab-host "http://cosmos.movesol.fr/gitlab/"
-          gitlab-token-id "ucc1ZKcKGW_1_cEBPz8J"))
+  ;; (use-package gitlab
+  ;; :delight
+  ;; :init
+  ;; (setq gitlab-host "http://cosmos.movesol.fr/gitlab/"
+  ;;       gitlab-token-id "ucc1ZKcKGW_1_cEBPz8J"))
 
-    (use-package helm-gitlab :delight
-    :after '(helm gitlab))
+  ;; (use-package helm-gitlab :delight
+  ;; :after '(helm gitlab))
 #+END_SRC
+*** Git forges =forge=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package forge
+  :after magit
+  :delight)
+#+END_SRC
+
 
 ** File Explorer =dired=
    Dired is a major mode for exploring file
@@ -1079,8 +1085,8 @@ made by previous commits.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dired
-    :ensure nil
     :delight "Dired "
+    :after helm
     :custom
     (dired-auto-revert-buffer t)
     (dired-dwim-target t)
@@ -1091,11 +1097,8 @@ made by previous commits.
     (dired-ls-F-marks-symlinks nil)
     (dired-recursive-copies 'always))
 
-  (use-package dired-x
-    :ensure nil )
   (use-package dired-du
-    :after dired
-    :bind (:map dired-du-mode-map))
+   :after dired)
 
 
 #+END_SRC
@@ -1520,6 +1523,7 @@ smaller, simpler, and smoother to use yet highly customizable.
        )
 
 #+END_SRC
+*** COMMENT =helm-org-rifle=
 ** COMMENT autocompletion =Ivy=
 
 I used =helm= before, but I find =ivy= faster and lighter.
