@@ -10,6 +10,7 @@
   - [[#backups][Backups]]
   - [[#apparence][apparence]]
 - [[#major-mode][Major mode]]
+  - [[#pdf][PDF]]
   - [[#languages][Languages]]
   - [[#budger-ledger][Budger =ledger=]]
   - [[#todo-agenda-org-mode][Todo, agenda =org-mode=]]
@@ -27,23 +28,20 @@
   - [[#internet-interface][Internet interface]]
   - [[#dashboard][Dashboard]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
-  - [[#spelling--flyspell][Spelling  =flyspell=]]
-  - [[#history][History]]
+  - [[#history-savehist][History =savehist=]]
   - [[#improved-package-menu-paradox][improved package menu =paradox=]]
-  - [[#general-text-formatting][General text formatting]]
+  - [[#text-formatting][Text formatting]]
+  - [[#text-editing][Text editing]]
   - [[#keystroke-which-key][keystroke =which-key=]]
-  - [[#autocompletion][autocompletion]]
+  - [[#autocompletion-interface-helm][autocompletion interface =Helm=]]
   - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
-  - [[#navigation][Navigation]]
-  - [[#pdf][PDF]]
+  - [[#text-navigation][Text Navigation]]
   - [[#point-and-region][Point and Region]]
   - [[#recent-files][Recent Files]]
-  - [[#whitespaces][Whitespaces]]
   - [[#buffer-and-windows][Buffer and Windows]]
-  - [[#word-wrap][Word Wrap]]
+  - [[#word-wrap-simple][Word Wrap =simple=]]
   - [[#custom-fonction][custom fonction]]
-  - [[#edition-iedit][edition =iedit=]]
-  - [[#specific-search-find-file-in-project][specific search =find-file-in-project=]]
+  - [[#project-management][Project management]]
 
 * Customisation
 ** Packages
@@ -211,6 +209,33 @@ For a better user experience of GNU Emacs, here are the default values I use.
 #+END_SRC
 
 * Major mode
+** PDF
+#+BEGIN_QUOTE
+PDF Tools is, among other things, a replacement of DocView for PDF files. The
+key difference is that pages are not pre-rendered by e.g. ghostscript and stored
+in the file-system, but rather created on-demand and stored in memory.
+[[https://github.com/politza/pdf-tools][Andras Politz]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+   ;; (use-package pdf-tools
+   ;;   :mode "\\.pdf\\"
+   ;;   :init (pdf-tools-install :no-query))
+
+   ;; (use-package pdf-view
+   ;;   :ensure nil
+   ;;   :after pdf-tools
+   ;;   :bind (:map pdf-view-mode-map
+   ;;               ("C-s" . isearch-forward)
+   ;;               ("d" . pdf-annot-delete)
+   ;;               ("h" . pdf-annot-add-highlight-markup-annotation)
+   ;;               ("t" . pdf-annot-add-text-annotation))
+   ;;   :custom
+   ;;   (pdf-view-display-size 'fit-page)
+   ;;   (pdf-view-resize-factor 1.1)
+   ;;   (pdf-view-use-unicode-ligther nil))
+ #+End_SRC
+
 ** Languages
    test test
 *** Emacs Lisp
@@ -1195,7 +1220,7 @@ of a term, without breaking its workflow, is ideal.
 
 #+END_SRC
 
-** Dashboard
+** TODO Dashboard
 Always good to have a dashboard.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dashboard
@@ -1204,7 +1229,7 @@ Always good to have a dashboard.
     :custom (dashboard-startup-banner 'logo)
     :config (dashboard-setup-startup-hook))
 #+END_SRC
-** reset config when config.org changes
+** TODO reset config when config.org changes
 
 not-sur to understand how it works
 I'm using an =.org= file to maintain my GNU Emacs configuration. However, at his
@@ -1254,31 +1279,31 @@ The code below, executes =org-babel-tangle= asynchronously when
               (message "ERROR: %s as tangle failed." ,org-file)))))))
 #+END_SRC
 
-** Spelling  =flyspell=
+** COMMENT Spelling  =flyspell=
 
 For the other words that would not be in my list of abbreviations, =flyspell=
 enables spell checking on-the-fly in GNU Emacs.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package flyspell
-    :defer 1
-    :delight
-    :custom
-    (flyspell-abbrev-p t)
-    (flyspell-issue-message-flag nil)
-    (flyspell-issue-welcome-flag nil)
-    (flyspell-mode 1))
+  ;; (use-package flyspell
+  ;;   :defer 1
+  ;;   :delight
+  ;;   :custom
+  ;;   (flyspell-abbrev-p t)
+  ;;   (flyspell-issue-message-flag nil)
+  ;;   (flyspell-issue-welcome-flag nil)
+  ;;   (flyspell-mode 1))
 
-    (use-package flyspell-correct-ivy
-      :bind ("C-M-;" . flyspell-correct-wrapper)
-      :init
-        (setq flyspell-correct-interface #'flyspell-correct-ivy))
-  (use-package ispell
-    :custom
-    (ispell-silently-savep t))
+    ;; (use-package flyspell-correct-ivy
+    ;;   :bind ("C-M-;" . flyspell-correct-wrapper)
+    ;;   :init
+    ;;     (setq flyspell-correct-interface #'flyspell-correct-ivy))
+  ;; (use-package ispell
+  ;;   :custom
+  ;;   (ispell-silently-savep t))
 #+END_SRC
 
-** History
+** History =savehist=
 
 Provides the ability to have commands and their history saved so that whenever
 you return to work, you can re-run things as you need them. This is not a
@@ -1286,17 +1311,14 @@ radical function, it is part of a good user experience.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package savehist
-    :ensure nil
     :custom
     (history-delete-duplicates t)
     (history-length t)
     (savehist-additional-variables
-     '(kill-ring
-       search-ring
-       regexp-search-ring))
+      '(kill-ring search-ring regexp-search-ring))
     (savehist-file  "~/.emacs.d/history" )
     (savehist-save-minibuffer-history 1)
-    :config (savehist-mode 1))
+    :config (savehist-mode))
 #+END_SRC
 
 ** improved package menu =paradox=
@@ -1324,8 +1346,8 @@ more.
     (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
 #+END_SRC
 
-** General text formatting
-*** =aggressive-indent=
+** Text formatting
+*** force Auto-indent =aggressive-indent=
 
 Auto-indent code as you write.
 
@@ -1351,7 +1373,37 @@ electric-indent-mode.
     :custom (aggressive-indent-comments-too))
 #+END_SRC
 
-*** =move-text=
+*** colorize color text =rainbow-mode=
+
+Colorize colors as text with their value.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rainbow-mode
+    :delight
+    :custom
+    (rainbow-x-colors t)
+    (rainbow-r-colors t)
+    :config(rainbow-mode))
+#+END_SRC
+
+*** Whitespace =whitespace=
+
+It is often annoying to see unnecessary blank spaces at the end of a line or file.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package whitespace
+    :defer 1
+    :hook (before-save . delete-trailing-whitespace))
+#+END_SRC
+
+** Text editing
+*** edit all occurence =iedit=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package iedit
+  :bind ("C-c e" . iedit-mode))
+#+END_SRC
+*** delete til next char =hungry-delete=
+*** move text =move-text=
 
  Moves the current line (or if marked, the current region's, whole lines).
 
@@ -1363,51 +1415,21 @@ electric-indent-mode.
     :config (move-text-default-bindings))
 #+END_SRC
 
-*** colorize color text =rainbow-mode=
-
-Colorize colors as text with their value.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-mode
-    :delight
-    :config
-    (setq rainbow-x-colors t)
-    (setq rainbow-r-colors t))
-#+END_SRC
-
-**** Replace the current file with the saved one :notused:
-
-Avoids call the function or reload Emacs.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package autorevert
-    :ensure nil
-    :delight auto-revert-mode
-    :bind ("C-x R" . revert-buffer)
-    :custom (auto-revert-verbose nil)
-    :config (global-auto-revert-mode 1))
-#+END_SRC
-
-#+RESULTS:
-: revert-buffer
-
-*** Parenthesis =rainbow-delimiters=
 
 #+BEGIN_QUOTE
-rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
-delimiters such as parentheses, brackets or braces according to their
-depth. Each successive level is highlighted in a different color. This makes it
-easy to spot matching delimiters, orient yourself in the code, and tell which
-statements are at a given depth.
+Deleting a whitespace character will delete all whitespace until the next
+non-whitespace character.
 
-[[https://github.com/Fanael/rainbow-delimiters][Fanael Linithien]]
+# [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-delimiters
-    :defer 1
-    :hook (prog-mode . rainbow-delimiters-mode))
+  (use-package hungry-delete
+    :defer 0.7
+    :delight
+    :config (global-hungry-delete-mode))
 #+END_SRC
+
 ** COMMENT Undo-redo =undo-tree=
 
 GNU Emacs's undo system allows you to recover any past state of a buffer. To do
@@ -1436,8 +1458,69 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
     :delight
     :config (which-key-mode))
 #+END_SRC
-** autocompletion
-*** =Ivy=
+** autocompletion interface =Helm=
+
+Helm is more powerfull than ivy and as my computer as speed to spare.
+
+#+BEGIN_QUOTE
+Ivy is a generic completion mechanism for Emacs. While it operates similarly to
+other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
+smaller, simpler, and smoother to use yet highly customizable.
+
+[[https://github.com/abo-abo/ivy][Oleh Krehel]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package helm
+      :delight
+      :config (helm-mode)
+      :bind (
+           ;; ("M-x" . helm-M-x)
+           ("C-x C-f" . helm-find-files)
+           ("C-x r" . helm-recentf)
+           ("M-y" . helm-show-kill-ring)
+           ("C-x b" . helm-buffers-list)
+           )
+  )
+     (use-package helm-smex
+       :after helm
+       :bind ("M-x" . helm-smex)
+             ("M-X" . helm-smex-major-mode-commands))
+
+     (use-package helm-company
+       :after helm
+       :bind ((:map company-mode-map   ("C-:" .  helm-company))
+              (:map company-active-map ("C-:" .  helm-company))))
+
+     (use-package helm-descbinds
+       :after helm
+       :bind ("C-h b" . helm-descbinds))
+
+       (use-package helm-projectile
+       :after helm projectile
+       :config (helm-projectile-on))
+     (use-package helm-swoop
+       :after helm
+       :bind (("M-i" . helm-swoop)
+              ("M-I" . helm-swoop-back-to-last-point)
+              ("C-c M-i" . helm-multi-swoop)
+              ("C-x M-i" . helm-multi-swoop-all)
+              (:map helm-swoop-map
+                  (("C-r" . helm-previous-line)
+                   ("C-s" . helm-next-line)
+                   ("M-m" . helm-multi-swoop-current-mode-from-helm-swoop)))
+              (:map helm-multi-swoop-map
+                   ("C-r" . helm-previous-line)
+                   ("C-s" . helm-next-line))
+              )
+       :custom
+       (helm-swoop-speed-or-color t)
+       (helm-swoop-move-to-line-cycle t)
+       (helm-swoop-use-line-number-face t) ;; Optional face for line numbers
+       )
+
+#+END_SRC
+** COMMENT autocompletion =Ivy=
 
 I used =helm= before, but I find =ivy= faster and lighter.
 
@@ -1450,50 +1533,45 @@ smaller, simpler, and smoother to use yet highly customizable.
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package counsel
-    :after ivy
-    :delight
-    :config (counsel-mode))
+  ;; (use-package counsel
+  ;;   :after ivy
+  ;;   :delight
+  ;;   :config (counsel-mode))
 
-  (use-package ivy
-    :defer 0.1
-    :delight
-    :bind (("C-c C-r" . ivy-resume)
-           ("C-x B" . ivy-switch-buffer-other-window))
-    :custom
-    (ivy-count-format "(%d/%d) ")
-    (ivy-use-virtual-buffers t)
-    (ivy-extra-directories nil)
-    :config (ivy-mode))
+  ;; (use-package ivy
+  ;;   :defer 0.1
+  ;;   :delight
+  ;;   :bind (("C-c C-r" . ivy-resume)
+  ;;          ("C-x B" . ivy-switch-buffer-other-window))
+  ;;   :custom
+  ;;   (ivy-count-format "(%d/%d) ")
+  ;;   (ivy-use-virtual-buffers t)
+  ;;   (ivy-extra-directories nil)
+  ;;   :config (ivy-mode))
 
-  (use-package ivy-pass
-    :after ivy
-    :commands ivy-pass)
+  ;; (use-package ivy-pass
+  ;;   :after ivy
+  ;;   :commands ivy-pass)
 
-  (use-package ivy-rich
-    :after ivy
-    :init (setq ivy-rich-parse-remote-file-path t)
-    :config (ivy-rich-mode 1))
+  ;; (use-package ivy-rich
+  ;;   :after ivy
+  ;;   :init (setq ivy-rich-parse-remote-file-path t)
+  ;;   :config (ivy-rich-mode 1))
 
-  (use-package swiper
-    :after ivy
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)))
-#+END_SRC
-*** COMMENT =helm=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package helm)
+  ;; (use-package swiper
+  ;;   :after ivy
+  ;;   :bind (("C-s" . swiper)
+  ;;          ("C-r" . swiper)))
 #+END_SRC
 
 ** M-x enhancement =smex=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package smex
-  :after counsel)
+  (use-package smex)
 #+END_SRC
 
 
-** Navigation
-
+** Text Navigation
+*** goto beginning of line
 This function is a mix of =C-a= and =M-m=.
 
 From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
@@ -1526,33 +1604,6 @@ From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
 #+END_SRC
 
-
-** PDF
-#+BEGIN_QUOTE
-PDF Tools is, among other things, a replacement of DocView for PDF files. The
-key difference is that pages are not pre-rendered by e.g. ghostscript and stored
-in the file-system, but rather created on-demand and stored in memory.
-[[https://github.com/politza/pdf-tools][Andras Politz]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-   ;; (use-package pdf-tools
-   ;;   :mode "\\.pdf\\"
-   ;;   :init (pdf-tools-install :no-query))
-
-   ;; (use-package pdf-view
-   ;;   :ensure nil
-   ;;   :after pdf-tools
-   ;;   :bind (:map pdf-view-mode-map
-   ;;               ("C-s" . isearch-forward)
-   ;;               ("d" . pdf-annot-delete)
-   ;;               ("h" . pdf-annot-add-highlight-markup-annotation)
-   ;;               ("t" . pdf-annot-add-text-annotation))
-   ;;   :custom
-   ;;   (pdf-view-display-size 'fit-page)
-   ;;   (pdf-view-resize-factor 1.1)
-   ;;   (pdf-view-use-unicode-ligther nil))
- #+End_SRC
 
 ** Point and Region
 
@@ -1601,37 +1652,44 @@ Provides fast access to the recent files.
     :config (run-at-time nil (* 5 60) 'recentf-save-list))
 #+END_SRC
 
-** Whitespaces
-
-It is often annoying to see unnecessary blank spaces at the end of a line or file.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package whitespace
-    :defer 1
-    :hook (before-save . delete-trailing-whitespace))
-#+END_SRC
-
-*** =hungry-delete=
-
-#+BEGIN_QUOTE
-Deleting a whitespace character will delete all whitespace until the next
-non-whitespace character.
-
-# [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package hungry-delete
-    :defer 0.7
-    :delight
-    :config (global-hungry-delete-mode))
-#+END_SRC
-
 ** Buffer and Windows
    Don't ask before killing a buffer. I know what I'm doing.
    #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key [remap kill-buffer] #'kill-current-buffer)
    #+END_SRC
+*** Revert buffer to saved file =autorevert=
+
+Avoids call the function or reload Emacs.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package autorevert
+    :ensure nil
+    :delight auto-revert-mode
+    :bind ("C-x R" . revert-buffer)
+    :custom (auto-revert-verbose nil)
+    :config (global-auto-revert-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: revert-buffer
+
+*** Parenthesis =rainbow-delimiters=
+
+#+BEGIN_QUOTE
+rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
+delimiters such as parentheses, brackets or braces according to their
+depth. Each successive level is highlighted in a different color. This makes it
+easy to spot matching delimiters, orient yourself in the code, and tell which
+statements are at a given depth.
+
+[[https://github.com/Fanael/rainbow-delimiters][Fanael Linithien]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rainbow-delimiters
+    :defer 1
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+END_SRC
 *** move around buffers =ace-window=
   ace window allow to simply switch when only 2 buffer or to choose
   which buffer with key when multiple buff
@@ -1732,7 +1790,7 @@ you can press ctrl-c right (calling =winner-redo=).
     :config (winner-mode 1))
 #+END_SRC
 
-** Word Wrap
+** Word Wrap =simple=
 
 I like to have lines of the same length.
 
@@ -1766,12 +1824,15 @@ I like to have lines of the same length.
   (load-file "~/.emacs.d/init.el"))
 
 #+END_SRC
-** edition =iedit=
+** Project management
+*** COMMENT specific search =find-file-in-project=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package iedit
-  :bind ("C-c e" . iedit-mode))
+  ;; (use-package find-file-in-project)
 #+END_SRC
-** specific search =find-file-in-project=
+*** =projectile
+=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package find-file-in-project)
+  (use-package projectile
+  :config (projectile-mode)
+  :bind (:map projectile-mode-map ("C-c p" . projectile-command-map)))
 #+END_SRC
