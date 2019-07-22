@@ -403,12 +403,10 @@ in the file-system, but rather created on-demand and stored in memory.
  (use-package gitignore-mode)
  #+END_SRC
 *** csv
+
  #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package csv-mode
- :custom
- (csv-separators '(";" ","))
-
-
+  :custom (csv-separators '(";" ",")))
  #+END_SRC
 
 
@@ -1035,7 +1033,6 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit
-     :defer 0.3
      :bind ("C-x g" . magit-status)
   )
   (use-package git-commit
@@ -1095,7 +1092,7 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dired
     :delight "Dired "
-    :after helm
+    :ensure nil
     :custom
     (dired-auto-revert-buffer t)
     (dired-dwim-target t)
@@ -1108,6 +1105,10 @@ made by previous commits.
 
   (use-package dired-du
    :after dired)
+  (use-package dired-x
+  :ensure nil
+  :after dired)
+
 
 
 #+END_SRC
