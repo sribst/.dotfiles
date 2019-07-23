@@ -646,6 +646,7 @@ in the file-system, but rather created on-demand and stored in memory.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-capture
+    :ensure nil
     :after org helm
     :preface
   (defun my/org-timestamp-add-reminder (date day)
@@ -805,8 +806,6 @@ in the file-system, but rather created on-demand and stored in memory.
 
 )))
 #+END_SRC
-
-***
 
 *** COMMENT Clock
 
