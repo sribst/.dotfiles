@@ -33,7 +33,7 @@
   - [[#text-formatting][Text formatting]]
   - [[#text-editing][Text editing]]
   - [[#keystroke-which-key][keystroke =which-key=]]
-  - [[#autocompletion-interface-helm][autocompletion interface =Helm=]]
+  - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
   - [[#text-navigation][Text Navigation]]
   - [[#point-and-region][Point and Region]]
@@ -647,7 +647,7 @@ in the file-system, but rather created on-demand and stored in memory.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-capture
     :ensure nil
-    :after org helm
+    :after org
     :preface
   (defun my/org-timestamp-add-reminder (date day)
     "add a reminder to a timestamp like : <2019-11-14 -5d>"
@@ -1182,11 +1182,11 @@ completion candidates.
      (company-tooltip-align-annotations 't)
      (global-company-mode t))
 
-    (use-package helm-company
-     :after helm company
-     :delight
-     :bind ((:map company-mode-map   ("C-:" .  helm-company))
-            (:map company-active-map ("C-:" .  helm-company))))
+    ;; (use-package helm-company
+    ;;  :after helm company
+    ;;  :delight
+    ;;  :bind ((:map company-mode-map   ("C-:" .  helm-company))
+    ;;         (:map company-active-map ("C-:" .  helm-company))))
 #+END_SRC
 
 # I use =company= with =company-box= that allows a company front-end with icons.
@@ -1483,10 +1483,11 @@ I used =guide-key= in my past days, but =which-key= is a good replacement.
     :delight
     :config (which-key-mode))
 #+END_SRC
-** autocompletion interface =Helm=
+** COMMENT autocompletion interface =Helm=
 
-Helm is more powerfull than ivy and as my computer as speed to spare.
-
+Helm is more powerful than ivy and as my computer as speed to spare.
+not a big fan in the end.
+I prefere the integration of ivy
 #+BEGIN_QUOTE
 Ivy is a generic completion mechanism for Emacs. While it operates similarly to
 other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
@@ -1496,52 +1497,51 @@ smaller, simpler, and smoother to use yet highly customizable.
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package helm
-      :delight
-      :config (helm-mode)
-      :bind (
-           ("C-x C-f" . helm-find-files)
-           ("M-y"     . helm-show-kill-ring)
-           ("C-x b"   . helm-buffers-list)
-           ))
-     (use-package helm-smex
-       :after helm
-       :bind ("M-x" . helm-smex)
-             ("M-X" . helm-smex-major-mode-commands))
+  ;; (use-package helm
+  ;;   :delight
+  ;;   :config (helm-mode)
+  ;;   :bind (
+  ;;        ("C-x C-f" . helm-find-files)
+  ;;        ("M-y"     . helm-show-kill-ring)
+  ;;        ("C-x b"   . helm-buffers-list)
+  ;;        ))
+  ;;  (use-package helm-smex
+  ;;    :after helm
+  ;;    :bind ("M-x" . helm-smex)
+  ;;          ("M-X" . helm-smex-major-mode-commands))
 
-     (use-package helm-descbinds
-       :after helm
-       :bind ("C-h b" . helm-descbinds))
+  ;;  (use-package helm-descbinds
+  ;;    :after helm
+  ;;    :bind ("C-h b" . helm-descbinds))
 
-     (use-package helm-projectile
-       :after helm projectile
-       :config (helm-projectile-on))
+  ;;  (use-package helm-projectile
+  ;;    :after helm projectile
+  ;;    :config (helm-projectile-on))
 
-     (use-package helm-swoop
-       :after helm
-       :bind (("M-i" . helm-swoop)
-              ("C-s" . helm-swoop)
-              ("C-r" . helm-swoop)
-              ("M-I" . helm-swoop-back-to-last-point)
-              ("C-c M-i" . helm-multi-swoop)
-              ("C-x M-i" . helm-multi-swoop-all)
-              (:map helm-swoop-map
-                  (("C-r" . helm-previous-line)
-                   ("C-s" . helm-next-line)
-                   ("M-m" . helm-multi-swoop-current-mode-from-helm-swoop)))
-              (:map helm-multi-swoop-map
-                   ("C-r" . helm-previous-line)
-                   ("C-s" . helm-next-line))
-              )
-       :custom
-       (helm-swoop-speed-or-color t)
-       (helm-swoop-move-to-line-cycle t)
-       (helm-swoop-use-line-number-face t) ;; Optional face for line numbers
-       )
-
+  ;;  (use-package helm-swoop
+  ;;    :after helm
+  ;;    :bind (("M-i" . helm-swoop)
+  ;;           ("C-s" . helm-swoop)
+  ;;           ("C-r" . helm-swoop)
+  ;;           ("M-I" . helm-swoop-back-to-last-point)
+  ;;           ("C-c M-i" . helm-multi-swoop)
+  ;;           ("C-x M-i" . helm-multi-swoop-all)
+  ;;           (:map helm-swoop-map
+  ;;               (("C-r" . helm-previous-line)
+  ;;                ("C-s" . helm-next-line)
+  ;;                ("M-m" . helm-multi-swoop-current-mode-from-helm-swoop)))
+  ;;           (:map helm-multi-swoop-map
+  ;;                ("C-r" . helm-previous-line)
+  ;;                ("C-s" . helm-next-line))
+  ;;           )
+  ;;    :custom
+  ;;    (helm-swoop-speed-or-color t)
+  ;;    (helm-swoop-move-to-line-cycle t)
+  ;;    (helm-swoop-use-line-number-face t) ;; Optional face for line numbers
+  ;;    )
 #+END_SRC
 *** COMMENT =helm-org-rifle=
-** COMMENT autocompletion =Ivy=
+** autocompletion =Ivy=
 
 I used =helm= before, but I find =ivy= faster and lighter.
 
@@ -1554,43 +1554,41 @@ smaller, simpler, and smoother to use yet highly customizable.
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package counsel
-  ;;   :after ivy
-  ;;   :delight
-  ;;   :config (counsel-mode))
+  (use-package counsel
+    :after ivy smex
+    :delight
+    :bind ("M-x" . counsel-M-x)
+    :config (counsel-mode))
 
-  ;; (use-package ivy
-  ;;   :defer 0.1
-  ;;   :delight
-  ;;   :bind (("C-c C-r" . ivy-resume)
-  ;;          ("C-x B" . ivy-switch-buffer-other-window))
-  ;;   :custom
-  ;;   (ivy-count-format "(%d/%d) ")
-  ;;   (ivy-use-virtual-buffers t)
-  ;;   (ivy-extra-directories nil)
-  ;;   :config (ivy-mode))
+  (use-package ivy
+    :delight
+    :bind (("C-c C-r" . ivy-resume)
+           ("C-x B" . ivy-switch-buffer-other-window))
+    :custom
+    (ivy-count-format "(%d/%d) ")
+    (ivy-use-virtual-buffers t)
+    (ivy-extra-directories nil)
+    :config (ivy-mode))
 
-  ;; (use-package ivy-pass
-  ;;   :after ivy
-  ;;   :commands ivy-pass)
+  (use-package ivy-pass
+    :after ivy
+    :commands ivy-pass)
 
-  ;; (use-package ivy-rich
-  ;;   :after ivy
-  ;;   :init (setq ivy-rich-parse-remote-file-path t)
-  ;;   :config (ivy-rich-mode 1))
+  (use-package ivy-rich
+    :after ivy
+    :init (setq ivy-rich-parse-remote-file-path t)
+    :config (ivy-rich-mode 1))
 
-  ;; (use-package swiper
-  ;;   :after ivy
-  ;;   :bind (("C-s" . swiper)
-  ;;          ("C-r" . swiper)))
+  (use-package swiper
+    :after ivy
+    :bind (("C-s" . swiper)
+           ("C-r" . swiper)))
 #+END_SRC
 
 ** M-x enhancement =smex=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smex)
 #+END_SRC
-
-
 ** Text Navigation
 *** goto beginning of line
 This function is a mix of =C-a= and =M-m=.
@@ -1654,23 +1652,28 @@ I find useful to delete a line and a region with only =C-w=.
 Provides fast access to the recent files.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package recentf
-    :bind ("C-x r" . helm-recentf)
-    :init (recentf-mode)
-    :custom
-    (recentf-exclude (list "COMMIT_EDITMSG"
-                           "~$"
-                           "/scp:"
-                           "/ssh:"
-                           "/sudo:"
-                           "/tmp/"
-                           "recentf"
-                           ".newsrc-dribble"
-                           ))
-    (recentf-max-menu-items 15)
-    (recentf-max-saved-items 200)
-    (recentf-save-file "~/.emacs.d/recentf" )
-    :config (run-at-time nil (* 5 60) 'recentf-save-list))
+    (use-package recentf
+      ;; :bind ("C-x r" . helm-recentf)
+      :bind (("C-x r" . counsel-recentf)
+             ;; ("C-x b" . counsel-ibuffer)
+  )
+
+      :after counsel
+      :init (recentf-mode)
+      :custom
+      (recentf-exclude (list "COMMIT_EDITMSG"
+                             "~$"
+                             "/scp:"
+                             "/ssh:"
+                             "/sudo:"
+                             "/tmp/"
+                             "recentf"
+                             ".newsrc-dribble"
+                             ))
+      (recentf-max-menu-items 15)
+      (recentf-max-saved-items 200)
+      (recentf-save-file "~/.emacs.d/recentf" )
+      :config (run-at-time nil (* 5 60) 'recentf-save-list))
 #+END_SRC
 
 ** Buffer and Windows
@@ -1722,7 +1725,7 @@ statements are at a given depth.
     (use-package ace-window
       :bind
       (("C-x o" . ace-window)
-      ("M-o" . ace-window))
+       ("M-o" . ace-window))
       :init
       (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
       (setq aw-scope 'frame)
