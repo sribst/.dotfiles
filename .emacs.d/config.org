@@ -909,7 +909,7 @@ in the file-system, but rather created on-demand and stored in memory.
         (setq org-caldav-calendar-id "personal")
         (setq org-caldav-inbox "~/org/sync2.org")
         (setq org-caldav-files
-              '("~/org/diario.org" "~/org/agenda.org" "~/org/todo.org" "~/org/work.org"))
+              '("~/org/master.org" "~/org/diario.org" "~/org/agenda.org" "~/org/todo.org" "~/org/work.org"))
         :config
         (setq org-icalendar-alarm-time 1)
         (setq org-caldav-show-sync-results nil)
@@ -1558,7 +1558,7 @@ smaller, simpler, and smoother to use yet highly customizable.
     :after ivy smex
     :delight
     :bind ("M-x" . counsel-M-x)
-    :config (counsel-mode))
+    :config (counsel-mode 1))
 
   (use-package ivy
     :delight
