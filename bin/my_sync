@@ -1,6 +1,7 @@
 #!/bin/bash
 cd $HOME
 pass git pull
+pass git add -u
 pass git push
 rm -f ~/emacs.d/config.el
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME pull
