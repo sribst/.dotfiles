@@ -908,8 +908,7 @@ in the file-system, but rather created on-demand and stored in memory.
               "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
         (setq org-caldav-calendar-id "personal")
         (setq org-caldav-inbox "~/org/sync2.org")
-        (setq org-caldav-files
-              '("~/org/master.org" "~/org/diario.org" "~/org/agenda.org" "~/org/todo.org" "~/org/work.org"))
+        (setq org-caldav-files '("~/org/master.org"))
         :config
         (setq org-icalendar-alarm-time 1)
         (setq org-caldav-show-sync-results nil)
