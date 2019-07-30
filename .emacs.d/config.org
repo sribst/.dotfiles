@@ -1153,8 +1153,34 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package twittering-mode
   :init
-  (setq twittering-use-master-password t)
+   (set-face-attribute 'twittering-username-face nil
+                                :underline nil
+                                :weight 'bold
+                                :foreground "darksalmon")
+  :config
+   (twittering-use-master-password t)
+   (twittering-timer-interval 300)
+   (twittering-url-show-status nil)
+   (twittering-icon-mode nil)
+   (twittering-status-format "%i %s\n%FILL[ ]{%T}\n %FACE[glyphless-char]{%@ from %f%L%r%R}\n")
+  :hook ('twittering-edit-mode .
+        (lambda () (auto-fill-mode -1) (visual-line-mode)))
   )
+
+(twittering-enable-unread-status-notifier)
+
+(add-hook 'twittering-mode-hook
+          (lambda ()
+            (setq twittering-timer-interval 300)
+            (setq twittering-url-show-status nil)
+            (setq twittering-icon-mode nil)
+            (setq twittering-status-format "%i %s\n%FILL[ ]{%T}\n %FACE[glyphless-char]{%@ from %f%L%r%R}\n")
+            (set-face-attribute 'twittering-username-face nil
+                                :underline nil
+                                :weight 'bold
+                                :foreground "darksalmon")))
+
+
 #+END_SRC
 * Minor mode
 ** Auto-Completion =company=
