@@ -279,6 +279,8 @@ alias ln='ln -v'
 alias chmod="chmod -c"
 alias chown="chown -c"
 
+alias ".."="cd .."
+
 alias e="emacsclient"
 
 alias sudo='sudo'               # to have alias within sudo

@@ -342,16 +342,13 @@ in the file-system, but rather created on-demand and stored in memory.
 
 *** OCaml
  #+BEGIN_SRC emacs-lisp :tangle yes
-   ;; (setq utop-command "opam config exec -- utop -emacs")
-   ;; (add-to-list 'load-path
-   ;;              "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-   ;; (require 'ocp-indent)
-      (setq utop-command "opam config exec -- utop -emacs")
-      (add-to-list 'load-path
-                   "/home/baroud/.opam/4.07.1+flambda/share/emacs/site-lisp")
-       ;; (use-package ocp-indent
-      ;; after:)
+ (use-package tuareg
+  :mode ("\\.ml\\'" . tuareg-mode))
+ (use-package merlin :after tuareg)
+ (use-package ocp-indent :after tuareg)
+ (use-package dune :after tuareg)
 #+END_SRC
+
 *** Java =jdee=
  #+BEGIN_SRC emacs-lisp :tangle yes
    ;; (use-package jdee
