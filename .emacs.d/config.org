@@ -343,10 +343,33 @@ in the file-system, but rather created on-demand and stored in memory.
 *** OCaml
  #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package tuareg
-  :mode ("\\.ml\\'" . tuareg-mode))
- (use-package merlin :after tuareg)
- (use-package ocp-indent :after tuareg)
- (use-package dune :after tuareg)
+  :mode ("\\.ml[ily]?$" . tuareg-mode))
+ (use-package ocp-indent
+  :hook tuareg-mode)
+ (use-package dune
+  :hook tuareg-mode)
+
+  (dolist
+  (var (car
+  (read-from-string
+  (shell-command-to-string "opam config env --sexp"))))
+  (setenv (car var) (cadr var)))
+
+  (use-package merlin
+  :hook
+    ((tuareg-mode . merlin-mode)
+    (caml-mode    . merlin-mode))
+  :bind (:map merlin-mode-map
+             ("M-." . merlin-locate)
+             ("M-," . merlin-pop-stack))
+  :config
+  (setq merlin-command 'opam)
+  (with-eval-after-load 'company
+    (add-hook 'merlin-mode-hook 'company-mode)
+    (add-to-list 'company-backends 'merlin-company-backend)))
+
+(use-package utop
+  :hook (tuareg-mode . utop-minor))
 #+END_SRC
 
 *** Java =jdee=
@@ -903,7 +926,7 @@ in the file-system, but rather created on-demand and stored in memory.
                 (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
         (setq org-caldav-url
               "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-        (setq org-caldav-calendar-id "personal")
+        (setq org-caldav-calendar-id "main")
         (setq org-caldav-inbox "~/org/sync2.org")
         (setq org-caldav-files '("~/org/master.org"))
         :config
@@ -913,7 +936,7 @@ in the file-system, but rather created on-demand and stored in memory.
         (setq org-icalendar-use-deadline  '(event-if-todo event-if-not-todo todo-due))
         (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
         :hook (
-        (kill-emacs . org-caldav-sync)
+        ;; (kill-emacs . org-caldav-sync)
                (after-save .
                    (lambda ()
                    (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
