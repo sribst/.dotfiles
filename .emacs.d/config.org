@@ -936,7 +936,7 @@ in the file-system, but rather created on-demand and stored in memory.
         (setq org-icalendar-use-deadline  '(event-if-todo event-if-not-todo todo-due))
         (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
         :hook (
-        ;; (kill-emacs . org-caldav-sync)
+        (kill-emacs . org-caldav-sync)
                (after-save .
                    (lambda ()
                    (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
