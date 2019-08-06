@@ -137,19 +137,24 @@ For a better user experience of GNU Emacs, here are the default values I use.
 *** Theme
    [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
 #+BEGIN_SRC emacs-lisp :tangle yes
-       ;; (use-package soothe-theme)
-     (use-package xresources-theme
-     ;; :when window-system
-       :hook ('after-make-frame-functions .
-              (lambda (frame)
-                 (when (eq (length (frame-list)) 2)
-                    (progn
-                    (select-frame frame)
-                    (load-theme 'xresources)))))
-       :config
-    ;; xresources-theme set hl-line to be the same color as the background...
-       (set-face-background 'hl-line (x-get-resource "color8" ""))
-       )
+     ;; (use-package soothe-theme)
+     (add-hook 'after-make-frame-functions
+      (lambda (frame)
+       (use-package xresources-theme
+        :config
+  ;; xresources-theme set hl-line to be the same color as the background...
+        (set-face-background 'hl-line (x-get-resource "color8" "")))))
+       ;; (use-package xresources-theme
+       ;; :hook ('after-make-frame-functions .
+            ;; (lambda (frame)
+       ;;         (when (eq (length (frame-list)) 2)
+       ;;            (progn
+       ;;            (select-frame frame)
+  ;;                 (load-theme 'xresources)))))
+  ;;    :config
+  ;; ;; xresources-theme set hl-line to be the same color as the background...
+  ;;    (set-face-background 'hl-line (x-get-resource "color8" ""))
+  ;;    )
 
 #+END_SRC
 
@@ -343,17 +348,16 @@ in the file-system, but rather created on-demand and stored in memory.
 *** OCaml
  #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package tuareg
-  :mode ("\\.ml[ily]?$" . tuareg-mode))
- (use-package ocp-indent
-  :hook tuareg-mode)
- (use-package dune
-  :hook tuareg-mode)
+   :mode ("\\.ml[ily]?$" . tuareg-mode)
+   :init
+   (dolist
+   (var (car
+   (read-from-string
+   (shell-command-to-string "opam config env --sexp"))))
+   (setenv (car var) (cadr var))))
 
-  (dolist
-  (var (car
-  (read-from-string
-  (shell-command-to-string "opam config env --sexp"))))
-  (setenv (car var) (cadr var)))
+ (use-package ocp-indent :hook tuareg-mode)
+ (use-package dune :hook tuareg-mode)
 
   (use-package merlin
   :hook
