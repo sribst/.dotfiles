@@ -540,10 +540,10 @@ in the file-system, but rather created on-demand and stored in memory.
         (org-use-extra-keys t)
         (org-catch-invisible-edits 'show-and-error)
         (org-cycle-separator-lines 0)
-        (org-link-abbrev-alist
-          '(("google-maps"      . "http://maps.google.com/maps?q=%s")
-            ("open-street-map" . "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
-          ))
+        ;; (org-link-abbrev-alist
+        ;;   '(("google-maps"      . "http://maps.google.com/maps?q=%s")
+        ;;     ("open-street-map" . "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
+        ;;   ))
     )
  #+END_SRC
 *** generate TOC automaticaly
@@ -678,14 +678,14 @@ in the file-system, but rather created on-demand and stored in memory.
     (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
 
   (defvar my/org-toreserve-template
-"* RESERVE %^{Name} [[google-maps:%\\2][@dress]] %^g
+"* RESERVE %^{Name} [[http://maps.google.com/maps?q=\\2][@dress]] %^g
   :PROPERTIES:
   :Created:     %U
   :Name:   %\\1
   :Type:   %^{Type}p
   :Place:  %^{Place}
   :With:   %^{With}
-  :GMap:   [[google-maps:%\\2][@dress]]
+  :GMap:   [[http://maps.google.com/maps?q=\\2][@dress]]
   :END:
   %^{When}T
 ")
@@ -698,7 +698,7 @@ in the file-system, but rather created on-demand and stored in memory.
   :Type:   %^{Type}p
   :Place:  %^{Place}
   :With:   %^{With}
-  :GMap:   [[google-maps:%\\2][@dress]]
+  :GMap:   [[http://maps.google.com/maps?q=\\2][@dress]]
   :END:
   %^{When}T
 ")
@@ -786,7 +786,7 @@ in the file-system, but rather created on-demand and stored in memory.
 ")
 
   (defvar my/org-stuff-flat-template
-"* BUY %^{What}
+"* FETCH %^{What}
   :PROPERTIES:
   :Created:     %U
   :Room: %^{Room}p
@@ -798,34 +798,34 @@ in the file-system, but rather created on-demand and stored in memory.
   (org-capture-templates
    `(("e" "Event")
       ("es" "Show")
-        ("esr" "To reserve" entry (file+headline "~/org/master.org" "Show"),
+        ("esr" "To reserve" entry (file+headline "~/org/master.org" "show"),
           my/org-toreserve-template)
-        ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
+        ("esg" "To go" entry (file+headline "~/org/master.org" "show"),
           my/org-togo-template)
-      ("er" "To reserve" entry (file+headline "~/org/master.org" "Agenda"),
+      ("er" "To reserve" entry (file+headline "~/org/master.org" "agenda"),
         my/org-toreserve-template)
-      ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
+      ("eg" "To go" entry (file+headline "~/org/master.org" "agenda"),
         my/org-togo-template)
       ("et" "Trip")
-      ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+      ("ets" "Single trip" entry (file+headline "~/org/master.org" "trip"),
         my/org-trip-template)
-      ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+      ("etr" "Round trip" entry (file+headline "~/org/master.org" "trip"),
         my/org-roundtrip-template)
      ("t" "TO-DO")
       ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
         my/org-todo-template)
       ("to" "oneday" entry (file+headline "~/org/master.org" "TO-DO"),
         my/org-someday-template)
-      ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
+      ("tw" "work" entry (file+headline "~/org/master.org" "work"),
         my/org-work-move-template)
-     ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
+     ("v" "voucher" entry (file+headline "~/org/master.org" "voucher"),
         my/org-voucher-template)
      ("s" "stuff")
       ("sb" "buy" entry (file+headline "~/org/master.org" "objet"),
         my/org-stuff-buy-template)
       ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
         my/org-stuff-gift-template)
-      ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
+      ("sa" "Flat" entry (file+headline "~/org/master.org" "flat"),
         my/org-stuff-flat-template)
 
 )))
