@@ -17,7 +17,7 @@
   - [[#mail-gnus][Mail =gnus=]]
   - [[#contact-bbdb][Contact =bbdb=]]
   - [[#git][Git]]
-  - [[#file-explorer-dired][File Explorer =dired=]]
+  - [[#file--dired][File  =dired=]]
   - [[#password-store-pass][password-store =pass=]]
   - [[#game][Game]]
   - [[#typing-training][Typing training]]
@@ -1104,7 +1104,7 @@ made by previous commits.
 #+END_SRC
 
 
-** File Explorer =dired=
+** File  =dired=
    Dired is a major mode for exploring file
    dired-x is a minor that brings a lot to dired like hidding
    - uninteresting file
@@ -1112,8 +1112,7 @@ made by previous commits.
 
    dired-du give the size of directory using du or lisp
    dired-du should be customize more than that
-
-#+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dired
     :delight "Dired "
     :ensure nil
@@ -1133,22 +1132,18 @@ made by previous commits.
   :ensure nil
   :after dired)
 
+lisp :tangle yes
+    (use-package ztree)
 
-
+#+END_SRC
+*** Directory diff
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ztree)
 #+END_SRC
 ** password-store =pass=
-   Pass helps me to be a bit more secure on my password management
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package pass
-    :delight "Pass ")
-#+END_SRC
+
 ** Game
-**** =Typing=
-     A game for fast typers
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package typing
-  :defer t)
-#+END_SRC
+
 ** Typing training
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package typing-practice
