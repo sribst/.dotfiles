@@ -1,12 +1,12 @@
 #!/bin/bash
 cd $HOME
 RED='\033[0;31m'
-echo -e "${RED}\033[5mMAJ PASS"
+echo -e "${RED}\033[5mMAJ PASS\033[0m"
 pass git pull
 # pass git add -u
 pass git push
 rm -f ~/emacs.d/config.el
-echo -e "${RED}\033[5mMAJ DOTFILES"
+echo -e "${RED}\033[5mMAJ DOTFILES\033[0m"
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME pull
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME add -u
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME commit -m "sync"
