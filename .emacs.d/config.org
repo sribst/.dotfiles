@@ -1,48 +1,6 @@
 #+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
 
-* table of content                                                    :TOC@2:
-- [[#customisation][Customisation]]
-  - [[#packages][Packages]]
-  - [[#authentification][Authentification]]
-  - [[#defaults-values][defaults values]]
-  - [[#customization-interface][Customization interface]]
-  - [[#backups][Backups]]
-  - [[#apparence][apparence]]
-- [[#major-mode][Major mode]]
-  - [[#pdf][PDF]]
-  - [[#languages][Languages]]
-  - [[#budger-ledger][Budger =ledger=]]
-  - [[#todo-agenda-org-mode][Todo, agenda =org-mode=]]
-  - [[#mail-gnus][Mail =gnus=]]
-  - [[#contact-bbdb][Contact =bbdb=]]
-  - [[#git][Git]]
-  - [[#file-explorer-dired][File Explorer =dired=]]
-  - [[#password-store-pass][password-store =pass=]]
-  - [[#game][Game]]
-  - [[#typing-training][Typing training]]
-  - [[#shell-eshell][Shell =eshell=]]
-  - [[#social-acount][social acount]]
-- [[#minor-mode][Minor mode]]
-  - [[#auto-completion-company][Auto-Completion =company=]]
-  - [[#internet-interface][Internet interface]]
-  - [[#dashboard][Dashboard]]
-  - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
-  - [[#history-savehist][History =savehist=]]
-  - [[#improved-package-menu-paradox][improved package menu =paradox=]]
-  - [[#text-formatting][Text formatting]]
-  - [[#text-editing][Text editing]]
-  - [[#keystroke-which-key][keystroke =which-key=]]
-  - [[#autocompletion-ivy][autocompletion =Ivy=]]
-  - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
-  - [[#text-navigation][Text Navigation]]
-  - [[#point-and-region][Point and Region]]
-  - [[#recent-files][Recent Files]]
-  - [[#buffer-and-windows][Buffer and Windows]]
-  - [[#word-wrap-simple][Word Wrap =simple=]]
-  - [[#custom-fonction][custom fonction]]
-  - [[#project-management][Project management]]
-
 * Customisation
 ** Packages
 ***  Sources
@@ -55,11 +13,10 @@
      ("marmalade" . "http://marmalade-repo.org/packages/")
   ))
 #+END_SRC
+
 *** package manager =use-package=
    To be able to manage its configuration with =use-package= it is necessary to
    first install it, if you don't already.
-   *NOTE:* Need to understand if it use also the package manager of emacs
-   Also ensure that the package is installed and if not tries to install it.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (unless (package-installed-p 'use-package)
@@ -73,6 +30,7 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq auth-sources '( "~/.authinfo.gpg" ))
 #+END_SRC
+
 ** defaults values
 For a better user experience of GNU Emacs, here are the default values I use.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -124,7 +82,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
    lot.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package files
-    :ensure nil
+    :ensure nil ; don't need to ensure as it is default package
     :custom
     (backup-directory-alist `(("." . "~/.emacs.d/backup")))
     (delete-old-versions -1)
@@ -132,69 +90,28 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (version-control t))
 #+END_SRC
 
-
 ** apparence
 *** Theme
-   [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
+   # [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
+   xresources-theme est un theme assez doux
 #+BEGIN_SRC emacs-lisp :tangle yes
-     ;; (use-package soothe-theme)
-     (add-hook 'after-make-frame-functions
-      (lambda (frame)
-       (use-package xresources-theme
-        :config
-  ;; xresources-theme set hl-line to be the same color as the background...
-        (set-face-background 'hl-line (x-get-resource "color8" "")))))
-       ;; (use-package xresources-theme
-       ;; :hook ('after-make-frame-functions .
-            ;; (lambda (frame)
-       ;;         (when (eq (length (frame-list)) 2)
-       ;;            (progn
-       ;;            (select-frame frame)
-  ;;                 (load-theme 'xresources)))))
-  ;;    :config
-  ;; ;; xresources-theme set hl-line to be the same color as the background...
-  ;;    (set-face-background 'hl-line (x-get-resource "color8" ""))
-  ;;    )
-
+  ;; (use-package soothe-theme)
+  (add-hook 'after-make-frame-functions
+   (lambda (frame)
+    (use-package xresources-theme
+     :config
+     ;; xresources-theme set hl-line to be the same color as the background...
+     (set-face-background 'hl-line (x-get-resource "color8" "")))
+    ))
 #+END_SRC
 
-*** transparent
-    Cannot make it work not sur to see why
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;emacs transparency
-(set-frame-parameter (selected-frame) 'alpha '(85 60))
-(add-to-list 'default-frame-alist '(alpha 85 60))
-
-(eval-when-compile (require 'cl))
-(defun toggle-transparency ()
-  (interactive)
-  (if (/=
-       (cadr (frame-parameter nil 'alpha))
-       100)
-      (set-frame-parameter nil 'alpha '(100 100))
-    (set-frame-parameter nil 'alpha '(90 60))))
-(global-set-key (kbd "C-c g") 'toggle-transparency)
-
-;; Set transparency of emacs
-(defun transparency (arg &optional active)
-  "Sets the transparency of the frame window. 0=transparent/100=opaque"
-  (interactive "Enter alpha value (1-100): \np")
-  (let* ((elt (assoc 'alpha default-frame-alist))
-         (old (frame-parameter nil 'alpha))
-         (new (cond ((atom old)     `(,arg ,arg))
-                    ((eql 1 active) `(,arg ,(cadr old)))
-                    (t              `(,(car old) ,arg)))))
-    (if elt (setcdr elt new) (push `(alpha ,@new) default-frame-alist))
-    (set-frame-parameter nil 'alpha new)))
-(global-set-key (kbd "C-c G") 'transparency)
-#+END_SRC
 *** =delight=
    delight is a way of showing wich major/minor is currently open
    It's show which mode on the main bar
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package delight :ensure t)
 #+END_SRC
-*** Turn off mouse interface
+*** Turn off mouse interface (scroll,...)
    Since I never use the mouse with GNU Emacs, I prefer not to use certain
    graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
    I find invasive.
@@ -204,7 +121,10 @@ For a better user experience of GNU Emacs, here are the default values I use.
     (tool-bar-mode -1)                              ; Disable the tool bar
     (tooltip-mode -1)                               ; Disable the tooltips
 #+END_SRC
-*** unicode icons ==all-the-icons=
+
+*** font
+
+**** unicode icons ==all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
      (use-package all-the-icons)
   ;; (use-package all-the-icons-dired :hook dired-mode)
@@ -214,311 +134,317 @@ For a better user experience of GNU Emacs, here are the default values I use.
 #+END_SRC
 
 * Major mode
-** PDF
-#+BEGIN_QUOTE
-PDF Tools is, among other things, a replacement of DocView for PDF files. The
-key difference is that pages are not pre-rendered by e.g. ghostscript and stored
-in the file-system, but rather created on-demand and stored in memory.
-[[https://github.com/politza/pdf-tools][Andras Politz]]
-#+END_QUOTE
+# ** PDF
+# #+BEGIN_QUOTE
+# PDF Tools is, among other things, a replacement of DocView for PDF files. The
+# key difference is that pages are not pre-rendered by e.g. ghostscript and stored
+# in the file-system, but rather created on-demand and stored in memory.
+# [[https://github.com/politza/pdf-tools][Andras Politz]]
+# #+END_QUOTE
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-   ;; (use-package pdf-tools
-   ;;   :mode "\\.pdf\\"
-   ;;   :init (pdf-tools-install :no-query))
+# #+BEGIN_SRC emacs-lisp :tangle yes
+#    ;; (use-package pdf-tools
+#    ;;   :mode "\\.pdf\\"
+#    ;;   :init (pdf-tools-install :no-query))
 
-   ;; (use-package pdf-view
-   ;;   :ensure nil
-   ;;   :after pdf-tools
-   ;;   :bind (:map pdf-view-mode-map
-   ;;               ("C-s" . isearch-forward)
-   ;;               ("d" . pdf-annot-delete)
-   ;;               ("h" . pdf-annot-add-highlight-markup-annotation)
-   ;;               ("t" . pdf-annot-add-text-annotation))
-   ;;   :custom
-   ;;   (pdf-view-display-size 'fit-page)
-   ;;   (pdf-view-resize-factor 1.1)
-   ;;   (pdf-view-use-unicode-ligther nil))
- #+End_SRC
+#    ;; (use-package pdf-view
+#    ;;   :ensure nil
+#    ;;   :after pdf-tools
+#    ;;   :bind (:map pdf-view-mode-map
+#    ;;               ("C-s" . isearch-forward)
+#    ;;               ("d" . pdf-annot-delete)
+#    ;;               ("h" . pdf-annot-add-highlight-markup-annotation)
+#    ;;               ("t" . pdf-annot-add-text-annotation))
+#    ;;   :custom
+#    ;;   (pdf-view-display-size 'fit-page)
+#    ;;   (pdf-view-resize-factor 1.1)
+#    ;;   (pdf-view-use-unicode-ligther nil))
+#  #+End_SRC
 
 ** Languages
-   test test
-*** Emacs Lisp
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package elisp-mode :ensure nil :delight "ξ ")
- #+END_SRC
-**** Eldoc
 
- Provides minibuffer hints when working with Emacs Lisp.
+# *** Emacs Lisp
 
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package eldoc
-     :delight
-     :hook (emacs-lisp-mode . eldoc-mode))
- #+END_SRC
+#  #+BEGIN_SRC emacs-lisp :tangle yes
+#    (use-package elisp-mode
+#     :ensure nil
+#     :delight "ξ " )
+#  #+END_SRC
+
+# **** Eldoc
+#  Provides minibuffer hints when working with Emacs Lisp.
+#  #+BEGIN_SRC emacs-lisp :tangle yes
+#    (use-package eldoc
+#      :delight
+#      :hook (emacs-lisp-mode . eldoc-mode))
+#  #+END_SRC
 
 *** Markdown
  Before you can use this package, make sure you install =markdown= on your
  operating system.
- #+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
    (use-package markdown-mode
-     :delight "μ "
+     :delight "M↓"
      :mode ("INSTALL\\'"
             "CONTRIBUTORS\\'"
             "LICENSE\\'"
             "README\\'"
             "\\.markdown\\'"
             "\\.md\\'"))
- #+END_SRC
+#+END_SRC
 
 *** LaTeX
  I use LaTeX for my reports, CVs, summaries, etc.
 
- #+BEGIN_SRC emacs-lisp :tangle yes
-      (use-package tex
-        :ensure auctex
-        :hook (LaTeX-mode . reftex-mode)
-        :custom
-        (TeX-PDF-mode t)
-        (TeX-auto-save t)
-        (TeX-byte-compile t)
-        (TeX-clean-confirm nil)
-        (TeX-master 'dwim)
-        (TeX-parse-self t)
-        (TeX-source-correlate-mode t)
-        (TeX-view-program-selection '((output-pdf "Evince")
-                                      (output-html "xdg-open"))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package tex-site                   ; auctex
+    :mode ("\\.tex\\'" . TeX-latex-mode)
+    :delight "Latex"
+    :load-path "site-lisp/auctex/"
+    :init
+    (setq reftex-plug-into-AUCTeX t)
+    (setq-default TeX-engine 'xetex) ; TeX engine that can deal with Unicode and use any font I like.
+    (setenv "PATH" (concat "/Library/TeX/texbin:" (getenv "PATH")))
+    (add-to-list 'exec-path "/Library/TeX/texbin")
+    :custom
+          (TeX-PDF-mode t)
+          (TeX-auto-save t)
+          (TeX-byte-compile t)
+          (TeX-clean-confirm nil)
+          (TeX-master 'dwim)
+          (TeX-parse-self t)
+          (TeX-source-correlate-mode t)
+          (TeX-view-program-selection '((output-pdf "Evince")
+                                        (output-html "xdg-open"))))
 
-      (use-package bibtex
-        :after auctex
-        :hook (bibtex-mode . my/bibtex-fill-column))
+    (use-package latex
+      :ensure nil
+      :after auctex
+      :delight "Latex"
+      :hook (LaTeX-mode . reftex-mode))
 
-      ;; (use-package company-auctex
-      ;;   :after (auctex company)
-      ;;   :config (company-auctex-init))
+    (use-package preview
+      :ensure nil
+      :after auctex)
 
-      ;; (use-package company-math
-      ;;     :after (auctex company))
- #+END_SRC
+    (use-package bibtex :after auctex)
 
- #+RESULTS:
+;  Minor mode with distinct support for \label, \ref and \cite in LaTeX.
+    (use-package reftex :after auctex)
+#+END_SRC
 
- I want a TeX engine that can deal with Unicode and use any font I like.
+# *** Cobol
+#  #+BEGIN_SRC emacs-lisp :tangle yes
+#  (use-package cobol-mode
+#   :mode ("\\.cbl\\'" "\\.cpy\\'" "\\.pco\\'"))
+#  #+END_SRC
 
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (setq-default TeX-engine 'xetex)
- #+END_SRC
-
-**** =reftex=
-
- Minor mode with distinct support for \label, \ref and \cite in LaTeX.
-
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package reftex :after auctex)
- #+END_SRC
-*** Cobol
- #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package cobol-mode
-  :mode ("\\.cbl\\'" "\\.cpy\\'" "\\.pco\\'"))
- #+END_SRC
-*** COQ
- #+BEGIN_SRC emacs-lisp :tangle yes
-;; (eval-after-load 'proof-script
-;;   '(progn
-;;      ;; (define-key proof-mode-map "\M-e" 'move-end-of-line)
-;;      ;; (define-key proof-mode-map "\M-a" 'move-beginning-of-line)
-;;      ;; (define-key proof-mode-map "\M-n"
-;;      ;;   'proof-assert-next-command-interactive)
-;;      ;; (define-key proof-mode-map "\M-p"
-;;      ;;   'proof-undo-last-successful-command)
-;;      (define-key proof-mode-map (kbd "\C-p") 'coq-About)
-;;      (define-key proof-mode-map (kbd "\C-c\C-k")
-;;        'proof-goto-point)
-;;      ))
-;; ;; Better indent for ssreflect
-;; (setq coq-one-command-per-line nil)
-;; (setq coq-indent-proofstart 0)
-;; (setq coq-indent-modulestart 0)
-;; ;; ;; input math symbol
-;; (add-hook 'proof-mode-hook (lambda () (set-input-method "TeX") ))
-;; ;; Open .v files with Proof General's Coq mode
-;; (require 'proof-site "~/.emacs.d/lisp/PG/generic/proof-site")
- #+END_SRC
+# *** COQ
+#  #+BEGIN_SRC emacs-lisp :tangle yes
+# ;; (eval-after-load 'proof-script
+# ;;   '(progn
+# ;;      ;; (define-key proof-mode-map "\M-e" 'move-end-of-line)
+# ;;      ;; (define-key proof-mode-map "\M-a" 'move-beginning-of-line)
+# ;;      ;; (define-key proof-mode-map "\M-n"
+# ;;      ;;   'proof-assert-next-command-interactive)
+# ;;      ;; (define-key proof-mode-map "\M-p"
+# ;;      ;;   'proof-undo-last-successful-command)
+# ;;      (define-key proof-mode-map (kbd "\C-p") 'coq-About)
+# ;;      (define-key proof-mode-map (kbd "\C-c\C-k")
+# ;;        'proof-goto-point)
+# ;;      ))
+# ;; ;; Better indent for ssreflect
+# ;; (setq coq-one-command-per-line nil)
+# ;; (setq coq-indent-proofstart 0)
+# ;; (setq coq-indent-modulestart 0)
+# ;; ;; ;; input math symbol
+# ;; (add-hook 'proof-mode-hook (lambda () (set-input-method "TeX") ))
+# ;; ;; Open .v files with Proof General's Coq mode
+# ;; (require 'proof-site "~/.emacs.d/lisp/PG/generic/proof-site")
+#  #+END_SRC
 
 *** OCaml
  #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package tuareg
    :mode ("\\.ml[ily]?$" . tuareg-mode)
+   :delight "🐪"
    :init
    (dolist
-   (var (car
-   (read-from-string
-   (shell-command-to-string "opam config env --sexp"))))
+   (var (car (read-from-string
+             (shell-command-to-string "opam config env --sexp"))))
    (setenv (car var) (cadr var))))
 
- (use-package ocp-indent :hook tuareg-mode)
- (use-package dune :hook tuareg-mode)
+ (use-package ocp-indent :after tuareg)
+ (use-package dune       :after tuareg)
 
-  (use-package merlin
-  :hook
-    ((tuareg-mode . merlin-mode)
-    (caml-mode    . merlin-mode))
-  :bind (:map merlin-mode-map
+ (use-package merlin
+   :hook
+   ((tuareg-mode caml-mode) . merlin-mode)
+   :bind (:map merlin-mode-map
              ("M-." . merlin-locate)
              ("M-," . merlin-pop-stack))
   :config
   (setq merlin-command 'opam)
   (with-eval-after-load 'company
-    (add-hook 'merlin-mode-hook 'company-mode)
-    (add-to-list 'company-backends 'merlin-company-backend)))
+     (add-hook 'merlin-mode-hook 'company-mode)
+     (add-to-list 'company-backends 'merlin-company-backend)))
 
 (use-package utop
-  :hook (tuareg-mode . utop-minor))
+  :hook
+  (tuareg-mode . (lambda ()
+                   (setq utop-command "utop -emacs")
+                   (utop-minor-mode))))
 #+END_SRC
 
-*** Java =jdee=
- #+BEGIN_SRC emacs-lisp :tangle yes
-   ;; (use-package jdee
-   ;;   :init
-   ;;   (custom-set-variables '(jdee-server-dir "~/.emacs.d/jdee-server"))
-   ;;   :mode "\\.java\\'"
-   ;;   :custom
-   ;;   (jdee-server-dir "~/bin/lib/jdee-server")
-   ;; )
-#+END_SRC
-**** lexer/parser =antlr=
-     lexer/parser generator LL(*) for java langage
-  #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package antlr-mode
-      :mode ("\\.g4\\'"))
-  #+END_SRC
-**** script =groovy=
-     Script version of java
-     run on jvm
-  #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package groovy-mode
-      :mode ("\\.groovy\\'" "\\.gvy\\'" "\\.gy\\'""\\.gsh\\'" )
-      :hook gradle-mode)
-  #+END_SRC
-**** builder =gradle=
-     Gradle is a dependency manager
-  #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package gradle-mode
-      :mode ("\\.gradle\\'")
-      )
+# *** Java =jdee=
+#  #+BEGIN_SRC emacs-lisp :tangle yes
+#    ;; (use-package jdee
+#    ;;   :init
+#    ;;   (custom-set-variables '(jdee-server-dir "~/.emacs.d/jdee-server"))
+#    ;;   :mode "\\.java\\'"
+#    ;;   :custom
+#    ;;   (jdee-server-dir "~/bin/lib/jdee-server")
+#    ;; )
+# #+END_SRC
 
-  #+END_SRC
+# **** lexer/parser =antlr=
+#      lexer/parser generator LL(*) for java langage
+#   #+BEGIN_SRC emacs-lisp :tangle yes
+#     (use-package antlr-mode
+#       :mode ("\\.g4\\'"))
+#   #+END_SRC
 
-*** Typescript
- #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package typescript-mode
-    :mode ("\\.ts\\'"))
- #+END_SRC
+# **** script =groovy=
+#      Script version of java
+#      run on jvm
+#   #+BEGIN_SRC emacs-lisp :tangle yes
+#   (use-package groovy-mode
+#       :mode ("\\.groovy\\'" "\\.gvy\\'" "\\.gy\\'""\\.gsh\\'" )
+#       :hook gradle-mode)
+#   #+END_SRC
+
+# **** builder =gradle=
+#      Gradle is a dependency manager
+#   #+BEGIN_SRC emacs-lisp :tangle yes
+#   (use-package gradle-mode
+#       :mode ("\\.gradle\\'")
+#       )
+
+#   #+END_SRC
+
+# *** Typescript
+#  #+BEGIN_SRC emacs-lisp :tangle yes
+#  (use-package typescript-mode
+#     :mode ("\\.ts\\'"))
+#  #+END_SRC
 
 *** Yaml
     Yet another marked langage
  #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package yaml-mode
-     :mode ("\\.yml\\'"))
+ (use-package yaml-mode :mode ("\\.yml\\'"))
  #+END_SRC
+
 *** config
 **** Git config file
  #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package gitignore-mode)
+ (use-package gitignore-mode :delight "Git" :mode ".gitignore")
  #+END_SRC
 *** csv
 
  #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package csv-mode
-  :custom (csv-separators '(";" ",")))
+  :mode "\\.[Cc][Ss][Vv]\\'"
+  :custom
+  (csv-separators '(";" ",")
+  ))
  #+END_SRC
 
 
-** Budger =ledger=
-*** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
-    You need a budged : four simple rule to control you budged
-**** Give Every Dollar a Job
-     As soon as you get money, you’ll decide what it needs to do—whatever is most
-     important to you. Then, instead of deciding to buy something based on your
-    mood, or the big (or small?) pile of money in your checking account, you’ll
-    decide based on a rock-solid plan.
+# ** Budget =ledger=
+# *** [[https://www.youneedabudget.com/the-four-rules/][YNAB]]
+#     You need a budged : four simple rule to control you budged
+# **** Give Every Dollar a Job
+#      As soon as you get money, you’ll decide what it needs to do—whatever is most
+#      important to you. Then, instead of deciding to buy something based on your
+#     mood, or the big (or small?) pile of money in your checking account, you’ll
+#     decide based on a rock-solid plan.
 
-     1. Get some dollars.
-     2. Prioritize those dollars (give ‘em jobs!).
-     3. Follow your plan.
-****  Embrace Your True Expenses
-     Take those large, less-frequent expenses (that usually send you into a financial
-     tailspin) and break them into manageable, monthly “bills.” Good-bye, Financial
-     Crisis Roller Coaster! You just won a free ticket on the Financial Peace
-     Express!
+#      1. Get some dollars.
+#      2. Prioritize those dollars (give ‘em jobs!).
+#      3. Follow your plan.
+# ****  Embrace Your True Expenses
+#      Take those large, less-frequent expenses (that usually send you into a financial
+#      tailspin) and break them into manageable, monthly “bills.” Good-bye, Financial
+#      Crisis Roller Coaster! You just won a free ticket on the Financial Peace
+#      Express!
 
-     1. Find a big, infrequent expense.
-     2. Create a goal to fund it monthly.
-     3. When that expense arrives, just pay it!
-**** Roll With The Punches
-     When you overspend in a budget category, just adjust. No guilt necessary. If you
-     plan to take the kids to the beach but it’s pouring down rain, do you still go?
-     Of course not! Circumstances change and plans change with them. Your budget is
-     no different. If you overspend in one category, free up money from another
-     category and move along. Remember, you’re the boss!
+#      1. Find a big, infrequent expense.
+#      2. Create a goal to fund it monthly.
+#      3. When that expense arrives, just pay it!
+# **** Roll With The Punches
+#      When you overspend in a budget category, just adjust. No guilt necessary. If you
+#      plan to take the kids to the beach but it’s pouring down rain, do you still go?
+#      Of course not! Circumstances change and plans change with them. Your budget is
+#      no different. If you overspend in one category, free up money from another
+#      category and move along. Remember, you’re the boss!
 
-     1. Choose a category with overspending.
-     2. Move funds from another category to cover it.
-     3. Move on with your life—no guilt!
-**** Age Your Money
-     With the help of the other three rules, you’ll be more purposeful about your
-     spending, consistently spend less than you earn, and be more than prepared for
-     the future. Eventually, you’ll be able to cover May’s rent with dollars from
-     April. Your money will be at least 30 days old and you’ll wonder how you ever
-     lived without the Four Rules.
+#      1. Choose a category with overspending.
+#      2. Move funds from another category to cover it.
+#      3. Move on with your life—no guilt!
+# **** Age Your Money
+#      With the help of the other three rules, you’ll be more purposeful about your
+#      spending, consistently spend less than you earn, and be more than prepared for
+#      the future. Eventually, you’ll be able to cover May’s rent with dollars from
+#      April. Your money will be at least 30 days old and you’ll wonder how you ever
+#      lived without the Four Rules.
 
-     1. Be purposeful in your spending.
-     2. Consistently spend less than you earn.
-     3. Watch that Age of Money grow!
+#      1. Be purposeful in your spending.
+#      2. Consistently spend less than you earn.
+#      3. Watch that Age of Money grow!
 
 
- #+BEGIN_QUOTE
- Ledger is a powerful, double-entry accounting system that is accessed from the
- UNIX command-line.
-*** ledger capture
- [[https://github.com/ledger/ledger][John Wiegley]]
- #+END_QUOTE
+#  #+BEGIN_QUOTE
+#  Ledger is a powerful, double-entry accounting system that is accessed from the
+#  UNIX command-line.
+# *** ledger capture
+#  [[https://github.com/ledger/ledger][John Wiegley]]
+#  #+END_QUOTE
 
- Before you can use this configuration, make sure you install =ledger= on your
- operating system.
+#  Before you can use this configuration, make sure you install =ledger= on your
+#  operating system.
 
- Now all we have to do is configure =ledger-mode=:
+#  Now all we have to do is configure =ledger-mode=:
 
- #+begin_SRC emacs-lisp :tangle yes
-   (use-package ledger-mode
-     :mode ("\\.dat\\'" "\\.ledger\\'")
-     :bind (:map ledger-mode-map ("c-x c-s" . my/ledger-save))
-     :hook (ledger-mode . ledger-flymapke-enable)
-     :preface
-     (defun my/ledger-save ()
-       "automatically clean the ledger buffer at each save."
-       (interactive)
-       (ledger-mode-clean-buffer)
-       (save-buffer))
-     :custom
-     (ledger-clear-whole-transactions t)
-     (ledger-reconcile-default-commodity "eur")
-     (ledger-reports
-      '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
-        ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
-        ("budget" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
-        ("budget goals" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
-        ("budget obligations" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
-        ("budget debts" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
-        ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
-        ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
-        ("income statement" "%(binary) --invert --real -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
-      (ledger-report-use-header-line nil)))
+#  #+begin_SRC emacs-lisp :tangle yes
+#    (use-package ledger-mode
+#      :mode ("\\.dat\\'" "\\.ledger\\'")
+#      :bind (:map ledger-mode-map ("c-x c-s" . my/ledger-save))
+#      :hook (ledger-mode . ledger-flymapke-enable)
+#      :preface
+#      (defun my/ledger-save ()
+#        "automatically clean the ledger buffer at each save."
+#        (interactive)
+#        (ledger-mode-clean-buffer)
+#        (save-buffer))
+#      :custom
+#      (ledger-clear-whole-transactions t)
+#      (ledger-reconcile-default-commodity "eur")
+#      (ledger-reports
+#       '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
+#         ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
+#         ("budget" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
+#         ("budget goals" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
+#         ("budget obligations" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
+#         ("budget debts" "%(binary) --empty -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
+#         ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
+#         ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
+#         ("income statement" "%(binary) --invert --real -s -t [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
+#       (ledger-report-use-header-line nil)))
 
-      (use-package flycheck-ledger :after ledger-mode)
- #+end_src
- *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
- format.
+#       (use-package flycheck-ledger :after ledger-mode)
+#  #+end_src
+#  *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
+#  format.
 ** Todo, agenda =org-mode=
 
  One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
@@ -528,7 +454,7 @@ in the file-system, but rather created on-demand and stored in memory.
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org
      :ensure org-plus-contrib
-     :delight "Θ"
+     :delight "🦄 Θ"
      :bind
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
@@ -974,43 +900,27 @@ in the file-system, but rather created on-demand and stored in memory.
  With that, I can compile many languages with =org-mode=.
 
  #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package ob-C :ensure nil :after org)
-   ;; (use-package ob-css :ensure nil :after org)
-   ;; (use-package ob-ditaa :ensure nil :after org)
-   ;; (use-package ob-dot :ensure nil :after org)
+   (use-package ob-C          :ensure nil :after org)
+   (use-package ob-dot        :ensure nil :after org)
    (use-package ob-emacs-lisp :ensure nil :after org)
-   ;; (use-package ob-gnuplot :ensure nil :after org)
-   (use-package ob-java :ensure nil :after org)
-   (use-package ob-js :ensure nil :after org)
-   (use-package ob-latex :ensure nil :after org)
-   (use-package ob-ledger :ensure nil :after org)
-   (use-package ob-makefile :ensure nil :after org)
-   (use-package ob-org :ensure nil :after org)
-
-   ;; (use-package ob-plantuml
-   ;;   :ensure nil
-   ;;   :after org
-   ;;   :custom (org-plantuml-jar-path (expand-file-name (format "%s/plantuml.jar" xdg-lib))))
-
-   ;; (use-package ob-python :ensure nil :after org)
-   ;; (use-package ob-ruby :ensure nil :after org)
-   (use-package ob-shell :ensure nil :after org)
-   (use-package ob-sql :ensure nil :after org)
+   (use-package ob-java       :ensure nil :after org)
+   (use-package ob-js         :ensure nil :after org)
+   (use-package ob-latex      :ensure nil :after org)
+   (use-package ob-ledger     :ensure nil :after org)
+   (use-package ob-makefile   :ensure nil :after org)
+   (use-package ob-org        :ensure nil :after org)
+   (use-package ob-shell      :ensure nil :after org)
+   (use-package ob-sql        :ensure nil :after org)
  #+END_SRC
 
 *** Other improvement
  #+BEGIN_SRC emacs-lisp :tangle yes
  (defun org-convert-csv-table (beg end)
  (interactive (list (mark) (point)))
- (org-table-convert-region beg end ";")
-  )
+ (org-table-convert-region beg end ";"))
 
  #+END_SRC
 
-*** External call
- #+BEGIN_SRC emacs-lisp :tangle yes
-
- #+END_SRC
 ** Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package gnus
@@ -1023,18 +933,18 @@ in the file-system, but rather created on-demand and stored in memory.
       :after gnus)
 #+END_SRC
 
-** Contact =bbdb=
+# ** Contact =bbdb=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package bbdb
-    :after gnus
-    :config (setq bbdb-file "~/Document/contact.el" ))
-  ;; (use-package bbdb-vcard
-  ;;   :after bbdb)
-  ;; (use-package vdirel
-  ;;   :custom
-  ;;   (vdirel-repository ~/Contacts))
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp :tangle yes
+#   (use-package bbdb
+#     :after gnus
+#     :config (setq bbdb-file "~/Document/contact.el" ))
+#   ;; (use-package bbdb-vcard
+#   ;;   :after bbdb)
+#   ;; (use-package vdirel
+#   ;;   :custom
+#   ;;   (vdirel-repository ~/Contacts))
+# #+END_SRC
 
 ** Git
 *** Git =magit=
@@ -1083,18 +993,8 @@ made by previous commits.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package git-timemachine :delight)
 #+END_SRC
-*** COMMENT Gitlab =gitlab=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package gitlab
-  ;; :delight
-  ;; :init
-  ;; (setq gitlab-host "http://cosmos.movesol.fr/gitlab/"
-  ;;       gitlab-token-id "ucc1ZKcKGW_1_cEBPz8J"))
-
-  ;; (use-package helm-gitlab :delight
-  ;; :after '(helm gitlab))
-#+END_SRC
 *** Git forges =forge=
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package forge
   :after magit
@@ -1102,7 +1002,6 @@ made by previous commits.
   :config
   (add-to-list 'forge-alist '("cosmos.movesol.fr:2222"  "cosmos.movesol.fr/gitlab/api/v4" "cosmos.movesol.fr/gitlab/" forge-gitlab-repository)))
 #+END_SRC
-
 
 ** File Explorer =dired=
    Dired is a major mode for exploring file
@@ -1132,28 +1031,28 @@ made by previous commits.
   (use-package dired-x
   :ensure nil
   :after dired)
-
-
-
 #+END_SRC
+
 ** password-store =pass=
    Pass helps me to be a bit more secure on my password management
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pass
     :delight "Pass ")
 #+END_SRC
+
 ** Game
-**** =Typing=
+
+*** =Typing=
      A game for fast typers
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package typing
-  :defer t)
+  (use-package typing :defer t)
 #+END_SRC
-** Typing training
+
+*** Typing training
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package typing-practice
-  :defer t)
+  (use-package typing-practice :defer t)
 #+END_SRC
+
 ** Shell =eshell=
 #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package eshell
@@ -1168,60 +1067,17 @@ made by previous commits.
             eshell-hist-ignoredups t
             eshell-save-history-on-exit t
             eshell-prefer-lisp-functions nil
-            eshell-destroy-buffer-when-process-dies t)
-  )
+            eshell-destroy-buffer-when-process-dies t))
 #+END_SRC
-** social acount
-*** twitter =twittering=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package twittering-mode
-  :init
-   (set-face-attribute 'twittering-username-face nil
-                                :underline nil
-                                :weight 'bold
-                                :foreground "darksalmon")
-  :config
-   (twittering-use-master-password t)
-   (twittering-timer-interval 300)
-   (twittering-url-show-status nil)
-   (twittering-icon-mode nil)
-   (twittering-status-format "%i %s\n%FILL[ ]{%T}\n %FACE[glyphless-char]{%@ from %f%L%r%R}\n")
-  :hook ('twittering-edit-mode .
-        (lambda () (auto-fill-mode -1) (visual-line-mode)))
-  )
 
-(twittering-enable-unread-status-notifier)
-
-(add-hook 'twittering-mode-hook
-          (lambda ()
-            (setq twittering-timer-interval 300)
-            (setq twittering-url-show-status nil)
-            (setq twittering-icon-mode nil)
-            (setq twittering-status-format "%i %s\n%FILL[ ]{%T}\n %FACE[glyphless-char]{%@ from %f%L%r%R}\n")
-            (set-face-attribute 'twittering-username-face nil
-                                :underline nil
-                                :weight 'bold
-                                :foreground "darksalmon")))
-
-
-#+END_SRC
 * Minor mode
 ** Auto-Completion =company=
 
 =company= provides auto-completion at point and to Displays a small pop-in
 containing the candidates.
 
-#+BEGIN_QUOTE
-Company is a text completion framework for Emacs. The name stands for "complete
-anything". It uses pluggable back-ends and front-ends to retrieve and display
-completion candidates.
-
-[[http://company-mode.github.io/][Dmitry Gutov]]
-#+END_QUOTE
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package company
-    :defer 0.5
     :delight
     :custom
      (company-begin-commands '(self-insert-command))
@@ -1230,12 +1086,6 @@ completion candidates.
      (company-show-numbers t)
      (company-tooltip-align-annotations 't)
      (global-company-mode t))
-
-    ;; (use-package helm-company
-    ;;  :after helm company
-    ;;  :delight
-    ;;  :bind ((:map company-mode-map   ("C-:" .  helm-company))
-    ;;         (:map company-active-map ("C-:" .  helm-company))))
 #+END_SRC
 
 # I use =company= with =company-box= that allows a company front-end with icons.
@@ -1286,7 +1136,6 @@ of a term, without breaking its workflow, is ideal.
     (defengine duckduckgo
       "https://duckduckgo.com/?q=%s"
       :keybinding "d"))
-
 #+END_SRC
 
 ** TODO Dashboard
@@ -1359,22 +1208,21 @@ For the other words that would not be in my list of abbreviations, =flyspell=
 enables spell checking on-the-fly in GNU Emacs.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package flyspell
-  ;;   :defer 1
-  ;;   :delight
-  ;;   :custom
-  ;;   (flyspell-abbrev-p t)
-  ;;   (flyspell-issue-message-flag nil)
-  ;;   (flyspell-issue-welcome-flag nil)
-  ;;   (flyspell-mode 1))
+  (use-package flyspell
+    :delight
+    :custom
+    (flyspell-abbrev-p t)
+    (flyspell-issue-message-flag nil)
+    (flyspell-issue-welcome-flag nil)
+    (flyspell-mode 1))
 
-    ;; (use-package flyspell-correct-ivy
-    ;;   :bind ("C-M-;" . flyspell-correct-wrapper)
-    ;;   :init
-    ;;     (setq flyspell-correct-interface #'flyspell-correct-ivy))
-  ;; (use-package ispell
-  ;;   :custom
-  ;;   (ispell-silently-savep t))
+    (use-package flyspell-correct-ivy
+      :bind ("C-M-;" . flyspell-correct-wrapper)
+      :init
+        (setq flyspell-correct-interface #'flyspell-correct-ivy))
+  (use-package ispell
+    :custom
+    (ispell-silently-savep t))
 #+END_SRC
 
 ** History =savehist=
@@ -1610,6 +1458,7 @@ smaller, simpler, and smoother to use yet highly customizable.
     :config (counsel-mode 1))
 
   (use-package ivy
+    :defer 0.1
     :delight
     :bind (("C-c C-r" . ivy-resume)
            ("C-x B" . ivy-switch-buffer-other-window))
@@ -1671,7 +1520,6 @@ From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (global-set-key [remap org-beginning-of-line] #'my/smarter-move-beginning-of-line)
 (global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
 #+END_SRC
-
 
 ** Point and Region
 
@@ -1859,7 +1707,7 @@ you can press ctrl-c right (calling =winner-redo=).
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package winner
-    :defer 2
+    :defer 0.1
     :config (winner-mode 1))
 #+END_SRC
 
