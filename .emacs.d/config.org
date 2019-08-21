@@ -1458,7 +1458,7 @@ smaller, simpler, and smoother to use yet highly customizable.
     :config (counsel-mode 1))
 
   (use-package ivy
-    :defer 0.1
+    :defer 0.1 ; force-loading
     :delight
     :bind (("C-c C-r" . ivy-resume)
            ("C-x B" . ivy-switch-buffer-other-window))
