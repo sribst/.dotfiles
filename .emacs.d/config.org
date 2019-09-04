@@ -555,7 +555,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
                 (:name "on pause Work" :todo "WAITING")
                 (:name "recurrent"      :tag "recurrent")
                 (:name "Current"        :todo "INPROGRESS")
-                (:name "Reserve ASAP"   :todo "RESERVE")
+                (:name "Book ASAP"   :todo "BOOK")
                 (:name "Next "          :todo "TODO")
                 (:name "Daily"
                  :and(:todo ("TOBUY" "FETCH")
@@ -603,8 +603,8 @@ For a better user experience of GNU Emacs, here are the default values I use.
     "add a reminder to a timestamp like : <2019-11-14 -5d>"
     (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
 
-  (defvar my/org-toreserve-template
-"* RESERVE %^{Name} [[google-maps:%\\2][@dress]] %^g
+  (defvar my/org-tobook-template
+"* BOOK %^{Name} [[google-maps:%\\2][@dress]] %^g
   :PROPERTIES:
   :Created:     %U
   :Name:   %\\1
@@ -724,12 +724,12 @@ For a better user experience of GNU Emacs, here are the default values I use.
   (org-capture-templates
    `(("e" "Event")
       ("es" "Show")
-        ("esr" "To reserve" entry (file+headline "~/org/master.org" "Show"),
-          my/org-toreserve-template)
+        ("esr" "To book" entry (file+headline "~/org/master.org" "Show"),
+          my/org-tobook-template)
         ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
           my/org-togo-template)
-      ("er" "To reserve" entry (file+headline "~/org/master.org" "Agenda"),
-        my/org-toreserve-template)
+      ("er" "To book" entry (file+headline "~/org/master.org" "Agenda"),
+        my/org-tobook-template)
       ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
         my/org-togo-template)
       ("et" "Trip")
@@ -814,7 +814,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
      :custom
      (org-todo-keyword-faces
       '(
-          ("RESERVE"  . (:foreground "red" :weight bold))
+          ("BOOK"  . (:foreground "red" :weight bold))
           ("GO"       . (:foreground "orange" :weight bold))
 
           ("WENT"       . (:foreground "green" :weight bold))
