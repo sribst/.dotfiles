@@ -1,0 +1,145 @@
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
+general {
+colors	  = true
+color_good="#d0d0d0"
+color_degraded="#ddb26f"
+color_bad="#fb9fb1"
+color_separator="#d0d0d0"
+interval  = 10
+separator = ""
+}
+
+order += "brightness"
+order += "volume master"
+order += "wireless _first_"
+order += "ethernet _first_"
+# order += "run_watch DHCP"
+order += "run_watch VPN"
+order += "disk /"
+order += "disk /home/"
+order += "cpu_usage"
+order += "load"
+order += "cpu_temperature 0"
+order += "cpu_temperature 1"
+order += "cpu_temperature 2"
+order += "battery all"
+order += "battery 0"
+order += "battery 1"
+order += "tztime local"
+
+volume master {
+format = "♪:%volume"
+format_muted = "♪: MM"
+}
+
+wireless _first_ {
+format_up = " W: [ %essid - %ip - %frequency - %quality - %bitrate]"
+format_down = ""
+}
+
+ethernet _first_ {
+# if you use %speed, i3status requires root privileges
+  format_up = "E: [%speed %ip]"
+  format_down = ""
+}
+
+run_watch DHCP {
+	format = "%title:%status"
+	format_down = ""
+	pidfile = "/var/run/dhcpcd*.pid"
+}
+
+run_watch VPN {
+	format  = "- %title:%status"
+	format_down = ""
+        pidfile = "/var/run/vpnc/pid"
+}
+
+disk "/" {
+format = " %avail/%total "
+}
+
+disk "/home/" {
+        format = "- H %avail/%total"
+}
+
+cpu_usage {
+format=" CPU %usage"
+}
+
+load {
+format = "- %1min/mn %5min/5mn"
+max_threshold = "0,3"
+}
+
+cpu_temperature 0{
+format = "- %degrees°C,"
+max_threshold = "60"
+}
+
+cpu_temperature 1{
+format = "%degrees°C,"
+max_threshold = "60"
+}
+
+cpu_temperature 2{
+format = "%degrees°C"
+max_threshold = "60"
+}
+
+battery all {
+	format = "bat : %remaining"
+	format_down = ""
+	last_full_capacity = true
+	integer_battery_capacity = true
+	hide_seconds= true
+	threshold_type ="percentage"
+	low_threshold = "10"
+}
+
+battery 0 {
+	format = "(%status %percentage"
+	format_down = "("
+	last_full_capacity = true
+	integer_battery_capacity = true
+	hide_seconds= true
+	threshold_type ="percentage"
+	low_threshold = "10"
+	status_chr = "chr"
+	status_bat = "bat"
+	status_full= "full"
+	status_unk = "unk"
+	status_chr = "⚇"
+	status_bat = "⚡"
+	status_full= "☻"
+	status_unk = "?"
+}
+
+battery 1 {
+	format = ", %status %percentage)"
+	format_down = ")"
+	last_full_capacity = true
+	integer_battery_capacity = true
+	hide_seconds= true
+	threshold_type ="percentage"
+	low_threshold = "10"
+	status_chr = "chr"
+	status_bat = "bat"
+	status_full= "full"
+	status_unk = "unk"
+	status_chr = "⚇"
+	status_bat = "⚡"
+	status_full= "☻"
+	status_unk = "?"
+}
+
+tztime local {
+format = "%d/%m/%y %H:%M"
+}
