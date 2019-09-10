@@ -10,7 +10,7 @@ HISTFILE="${ZDOTDIR}/.zsh_history"
 HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
 
-export EDITOR="/usr/bin/emacsclient -nw"
+export EDITOR="/usr/bin/emacsclient -s /tmp/emacs1000/server -nw"
 export ALTERNATE_EDITOR="/usr/bin/nano"
 
 export TMP="$HOME/tmp"
