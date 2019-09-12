@@ -1,6 +1,43 @@
 #+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
 
+* TOC :TOC:
+- [[#customisation][Customisation]]
+  - [[#packages][Packages]]
+  - [[#authentification][Authentification]]
+  - [[#defaults-values][defaults values]]
+  - [[#customization-interface][Customization interface]]
+  - [[#backups][Backups]]
+  - [[#apparence][apparence]]
+- [[#major-mode][Major mode]]
+  - [[#languages][Languages]]
+  - [[#todo-agenda-org-mode][Todo, agenda =org-mode=]]
+  - [[#mail-gnus][Mail =gnus=]]
+  - [[#git][Git]]
+  - [[#file-explorer-dired][File Explorer =dired=]]
+  - [[#password-store-pass][password-store =pass=]]
+  - [[#game][Game]]
+  - [[#shell-eshell][Shell =eshell=]]
+- [[#minor-mode][Minor mode]]
+  - [[#auto-completion-company][Auto-Completion =company=]]
+  - [[#internet-interface][Internet interface]]
+  - [[#dashboard][Dashboard]]
+  - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
+  - [[#history-savehist][History =savehist=]]
+  - [[#improved-package-menu-paradox][improved package menu =paradox=]]
+  - [[#text-formatting][Text formatting]]
+  - [[#text-editing][Text editing]]
+  - [[#keystroke-which-key][keystroke =which-key=]]
+  - [[#autocompletion-ivy][autocompletion =Ivy=]]
+  - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
+  - [[#text-navigation][Text Navigation]]
+  - [[#point-and-region][Point and Region]]
+  - [[#recent-files][Recent Files]]
+  - [[#buffer-and-windows][Buffer and Windows]]
+  - [[#word-wrap-simple][Word Wrap =simple=]]
+  - [[#custom-fonction][custom fonction]]
+  - [[#project-management][Project management]]
+
 * Customisation
 ** Packages
 ***  Sources
@@ -147,12 +184,25 @@ For a better user experience of GNU Emacs, here are the default values I use.
 #+END_SRC
 *** mode-line =smart-mode-line=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package smart-mode-line-powerline-theme)
-  (use-package smart-mode-line
-  :requires smart-mode-line-powerline-theme
-  :custom (sml/theme 'powerline-theme)
-  :config (sml/setup))
-
+  ;; (setq sml/theme 'dark)
+  ;; (setq sml/theme 'light)
+    ;; (setq sml/theme 'respectful)
+    ;; (sml/setup)
+    (use-package smart-mode-line
+    :config (sml/setup))
+#+END_SRC
+*** nyan-cat =nyan=
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package nyan-mode
+    :config (nyan-mode)
+    :custom
+    (nyan-animate-nyancat t)
+    (nyan-wavy-trail t)
+    )
+    ;;(nyan-animation-frame-interval 0.1)
+    ;; (nyan-bar-length)
+    ;;(nyan-cat-face-number ":8")
+    ;;(nyan-minimum-window-width )
 #+END_SRC
 
 

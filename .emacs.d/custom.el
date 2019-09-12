@@ -24,7 +24,7 @@
  '(csv-separators (quote (";" ",")) t)
  '(custom-safe-themes
    (quote
-    ("84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c2104aacc11ed1617955f16ae9a737b870f846105b6854744f3dd3bfb03d8a18" "86704574d397606ee1433af037c46611fb0a2787e8b6fd1d6c96361575be72d2" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
+    ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c2104aacc11ed1617955f16ae9a737b870f846105b6854744f3dd3bfb03d8a18" "86704574d397606ee1433af037c46611fb0a2787e8b6fd1d6c96361575be72d2" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
  '(dashboard-startup-banner (quote logo) t)
  '(delete-old-versions -1)
  '(dired-auto-revert-buffer t)
@@ -333,7 +333,7 @@
  '(org-use-extra-keys t)
  '(package-selected-packages
    (quote
-    (smart-mode-line-powerline-theme posframe statusbar preview latex files dune ivy-smex swiper-helm dired-x dired org-capture forge helm-projectile helm-company projectile helm-smex helm-swoop helm-gitlab helm gitlab twittering-mode find-file-in-project xresources-theme all-the-icons-dired all-the-icons typing-practice typing jdee org-super-agenda org-super-agenda-mode org-journal soothe-theme org-caldav dired-du calfw-cal async company pdf-view auto-package-update erc-join auctex typescript-mode vdirel bbdb-vcard pass hungry-delete emacs-delphi-mode gradle-mode gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
+    (nyan-mode smart-mode-line-powerline-theme posframe statusbar preview latex files dune ivy-smex swiper-helm dired-x dired org-capture forge helm-projectile helm-company projectile helm-smex helm-swoop helm-gitlab helm gitlab twittering-mode find-file-in-project xresources-theme all-the-icons-dired all-the-icons typing-practice typing jdee org-super-agenda org-super-agenda-mode org-journal soothe-theme org-caldav dired-du calfw-cal async company pdf-view auto-package-update erc-join auctex typescript-mode vdirel bbdb-vcard pass hungry-delete emacs-delphi-mode gradle-mode gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
  '(paradox-column-width-package 27)
  '(paradox-column-width-version 13)
  '(paradox-execute-asynchronously t)
@@ -351,7 +351,7 @@
  '(savehist-save-minibuffer-history 1)
  '(set-mark-command-repeat-pop t)
  '(setq (quote respectful) t)
- '(sml/theme (quote powerline))
+ '(sml/theme (quote respectful))
  '(vc-make-backup-files t)
  '(version-control t))
 (custom-set-faces
