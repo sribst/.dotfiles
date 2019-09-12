@@ -133,6 +133,29 @@ For a better user experience of GNU Emacs, here are the default values I use.
   ;;   (use-package all-the-icons-ivy)
 #+END_SRC
 
+*** status =statusbar=
+    had a statusbar on bottom right that show common info of all mode-line
+    not on melpa only git so far
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package posframe)
+  ;;  (use-package statusbar
+  ;;   :ensure nil
+  ;;   ;; :requires (subr-x dash posframe)
+  ;;   :load-path "git"
+  ;;   :config
+  ;;   (statusbar-mode 1))
+#+END_SRC
+*** mode-line =smart-mode-line=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smart-mode-line-powerline-theme)
+  (use-package smart-mode-line
+  :requires smart-mode-line-powerline-theme
+  :custom (sml/theme 'powerline-theme)
+  :config (sml/setup))
+
+#+END_SRC
+
+
 * Major mode
 # ** PDF
 # #+BEGIN_QUOTE
