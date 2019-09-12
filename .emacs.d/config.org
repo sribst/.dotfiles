@@ -1912,7 +1912,6 @@ I like to have lines of the same length.
   ;; (use-package find-file-in-project)
 #+END_SRC
 *** =projectile
-=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
   :config (projectile-mode)
