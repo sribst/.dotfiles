@@ -1934,16 +1934,16 @@ I like to have lines of the same length.
 * TODO copy emacs config of http://ix.io/1Uvz
 
 
-* global config
-** open file
-*** root file
-auto-sudoedit : automaticaly open with tramp when needed
-#+BEGIN_SRC emacs-lisp
-(use-package tramp
-  :ensure nil
-  :custom (tramp-default-method "sshx"))
+# * global config
+# ** open file
+# *** root file
+# auto-sudoedit : automaticaly open with tramp when needed
+# #+BEGIN_SRC emacs-lisp
+# (use-package tramp
+#   :ensure nil
+#   :custom (tramp-default-method "sshx"))
 
-(use-package auto-sudoedit
-  :init (auto-sudoedit-mode 1))
-(use-package counsel-tramp)
-#+END_SRC
+# (use-package auto-sudoedit
+#   :init (auto-sudoedit-mode 1))
+# (use-package counsel-tramp)
+# #+END_SRC
