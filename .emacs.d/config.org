@@ -208,13 +208,13 @@ For a better user experience of GNU Emacs, here are the default values I use.
 #+END_SRC
 *** tab =centaur-tabs=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package centaur-tabs
-  :demand
-  :config
-  (centaur-tabs-mode t)
-  :bind
-  ("<C-tab>" . centaur-tabs-forward)
-  ("<C-S-tab>" . centaur-tabs-backward))
+  ;; (use-package centaur-tabs
+    ;; :demand
+    ;; :config
+    ;; (centaur-tabs-mode t)
+    ;; :bind
+    ;; ("<C-tab>" . centaur-tabs-forward)
+    ;; ("<C-S-tab>" . centaur-tabs-backward))
 #+END_SRC
 * Major mode
 ** PDF
@@ -537,7 +537,7 @@ For a better user experience of GNU Emacs, here are the default values I use.
  #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org
      :ensure org-plus-contrib
-     :delight "🦄 Θ"
+     :delight "Θ"
      :bind
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
@@ -678,166 +678,167 @@ For a better user experience of GNU Emacs, here are the default values I use.
  information.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-capture
-    :ensure nil
-    :after org
-    :preface
-  (defun my/org-timestamp-add-reminder (date day)
-    "add a reminder to a timestamp like : <2019-11-14 -5d>"
-    (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
+    (use-package org-capture
+      :ensure nil
+      :after org
+      :preface
+    (defun my/org-timestamp-add-reminder (date day)
+      "add a reminder to a timestamp like : <2019-11-14 -5d>"
+      (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
+    (defvar my/org-tobook-template
+  ;; "* BOOK %^{Name} [[google-maps:%\\2][@dress]] %^g
+  ;; :GMap:   [[google-maps:%\\2][@dress]]
+  "* BOOK %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With}
+    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
 
-  (defvar my/org-tobook-template
-"* BOOK %^{Name} [[google-maps:%\\2][@dress]] %^g
-  :PROPERTIES:
-  :Created:     %U
-  :Name:   %\\1
-  :Type:   %^{Type}p
-  :Place:  %^{Place}
-  :With:   %^{With}
-  :GMap:   [[google-maps:%\\2][@dress]]
-  :END:
-  %^{When}T
-")
-
-  (defvar my/org-togo-template
-"* GO %^{Name} [[:%\\2][@dress]] %^g
-  :PROPERTIES:
-  :Created:     %U
-  :Name:   %\\1
-  :Type:   %^{Type}p
-  :Place:  %^{Place}
-  :With:   %^{With}
-  :GMap:   [[google-maps:%\\2][@dress]]
-  :END:
-  %^{When}T
-")
+    (defvar my/org-togo-template
+  "* GO %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With}
+    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
 
 
-  (defvar my/org-trip-template
-"* GO %\\1 -%\\3-> %\\2
-  :PROPERTIES:
-  :Created: %U
-  :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :To:    %^{To|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :Type:    %^{Type}p
-  :With:    %^{With}
-  :END:
-  %^{When}T
-")
+    (defvar my/org-trip-template
+  "* GO %\\1 -%\\3-> %\\2
+    :PROPERTIES:
+    :Created: %U
+    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :To:    %^{To|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T
+  ")
 
-  (defvar my/org-roundtrip-template
-"* GO %\\1 -%\\3-> %\\2
-  :PROPERTIES:
-  :Created: %U
-  :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :To:    %^{to|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :Type:    %^{Type}p
-  :With:    %^{With}
-  :END:
-  %^{When}T\n* GO %\\2 -> %\\1
-  :PROPERTIES:
-  :Created: %U
-  :From:      %\\2
-  :To:       %\\1
-  :Type:    %^{Type}p
-  :With:    %^{With}
-  :END:
-  %^{When}T
-")
+    (defvar my/org-roundtrip-template
+  "* GO %\\1 -%\\3-> %\\2
+    :PROPERTIES:
+    :Created: %U
+    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :To:    %^{to|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T\n* GO %\\2 -> %\\1
+    :PROPERTIES:
+    :Created: %U
+    :From:      %\\2
+    :To:       %\\1
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T
+  ")
 
-  (defvar my/org-voucher-template
-"* USE %^{Valor}
-   DEADLINE:%^{Before}t
-  :PROPERTIES:
-  :Reduction:     %^{Reduction}
-  :At:     %^{At|oui.sncf|ouibus|ouigo...}
-  :END:
-  %^{Cuando}t
-")
+    (defvar my/org-voucher-template
+  "* USE %^{Valor}
+     DEADLINE:%^{Before}t
+    :PROPERTIES:
+    :Reduction:     %^{Reduction}
+    :At:     %^{At|oui.sncf|ouibus|ouigo...}
+    :END:
+    %^{Cuando}t
+  ")
 
-  (defvar my/org-todo-template
-"* TODO %^{What} %^g
-  :PROPERTIES:
-  :Created:     %U
-  :END:
-")
+    (defvar my/org-todo-template
+  "* TODO %^{What} %^g
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
 
-  (defvar my/org-someday-template
-"* SOMEDAY %^{What} %^g
-  :PROPERTIES:
-  :Created:     %U
-  :END:
-")
+    (defvar my/org-someday-template
+  "* SOMEDAY %^{What} %^g
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
 
-(defvar my/org-work-move-template
-"* TODO %^{What} %^g
-  :PROPERTIES:
-  :Created:     %U
-  :mission:     %^{mission}p
-  :CATEGORY:    %\\2
-  :END:
-")
+  (defvar my/org-work-move-template
+  "* TODO %^{What} %^g
+    :PROPERTIES:
+    :Created:     %U
+    :mission:     %^{mission}p
+    :CATEGORY:    %\\2
+    :END:
+  ")
 
-  (defvar my/org-stuff-buy-template
-"* FETCH %^{What}
-  :PROPERTIES:
-  :Created:     %U
-  :END:
-")
+    (defvar my/org-stuff-buy-template
+  "* FETCH %^{What}
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
 
-  (defvar my/org-stuff-gift-template
-"* IDEA %^{What}
-  :PROPERTIES:
-  :Created:     %U
-  :For: %^{For}
-  :When: %^{When}t
-  :END:
-")
+    (defvar my/org-stuff-gift-template
+  "* IDEA %^{What}
+    :PROPERTIES:
+    :Created:     %U
+    :For: %^{For}
+    :When: %^{When}t
+    :END:
+  ")
 
-  (defvar my/org-stuff-flat-template
-"* BUY %^{What}
-  :PROPERTIES:
-  :Created:     %U
-  :Room: %^{Room}p
-  :CATEGORY: %\\2
-  :END:
-")
+    (defvar my/org-stuff-flat-template
+  "* BUY %^{What}
+    :PROPERTIES:
+    :Created:     %U
+    :Room: %^{Room}p
+    :CATEGORY: %\\2
+    :END:
+  ")
 
-  :custom
-  (org-capture-templates
-   `(("e" "Event")
-      ("es" "Show")
-        ("esr" "To book" entry (file+headline "~/org/master.org" "Show"),
+    :custom
+    (org-capture-templates
+     `(("e" "Event")
+        ("es" "Show")
+          ("esr" "To book" entry (file+headline "~/org/master.org" "Show"),
+            my/org-tobook-template)
+          ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
+            my/org-togo-template)
+        ("er" "To book" entry (file+headline "~/org/master.org" "Agenda"),
           my/org-tobook-template)
-        ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
+        ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
           my/org-togo-template)
-      ("er" "To book" entry (file+headline "~/org/master.org" "Agenda"),
-        my/org-tobook-template)
-      ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
-        my/org-togo-template)
-      ("et" "Trip")
-      ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
-        my/org-trip-template)
-      ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
-        my/org-roundtrip-template)
-     ("t" "TO-DO")
-      ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
-        my/org-todo-template)
-      ("to" "oneday" entry (file+headline "~/org/master.org" "TO-DO"),
-        my/org-someday-template)
-      ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
-        my/org-work-move-template)
-     ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
-        my/org-voucher-template)
-     ("s" "stuff")
-      ("sb" "buy" entry (file+headline "~/org/master.org" "objet"),
-        my/org-stuff-buy-template)
-      ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
-        my/org-stuff-gift-template)
-      ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
-        my/org-stuff-flat-template)
+        ("et" "Trip")
+        ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+          my/org-trip-template)
+        ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+          my/org-roundtrip-template)
+       ("t" "TO-DO")
+        ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
+          my/org-todo-template)
+        ("to" "oneday" entry (file+headline "~/org/master.org" "TO-DO"),
+          my/org-someday-template)
+        ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
+          my/org-work-move-template)
+       ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
+          my/org-voucher-template)
+       ("s" "stuff")
+        ("sb" "buy" entry (file+headline "~/org/master.org" "objet"),
+          my/org-stuff-buy-template)
+        ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
+          my/org-stuff-gift-template)
+        ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
+          my/org-stuff-flat-template)
 
-)))
+  )))
 #+END_SRC
 
 *** COMMENT Clock
@@ -1096,24 +1097,36 @@ made by previous commits.
    dired-du should be customize more than that
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dired
-    :delight "Dired "
-    :ensure nil
-    :custom
-    (dired-auto-revert-buffer t)
-    (dired-dwim-target t)
-    (dired-hide-details-hide-symlink-targets nil)
-    (dired-omit-files "^\\...+$")
-    (dired-omit-mode t)
-    (dired-listing-switches "-alh")
-    (dired-ls-F-marks-symlinks nil)
-    (dired-recursive-copies 'always))
+    (use-package dired
+      :delight "Dired "
+      :ensure nil
+      :custom
+      (dired-auto-revert-buffer t)
+      (dired-dwim-target t)
+      (dired-hide-details-hide-symlink-targets nil)
+      (dired-omit-files "^\\...+$")
+      (dired-omit-mode t)
+      (dired-listing-switches "-alh")
+      (dired-ls-F-marks-symlinks nil)
+      (dired-recursive-copies 'always))
 
-  (use-package dired-du
-   :after dired)
-  (use-package dired-x
-  :ensure nil
-  :after dired)
+    (use-package dired-du
+     :after dired)
+
+    ;; (use-package dired-icon
+    ;;  :after dired
+    ;;  :config
+    ;;  (dired-icon-mode))
+
+
+  ;; (use-package all-the-icons-dired
+  ;;   :init
+  ;;   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+  (use-package all-the-icons-dired
+     :hook (dired-mode . all-the-icons-dired-mode))
+    (use-package dired-x
+    :ensure nil
+    :after dired)
 #+END_SRC
 
 ** password-store =pass=
@@ -1156,7 +1169,6 @@ made by previous commits.
 ** project explorer =treemacs=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package treemacs
-
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
@@ -1224,7 +1236,6 @@ made by previous commits.
 
 (use-package treemacs-icons-dired
   :after treemacs dired
-  :ensure t
   :config (treemacs-icons-dired-mode))
 
 (use-package treemacs-magit
