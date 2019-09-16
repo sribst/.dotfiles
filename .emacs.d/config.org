@@ -1,5 +1,6 @@
-#+AUTHOR: Sylvain Ribstein
 #+TITLE: GNU Emacs Configuration
+#+SUBTITLE:
+#+AUTHOR: Sylvain Ribstein
 
 * TOC :TOC:
 - [[#customisation][Customisation]]
@@ -39,6 +40,9 @@
   - [[#word-wrap-simple][Word Wrap =simple=]]
   - [[#custom-fonction][custom fonction]]
   - [[#project-management][Project management]]
+- [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
+- [[#global-config][global config]]
+  - [[#open-file][open file]]
 
 * Customisation
 ** Packages
@@ -1256,17 +1260,16 @@ containing the candidates.
      (company-idle-delay 0.2)
      (company-minimum-prefix-length 2)
      (company-show-numbers t)
-     (company-tooltip-align-annotations 't)
+     (company-tooltip-align-annotations t)
      (global-company-mode t))
 #+END_SRC
 
 # I use =company= with =company-box= that allows a company front-end with icons.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package company-box
-     :after company
-     :delight
-     :hook (company-mode . company-box-mode))
+  (use-package company-box
+    :delight
+    :hook (company-mode . company-box-mode))
 #+END_SRC
 
 ** Internet interface
@@ -1927,4 +1930,20 @@ I like to have lines of the same length.
   (use-package projectile
   :config (projectile-mode)
   :bind (:map projectile-mode-map ("C-c p" . projectile-command-map)))
+#+END_SRC
+* TODO copy emacs config of http://ix.io/1Uvz
+
+
+* global config
+** open file
+*** root file
+auto-sudoedit : automaticaly open with tramp when needed
+#+BEGIN_SRC emacs-lisp
+(use-package tramp
+  :ensure nil
+  :custom (tramp-default-method "sshx"))
+
+(use-package auto-sudoedit
+  :init (auto-sudoedit-mode 1))
+(use-package counsel-tramp)
 #+END_SRC
