@@ -41,8 +41,6 @@
   - [[#custom-fonction][custom fonction]]
   - [[#project-management][Project management]]
 - [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
-- [[#global-config][global config]]
-  - [[#open-file][open file]]
 
 * Customisation
 ** Packages
@@ -98,6 +96,8 @@ For a better user experience of GNU Emacs, here are the default values I use.
   vc-follow-symlinks t                             ; Always follow the symlinks
   view-read-only t                                 ; Always open read-only buffers in view-mode
   blink-cursor-mode nil                            ; the cursor wont blink
+  initial-major-mode 'org-mode
+  major-mode 'org-mode
   indent-tabs-mode nil)                            ; use space instead of tab to indent
  (delete-selection-mode t)                        ; when writing into marked region delete it
  (transient-mark-mode t)                          ; same mark mouse or keyboard
@@ -250,22 +250,21 @@ For a better user experience of GNU Emacs, here are the default values I use.
 
 ** Languages
 
-# *** Emacs Lisp
+*** Emacs Lisp
 
-#  #+BEGIN_SRC emacs-lisp :tangle yes
-#    (use-package elisp-mode
-#     :ensure nil
-#     :delight "ξ " )
-#  #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package elisp-mode
+     :ensure nil
+     :delight "ξ " )
+#+END_SRC
 
-# **** Eldoc
-#  Provides minibuffer hints when working with Emacs Lisp.
-#  #+BEGIN_SRC emacs-lisp :tangle yes
-#    (use-package eldoc
-#      :delight
-#      :hook (emacs-lisp-mode . eldoc-mode))
-#  #+END_SRC
-
+**** Eldoc
+  Provides minibuffer hints when working with Emacs Lisp.
+  #+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package eldoc
+      :delight
+      :hook (emacs-lisp-mode . eldoc-mode))
+#+END_SRC
 *** Markdown
  Before you can use this package, make sure you install =markdown= on your
  operating system.
@@ -1006,7 +1005,6 @@ For a better user experience of GNU Emacs, here are the default values I use.
  (defun org-convert-csv-table (beg end)
  (interactive (list (mark) (point)))
  (org-table-convert-region beg end ";"))
-
  #+END_SRC
 
 ** Mail =gnus=
@@ -1015,9 +1013,11 @@ For a better user experience of GNU Emacs, here are the default values I use.
       :bind (("C-x e" . gnus)
             :map gnus-group-mode-map
             ("C-c C-f" . gnus-summary-mail-forward))
+      :delight ""
       :custom
       (gnus-fetch-old-headers t))
     (use-package w3m
+      :delight ""
       :after gnus)
 #+END_SRC
 
@@ -1485,12 +1485,24 @@ Colorize colors as text with their value.
 
 *** Whitespace =whitespace=
 
-It is often annoying to see unnecessary blank spaces at the end of a line or file.
+It is often annoying to see unnecessary blank spaces at the end of a line or
+file.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package whitespace
     :defer 1
-    :hook (before-save . delete-trailing-whitespace))
+    :hook (before-save . delete-trailing-whitespace)
+    :config
+    (global-whitespace-mode 1)
+    :custom
+    (whitespace-style '(face trailing tabs lines-tail newline empty
+    tab-mark newline-mark))
+    (whitespace-display-mappings
+        '((space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46
+                                     ; FULL STOP 「.」
+          (newline-mark 10 [182 10]) ; LINE FEED
+          (tab-mark 9 [9655 9] [92 9]) ; tab
+          )))
 #+END_SRC
 
 ** Text editing

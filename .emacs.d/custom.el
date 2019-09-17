@@ -21,7 +21,7 @@
  '(company-minimum-prefix-length 2)
  '(company-show-numbers t)
  '(company-tooltip-align-annotations t)
- '(csv-separators (quote (";" ",")))
+ '(csv-separators (quote (";" ",")) t)
  '(custom-safe-themes
    (quote
     ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c2104aacc11ed1617955f16ae9a737b870f846105b6854744f3dd3bfb03d8a18" "86704574d397606ee1433af037c46611fb0a2787e8b6fd1d6c96361575be72d2" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
@@ -353,7 +353,10 @@
  '(setq (quote respectful) t)
  '(sml/theme (quote respectful))
  '(vc-make-backup-files t)
- '(version-control t))
+ '(version-control t)
+ '(whitespace-style
+   (quote
+    (face tabs spaces newline space-mark tab-mark newline-mark))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
