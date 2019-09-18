@@ -152,149 +152,149 @@
      ("esr" "To book" entry
       (file+headline "~/org/master.org" "Show")
       "* BOOK %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
-  :PROPERTIES:
-  :Created:     %U
-  :Name:   %\\1
-  :Type:   %^{Type}p
-  :Place:  %^{Place}
-  :With:   %^{With}
-  :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
-  :END:
-  %^{When}T
-")
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With}
+    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
      ("esg" "To go" entry
       (file+headline "~/org/master.org" "Show")
       "* GO %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
-  :PROPERTIES:
-  :Created:     %U
-  :Name:   %\\1
-  :Type:   %^{Type}p
-  :Place:  %^{Place}
-  :With:   %^{With}
-  :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
-  :END:
-  %^{When}T
-")
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With}
+    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
      ("er" "To book" entry
       (file+headline "~/org/master.org" "Agenda")
       "* BOOK %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
-  :PROPERTIES:
-  :Created:     %U
-  :Name:   %\\1
-  :Type:   %^{Type}p
-  :Place:  %^{Place}
-  :With:   %^{With}
-  :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
-  :END:
-  %^{When}T
-")
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With}
+    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
      ("eg" "To go" entry
       (file+headline "~/org/master.org" "Agenda")
       "* GO %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
-  :PROPERTIES:
-  :Created:     %U
-  :Name:   %\\1
-  :Type:   %^{Type}p
-  :Place:  %^{Place}
-  :With:   %^{With}
-  :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
-  :END:
-  %^{When}T
-")
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With}
+    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
      ("et" "Trip")
      ("ets" "Single trip" entry
       (file+headline "~/org/master.org" "Trip")
       "* GO %\\1 -%\\3-> %\\2
-  :PROPERTIES:
-  :Created: %U
-  :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :To:    %^{To|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :Type:    %^{Type}p
-  :With:    %^{With}
-  :END:
-  %^{When}T
-")
+    :PROPERTIES:
+    :Created: %U
+    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :To:    %^{To|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T
+  ")
      ("etr" "Round trip" entry
       (file+headline "~/org/master.org" "Trip")
       "* GO %\\1 -%\\3-> %\\2
-  :PROPERTIES:
-  :Created: %U
-  :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :To:    %^{to|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-  :Type:    %^{Type}p
-  :With:    %^{With}
-  :END:
-  %^{When}T
+    :PROPERTIES:
+    :Created: %U
+    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :To:    %^{to|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T
 * GO %\\2 -> %\\1
-  :PROPERTIES:
-  :Created: %U
-  :From:      %\\2
-  :To:       %\\1
-  :Type:    %^{Type}p
-  :With:    %^{With}
-  :END:
-  %^{When}T
-")
+    :PROPERTIES:
+    :Created: %U
+    :From:      %\\2
+    :To:       %\\1
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T
+  ")
      ("t" "TO-DO")
      ("tt" "todo" entry
       (file+headline "~/org/master.org" "TO-DO")
       "* TODO %^{What} %^g
-  :PROPERTIES:
-  :Created:     %U
-  :END:
-")
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
      ("to" "oneday" entry
       (file+headline "~/org/master.org" "TO-DO")
       "* SOMEDAY %^{What} %^g
-  :PROPERTIES:
-  :Created:     %U
-  :END:
-")
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
      ("tw" "work" entry
       (file+headline "~/org/master.org" "Work")
       "* TODO %^{What} %^g
-  :PROPERTIES:
-  :Created:     %U
-  :mission:     %^{mission}p
-  :CATEGORY:    %\\2
-  :END:
-")
+    :PROPERTIES:
+    :Created:     %U
+    :mission:     %^{mission}p
+    :CATEGORY:    %\\2
+    :END:
+  ")
      ("v" "voucher" entry
       (file+headline "~/org/master.org" "Voucher")
       "* USE %^{Valor}
-   DEADLINE:%^{Before}t
-  :PROPERTIES:
-  :Reduction:     %^{Reduction}
-  :At:     %^{At|oui.sncf|ouibus|ouigo...}
-  :END:
-  %^{Cuando}t
-")
+     DEADLINE:%^{Before}t
+    :PROPERTIES:
+    :Reduction:     %^{Reduction}
+    :At:     %^{At|oui.sncf|ouibus|ouigo...}
+    :END:
+    %^{Cuando}t
+  ")
      ("s" "stuff")
      ("sb" "buy" entry
       (file+headline "~/org/master.org" "objet")
       "* FETCH %^{What}
-  :PROPERTIES:
-  :Created:     %U
-  :END:
-")
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
      ("sg" "gift" entry
       (file+headline "~/org/master.org" "objet")
       "* IDEA %^{What}
-  :PROPERTIES:
-  :Created:     %U
-  :For: %^{For}
-  :When: %^{When}t
-  :END:
-")
+    :PROPERTIES:
+    :Created:     %U
+    :For: %^{For}
+    :When: %^{When}t
+    :END:
+  ")
      ("sa" "Flat" entry
       (file+headline "~/org/master.org" "Flat")
       "* BUY %^{What}
-  :PROPERTIES:
-  :Created:     %U
-  :Room: %^{Room}p
-  :CATEGORY: %\\2
-  :END:
-"))))
+    :PROPERTIES:
+    :Created:     %U
+    :Room: %^{Room}p
+    :CATEGORY: %\\2
+    :END:
+  "))))
  '(org-catch-invisible-edits (quote show-and-error))
  '(org-contacts-files (quote ("~/org/contacts.org")))
  '(org-cycle-separator-lines 0)
@@ -333,7 +333,7 @@
  '(org-use-extra-keys t)
  '(package-selected-packages
    (quote
-    (auto-sudoedit dired-subtree markdown-preview-eww markdown-preview-eww\.el dired-icon centaur-tabs treemacs-magit treemacs-icons-dired treemacs-projectile treemacs nyan-mode smart-mode-line-powerline-theme posframe statusbar preview latex files dune ivy-smex swiper-helm dired-x dired org-capture forge helm-projectile helm-company projectile helm-smex helm-swoop helm-gitlab helm gitlab twittering-mode find-file-in-project xresources-theme all-the-icons-dired all-the-icons typing-practice typing jdee org-super-agenda org-super-agenda-mode org-journal soothe-theme org-caldav dired-du calfw-cal async company pdf-view auto-package-update erc-join auctex typescript-mode vdirel bbdb-vcard pass hungry-delete emacs-delphi-mode gradle-mode gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
+    (org-indent auto-sudoedit dired-subtree markdown-preview-eww markdown-preview-eww\.el dired-icon centaur-tabs treemacs-magit treemacs-icons-dired treemacs-projectile treemacs nyan-mode smart-mode-line-powerline-theme posframe statusbar preview latex files dune ivy-smex swiper-helm dired-x dired org-capture forge helm-projectile helm-company projectile helm-smex helm-swoop helm-gitlab helm gitlab twittering-mode find-file-in-project xresources-theme all-the-icons-dired all-the-icons typing-practice typing jdee org-super-agenda org-super-agenda-mode org-journal soothe-theme org-caldav dired-du calfw-cal async company pdf-view auto-package-update erc-join auctex typescript-mode vdirel bbdb-vcard pass hungry-delete emacs-delphi-mode gradle-mode gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
  '(paradox-column-width-package 27)
  '(paradox-column-width-version 13)
  '(paradox-execute-asynchronously t)
@@ -342,7 +342,7 @@
  '(rainbow-x-colors t)
  '(recentf-exclude
    (quote
-    ("COMMIT_EDITMSG" "~$" "/scp:" "/ssh:" "/sudo:" "/tmp/" "recentf" ".newsrc-dribble")))
+    ("COMMIT_EDITMSG" "~$" "/scp:" "/ssh:" "/sudo:" "/tmp/" "recentf" ".newsrc-dribble")) t)
  '(recentf-max-menu-items 15)
  '(recentf-max-saved-items 200)
  '(recentf-save-file "~/.emacs.d/recentf")
@@ -352,6 +352,7 @@
  '(set-mark-command-repeat-pop t)
  '(setq (quote respectful) t)
  '(sml/theme (quote respectful))
+ '(use-package-always-ensure t)
  '(vc-make-backup-files t)
  '(version-control t)
  '(whitespace-style
