@@ -169,14 +169,10 @@
     #+END_SRC
 
 *** font
-
 **** unicode icons ==all-the-icons=
      #+BEGIN_SRC emacs-lisp :tangle yes
      (use-package all-the-icons)
   ;; (use-package all-the-icons-dired :hook dired-mode)
-  ;;   (use-package all-the-icons-gnus
-  ;;   :hook gnus)
-  ;;   (use-package all-the-icons-ivy)
      #+END_SRC
 
 *** status =statusbar=
@@ -193,12 +189,15 @@
     #+END_SRC
 *** mode-line =smart-mode-line=
     #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (setq sml/theme 'dark)
-  ;; (setq sml/theme 'light)
-    ;; (setq sml/theme 'respectful)
-    ;; (sml/setup)
-    (use-package smart-mode-line
-    :config (sml/setup 1))
+                ;; (setq sml/theme 'dark)
+    (use-package smart-mode-line)
+    (use-package  smart-mode-line-powerline-theme
+    :after smart-mode-line
+    :custom
+     (powerline-arrow-shape 'curve)
+     (powerline-default-separator-dir '(right . left))
+     (sml/theme 'powerline)
+    :config (sml/setup))
     #+END_SRC
 *** nyan-cat =nyan=
     #+BEGIN_SRC emacs-lisp :tangle yes
@@ -543,7 +542,7 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package org
      :ensure org-plus-contrib
-     :delight "Θ"
+     :delight ""
      :bind
       ("C-c l" . org-store-link)
       ("C-c a" . org-agenda)
@@ -555,6 +554,7 @@
         (org-use-extra-keys t)
         (org-catch-invisible-edits 'show-and-error)
         (org-cycle-separator-lines 0)
+        (org-refile-use-outline-path 3)
     )
    #+END_SRC
 *** generate TOC automaticaly
@@ -689,27 +689,27 @@
     (defvar my/org-tobook-template
   ;; "* BOOK %^{Name} [[google-maps:%\\2][@dress]] %^g
   ;; :GMap:   [[google-maps:%\\2][@dress]]
-  "* BOOK %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
+  "* BOOK %^{Name} [[https://www.google.com/search?hl=en&q=%\\2][@dress]] %^g
     :PROPERTIES:
     :Created:     %U
     :Name:   %\\1
     :Type:   %^{Type}p
     :Place:  %^{Place}
-    :With:   %^{With}
-    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :With:   %^{With|Sylvain|Claire}
+    :GMap:  [[https://www.google.com/search?hl=en&q=%\\2][@dress]]
     :END:
     %^{When}T
   ")
 
     (defvar my/org-togo-template
-  "* GO %^{Name} [[https://www.google.com/search?hl=en&q=\\2][@dress]] %^g
+  "* GO %^{Name} [[https://www.google.com/search?hl=en&q=%\\2][@dress]] %^g
     :PROPERTIES:
     :Created:     %U
     :Name:   %\\1
     :Type:   %^{Type}p
     :Place:  %^{Place}
-    :With:   %^{With}
-    :GMap:  [[https://www.google.com/search?hl=en&q=\\2][@dress]]
+    :With:   %^{With|Sylvain|Claire}
+    :GMap:  [[https://www.google.com/search?hl=en&q=%\\2][@dress]]
     :END:
     %^{When}T
   ")
@@ -1017,6 +1017,11 @@
     (use-package w3m
       :delight ""
       :after gnus)
+    (use-package all-the-icons-gnus
+    :after gnus all-the-icons
+    :config
+    (all-the-icons-gnus-setup))
+
    #+END_SRC
 
    # ** Contact =bbdb=
@@ -1102,6 +1107,11 @@
     (use-package dired
       :delight ""
       :ensure nil
+      :bind (:map dired-mode-map
+                ("RET" . dired-find-alternate-file)
+                ("^" . (lambda () (interactive) (find-alternate-file ".."))))
+      :config
+          (put 'dired-find-alternate-file 'disabled nil) ; disables warning
       :custom
       (dired-auto-revert-buffer t)
       (dired-dwim-target t)
@@ -1644,7 +1654,13 @@
     (ivy-count-format "(%d/%d) ")
     (ivy-use-virtual-buffers t)
     (ivy-extra-directories nil)
-    :config (ivy-mode))
+    :config
+    (custom-set-faces
+     '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
+     '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
+     '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
+     '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold))))
+    (ivy-mode))
 
   (use-package ivy-pass
     :after ivy
@@ -1659,9 +1675,17 @@
     :after ivy
     :bind (("C-s" . swiper)
            ("C-r" . swiper)))
+  (use-package all-the-icons-ivy
+    :after ivy
+    :config (all-the-icons-ivy-setup))
    #+END_SRC
 
 ** M-x enhancement =smex=
+   #+BEGIN_QUOTE
+   Smex is a M-x enhancement for Emacs. Built on top of Ido, it provides a
+   convenient interface to your recently and most frequently used commands. And
+   to all the other commands, too.
+   #+END_QUOTE
    #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smex)
    #+END_SRC
@@ -1811,10 +1835,10 @@
      :custom
         (ibuffer-saved-filter-groups
         '(("default"
-               ("dired" (mode . dired-mode))
                ("org"   (name . "^.*org$"))
                ("magit" (or (mode . magit-mode)
                             (name . "^magit.*$" )))
+               ("dired" (mode . dired-mode))
 
                ("IRC"   (or (mode . circe-channel-mode) (mode . circe-server-mode)))
                ("web"   (or (mode . web-mode) (mode . js2-mode)))
@@ -1921,7 +1945,6 @@
   "reload your .emacs file without restarting Emacs"
   (interactive)
   (load-file "~/.emacs.d/init.el"))
-
    #+END_SRC
 ** Project management
 *** COMMENT specific search =find-file-in-project=
