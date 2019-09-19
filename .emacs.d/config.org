@@ -628,23 +628,20 @@
                 (:name "Agenda" :and (:time-grid t :todo t))
                 (:name "Scheduled" :scheduled t)
                 (:name "Deadline" :deadline t)
+                (:name "Book ASAP"   :todo "BOOK")
                 (:name "Information" :and (:time-grid t :todo nil))
               ))))
              (alltodo ""
               ((org-super-agenda-groups
               '(
                 (:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
-                (:name "recurrent Work":and(:tag "work" :tag "recurrent"))
-                (:name "Next work"
-                 :and(:tag "work" :todo "TODO"))
+                (:name "recurrent Work":and(:tag "work" :tag  "recurrent"))
+                (:name "Next work"     :and(:tag "work" :todo "TODO"))
                 (:name "on pause Work" :todo "WAITING")
-                (:name "recurrent"      :tag "recurrent")
-                (:name "Current"        :todo "INPROGRESS")
-                (:name "Book ASAP"   :todo "BOOK")
-                (:name "Next "          :todo "TODO")
-                (:name "Daily"
-                 :and(:todo ("TOBUY" "FETCH")
-                     :tag  "daily"))
+                (:name "recurrent"     :tag "recurrent")
+                (:name "Current"       :todo "INPROGRESS")
+                (:name "Next "         :todo "TODO")
+                (:name "Daily"    :and(:todo "FETCH" :tag  "daily"))
                 (:name "FETCH ASAP"       :todo ("TOBUY" "FETCH"))
                 (:name "One day"        :todo "SOMEDAY")
                 (:name "on pause"       :todo "WAITING")
