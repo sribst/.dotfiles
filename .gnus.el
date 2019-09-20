@@ -178,6 +178,12 @@
              ("Pro"
               "Trabajo"
               "Universidad"
+              ("Move"
+               "nnimap+movesol:INBOX"
+               "nnimap+movesol:Brouillons"
+               "nnimap+movesol:Trash"
+               "nnimap+movesol:Send"
+               )
               )
              ("Other"
               "Miscelaneo"
@@ -216,9 +222,4 @@
               "nnimap+outlook:Corbeille"
               "nnimap+outlook:Deleted"
               )
-             ("Move"
-              "nnimap+movesol:INBOX"
-              "nnimap+movesol:Brouillons"
-              "nnimap+movesol:Trash"
-              "nnimap+movesol:Send"
-              )))))
+             ))))

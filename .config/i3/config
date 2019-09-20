@@ -264,7 +264,7 @@ bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # Lock screen
-bindsym $mod+twosuperior exec --no-startup-id "i3lock-fancy-rapid 0 0 -u -p win && gpg-connect-agent reloadagent /bye"
+bindsym $mod+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p default && gpg-connect-agent reloadagent /bye"
 
 #bepo
 # bindsym $mod+Menu exec --no-startup-id bepo_switch

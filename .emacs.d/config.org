@@ -3,17 +3,16 @@
 #+AUTHOR: Sylvain Ribstein
 
 * TOC :TOC:
-- [[#customisation][Customisation]]
+- [[#global-configuration][Global configuration]]
   - [[#packages][Packages]]
   - [[#authentification][Authentification]]
-  - [[#defaults-values][defaults values]]
+  - [[#start-up-of-emacs][Start-up of emacs]]
   - [[#customization-interface][Customization interface]]
-  - [[#backups][Backups]]
-  - [[#apparence][apparence]]
+  - [[#variable][variable]]
+- [[#apparence][apparence]]
 - [[#major-mode][Major mode]]
   - [[#pdf][PDF]]
   - [[#languages][Languages]]
-  - [[#todo-agenda-org-mode][Todo, agenda =org-mode=]]
   - [[#mail-gnus][Mail =gnus=]]
   - [[#git][Git]]
   - [[#file-explorer-dired][File Explorer =dired=]]
@@ -22,12 +21,9 @@
   - [[#shell-eshell][Shell =eshell=]]
   - [[#project-explorer-treemacs][project explorer =treemacs=]]
 - [[#minor-mode][Minor mode]]
-  - [[#auto-completion-company][Auto-Completion =company=]]
   - [[#internet-interface][Internet interface]]
-  - [[#dashboard][Dashboard]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#history-savehist][History =savehist=]]
-  - [[#improved-package-menu-paradox][improved package menu =paradox=]]
   - [[#text-formatting][Text formatting]]
   - [[#text-editing][Text editing]]
   - [[#keystroke-which-key][keystroke =which-key=]]
@@ -40,81 +36,111 @@
   - [[#word-wrap-simple][Word Wrap =simple=]]
   - [[#custom-fonction][custom fonction]]
   - [[#project-management][Project management]]
+- [[#kill-ring--clipboard][kill-ring && clipboard]]
+- [[#edition][Edition]]
+  - [[#parameter][parameter]]
+  - [[#auto-completion-company][Auto-Completion =company=]]
+- [[#buffer][buffer]]
+  - [[#parameter-1][parameter]]
+- [[#mode-line][mode-line]]
+  - [[#parameter-2][parameter]]
+  - [[#better-mode-line-smart-mode-line][better mode-line =smart-mode-line=]]
+  - [[#minor-mode-icons-delight][minor-mode icons =delight=]]
+- [[#mini-buffer][mini-buffer]]
+- [[#backups][Backups]]
+- [[#way-of-life-org-mode][way of life =org-mode=]]
 - [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
 
-* Customisation
+* Global configuration
 ** Packages
 ***  Sources
     In order to install packages, it is useful to configure the package sources.
     #+BEGIN_SRC emacs-lisp :tangle yes
-(setq package-archives
-  '(("melpa" . "http://melpa.org/packages/")
-     ("gnu" . "http://elpa.gnu.org/packages/") ;; is it still used ?
-     ("org" . "http://orgmode.org/elpa/")
-     ("marmalade" . "http://marmalade-repo.org/packages/")
-  ))
+    (setq package-archives
+        '(("melpa" . "http://melpa.org/packages/")
+           ("gnu" . "http://elpa.gnu.org/packages/") ;; is it still used ?
+           ("org" . "http://orgmode.org/elpa/")
+    ))
     #+END_SRC
 
 *** package manager =use-package=
     To be able to manage its configuration with =use-package= it is necessary to
     first install it, if you don't already.
 
-    #+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
+
   (use-package use-package-ensure-system-package
   :ensure t
   :custom
-  (use-package-always-ensure t)                      ; Avoid the :ensure keyword for each package
-  )
-    #+END_SRC
+  (use-package-always-ensure t)) ; Avoid the :ensure keyword for each package
+#+END_SRC
+
+*** improved package menu =paradox=
+
+   Improved GNU Emacs standard package menu.
+
+   #+BEGIN_QUOTE
+   Project for modernizing Emacs' Package Menu. With improved appearance, mode-line
+   information. Github integration, customizability, asynchronous upgrading, and
+   more.
+
+   [[https://github.com/Malabarba/paradox][Artur Malabarba]]
+   #+END_QUOTE
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package paradox
+    :defer t
+    :custom
+    (paradox-column-width-package 27)
+    (paradox-column-width-version 13)
+    (paradox-execute-asynchronously t)
+    (paradox-hide-wiki-packages t)
+    :config
+    (setq paradox-github-token
+       (cadr(auth-source-user-and-password
+            "api.github.com" "sribst^paradox")))
+    (paradox-enable)
+    (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
+   #+END_SRC
 
 ** Authentification
    In which file the authentification is save
-   #+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
   (setq auth-sources '( "~/.authinfo.gpg" ))
-   #+END_SRC
-
-** defaults values
-   For a better user experience of GNU Emacs, here are the default values I use.
-   #+BEGIN_SRC emacs-lisp :tangle yes
+#+END_SRC
+** Start-up of emacs
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq-default
-  ad-redefinition-action 'accept                   ; Silence warnings for redefinition
-  cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
-  display-time-default-load-average nil            ; Don't display load average
-  fill-column 80                                   ; Set width for automatic line breaks
-  help-window-select t                             ; Focus new help windows when opened
-  inhibit-startup-screen t                         ; Disable start-up screen
-  initial-scratch-message ""                       ; Empty the initial *scratch* buffer
-  kill-ring-max 128                                ; Maximum length of kill ring
-  load-prefer-newer t                              ; Prefers the newest version of a file
-  mark-ring-max 128                                ; Maximum length of mark ring
-  scroll-conservatively most-positive-fixnum       ; Always scroll by one line
-  select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
-  x-select-enable-clipboard t                      ; enable copy pas to classic clipboard
-  tab-width 4                                      ; Set width for tabs
-  user-full-name "Sylvain Ribstein"                ; Set the full name of the current user
-  user-mail-address "sylvain.ribstein@gmail.com"   ; Set the email address of the current user
-  vc-follow-symlinks t                             ; Always follow the symlinks
-  view-read-only t                                 ; Always open read-only buffers in view-mode
-  blink-cursor-mode nil                            ; the cursor wont blink
-  initial-major-mode 'text-mode
-  major-mode 'text-mode
-  indent-tabs-mode nil)                            ; use space instead of tab to indent
- (delete-selection-mode t)                        ; when writing into marked region delete it
- (transient-mark-mode t)                          ; same mark mouse or keyboard
- (cd "~/")                                        ; Move to the user directory
- (column-number-mode 1)                           ; Show the column number
- (display-time-mode 1)                            ; Enable time in the mode-line
- (fset 'yes-or-no-p 'y-or-n-p)                    ; Replace yes/no prompts with y/n
- (global-hl-line-mode)                            ; Hightlight current line
- (set-default-coding-systems 'utf-8)              ; Default to utf-8 encoding
- (show-paren-mode 1)                              ; Show the parenthesis
- (put 'upcase-region 'disabled nil)               ; Allow C-x C-u
- (put 'downcase-region 'disabled nil)             ; Allow C-x C-l
+  inhibit-startup-screen t ; Disable start-up screen
+  initial-scratch-message "" ; Empty the initial *scratch* buffer
+  initial-major-mode 'text-mode ; major mode of  *scratch* buffer
+  ad-redefinition-action 'accept ; Silence warnings for redefinition
+  display-time-default-load-average nil ; Don't display load average
+  fill-column 80 ; Set width for automatic line breaks
+  help-window-select t ; Focus new help windows when opened
+  load-prefer-newer t ; Prefers the newest version of a file
+  scroll-conservatively most-positive-fixnum ; Always scroll by one line
+)
+ (cd "~/") ; Move to the user directory
+ (set-default-coding-systems 'utf-8) ; Default to utf-8 encoding
    #+END_SRC
-
+*** Dashboard
+   Always good to have a dashboard.
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package dashboard
+    :preface
+       :hook ('after-make-frame-functions .
+              (lambda (frame)
+                 (when (eq (length (frame-list)) 2)
+                    (progn
+                    (select-frame frame)
+                    (dashboard-refresh-buffer)))))
+    :custom (dashboard-startup-banner 'logo)
+    :config (dashboard-setup-startup-hook))
+   #+END_SRC
 ** Customization interface
    To avoid overloading the GNU Emacs custormization =init.el= file made by the
    user with the UI, I add the generated code in a separate file.
@@ -123,20 +149,13 @@
   (when (file-exists-p custom-file)
     (load custom-file t))
    #+END_SRC
-** Backups
-   It is important to have a stable backup environment. Don't hesitate to save a
-   lot.
-   #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package files
-    :ensure nil ; don't need to ensure as it is default package
-    :custom
-    (backup-directory-alist `(("." . "~/.emacs.d/backup")))
-    (delete-old-versions -1)
-    (vc-make-backup-files t)
-    (version-control t))
-   #+END_SRC
+** variable
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq  user-full-name "Sylvain Ribstein" ); Set the full name of the current user
+(setq  user-mail-address "sylvain.ribstein@gmail.com") ; Set the email address of the current user
+#+END_SRC
 
-** apparence
+* apparence
 *** Theme
     # [[https://github.com/emacsfodder/emacs-soothe-theme][soothe]] est un theme assez doux
     xresources-theme est un theme assez doux
@@ -150,13 +169,6 @@
      (set-face-background 'hl-line (x-get-resource "color8" "")))
     ))
     #+END_SRC
-
-*** =delight=
-    delight is a way of showing wich major/minor is currently open
-    It's show which mode on the main bar
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package delight)
-    #+END_SRC
 *** Turn off mouse interface (scroll,...)
     Since I never use the mouse with GNU Emacs, I prefer not to use certain
     graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
@@ -167,7 +179,6 @@
     (tool-bar-mode -1)                              ; Disable the tool bar
     (tooltip-mode -1)                               ; Disable the tooltips
     #+END_SRC
-
 *** font
 **** unicode icons ==all-the-icons=
      #+BEGIN_SRC emacs-lisp :tangle yes
@@ -179,25 +190,8 @@
     had a statusbar on bottom right that show common info of all mode-line
     not on melpa only git so far
     #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package posframe)
-  ;;  (use-package statusbar
-  ;;   :ensure nil
-  ;;   ;; :requires (subr-x dash posframe)
-  ;;   :load-path "git"
-  ;;   :config
-  ;;   (statusbar-mode 1))
-    #+END_SRC
-*** mode-line =smart-mode-line=
-    #+BEGIN_SRC emacs-lisp :tangle yes
-                ;; (setq sml/theme 'dark)
-    (use-package smart-mode-line)
-    (use-package  smart-mode-line-powerline-theme
-    :after smart-mode-line
-    :custom
-     (powerline-arrow-shape 'curve)
-     (powerline-default-separator-dir '(right . left))
-     (sml/theme 'powerline)
-    :config (sml/setup))
+      (use-package posframe)
+      (use-package statusbar)
     #+END_SRC
 *** nyan-cat =nyan=
     #+BEGIN_SRC emacs-lisp :tangle yes
@@ -222,6 +216,9 @@
     ;; ("<C-tab>" . centaur-tabs-forward)
     ;; ("<C-S-tab>" . centaur-tabs-backward))
     #+END_SRC
+
+
+
 * Major mode
 ** PDF
    # #+BEGIN_QUOTE
@@ -533,480 +530,6 @@
     #  #+end_src
     #  *note:* by default, =ledger= uses the [[ https://xkcd.com/1179/][iso 8601]] format to write dates, which is the recommended
     #  format.
-** Todo, agenda =org-mode=
-
-   One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
-   take notes and make my presentations, but you can do lots of things with
-   it. =org-mode= it's like the sky, without limits.
-
-   #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org
-     :ensure org-plus-contrib
-     :delight ""
-     :bind
-      ("C-c l" . org-store-link)
-      ("C-c a" . org-agenda)
-      ("C-c c" . org-capture)
-     :config
-        (org-babel-do-load-languages
-           'org-babel-load-languages '((calc . t)))
-     :custom
-        (org-use-extra-keys t)
-        (org-catch-invisible-edits 'show-and-error)
-        (org-cycle-separator-lines 0)
-        (org-refile-use-outline-path 3)
-    )
-   #+END_SRC
-*** generate TOC automaticaly
-    If like me, you're tired of manually updating your tables of contents, =toc-org=
-    will maintain a table of contents at the first heading that has a =:TOC:= tag.
-    #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package toc-org
-     :after org
-     :hook (org-mode . toc-org-enable))
-    #+END_SRC
-*** cleaner indentation
-    For a cleaner online mode.
-    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org-indent :after org :ensure nil :delight)
-    #+END_SRC
-*** Agenda
-    Nowadays, it is crucial to be organized. Even more than before. That is why it
-    is important to take the time to make a configuration that is simple to use and
-    that makes your life easier with an irreproachable organization.
-    =org-agenda= allows me to be organized with daily tasks. As a result, I can use
-    my time to the fullest.
-    #+BEGIN_SRC emacs-lisp :tangle yes
-       (use-package org-agenda
-         :ensure nil
-         :after org
-         :custom
-         (org-directory "~/org")
-         (org-agenda-files '("~/org/"))
-         (org-agenda-dim-blocked-tasks t)
-         (org-agenda-inhibit-startup t)
-         (org-agenda-show-log t)
-         (org-agenda-span 2)
-         (org-agenda-sticky nil)
-         (org-agenda-tags-column -100)
-         (org-agenda-time-grid '((daily today require-timed)))
-         (org-agenda-use-tag-inheritance t)
-         (org-enforce-todo-dependencies t)
-         (org-habit-graph-column 80)
-         (org-habit-show-habits-only-for-today nil)
-         (org-track-ordered-property-with-tag t)
-         (org-agenda-todo-ignore-timestamp 'future)
-         (org-agenda-todo-ignore-scheduled 'future)
-         (org-agenda-todo-ignore-deadline  'far)
-         (org-agenda-skip-scheduled-if-done t)
-         (org-agenda-skip-deadline-if-done  t)
-         (org-agenda-skip-scheduled-if-deadline-is-shown t)
-         (org-agenda-skip-scheduled-if-done t)
-         (org-agenda-skip-deadline-if-done t)
-         (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-         (org-agenda-skip-timestamp-if-done t)
-         (org-agenda-skip-timestamp-if-deadline-is-shown t)
-   )
-
-    #+END_SRC
-**** Agenda view =org-super-agenda=
-     Org super agenda allows a more readible agenda by grouping the todo item
-     #+BEGIN_SRC emacs-lisp :tangle yes
-       (use-package org-super-agenda
-       :init
-       (org-super-agenda-mode)
-       :custom
-       (org-agenda-custom-commands
-        '(("b" "Experimental"
-            ;; (org-agenda-skip-function
-            ;;   '(org-agenda-skip-entry-if \\='timestamp))
-            ((agenda ""
-              (
-              (org-agenda-span '1)
-              (org-super-agenda-groups
-              '(
-                (:name "Agenda" :and (:time-grid t :todo t))
-                (:name "Scheduled" :scheduled t)
-                (:name "Deadline" :deadline t)
-                (:name "Book ASAP"   :todo "BOOK")
-                (:name "Information" :and (:time-grid t :todo nil))
-              ))))
-             (alltodo ""
-              ((org-super-agenda-groups
-              '(
-                (:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
-                (:name "recurrent Work":and(:tag "work" :tag  "recurrent"))
-                (:name "Next work"     :and(:tag "work" :todo "TODO"))
-                (:name "on pause Work" :todo "WAITING")
-                (:name "recurrent"     :tag "recurrent")
-                (:name "Current"       :todo "INPROGRESS")
-                (:name "Next "         :todo "TODO")
-                (:name "Daily"    :and(:todo "FETCH" :tag  "daily"))
-                (:name "FETCH ASAP"       :todo ("TOBUY" "FETCH"))
-                (:name "One day"        :todo "SOMEDAY")
-                (:name "on pause"       :todo "WAITING")
-                (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
-              ))))
-             ))))
-   )
-     #+END_SRC
-**** Agenda view "square view"  =calfw=
-
-     #+BEGIN_SRC emacs-lisp :tangle yes
-      (use-package calfw :after org-agenda)
-
-      (use-package calfw-org
-         :after calfw
-         :bind ("C-c z" . cfw:open-org-calendar)
-         :custom
-         (cfw:org-overwrite-default-keybinding t))
-     #+END_SRC
-
-*** Bullets
-    Prettier [[https://github.com/sabof/org-bullets][bullets]] in org-mode.
-    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org-bullets
-     :hook (org-mode . org-bullets-mode)
-     :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
-    #+END_SRC
-
-*** Capture
-    =org-capture= templates saves you a lot of time when adding new entries. I use
-    it to quickly record tasks, ledger entries, notes and other semi-structured
-    information.
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package org-capture
-      :ensure nil
-      :after org
-      :preface
-    (defun my/org-timestamp-add-reminder (date day)
-      "add a reminder to a timestamp like : <2019-11-14 -5d>"
-      (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
-    (defvar my/org-tobook-template
-  ;; "* BOOK %^{Name} [[google-maps:%\\2][@dress]] %^g
-  ;; :GMap:   [[google-maps:%\\2][@dress]]
-  "* BOOK %^{Name} [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]] %^g
-    :PROPERTIES:
-    :Created:     %U
-    :Name:   %\\1
-    :Type:   %^{Type}p
-    :Place:  %^{Place}
-    :With:   %^{With|Sylvain|Claire}
-    :GMap:  [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]]
-    :END:
-    %^{When}T
-  ")
-
-    (defvar my/org-togo-template
-  "* GO %^{Name} [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]] %^g
-    :PROPERTIES:
-    :Created:     %U
-    :Name:   %\\1
-    :Type:   %^{Type}p
-    :Place:  %^{Place}
-    :With:   %^{With|Sylvain|Claire}
-    :GMap:  [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]]
-    :END:
-    %^{When}T
-  ")
-
-
-    (defvar my/org-trip-template
-  "* GO %\\1 -%\\3-> %\\2
-    :PROPERTIES:
-    :Created: %U
-    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-    :To:    %^{To|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-    :Type:    %^{Type}p
-    :With:    %^{With}
-    :END:
-    %^{When}T
-  ")
-
-    (defvar my/org-roundtrip-template
-  "* GO %\\1 -%\\3-> %\\2
-    :PROPERTIES:
-    :Created: %U
-    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-    :To:    %^{to|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
-    :Type:    %^{Type}p
-    :With:    %^{With}
-    :END:
-    %^{When}T\n* GO %\\2 -> %\\1
-    :PROPERTIES:
-    :Created: %U
-    :From:      %\\2
-    :To:       %\\1
-    :Type:    %^{Type}p
-    :With:    %^{With}
-    :END:
-    %^{When}T
-  ")
-
-    (defvar my/org-voucher-template
-  "* USE %^{Valor}
-     DEADLINE:%^{Before}t
-    :PROPERTIES:
-    :Reduction:     %^{Reduction}
-    :At:     %^{At|oui.sncf|ouibus|ouigo...}
-    :END:
-    %^{Cuando}t
-  ")
-
-    (defvar my/org-todo-template
-  "* TODO %^{What} %^g
-    :PROPERTIES:
-    :Created:     %U
-    :END:
-  ")
-
-    (defvar my/org-someday-template
-  "* SOMEDAY %^{What} %^g
-    :PROPERTIES:
-    :Created:     %U
-    :END:
-  ")
-
-  (defvar my/org-work-move-template
-  "* TODO %^{What} %^g
-    :PROPERTIES:
-    :Created:     %U
-    :mission:     %^{mission}p
-    :CATEGORY:    %\\2
-    :END:
-  ")
-
-    (defvar my/org-stuff-buy-template
-  "* FETCH %^{What}
-    :PROPERTIES:
-    :Created:     %U
-    :END:
-  ")
-
-    (defvar my/org-stuff-gift-template
-  "* IDEA %^{What}
-    :PROPERTIES:
-    :Created:     %U
-    :For: %^{For}
-    :When: %^{When}t
-    :END:
-  ")
-
-    (defvar my/org-stuff-flat-template
-  "* BUY %^{What}
-    :PROPERTIES:
-    :Created:     %U
-    :Room: %^{Room}p
-    :CATEGORY: %\\2
-    :END:
-  ")
-
-    :custom
-    (org-capture-templates
-     `(("e" "Event")
-        ("es" "Show")
-          ("esb" "To book" entry (file+headline "~/org/master.org" "Show"),
-            my/org-tobook-template)
-          ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
-            my/org-togo-template)
-        ("eb" "To book" entry (file+headline "~/org/master.org" "Agenda"),
-          my/org-tobook-template)
-        ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
-          my/org-togo-template)
-        ("et" "Trip")
-        ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
-          my/org-trip-template)
-        ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
-          my/org-roundtrip-template)
-       ("t" "TO-DO")
-        ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
-          my/org-todo-template)
-        ("to" "oneday" entry (file+headline "~/org/master.org" "TO-DO"),
-          my/org-someday-template)
-        ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
-          my/org-work-move-template)
-       ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
-          my/org-voucher-template)
-       ("s" "stuff")
-        ("sb" "buy" entry (file+headline "~/org/master.org" "objet"),
-          my/org-stuff-buy-template)
-        ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
-          my/org-stuff-gift-template)
-        ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
-          my/org-stuff-flat-template)
-
-  )))
-    #+END_SRC
-
-*** COMMENT Clock
-
-    # # Being organized is one thing, but being optimal is another. =org-clock= allows
-    # # you to estimate your tasks and time them. This is useful, since with experience,
-    # # you can have a better estimate of the time that needs to be given to each task.
-
-    # # #+BEGIN_SRC emacs-lisp :tangle yes
-    # #   (use-package org-clock
-    # #     :ensure nil
-    # #     :after org
-    # #     :preface
-    # #     (defun my/org-mode-ask-effort ()
-    # #       "Ask for an effort estimate when clocking in."
-    # #       (unless (org-entry-get (point) "Effort")
-    # #         (let ((effort
-    # #                (completing-read
-    # #                 "Effort: "
-    # #                 (org-entry-get-multivalued-property (point) "Effort"))))
-    # #           (unless (equal effort "")
-    # #             (org-set-property "Effort" effort)))))
-    # #     :hook (org-clock-in-prepare-hook . my/org-mode-ask-effort)
-    # #     :custom
-    # #     (org-clock-clocktable-default-properties
-    # #      '(:block day :maxlevel 2 :scope agenda :link t :compact t :formula %
-    # #               :step day :fileskip0 t :stepskip0 t :narrow 80
-    # #               :properties ("Effort" "CLOCKSUM" "CLOCKSUM_T" "TODO")))
-    # #     (org-clock-continuously nil)
-    # #     (org-clock-in-switch-to-state "STARTED")
-    # #     (org-clock-out-remove-zero-time-clocks t)
-    # #     (org-clock-persist t)
-    # #     (org-clock-persist-file (expand-file-name (format "%s/emacs/org-clock-save.el" xdg-cache)))
-    # #     (org-clock-persist-query-resume nil)
-    # #     (org-clock-report-include-clocking-task t)
-    # #     (org-show-notification-handler (lambda (msg) (alert msg))))
-    # # #+END_SRC
-
-*** Contacts
-    The best solution to maintain your contacts. I tend to use =org-contacts= to
-    remember their birthdays so I can be the first to wish them that. Be careful
-    that to install it, this one is available with =org-plus-contrib=.
-    #+BEGIN_SRC emacs-lisp :tangle yes
-   ;; (use-package org-contacts
-   ;;   :ensure nil
-   ;;   :after org
-   ;;   :custom (org-contacts-files '("~/org/contacts.org")))
-    #+END_SRC
-
-*** Customization
-    Let's change the foreground and the weight of each keywords.
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package org-faces
-     :ensure nil
-     :after org
-     :custom
-     (org-todo-keyword-faces
-      '(
-          ("BOOK"  . (:foreground "red" :weight bold))
-          ("GO"       . (:foreground "orange" :weight bold))
-
-          ("WENT"       . (:foreground "green" :weight bold))
-          ("CANCELED"   . (:foreground "grey"))
-
-
-          ("SOMEDAY"    . (:foreground "blue"))
-          ("TODO"       . (:foreground "red" :weight bold))
-          ("INPROGRESS" . (:foreground "orange" :weight bold))
-          ("WAITING"    . (:foreground "yellow" :weight bold))
-
-          ("DONE"       . (:foreground "green"))
-          ("ABORDED"    . (:foreground "grey" ))
-
-
-          ("IDEA"       . (:foreground "blue" :weight bold))
-          ("FETCH"      . (:foreground "red" :weight bold))
-          ("GIVE"     . (:foreground "orange" :weight bold))
-
-          ("FETCHED"     . (:foreground "green" :weight bold))
-          ("GIVEN"      . (:foreground "green" :weight bold))
-
-          ("USE"      . (:foreground "red" :weight bold))
-          ("CONSUMED" . (:foreground "green" :weight bold))
-          ("LOST" . (:foreground "grey"))
-        )))
-    #+END_SRC
-
-*** syncronize
-**** calendar =org-caldav=
-     #+BEGIN_SRC emacs-lisp :tangle yes
-          (use-package org-caldav
-            :init
-            (defvar org-caldav-sync-timer nil
-                    "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-            (defun org-caldav-sync-with-delay (secs)
-              (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-              (setq org-caldav-sync-timer
-                    (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-            (setq org-caldav-url
-                  "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-            (setq org-caldav-calendar-id "main")
-            (setq org-caldav-inbox "~/org/sync2.org")
-            (setq org-caldav-files '("~/org/master.org"))
-            :config
-            (setq org-icalendar-alarm-time 1)
-            (setq org-caldav-show-sync-results nil)
-            (setq org-icalendar-include-todo t)
-            (setq org-icalendar-use-deadline
-                  '(event-if-todo event-if-not-todo todo-due))
-            (setq org-icalendar-use-scheduled
-                  '(todo-start event-if-todo event-if-not-todo))
-            :hook (
-            (kill-emacs . org-caldav-sync)
-                   (after-save .
-                       (lambda ()
-                       (when (eq major-mode
-                           'org-mode) (org-caldav-sync-with-delay 30))))) )
-     #+END_SRC
-
-     #+RESULTS:
-     | (lambda nil (when (eq major-mode (quote org-mode)) (org-caldav-sync-with-delay 30))) | rmail-after-save-hook |
-
-*** Journal
-
-    Recently, I started writing a journal about my daily life as I read that
-    journals improve mental claritym, help solve problems, improve overall focus,
-    insight and understanding, track the overall development and facilitate personal
-    growth.
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package org-journal
-  ;;   :after org
-  ;;   ;; :bind (:map (org-journal-map))
-  ;;   :bind (("C-c C-f" . org-journal-open-next-entry)
-  ;;          ("C-c C-b" . org-journal-open-previous-entry)
-  ;;          ("C-c C-j" . org-journal-new-entry)
-  ;;          ("C-c C-s" . org-journal-search)
-  ;;          ("C-c t" . org-journal-new-entry))
-  ;;   :custom
-  ;;   (org-journal-dir "~/org/journal/")
-  ;;   (org-journal-file-format "%Y%m%d")
-  ;;   (org-journal-enable-agenda-integration t))
-    #+END_SRC
-
-*** Languages
-
-    With that, I can compile many languages with =org-mode=.
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package ob-C          :ensure nil :after org)
-   (use-package ob-dot        :ensure nil :after org)
-   (use-package ob-emacs-lisp :ensure nil :after org)
-   (use-package ob-java       :ensure nil :after org)
-   (use-package ob-js         :ensure nil :after org)
-   (use-package ob-latex      :ensure nil :after org)
-   (use-package ob-ledger     :ensure nil :after org)
-   (use-package ob-makefile   :ensure nil :after org)
-   (use-package ob-org        :ensure nil :after org)
-   (use-package ob-shell      :ensure nil :after org)
-   (use-package ob-sql        :ensure nil :after org)
-    #+END_SRC
-
-*** Other improvement
-    #+BEGIN_SRC emacs-lisp :tangle yes
- (defun org-convert-csv-table (beg end)
- (interactive (list (mark) (point)))
- (org-table-convert-region beg end ";"))
-    #+END_SRC
-
 ** Mail =gnus=
    #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package gnus
@@ -1250,31 +773,6 @@
   :ensure t)
    #+END_SRC
 * Minor mode
-** Auto-Completion =company=
-
-   =company= provides auto-completion at point and to Displays a small pop-in
-   containing the candidates.
-
-   #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package company
-    :delight
-    :custom
-     (company-begin-commands '(self-insert-command))
-     (company-idle-delay 0.2)
-     (company-minimum-prefix-length 2)
-     (company-show-numbers t)
-     (company-tooltip-align-annotations t)
-     (global-company-mode t))
-   #+END_SRC
-
-   # I use =company= with =company-box= that allows a company front-end with icons.
-
-   #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package company-box
-    :delight
-    :hook (company-mode . company-box-mode))
-   #+END_SRC
-
 ** Internet interface
    #+BEGIN_SRC emacs-lisp :tangle yes
   (setq browse-url-browser-function 'browse-url-firefox)
@@ -1315,21 +813,6 @@
       "https://duckduckgo.com/?q=%s"
       :keybinding "d"))
     #+END_SRC
-
-** TODO Dashboard
-   Always good to have a dashboard.
-   #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dashboard
-    :preface
-       :hook ('after-make-frame-functions .
-              (lambda (frame)
-                 (when (eq (length (frame-list)) 2)
-                    (progn
-                    (select-frame frame)
-                    (dashboard-refresh-buffer)))))
-    :custom (dashboard-startup-banner 'logo)
-    :config (dashboard-setup-startup-hook))
-   #+END_SRC
 ** TODO reset config when config.org changes
 
    not-sur to understand how it works
@@ -1419,31 +902,6 @@
     (savehist-file  "~/.emacs.d/history" )
     (savehist-save-minibuffer-history 1)
     :config (savehist-mode))
-   #+END_SRC
-
-** improved package menu =paradox=
-
-   Improved GNU Emacs standard package menu.
-
-   #+BEGIN_QUOTE
-   Project for modernizing Emacs' Package Menu. With improved appearance, mode-line
-   information. Github integration, customizability, asynchronous upgrading, and
-   more.
-
-   [[https://github.com/Malabarba/paradox][Artur Malabarba]]
-   #+END_QUOTE
-
-   #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package paradox
-    :defer 1
-    :custom
-    (paradox-column-width-package 27)
-    (paradox-column-width-version 13)
-    (paradox-execute-asynchronously t)
-    (paradox-hide-wiki-packages t)
-    :config
-    (paradox-enable)
-    (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
    #+END_SRC
 
 ** Text formatting
@@ -1656,6 +1114,7 @@
     (ivy-count-format "(%d/%d) ")
     (ivy-use-virtual-buffers t)
     (ivy-extra-directories nil)
+    (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
     :config
     (custom-set-faces
      '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
@@ -1916,9 +1375,7 @@
     #+END_SRC
 
 ** Word Wrap =simple=
-
    I like to have lines of the same length.
-
    #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package simple
     :ensure nil
@@ -1959,6 +1416,558 @@
   :config (projectile-mode)
   :bind (:map projectile-mode-map ("C-c p" . projectile-command-map)))
     #+END_SRC
+* kill-ring && clipboard
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq kill-ring-max 128 ) ; Maximum length of kill ring
+(setq mark-ring-max 128 ) ; Maximum length of mark ring
+(setq select-enable-clipboard t) ; Merge system's and Emacs' clipboard
+#+END_SRC
+* Edition
+** parameter
+basic default value to enable
+#+BEGIN_SRC emacs-lisp :tangle yes
+(put 'upcase-region 'disabled nil) ; Allow C-x C-u
+(put 'downcase-region 'disabled nil) ; Allow C-x C-l
+(show-paren-mode 1) ; Show the parenthesis
+(global-hl-line-mode) ; Hightlight current line
+(transient-mark-mode t) ; same mark mouse or keyboard
+(setq blink-cursor-mode nil) ; the cursor wont blink
+(setq indent-tabs-mode nil) ; use space instead of tab to indent
+(delete-selection-mode t) ; when writing into marked region delete it
+(setq tab-width 4) ; Set width for tabs
+#+END_SRC
+
+** Auto-Completion =company=
+
+   =company= provides auto-completion at point and to Displays a small pop-in
+   containing the candidates.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package company
+    :delight
+    :custom
+     (company-begin-commands '(self-insert-command))
+     (company-idle-delay 0.2)
+     (company-minimum-prefix-length 2)
+     (company-show-numbers t)
+     (company-tooltip-align-annotations t)
+     (global-company-mode t))
+   #+END_SRC
+
+   # I use =company= with =company-box= that allows a company front-end with icons.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package company-box
+    :delight
+    :hook (company-mode . company-box-mode))
+   #+END_SRC
+
+* buffer
+** parameter
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (setq view-read-only t ) ; Always open read-only buffers in view-mode
+   (setq cursor-in-non-selected-windows t) ; Hide the cursor in inactive windows
+#+END_SRC
+
+
+* mode-line
+** parameter
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(display-battery-mode 1) ; Enable battery in the mode-line
+(display-time-mode 1)    ; Enable time in the mode-line
+(column-number-mode 1) ; Show the column number
+#+END_SRC
+** better mode-line =smart-mode-line=
+    #+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package smart-mode-line)
+    (use-package  smart-mode-line-powerline-theme
+    :after smart-mode-line
+    :custom
+     (powerline-arrow-shape 'curve)
+     (powerline-default-separator-dir '(right . left))
+     (sml/theme 'powerline)
+    :config (sml/setup))
+    #+END_SRC
+
+** minor-mode icons =delight=
+    delight is a way of showing wich major/minor is currently open
+    It's show which mode on the main bar
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package delight)
+    #+END_SRC
+* mini-buffer
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (fset 'yes-or-no-p 'y-or-n-p) ; Replace yes/no prompts with y/n
+#+END_SRC
+
+* Backups
+   It is important to have a stable backup environment. Don't hesitate to save a
+   lot.
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package files
+    :ensure nil ; don't need to ensure as it is default package
+    :custom
+    (backup-directory-alist `(("." . "~/.emacs.d/backup")))
+    (delete-old-versions -1)
+    (vc-make-backup-files t)
+    (version-control t))
+   #+END_SRC
+* way of life =org-mode=
+   One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
+   take notes and make my presentations, but you can do lots of things with
+   it. =org-mode= it's like the sky, without limits.
+   #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package org
+     :ensure org-plus-contrib
+     :delight ""
+     :bind
+      ("C-c l" . org-store-link)
+      ("C-c a" . org-agenda)
+      ("C-c c" . org-capture)
+     :config
+        (org-babel-do-load-languages
+           'org-babel-load-languages '((calc . t)))
+     :custom
+        (org-use-extra-keys t)
+        (org-catch-invisible-edits 'show-and-error)
+        (org-cycle-separator-lines 0)
+        (org-refile-use-outline-path 3)
+    )
+   #+END_SRC
+*** Table of content =toc-org=
+    If like me, you're tired of manually updating your tables of contents,
+    =toc-org= will maintain a table of contents at the first heading that has a
+    =:TOC:= tag.
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (use-package toc-org
+     :after org
+     :hook (org-mode . toc-org-enable))
+#+END_SRC
+*** Apparence
+**** indentation
+    For a cleaner inline mode.
+    #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package org-indent :after org :ensure nil :delight)
+    #+END_SRC
+**** Bullets =org-bullets=
+    Prettier [[https://github.com/sabof/org-bullets][bullets]] in org-mode.
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package org-bullets
+     :hook (org-mode . org-bullets-mode)
+     :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
+#+END_SRC
+
+**** face
+    Let's change the foreground and the weight of each keywords.
+
+    #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package org-faces
+     :ensure nil
+     :after org
+     :custom
+     (org-todo-keyword-faces
+      '(
+          ("BOOK"  . (:foreground "red" :weight bold))
+          ("GO"       . (:foreground "orange" :weight bold))
+
+          ("WENT"       . (:foreground "green" :weight bold))
+          ("CANCELED"   . (:foreground "grey"))
+
+
+          ("SOMEDAY"    . (:foreground "blue"))
+          ("TODO"       . (:foreground "red" :weight bold))
+          ("INPROGRESS" . (:foreground "orange" :weight bold))
+          ("WAITING"    . (:foreground "yellow" :weight bold))
+
+          ("DONE"       . (:foreground "green"))
+          ("ABORDED"    . (:foreground "grey" ))
+
+
+          ("IDEA"       . (:foreground "blue" :weight bold))
+          ("FETCH"      . (:foreground "red" :weight bold))
+          ("GIVE"     . (:foreground "orange" :weight bold))
+
+          ("FETCHED"     . (:foreground "green" :weight bold))
+          ("GIVEN"      . (:foreground "green" :weight bold))
+
+          ("USE"      . (:foreground "red" :weight bold))
+          ("CONSUMED" . (:foreground "green" :weight bold))
+          ("LOST" . (:foreground "grey"))
+        )))
+    #+END_SRC
+
+*** Agenda
+    Nowadays, it is crucial to be organized. Even more than before. That is why it
+    is important to take the time to make a configuration that is simple to use and
+    that makes your life easier with an irreproachable organization.
+    =org-agenda= allows me to be organized with daily tasks. As a result, I can use
+    my time to the fullest.
+    #+BEGIN_SRC emacs-lisp :tangle yes
+       (use-package org-agenda
+         :ensure nil
+         :after org
+         :custom
+         (org-directory "~/org")
+         (org-agenda-files '("~/org/"))
+         (org-agenda-dim-blocked-tasks t)
+         (org-agenda-inhibit-startup t)
+         (org-agenda-show-log t)
+         (org-agenda-span 2)
+         (org-agenda-sticky nil)
+         (org-agenda-tags-column -100)
+         (org-agenda-time-grid '((daily today require-timed)))
+         (org-agenda-use-tag-inheritance t)
+         (org-enforce-todo-dependencies t)
+         (org-habit-graph-column 80)
+         (org-habit-show-habits-only-for-today nil)
+         (org-track-ordered-property-with-tag t)
+         (org-agenda-todo-ignore-timestamp 'future)
+         (org-agenda-todo-ignore-scheduled 'future)
+         (org-agenda-todo-ignore-deadline  'far)
+         (org-agenda-skip-scheduled-if-done t)
+         (org-agenda-skip-deadline-if-done  t)
+         (org-agenda-skip-scheduled-if-deadline-is-shown t)
+         (org-agenda-skip-scheduled-if-done t)
+         (org-agenda-skip-deadline-if-done t)
+         (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+         (org-agenda-skip-timestamp-if-done t)
+         (org-agenda-skip-timestamp-if-deadline-is-shown t)
+   )
+
+    #+END_SRC
+**** Agenda view =org-super-agenda=
+     Org super agenda allows a more readible agenda by grouping the todo item
+     #+BEGIN_SRC emacs-lisp :tangle yes
+       (use-package org-super-agenda
+       :init
+       (org-super-agenda-mode)
+       :custom
+       (org-agenda-custom-commands
+        '(("b" "Experimental"
+            ;; (org-agenda-skip-function
+            ;;   '(org-agenda-skip-entry-if \\='timestamp))
+            ((agenda ""
+              (
+              (org-agenda-span '1)
+              (org-super-agenda-groups
+              '(
+                (:name "Agenda" :and (:time-grid t :todo t))
+                (:name "Scheduled" :scheduled t)
+                (:name "Deadline" :deadline t)
+                (:name "Book ASAP"   :todo "BOOK")
+                (:name "Information" :and (:time-grid t :todo nil))
+              ))))
+             (alltodo ""
+              ((org-super-agenda-groups
+              '(
+                (:name "Current Work"  :and(:tag "work" :todo "INPROGRESS"))
+                (:name "recurrent Work":and(:tag "work" :tag  "recurrent"))
+                (:name "Next work"     :and(:tag "work" :todo "TODO"))
+                (:name "on pause Work" :todo "WAITING")
+                (:name "recurrent"     :tag "recurrent")
+                (:name "Current"       :todo "INPROGRESS")
+                (:name "Next "         :todo "TODO")
+                (:name "Daily"    :and(:todo "FETCH" :tag  "daily"))
+                (:name "FETCH ASAP"       :todo ("TOBUY" "FETCH"))
+                (:name "One day"        :todo "SOMEDAY")
+                (:name "on pause"       :todo "WAITING")
+                (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
+              ))))
+             ))))
+   )
+     #+END_SRC
+**** Agenda view "square view"  =calfw=
+
+     #+BEGIN_SRC emacs-lisp :tangle yes
+      (use-package calfw :after org-agenda)
+
+      (use-package calfw-org
+         :after calfw
+         :bind ("C-c z" . cfw:open-org-calendar)
+         :custom
+         (cfw:org-overwrite-default-keybinding t))
+     #+END_SRC
+
+*** Capture
+    =org-capture= templates saves you a lot of time when adding new entries. I use
+    it to quickly record tasks, ledger entries, notes and other semi-structured
+    information.
+
+    #+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package org-capture
+      :ensure nil
+      :after org
+      :preface
+    (defun my/org-timestamp-add-reminder (date day)
+      "add a reminder to a timestamp like : <2019-11-14 -5d>"
+      (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
+    (defvar my/org-tobook-template
+  ;; "* BOOK %^{Name} [[google-maps:%\\2][@dress]] %^g
+  ;; :GMap:   [[google-maps:%\\2][@dress]]
+  "* BOOK %^{Name} [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]] %^g
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With|Sylvain|Claire}
+    :GMap:  [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
+
+    (defvar my/org-togo-template
+  "* GO %^{Name} [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]] %^g
+    :PROPERTIES:
+    :Created:     %U
+    :Name:   %\\1
+    :Type:   %^{Type}p
+    :Place:  %^{Place}
+    :With:   %^{With|Sylvain|Claire}
+    :GMap:  [[https://www.google.com/maps/search?hl=en&q=%\\2][@dress]]
+    :END:
+    %^{When}T
+  ")
+
+
+    (defvar my/org-trip-template
+  "* GO %\\1 -%\\3-> %\\2
+    :PROPERTIES:
+    :Created: %U
+    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :To:    %^{To|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T
+  ")
+
+    (defvar my/org-roundtrip-template
+  "* GO %\\1 -%\\3-> %\\2
+    :PROPERTIES:
+    :Created: %U
+    :From:    %^{From|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :To:    %^{to|Lyon Part-dieu|Lyon Perrache|Lyon Georges|Paris GdL|Montpellier St-Roch}
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T\n* GO %\\2 -> %\\1
+    :PROPERTIES:
+    :Created: %U
+    :From:      %\\2
+    :To:       %\\1
+    :Type:    %^{Type}p
+    :With:    %^{With}
+    :END:
+    %^{When}T
+  ")
+
+    (defvar my/org-voucher-template
+  "* USE %^{Valor}
+     DEADLINE:%^{Before}t
+    :PROPERTIES:
+    :Reduction:     %^{Reduction}
+    :At:     %^{At|oui.sncf|ouibus|ouigo...}
+    :END:
+    %^{Cuando}t
+  ")
+
+    (defvar my/org-todo-template
+  "* TODO %^{What} %^g
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
+
+    (defvar my/org-someday-template
+  "* SOMEDAY %^{What} %^g
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
+
+  (defvar my/org-work-move-template
+  "* TODO %^{What} %^g
+    :PROPERTIES:
+    :Created:     %U
+    :mission:     %^{mission}p
+    :CATEGORY:    %\\2
+    :END:
+  ")
+
+    (defvar my/org-stuff-buy-template
+  "* FETCH %^{What}
+    :PROPERTIES:
+    :Created:     %U
+    :END:
+  ")
+
+    (defvar my/org-stuff-gift-template
+  "* IDEA %^{What}
+    :PROPERTIES:
+    :Created:     %U
+    :For: %^{For}
+    :When: %^{When}t
+    :END:
+  ")
+
+    (defvar my/org-stuff-flat-template
+  "* BUY %^{What}
+    :PROPERTIES:
+    :Created:     %U
+    :Room: %^{Room}p
+    :CATEGORY: %\\2
+    :END:
+  ")
+
+    :custom
+    (org-capture-templates
+     `(("e" "Event")
+        ("es" "Show")
+          ("esb" "To book" entry (file+headline "~/org/master.org" "Show"),
+            my/org-tobook-template)
+          ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
+            my/org-togo-template)
+        ("eb" "To book" entry (file+headline "~/org/master.org" "Agenda"),
+          my/org-tobook-template)
+        ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
+          my/org-togo-template)
+        ("et" "Trip")
+        ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+          my/org-trip-template)
+        ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+          my/org-roundtrip-template)
+       ("t" "TO-DO")
+        ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
+          my/org-todo-template)
+        ("to" "oneday" entry (file+headline "~/org/master.org" "TO-DO"),
+          my/org-someday-template)
+        ("tw" "work" entry (file+headline "~/org/master.org" "Work"),
+          my/org-work-move-template)
+       ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
+          my/org-voucher-template)
+       ("s" "stuff")
+        ("sb" "buy" entry (file+headline "~/org/master.org" "objet"),
+          my/org-stuff-buy-template)
+        ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
+          my/org-stuff-gift-template)
+        ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
+          my/org-stuff-flat-template)
+
+  )))
+    #+END_SRC
+
+*** COMMENT Clock
+
+    # # Being organized is one thing, but being optimal is another. =org-clock= allows
+    # # you to estimate your tasks and time them. This is useful, since with experience,
+    # # you can have a better estimate of the time that needs to be given to each task.
+
+    # # #+BEGIN_SRC emacs-lisp :tangle yes
+    # #   (use-package org-clock
+    # #     :ensure nil
+    # #     :after org
+    # #     :preface
+    # #     (defun my/org-mode-ask-effort ()
+    # #       "Ask for an effort estimate when clocking in."
+    # #       (unless (org-entry-get (point) "Effort")
+    # #         (let ((effort
+    # #                (completing-read
+    # #                 "Effort: "
+    # #                 (org-entry-get-multivalued-property (point) "Effort"))))
+    # #           (unless (equal effort "")
+    # #             (org-set-property "Effort" effort)))))
+    # #     :hook (org-clock-in-prepare-hook . my/org-mode-ask-effort)
+    # #     :custom
+    # #     (org-clock-clocktable-default-properties
+    # #      '(:block day :maxlevel 2 :scope agenda :link t :compact t :formula %
+    # #               :step day :fileskip0 t :stepskip0 t :narrow 80
+    # #               :properties ("Effort" "CLOCKSUM" "CLOCKSUM_T" "TODO")))
+    # #     (org-clock-continuously nil)
+    # #     (org-clock-in-switch-to-state "STARTED")
+    # #     (org-clock-out-remove-zero-time-clocks t)
+    # #     (org-clock-persist t)
+    # #     (org-clock-persist-file (expand-file-name (format "%s/emacs/org-clock-save.el" xdg-cache)))
+    # #     (org-clock-persist-query-resume nil)
+    # #     (org-clock-report-include-clocking-task t)
+    # #     (org-show-notification-handler (lambda (msg) (alert msg))))
+    # # #+END_SRC
+
+*** syncronize calendar =org-caldav=
+     #+BEGIN_SRC emacs-lisp :tangle yes
+       ;; (use-package org-caldav
+       ;;   :init
+       ;;   (defvar org-caldav-sync-timer nil
+       ;;           "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+       ;;   (defun org-caldav-sync-with-delay (secs)
+       ;;     (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+       ;;     (setq org-caldav-sync-timer
+       ;;           (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+       ;;   (setq org-caldav-url
+       ;;         "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+       ;;   (setq org-caldav-calendar-id "main")
+       ;;   (setq org-caldav-inbox "~/org/sync2.org")
+       ;;   (setq org-caldav-files '("~/org/master.org"))
+       ;;   :config
+       ;;   (setq org-icalendar-alarm-time 1)
+       ;;   (setq org-caldav-show-sync-results nil)
+       ;;   (setq org-icalendar-include-todo t)
+       ;;   (setq org-icalendar-use-deadline
+       ;;         '(event-if-todo event-if-not-todo todo-due))
+       ;;   (setq org-icalendar-use-scheduled
+       ;;         '(todo-start event-if-todo event-if-not-todo))
+       ;;   :hook (
+       ;;   (kill-emacs . org-caldav-sync)
+       ;;          (after-save .
+       ;;              (lambda ()
+       ;;              (when (eq major-mode
+       ;;                  'org-mode) (org-caldav-sync-with-delay 30))))) )
+     #+END_SRC
+*** Journal
+
+    Recently, I started writing a journal about my daily life as I read that
+    journals improve mental claritym, help solve problems, improve overall
+    focus, insight and understanding, track the overall development and
+    facilitate personal growth.
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package org-journal
+  ;;   :after org
+  ;;   ;; :bind (:map (org-journal-map))
+  ;;   :bind (("C-c C-f" . org-journal-open-next-entry)
+  ;;          ("C-c C-b" . org-journal-open-previous-entry)
+  ;;          ("C-c C-j" . org-journal-new-entry)
+  ;;          ("C-c C-s" . org-journal-search)
+  ;;          ("C-c t" . org-journal-new-entry))
+  ;;   :custom
+  ;;   (org-journal-dir "~/org/journal/")
+  ;;   (org-journal-file-format "%Y%m%d")
+  ;;   (org-journal-enable-agenda-integration t))
+    #+END_SRC
+
+*** Languages
+
+    With that, I can compile many languages with =org-mode=.
+    #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package ob-C          :ensure nil :after org)
+   (use-package ob-dot        :ensure nil :after org)
+   (use-package ob-emacs-lisp :ensure nil :after org)
+   (use-package ob-java       :ensure nil :after org)
+   (use-package ob-js         :ensure nil :after org)
+   (use-package ob-latex      :ensure nil :after org)
+   (use-package ob-ledger     :ensure nil :after org)
+   (use-package ob-makefile   :ensure nil :after org)
+   (use-package ob-org        :ensure nil :after org)
+   (use-package ob-shell      :ensure nil :after org)
+   (use-package ob-sql        :ensure nil :after org)
+    #+END_SRC
+
+*** improvement
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (defun org-convert-csv-table (beg end)
+   (interactive (list (mark) (point)))
+ (org-table-convert-region beg end ";"))
+#+END_SRC
 * TODO copy emacs config of http://ix.io/1Uvz
 
 
