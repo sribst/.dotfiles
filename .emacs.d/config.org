@@ -24,8 +24,6 @@
   - [[#internet-interface][Internet interface]]
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#history-savehist][History =savehist=]]
-  - [[#text-formatting][Text formatting]]
-  - [[#text-editing][Text editing]]
   - [[#keystroke-which-key][keystroke =which-key=]]
   - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
@@ -40,6 +38,10 @@
 - [[#edition][Edition]]
   - [[#parameter][parameter]]
   - [[#auto-completion-company][Auto-Completion =company=]]
+  - [[#edit-all-occurence-iedit][edit all occurence =iedit=]]
+  - [[#delete-til-next-char-hungry-delete][delete til next char =hungry-delete=]]
+  - [[#move-text-move-text][move text =move-text=]]
+  - [[#text-formatting][Text formatting]]
 - [[#buffer][buffer]]
   - [[#parameter-1][parameter]]
 - [[#mode-line][mode-line]]
@@ -47,6 +49,7 @@
   - [[#better-mode-line-smart-mode-line][better mode-line =smart-mode-line=]]
   - [[#minor-mode-icons-delight][minor-mode icons =delight=]]
 - [[#mini-buffer][mini-buffer]]
+  - [[#info-in-mini-buffer][info in mini-buffer]]
 - [[#backups][Backups]]
 - [[#way-of-life-org-mode][way of life =org-mode=]]
 - [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
@@ -118,7 +121,6 @@
   initial-scratch-message "" ; Empty the initial *scratch* buffer
   initial-major-mode 'text-mode ; major mode of  *scratch* buffer
   ad-redefinition-action 'accept ; Silence warnings for redefinition
-  display-time-default-load-average nil ; Don't display load average
   fill-column 80 ; Set width for automatic line breaks
   help-window-select t ; Focus new help windows when opened
   load-prefer-newer t ; Prefers the newest version of a file
@@ -185,14 +187,6 @@
      (use-package all-the-icons)
   ;; (use-package all-the-icons-dired :hook dired-mode)
      #+END_SRC
-
-*** status =statusbar=
-    had a statusbar on bottom right that show common info of all mode-line
-    not on melpa only git so far
-    #+BEGIN_SRC emacs-lisp :tangle yes
-      (use-package posframe)
-      (use-package statusbar)
-    #+END_SRC
 *** nyan-cat =nyan=
     #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package nyan-mode
@@ -698,79 +692,79 @@
 
 ** project explorer =treemacs=
    #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package treemacs
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (progn
-    (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-follow-delay             0.2
-          treemacs-follow-after-init             t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-missing-project-action        'ask
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-position                      'left
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-desc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-width                         35)
+     ;; (use-package treemacs
+     ;;   :init
+     ;;   (with-eval-after-load 'winum
+     ;;     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+     ;;   :config
+     ;;   (progn
+     ;;     (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
+     ;;           treemacs-deferred-git-apply-delay      0.5
+     ;;           treemacs-display-in-side-window        t
+     ;;           treemacs-eldoc-display                 t
+     ;;           treemacs-file-event-delay              5000
+     ;;           treemacs-file-follow-delay             0.2
+     ;;           treemacs-follow-after-init             t
+     ;;           treemacs-git-command-pipe              ""
+     ;;           treemacs-goto-tag-strategy             'refetch-index
+     ;;           treemacs-indentation                   2
+     ;;           treemacs-indentation-string            " "
+     ;;           treemacs-is-never-other-window         nil
+     ;;           treemacs-max-git-entries               5000
+     ;;           treemacs-missing-project-action        'ask
+     ;;           treemacs-no-png-images                 nil
+     ;;           treemacs-no-delete-other-windows       t
+     ;;           treemacs-project-follow-cleanup        nil
+     ;;           treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+     ;;           treemacs-position                      'left
+     ;;           treemacs-recenter-distance             0.1
+     ;;           treemacs-recenter-after-file-follow    nil
+     ;;           treemacs-recenter-after-tag-follow     nil
+     ;;           treemacs-recenter-after-project-jump   'always
+     ;;           treemacs-recenter-after-project-expand 'on-distance
+     ;;           treemacs-show-cursor                   nil
+     ;;           treemacs-show-hidden-files             t
+     ;;           treemacs-silent-filewatch              nil
+     ;;           treemacs-silent-refresh                nil
+     ;;           treemacs-space-between-root-nodes      t
+     ;;           treemacs-sorting                       'alphabetic-desc
+     ;;           treemacs-tag-follow-cleanup            t
+     ;;           treemacs-tag-follow-delay              1.5
+     ;;           treemacs-width                         35)
 
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
+     ;;     ;; The default width and height of the icons is 22 pixels. If you are
+     ;;     ;; using a Hi-DPI display, uncomment this to double the icon size.
+     ;;     ;;(treemacs-resize-icons 44)
 
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode t)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null treemacs-python-executable)))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple))))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+     ;;     (treemacs-follow-mode t)
+     ;;     (treemacs-filewatch-mode t)
+     ;;     (treemacs-fringe-indicator-mode t)
+     ;;     (pcase (cons (not (null (executable-find "git")))
+     ;;                  (not (null treemacs-python-executable)))
+     ;;       (`(t . t)
+     ;;        (treemacs-git-mode 'deferred))
+     ;;       (`(t . _)
+     ;;        (treemacs-git-mode 'simple))))
+     ;;   :bind
+     ;;   (:map global-map
+     ;;         ("M-0"       . treemacs-select-window)
+     ;;         ("C-x t 1"   . treemacs-delete-other-windows)
+     ;;         ("C-x t t"   . treemacs)
+     ;;         ("C-x t B"   . treemacs-bookmark)
+     ;;         ("C-x t C-t" . treemacs-find-file)
+     ;;         ("C-x t M-t" . treemacs-find-tag)))
 
-(use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
+     ;; (use-package treemacs-projectile
+     ;;   :after treemacs projectile
+     ;;   :ensure t)
 
-(use-package treemacs-icons-dired
-  :after treemacs dired
-  :config (treemacs-icons-dired-mode))
+     ;; (use-package treemacs-icons-dired
+     ;;   :after treemacs dired
+     ;;   :config (treemacs-icons-dired-mode))
 
-(use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
+     ;; (use-package treemacs-magit
+     ;;   :after treemacs magit
+     ;;   :ensure t)
    #+END_SRC
 * Minor mode
 ** Internet interface
@@ -903,102 +897,6 @@
     (savehist-save-minibuffer-history 1)
     :config (savehist-mode))
    #+END_SRC
-
-** Text formatting
-*** force Auto-indent =aggressive-indent=
-
-    Auto-indent code as you write.
-
-    #+BEGIN_QUOTE
-    =electric-indent-mode= is enough to keep your code nicely aligned when all you
-    do is type. However, once you start shifting blocks around, transposing lines,
-    or slurping and barfing sexps, indentation is bound to go wrong.
-
-    =aggressive-indent-mode= is a minor mode that keeps your code *always* indented.
-    It reindents after every change, making it more reliable than
-    electric-indent-mode.
-
-    [[https://github.com/Malabarba/aggressive-indent-mode][Artur Malabarba]]
-    #+END_QUOTE
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package aggressive-indent
-    :defer 2
-    :hook ((css-mode . aggressive-indent-mode)
-           (emacs-lisp-mode . aggressive-indent-mode)
-           (js-mode . aggressive-indent-mode)
-           (lisp-mode . aggressive-indent-mode))
-    :custom (aggressive-indent-comments-too))
-    #+END_SRC
-
-*** colorize color text =rainbow-mode=
-
-    Colorize colors as text with their value.
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-mode
-    :delight
-    :custom
-    (rainbow-x-colors t)
-    (rainbow-r-colors t)
-    :config(rainbow-mode))
-    #+END_SRC
-
-*** Whitespace =whitespace=
-
-    It is often annoying to see unnecessary blank spaces at the end of a line or
-    file.
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package whitespace
-    :delight
-    :hook
-    (((prog-mode text-mode) . whitespace-mode)
-     (before-save . delete-trailing-whitespace))
-    :custom
-    (whitespace-style '(face trailing tabs lines-tail newline empty
-    tab-mark newline-mark))
-    (whitespace-display-mappings
-        '((space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46
-                                     ; FULL STOP 「.」
-          (newline-mark 10 [182 10]) ; LINE FEED
-          (tab-mark 9 [9655 9] [92 9]) ; tab
-          )))
-    #+END_SRC
-
-** Text editing
-*** edit all occurence =iedit=
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package iedit
-  :bind ("C-c e" . iedit-mode))
-    #+END_SRC
-*** delete til next char =hungry-delete=
-*** move text =move-text=
-
-    Moves the current line (or if marked, the current region's, whole lines).
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package move-text
-    :defer 2
-    :bind (("M-p" . move-text-up)
-           ("M-n" . move-text-down))
-    :config (move-text-default-bindings))
-    #+END_SRC
-
-
-    #+BEGIN_QUOTE
-    Deleting a whitespace character will delete all whitespace until the next
-    non-whitespace character.
-
-    # [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
-    #+END_QUOTE
-
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package hungry-delete
-    :defer 0.7
-    :delight
-    :config (global-hungry-delete-mode))
-    #+END_SRC
 
 ** COMMENT Undo-redo =undo-tree=
 
@@ -1462,13 +1360,96 @@ basic default value to enable
     :hook (company-mode . company-box-mode))
    #+END_SRC
 
+** edit all occurence =iedit=
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package iedit
+  :bind ("C-c e" . iedit-mode))
+    #+END_SRC
+** delete til next char =hungry-delete=
+#+BEGIN_QUOTE
+    Deleting a whitespace character will delete all whitespace until the next
+    non-whitespace character.
+    # [[https://github.com/nflath/hungry-delete][Nathaniel Flath]]
+#+END_QUOTE
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package hungry-delete
+    :delight
+    :config (global-hungry-delete-mode))
+#+END_SRC
+** move text =move-text=
+    Moves the current line (or if marked, the current region's, whole lines).
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (use-package move-text
+          :config (move-text-default-bindings)) ; M-p M-n
+    #+END_SRC
+
+** Text formatting
+***  =aggressive-indent=
+    Auto-indent code as you write.
+    #+BEGIN_QUOTE
+    =electric-indent-mode= is enough to keep your code nicely aligned when all
+    you do is type. However, once you start shifting blocks around, transposing
+    lines, or slurping and barfing sexps, indentation is bound to go wrong.
+    [[https://github.com/Malabarba/aggressive-indent-mode][Artur Malabarba]]
+    #+END_QUOTE
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package electric
+    :ensure nil
+    :config
+    (electric-indent-mode))
+#+END_SRC
+*** force Auto-indent =aggressive-indent=
+    =aggressive-indent-mode= is a minor mode that keeps your code *always*
+    indented.  It reindents after every change, making it more reliable than
+    electric-indent-mode.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package aggressive-indent
+    :hook (prog-mode . aggressive-indent-mode)
+    :custom (aggressive-indent-comments-too t))
+#+END_SRC
+
+*** colorize color text =rainbow-mode=
+
+    Colorize colors as text with their value.
+
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rainbow-mode
+    :delight
+    :custom
+    (rainbow-x-colors t)
+    (rainbow-r-colors t)
+    :config(rainbow-mode))
+    #+END_SRC
+
+*** Whitespace =whitespace=
+
+    It is often annoying to see unnecessary blank spaces at the end of a line or
+    file.
+
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package whitespace
+    :delight
+    :hook
+    (((prog-mode text-mode) . whitespace-mode)
+     (before-save . delete-trailing-whitespace))
+    :custom
+    (whitespace-style '(face trailing tabs lines-tail newline empty
+    tab-mark newline-mark))
+    (whitespace-display-mappings
+        '((space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46
+                                     ; FULL STOP 「.」
+          (newline-mark 10 [182 10]) ; LINE FEED
+          (tab-mark 9 [9655 9] [92 9]) ; tab
+          )))
+    #+END_SRC
+
+
 * buffer
 ** parameter
 #+BEGIN_SRC emacs-lisp :tangle yes
    (setq view-read-only t ) ; Always open read-only buffers in view-mode
    (setq cursor-in-non-selected-windows t) ; Hide the cursor in inactive windows
 #+END_SRC
-
 
 * mode-line
 ** parameter
@@ -1477,17 +1458,19 @@ basic default value to enable
 (display-battery-mode 1) ; Enable battery in the mode-line
 (display-time-mode 1)    ; Enable time in the mode-line
 (column-number-mode 1) ; Show the column number
+(setq display-time-default-load-average nil) ; Don't display load average
+
 #+END_SRC
 ** better mode-line =smart-mode-line=
     #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package smart-mode-line)
-    (use-package  smart-mode-line-powerline-theme
-    :after smart-mode-line
-    :custom
-     (powerline-arrow-shape 'curve)
-     (powerline-default-separator-dir '(right . left))
-     (sml/theme 'powerline)
-    :config (sml/setup))
+      ;; (use-package smart-mode-line)
+      ;; (use-package  smart-mode-line-powerline-theme
+      ;; :after smart-mode-line
+      ;; :custom
+      ;;  (powerline-arrow-shape 'curve)
+      ;;  (powerline-default-separator-dir '(right . left))
+      ;;  (sml/theme 'powerline)
+      ;; :config (sml/setup))
     #+END_SRC
 
 ** minor-mode icons =delight=
@@ -1500,7 +1483,23 @@ basic default value to enable
 #+BEGIN_SRC emacs-lisp :tangle yes
   (fset 'yes-or-no-p 'y-or-n-p) ; Replace yes/no prompts with y/n
 #+END_SRC
+** info in mini-buffer
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package minibuffer-line
+  :init
+  (setq minibuffer-line-format
+     '((:eval
+     (let ((time-string (format-time-string "%l:%M %b %d %a")))
+     (if modi/minibuffer-line-right-aligned
+     (concat (make-string (- (frame-text-cols) (string-width time-string))
+     ? )
+                    time-string)
+                 time-string))))))
+  :config
+  (progn (set-face-attribute 'minibuffer-line nil :inherit font-lock-type-face)
 
+    (minibuffer-line-mode))
+#+END_SRC
 * Backups
    It is important to have a stable backup environment. Don't hesitate to save a
    lot.

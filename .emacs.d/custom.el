@@ -49,45 +49,46 @@
        (name . "^.*org$"))
       ("magit"
        (or
-        (mode . magit-mode)
-        (name . "^magit.*$")))
+	(mode . magit-mode)
+	(name . "^magit.*$")))
       ("dired"
        (mode . dired-mode))
       ("IRC"
        (or
-        (mode . circe-channel-mode)
-        (mode . circe-server-mode)))
+	(mode . circe-channel-mode)
+	(mode . circe-server-mode)))
       ("web"
        (or
-        (mode . web-mode)
-        (mode . js2-mode)))
+	(mode . web-mode)
+	(mode . js2-mode)))
       ("shell"
        (or
-        (mode . eshell-mode)
-        (mode . shell-mode)))
+	(mode . eshell-mode)
+	(mode . shell-mode)))
       ("gnus"
        (or
-        (mode . message-mode)
-        (mode . bbdb-mode)
-        (mode . mail-mode)
-        (mode . gnus-group-mode)
-        (mode . gnus-summary-mode)
-        (mode . gnus-article-mode)
-        (name . "^\\.bbdb$")
-        (name . "^\\.newsrc-dribble")))
+	(mode . message-mode)
+	(mode . bbdb-mode)
+	(mode . mail-mode)
+	(mode . gnus-group-mode)
+	(mode . gnus-summary-mode)
+	(mode . gnus-article-mode)
+	(name . "^\\.bbdb$")
+	(name . "^\\.newsrc-dribble")))
       ("programming"
        (or
-        (mode . java-mode)
-        (mode . groovy-mode)
-        (mode . conf-space-mode)))
+	(mode . java-mode)
+	(mode . groovy-mode)
+	(mode . conf-space-mode)))
       ("emacs"
        (or
-        (name . "^\\*scratch\\*$")
-        (name . "^\\*Messages\\*$")))
+	(name . "^\\*scratch\\*$")
+	(name . "^\\*Messages\\*$")))
       ("Ediff"
-       (name . "^\\*Ediff.*\\*$"))))))
+       (name . "^\\*Ediff.*\\*$"))))) t)
  '(ivy-count-format "(%d/%d) ")
  '(ivy-extra-directories nil)
+ '(ivy-magic-slash-non-match-action (quote ivy-magic-slash-non-match-create))
  '(ivy-use-virtual-buffers t)
  '(nil nil t)
  '(nyan-animate-nyancat t)
@@ -96,39 +97,39 @@
    (quote
     (("b" "Experimental"
       ((agenda ""
-               ((org-agenda-span
-                 (quote 1))
-                (org-super-agenda-groups
-                 (quote
-                  ((:name "Agenda" :and
-                          (:time-grid t :todo t))
-                   (:name "Scheduled" :scheduled t)
-                   (:name "Deadline" :deadline t)
-                   (:name "Book ASAP" :todo "BOOK")
-                   (:name "Information" :and
-                          (:time-grid t :todo nil)))))))
+	       ((org-agenda-span
+		 (quote 1))
+		(org-super-agenda-groups
+		 (quote
+		  ((:name "Agenda" :and
+			  (:time-grid t :todo t))
+		   (:name "Scheduled" :scheduled t)
+		   (:name "Deadline" :deadline t)
+		   (:name "Book ASAP" :todo "BOOK")
+		   (:name "Information" :and
+			  (:time-grid t :todo nil)))))))
        (alltodo ""
-                ((org-super-agenda-groups
-                  (quote
-                   ((:name "Current Work" :and
-                           (:tag "work" :todo "INPROGRESS"))
-                    (:name "recurrent Work" :and
-                           (:tag "work" :tag "recurrent"))
-                    (:name "Next work" :and
-                           (:tag "work" :todo "TODO"))
-                    (:name "on pause Work" :todo "WAITING")
-                    (:name "recurrent" :tag "recurrent")
-                    (:name "Current" :todo "INPROGRESS")
-                    (:name "Next " :todo "TODO")
-                    (:name "Daily" :and
-                           (:todo "FETCH" :tag "daily"))
-                    (:name "FETCH ASAP" :todo
-                           ("TOBUY" "FETCH"))
-                    (:name "One day" :todo "SOMEDAY")
-                    (:name "on pause" :todo "WAITING")
-                    (:discard
-                     (:todo
-                      ("TOGO" "GO" "TOUSE" "USE" "IDEA")))))))))))))
+		((org-super-agenda-groups
+		  (quote
+		   ((:name "Current Work" :and
+			   (:tag "work" :todo "INPROGRESS"))
+		    (:name "recurrent Work" :and
+			   (:tag "work" :tag "recurrent"))
+		    (:name "Next work" :and
+			   (:tag "work" :todo "TODO"))
+		    (:name "on pause Work" :todo "WAITING")
+		    (:name "recurrent" :tag "recurrent")
+		    (:name "Current" :todo "INPROGRESS")
+		    (:name "Next " :todo "TODO")
+		    (:name "Daily" :and
+			   (:todo "FETCH" :tag "daily"))
+		    (:name "FETCH ASAP" :todo
+			   ("TOBUY" "FETCH"))
+		    (:name "One day" :todo "SOMEDAY")
+		    (:name "on pause" :todo "WAITING")
+		    (:discard
+		     (:todo
+		      ("TOGO" "GO" "TOUSE" "USE" "IDEA")))))))))))))
  '(org-agenda-dim-blocked-tasks t)
  '(org-agenda-files (quote ("~/org/")))
  '(org-agenda-inhibit-startup t)
@@ -337,12 +338,12 @@
  '(org-use-extra-keys t)
  '(package-selected-packages
    (quote
-    (all-the-icons-gnus all-the-icons-ivy org-indent auto-sudoedit dired-subtree markdown-preview-eww markdown-preview-eww\.el dired-icon centaur-tabs treemacs-magit treemacs-icons-dired treemacs-projectile treemacs nyan-mode smart-mode-line-powerline-theme posframe statusbar preview latex files dune ivy-smex swiper-helm dired-x dired org-capture forge helm-projectile helm-company projectile helm-smex helm-swoop helm-gitlab helm gitlab twittering-mode find-file-in-project xresources-theme all-the-icons-dired all-the-icons typing-practice typing jdee org-super-agenda org-super-agenda-mode org-journal soothe-theme org-caldav dired-du calfw-cal async company pdf-view auto-package-update erc-join auctex typescript-mode vdirel bbdb-vcard pass hungry-delete emacs-delphi-mode gradle-mode gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
+    (minibuffer-line all-the-icons-gnus all-the-icons-ivy org-indent auto-sudoedit dired-subtree markdown-preview-eww markdown-preview-eww\.el dired-icon centaur-tabs treemacs-magit treemacs-icons-dired treemacs-projectile treemacs nyan-mode smart-mode-line-powerline-theme posframe statusbar preview latex files dune ivy-smex swiper-helm dired-x dired org-capture forge helm-projectile helm-company projectile helm-smex helm-swoop helm-gitlab helm gitlab twittering-mode find-file-in-project xresources-theme all-the-icons-dired all-the-icons typing-practice typing jdee org-super-agenda org-super-agenda-mode org-journal soothe-theme org-caldav dired-du calfw-cal async company pdf-view auto-package-update erc-join auctex typescript-mode vdirel bbdb-vcard pass hungry-delete emacs-delphi-mode gradle-mode gitignore-mode git-modes yaml-mode erc-image erc-hl-nicks org-bullets org-plus-contrib company-box bbdb git-timemachine git-gutter flycheck-ledger ledger-mode toc-org wiki-summary which-key w3m utop use-package-ensure-system-package undo-tree tuareg switch-window switch-buffer-functions smex smartparens smart-mode-line ranger rainbow-mode rainbow-delimiters pdf-tools paradox org-gcal ocp-indent nord-theme move-text merlin markdown-mode major-mode-hydra magit-popup magit ivy-rich ivy-pass iedit helm-descbinds groovy-mode flyspell-correct-ivy flymd flycheck expand-region engine-mode eclim delight dashboard csv-mode counsel company-math company-auctex cobol-mode calfw-org calfw auto-complete async-await ascii-art-to-unicode alert-termux aggressive-indent ace-window)))
  '(paradox-automatically-star t)
- '(paradox-column-width-package 27)
- '(paradox-column-width-version 13)
- '(paradox-execute-asynchronously t)
- '(paradox-hide-wiki-packages t)
+ '(paradox-column-width-package 27 t)
+ '(paradox-column-width-version 13 t)
+ '(paradox-execute-asynchronously t t)
+ '(paradox-hide-wiki-packages t t)
  '(powerline-arrow-shape (quote curve) t)
  '(powerline-default-separator-dir (quote (right . left)))
  '(rainbow-r-colors t)
@@ -366,13 +367,13 @@
  '(whitespace-display-mappings
    (quote
     ((space-mark 32
-                 [183]
-                 [46])
+		 [183]
+		 [46])
      (newline-mark 10
-                   [182 10])
+		   [182 10])
      (tab-mark 9
-               [9655 9]
-               [92 9]))))
+	       [9655 9]
+	       [92 9]))))
  '(whitespace-style
    (quote
     (face trailing tabs lines-tail newline empty tab-mark newline-mark))))
