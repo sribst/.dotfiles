@@ -13,7 +13,7 @@
  '(TeX-view-program-selection (quote ((output-pdf "Evince") (output-html "xdg-open"))) t)
  '(abbrev-file-name "~/.emacs.d/abbrev_defs")
  '(aggressive-indent-comments-too nil)
- '(auto-revert-verbose nil t)
+ '(auto-revert-verbose nil)
  '(backup-directory-alist (quote (("." . "~/.emacs.d/backup"))))
  '(cfw:org-overwrite-default-keybinding t t)
  '(company-begin-commands (quote (self-insert-command)))
@@ -35,6 +35,9 @@
  '(dired-omit-files "^\\...+$" t)
  '(dired-omit-mode t t)
  '(dired-recursive-copies (quote always))
+ '(display-battery-mode t)
+ '(display-time-mode t)
+ '(git-commit-summary-max-length 80)
  '(global-company-mode t)
  '(gnus-fetch-old-headers t)
  '(history-delete-duplicates t)
@@ -101,6 +104,7 @@
                           (:time-grid t :todo t))
                    (:name "Scheduled" :scheduled t)
                    (:name "Deadline" :deadline t)
+                   (:name "Book ASAP" :todo "BOOK")
                    (:name "Information" :and
                           (:time-grid t :todo nil)))))))
        (alltodo ""
@@ -115,12 +119,9 @@
                     (:name "on pause Work" :todo "WAITING")
                     (:name "recurrent" :tag "recurrent")
                     (:name "Current" :todo "INPROGRESS")
-                    (:name "Book ASAP" :todo "BOOK")
                     (:name "Next " :todo "TODO")
                     (:name "Daily" :and
-                           (:todo
-                            ("TOBUY" "FETCH")
-                            :tag "daily"))
+                           (:todo "FETCH" :tag "daily"))
                     (:name "FETCH ASAP" :todo
                            ("TOBUY" "FETCH"))
                     (:name "One day" :todo "SOMEDAY")
@@ -151,7 +152,7 @@
    (quote
     (("e" "Event")
      ("es" "Show")
-     ("esr" "To book" entry
+     ("esb" "To book" entry
       (file+headline "~/org/master.org" "Show")
       "* BOOK %^{Name} [[https://www.google.com/search?hl=en&q=%\\2][@dress]] %^g
   :PROPERTIES:
@@ -177,7 +178,7 @@
   :END:
   %^{When}T
 ")
-     ("er" "To book" entry
+     ("eb" "To book" entry
       (file+headline "~/org/master.org" "Agenda")
       "* BOOK %^{Name} [[https://www.google.com/search?hl=en&q=%\\2][@dress]] %^g
   :PROPERTIES:
@@ -341,6 +342,8 @@
  '(paradox-column-width-version 13)
  '(paradox-execute-asynchronously t)
  '(paradox-hide-wiki-packages t)
+ '(powerline-arrow-shape (quote curve) t)
+ '(powerline-default-separator-dir (quote (right . left)))
  '(rainbow-r-colors t)
  '(rainbow-x-colors t)
  '(recentf-exclude
@@ -355,6 +358,7 @@
  '(send-mail-function (quote mailclient-send-it))
  '(set-mark-command-repeat-pop t)
  '(setq (quote respectful) t)
+ '(sml/theme (quote powerline))
  '(use-package-always-ensure t)
  '(vc-make-backup-files t)
  '(version-control t)
