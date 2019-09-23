@@ -1895,33 +1895,33 @@ basic default value to enable
 
 *** syncronize calendar =org-caldav=
      #+BEGIN_SRC emacs-lisp :tangle yes
-       ;; (use-package org-caldav
-       ;;   :init
-       ;;   (defvar org-caldav-sync-timer nil
-       ;;           "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-       ;;   (defun org-caldav-sync-with-delay (secs)
-       ;;     (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-       ;;     (setq org-caldav-sync-timer
-       ;;           (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-       ;;   (setq org-caldav-url
-       ;;         "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-       ;;   (setq org-caldav-calendar-id "main")
-       ;;   (setq org-caldav-inbox "~/org/sync2.org")
-       ;;   (setq org-caldav-files '("~/org/master.org"))
-       ;;   :config
-       ;;   (setq org-icalendar-alarm-time 1)
-       ;;   (setq org-caldav-show-sync-results nil)
-       ;;   (setq org-icalendar-include-todo t)
-       ;;   (setq org-icalendar-use-deadline
-       ;;         '(event-if-todo event-if-not-todo todo-due))
-       ;;   (setq org-icalendar-use-scheduled
-       ;;         '(todo-start event-if-todo event-if-not-todo))
-       ;;   :hook (
-       ;;   (kill-emacs . org-caldav-sync)
-       ;;          (after-save .
-       ;;              (lambda ()
-       ;;              (when (eq major-mode
-       ;;                  'org-mode) (org-caldav-sync-with-delay 30))))) )
+       (use-package org-caldav
+         :init
+         (defvar org-caldav-sync-timer nil
+                 "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+         (defun org-caldav-sync-with-delay (secs)
+           (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+           (setq org-caldav-sync-timer
+                 (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+         (setq org-caldav-url
+               "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+         (setq org-caldav-calendar-id "main")
+         (setq org-caldav-inbox "~/org/sync2.org")
+         (setq org-caldav-files '("~/org/master.org"))
+         :config
+         (setq org-icalendar-alarm-time 1)
+         (setq org-caldav-show-sync-results nil)
+         (setq org-icalendar-include-todo t)
+         (setq org-icalendar-use-deadline
+               '(event-if-todo event-if-not-todo todo-due))
+         (setq org-icalendar-use-scheduled
+               '(todo-start event-if-todo event-if-not-todo))
+         :hook (
+         (kill-emacs . org-caldav-sync)
+                (after-save .
+                    (lambda ()
+                    (when (eq major-mode
+                        'org-mode) (org-caldav-sync-with-delay 30))))) )
      #+END_SRC
 *** Journal
 
