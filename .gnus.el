@@ -31,6 +31,16 @@
            (nnmail-expiry-target "nnimap+movesol:Trash")
            (nnmail-expiry-wait immediate))))
 
+;; (setq message-send-mail-function 'smtpmail-send-it
+;;       smtpmail-default-smtp-server "smtp.movesol.com"
+;;       smtpmail-smtp-service 587
+;;       smtpmail-local-domain "homepc")
+;; (setq message-send-mail-function 'smtpmail-send-it
+;;       smtpmail-default-smtp-server "smtp.gmail.com"
+;;       smtpmail-smtp-service 587
+;;       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
+;;       smtpmail-local-domain "homepc")
+
 ;;To set the yahoo smtp details
 (defun setOutlook ()
   (interactive)
@@ -178,12 +188,6 @@
              ("Pro"
               "Trabajo"
               "Universidad"
-              ("Move"
-               "nnimap+movesol:INBOX"
-               "nnimap+movesol:Brouillons"
-               "nnimap+movesol:Trash"
-               "nnimap+movesol:Send"
-               )
               )
              ("Other"
               "Miscelaneo"
@@ -222,4 +226,9 @@
               "nnimap+outlook:Corbeille"
               "nnimap+outlook:Deleted"
               )
-             ))))
+             ("Move"
+              "nnimap+movesol:INBOX"
+              "nnimap+movesol:Brouillons"
+              "nnimap+movesol:Trash"
+              "nnimap+movesol:Send"
+              )))))
