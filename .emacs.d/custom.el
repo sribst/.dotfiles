@@ -13,7 +13,7 @@
  '(TeX-view-program-selection (quote ((output-pdf "Evince") (output-html "xdg-open"))) t)
  '(abbrev-file-name "~/.emacs.d/abbrev_defs")
  '(aggressive-indent-comments-too nil)
- '(auto-revert-verbose nil)
+ '(auto-revert-verbose nil t)
  '(backup-directory-alist (quote (("." . "~/.emacs.d/backup"))))
  '(cfw:org-overwrite-default-keybinding t t)
  '(company-begin-commands (quote (self-insert-command)))
