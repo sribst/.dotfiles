@@ -49,12 +49,14 @@
   - [[#minor-mode-icons-delight][minor-mode icons =delight=]]
 - [[#mini-buffer][mini-buffer]]
   - [[#info-in-mini-buffer][info in mini-buffer]]
+  - [[#function-information-eldoc][function information =eldoc=]]
 - [[#backups][Backups]]
 - [[#way-of-life-org-mode][way of life =org-mode=]]
 - [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
-- [[#project-utilities][project utilities]]
+- [[#project][project]]
   - [[#git][Git]]
   - [[#project-explorer-treemacs][project explorer =treemacs=]]
+  - [[#project-action--projectile][project action  =projectile=]]
 
 * Global configuration
 ** Packages
@@ -1196,12 +1198,7 @@
     #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package find-file-in-project)
     #+END_SRC
-*** =projectile
-    #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package projectile
-  :config (projectile-mode)
-  :bind (:map projectile-mode-map ("C-c p" . projectile-command-map)))
-    #+END_SRC
+
 * kill-ring && clipboard
 #+BEGIN_SRC emacs-lisp :tangle yes
    (setq kill-ring-max 128 ) ; Maximum length of kill ring
@@ -1388,6 +1385,14 @@ basic default value to enable
 
     (minibuffer-line-mode))
 #+END_SRC
+** function information =eldoc=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eldoc :ensure nil
+   :hook prog-mode)
+(use-package merlin-eldoc
+   :hook tuareg-mode)
+#+END_SRC
+
 * Backups
    It is important to have a stable backup environment. Don't hesitate to save a
    lot.
@@ -1930,7 +1935,7 @@ basic default value to enable
   # (use-package counsel-tramp)
   # #+END_SRC
 
-* project utilities
+* project
 ** Git
 *** Git =magit=
 
@@ -1988,78 +1993,52 @@ basic default value to enable
   (add-to-list 'forge-alist '("cosmos.movesol.fr:2222"  "cosmos.movesol.fr/gitlab/api/v4" "cosmos.movesol.fr/gitlab/" forge-gitlab-repository)))
 #+END_SRC
 ** project explorer =treemacs=
-   #+BEGIN_SRC emacs-lisp :tangle yes
-     ;; (use-package treemacs
-     ;;   :init
-     ;;   (with-eval-after-load 'winum
-     ;;     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-     ;;   :config
-     ;;   (progn
-     ;;     (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
-     ;;           treemacs-deferred-git-apply-delay      0.5
-     ;;           treemacs-display-in-side-window        t
-     ;;           treemacs-eldoc-display                 t
-     ;;           treemacs-file-event-delay              5000
-     ;;           treemacs-file-follow-delay             0.2
-     ;;           treemacs-follow-after-init             t
-     ;;           treemacs-git-command-pipe              ""
-     ;;           treemacs-goto-tag-strategy             'refetch-index
-     ;;           treemacs-indentation                   2
-     ;;           treemacs-indentation-string            " "
-     ;;           treemacs-is-never-other-window         nil
-     ;;           treemacs-max-git-entries               5000
-     ;;           treemacs-missing-project-action        'ask
-     ;;           treemacs-no-png-images                 nil
-     ;;           treemacs-no-delete-other-windows       t
-     ;;           treemacs-project-follow-cleanup        nil
-     ;;           treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-     ;;           treemacs-position                      'left
-     ;;           treemacs-recenter-distance             0.1
-     ;;           treemacs-recenter-after-file-follow    nil
-     ;;           treemacs-recenter-after-tag-follow     nil
-     ;;           treemacs-recenter-after-project-jump   'always
-     ;;           treemacs-recenter-after-project-expand 'on-distance
-     ;;           treemacs-show-cursor                   nil
-     ;;           treemacs-show-hidden-files             t
-     ;;           treemacs-silent-filewatch              nil
-     ;;           treemacs-silent-refresh                nil
-     ;;           treemacs-space-between-root-nodes      t
-     ;;           treemacs-sorting                       'alphabetic-desc
-     ;;           treemacs-tag-follow-cleanup            t
-     ;;           treemacs-tag-follow-delay              1.5
-     ;;           treemacs-width                         35)
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package doom-themes
+    :config
+    (doom-themes-treemacs-config))
+(use-package treemacs
+       :require all-the-icons
+       :config
+         (treemacs-follow-mode t)
+         (treemacs-filewatch-mode t)
+         (treemacs-fringe-indicator-mode t)
+         (treemacs-git-mode 'deferred)
+       :custom
+         (treemacs-collapse-dirs 3)
+         (treemacs-follow-after-init t)
+	 (treemacs-goto-tag-strategy 'refetch-index)
+	 (treemacs-indentation-string            " ")
+	 (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
+         (treemacs-position                      'left)
+         (treemacs-show-cursor                   t)
+         (treemacs-width                         35)
+       :bind
+         ("M-p"       . treemacs-select-window)
+         ;; ("C-x t 1"   . treemacs-delete-other-windows)
+         ;; ("C-x t t"   . treemacs)
+         ("C-x t B"   . treemacs-bookmark)
+         ("C-x t C-t" . treemacs-find-file)
+         ("C-x t M-t" . treemacs-find-tag))
 
-     ;;     ;; The default width and height of the icons is 22 pixels. If you are
-     ;;     ;; using a Hi-DPI display, uncomment this to double the icon size.
-     ;;     ;;(treemacs-resize-icons 44)
+     (use-package treemacs-projectile
+       :after treemacs projectile)
 
-     ;;     (treemacs-follow-mode t)
-     ;;     (treemacs-filewatch-mode t)
-     ;;     (treemacs-fringe-indicator-mode t)
-     ;;     (pcase (cons (not (null (executable-find "git")))
-     ;;                  (not (null treemacs-python-executable)))
-     ;;       (`(t . t)
-     ;;        (treemacs-git-mode 'deferred))
-     ;;       (`(t . _)
-     ;;        (treemacs-git-mode 'simple))))
-     ;;   :bind
-     ;;   (:map global-map
-     ;;         ("M-0"       . treemacs-select-window)
-     ;;         ("C-x t 1"   . treemacs-delete-other-windows)
-     ;;         ("C-x t t"   . treemacs)
-     ;;         ("C-x t B"   . treemacs-bookmark)
-     ;;         ("C-x t C-t" . treemacs-find-file)
-     ;;         ("C-x t M-t" . treemacs-find-tag)))
+     (use-package treemacs-icons-dired
+       :after treemacs dired
+       :config (treemacs-icons-dired-mode))
 
-     ;; (use-package treemacs-projectile
-     ;;   :after treemacs projectile
-     ;;   :ensure t)
-
-     ;; (use-package treemacs-icons-dired
-     ;;   :after treemacs dired
-     ;;   :config (treemacs-icons-dired-mode))
-
-     ;; (use-package treemacs-magit
-     ;;   :after treemacs magit
-     ;;   :ensure t)
+     (use-package treemacs-magit
+       :after treemacs magit)
    #+END_SRC
+
+   #+RESULTS:
+
+** project action  =projectile=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package projectile
+  :config
+  (setq projectile-completion-system 'ivy)
+  :bind-keymap
+  ("C-c p" . projectile-command-map))
+#+END_SRC
