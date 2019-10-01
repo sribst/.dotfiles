@@ -1349,6 +1349,7 @@ smaller, simpler, and smoother to use yet highly customizable.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package counsel
+     :defer 0.1 ; force-loading
      :after ivy smex
      :delight
      :bind ("M-x" . counsel-M-x)
@@ -1401,6 +1402,7 @@ smaller, simpler, and smoother to use yet highly customizable.
    (use-package all-the-icons-ivy
      :after ivy
      :config (all-the-icons-ivy-setup))
+
 #+END_SRC
 
 #+RESULTS:
