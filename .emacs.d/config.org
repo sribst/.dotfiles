@@ -24,7 +24,6 @@
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#history-savehist][History =savehist=]]
   - [[#keystroke-which-key][keystroke =which-key=]]
-  - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
   - [[#text-navigation][Text Navigation]]
   - [[#point-and-region][Point and Region]]
@@ -50,6 +49,7 @@
 - [[#mini-buffer][mini-buffer]]
   - [[#info-in-mini-buffer][info in mini-buffer]]
   - [[#function-information-eldoc][function information =eldoc=]]
+  - [[#autocompletion-ivy][autocompletion =Ivy=]]
 - [[#backups][Backups]]
 - [[#way-of-life-org-mode][way of life =org-mode=]]
 - [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
@@ -208,7 +208,6 @@
 **** unicode icons ==all-the-icons=
      #+BEGIN_SRC emacs-lisp :tangle yes
      (use-package all-the-icons)
-  ;; (use-package all-the-icons-dired :hook dired-mode)
      #+END_SRC
 *** nyan-cat =nyan=
     #+BEGIN_SRC emacs-lisp :tangle yes
@@ -874,61 +873,6 @@
   ;;    )
    #+END_SRC
 *** COMMENT =helm-org-rifle=
-** autocompletion =Ivy=
-
-   I used =helm= before, but I find =ivy= faster and lighter.
-
-   #+BEGIN_QUOTE
-   Ivy is a generic completion mechanism for Emacs. While it operates similarly to
-   other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
-   smaller, simpler, and smoother to use yet highly customizable.
-
-   [[https://github.com/abo-abo/ivy][Oleh Krehel]]
-   #+END_QUOTE
-
-   #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package counsel
-    :after ivy smex
-    :delight
-    :bind ("M-x" . counsel-M-x)
-    :config (counsel-mode 1))
-
-  (use-package ivy
-    :defer 0.1 ; force-loading
-    :delight
-    :bind (("C-c C-r" . ivy-resume)
-           ("C-x B" . ivy-switch-buffer-other-window))
-    :custom
-    (ivy-count-format "(%d/%d) ")
-    (ivy-use-virtual-buffers t)
-    (ivy-extra-directories nil)
-    (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
-    :config
-    (custom-set-faces
-     '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
-     '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
-     '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
-     '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold))))
-    (ivy-mode))
-
-  (use-package ivy-pass
-    :after ivy
-    :commands ivy-pass)
-
-  (use-package ivy-rich
-    :after ivy
-    :init (setq ivy-rich-parse-remote-file-path t)
-    :config (ivy-rich-mode 1))
-
-  (use-package swiper
-    :after ivy
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)))
-  (use-package all-the-icons-ivy
-    :after ivy
-    :config (all-the-icons-ivy-setup))
-   #+END_SRC
-
 ** M-x enhancement =smex=
    #+BEGIN_QUOTE
    Smex is a M-x enhancement for Emacs. Built on top of Ido, it provides a
@@ -1393,6 +1337,75 @@ basic default value to enable
    :hook tuareg-mode)
 #+END_SRC
 
+** autocompletion =Ivy=
+I used =helm= before, but I find =ivy= faster and lighter.
+
+#+BEGIN_QUOTE
+Ivy is a generic completion mechanism for Emacs. While it operates similarly to
+other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
+smaller, simpler, and smoother to use yet highly customizable.
+[[https://github.com/abo-abo/ivy][Oleh Krehel]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package counsel
+     :after ivy smex
+     :delight
+     :bind ("M-x" . counsel-M-x)
+     :config (counsel-mode 1))
+
+   (use-package ivy
+     :defer 0.1 ; force-loading
+     :delight
+     :bind (("C-c C-r" . ivy-resume)
+            ("C-x B" . ivy-switch-buffer-other-window))
+     :custom
+     (ivy-count-format "(%d/%d) ")
+     (ivy-use-virtual-buffers t)
+     (ivy-extra-directories nil)
+     (ivy-magic-slash-non-match-action 'ivy-magic-slash-non
+ match-create)
+     :config
+     (custom-set-faces
+      '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
+      '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
+      '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
+      '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold))))
+     (ivy-mode))
+
+   (use-package ivy-pass
+     :after ivy
+     :commands ivy-pass)
+
+   (use-package ivy-rich
+     :after ivy
+     :init (setq ivy-rich-parse-remote-file-path t)
+     :config (ivy-rich-mode 1))
+      ;; (use-package ivy-rich
+      ;; :after ivy
+      ;; :custom
+      ;; (ivy-virtual-abbreviate
+      ;; 	 'full
+      ;; 	  ivy-rich-switch-buffer-align-virtual-buffer t
+      ;; 	  ivy-rich-path-style 'abbrev)
+      ;; :config
+      ;; (ivy-set-display-transformer 'ivy-switch-buffer
+      ;; 				 'ivy-rich-switch-buffer-transformer)
+      ;; (ivy-rich-mode 1))
+
+   (use-package swiper
+     :after ivy
+     :bind (("C-s" . swiper)
+            ("C-r" . swiper)))
+
+   (use-package all-the-icons-ivy
+     :after ivy
+     :config (all-the-icons-ivy-setup))
+#+END_SRC
+
+#+RESULTS:
+: swiper
+
 * Backups
    It is important to have a stable backup environment. Don't hesitate to save a
    lot.
@@ -1787,93 +1800,35 @@ basic default value to enable
     # # #+END_SRC
 
 *** syncronize calendar =org-caldav=
-     #+BEGIN_SRC emacs-lisp :tangle yes
-<<<<<<< HEAD
-       ;; (use-package org-caldav
-       ;;   :init
-       ;;   (defvar org-caldav-sync-timer nil
-       ;; 	  "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-       ;;   (defun org-caldav-sync-with-delay (secs)
-       ;;     (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-       ;;     (setq org-caldav-sync-timer
-       ;; 	  (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-       ;;   (setq org-caldav-url
-       ;; 	"https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-       ;;   (setq org-caldav-calendar-id "main")
-       ;;   (setq org-caldav-inbox "~/org/sync2.org")
-       ;;   (setq org-caldav-files '("~/org/master.org"))
-       ;;   :config
-       ;;   (setq org-icalendar-alarm-time 1)
-       ;;   (setq org-caldav-show-sync-results nil)
-       ;;   (setq org-icalendar-include-todo t)
-       ;;   (setq org-icalendar-use-deadline
-       ;; 	'(event-if-todo event-if-not-todo todo-due))
-       ;;   (setq org-icalendar-use-scheduled
-       ;; 	'(todo-start event-if-todo event-if-not-todo))
-       ;;   :hook (
-       ;;   (kill-emacs . org-caldav-sync)
-       ;; 	 (after-save .
-       ;; 	     (lambda ()
-       ;; 	     (when (eq major-mode
-       ;; 		 'org-mode) (org-caldav-sync-with-delay 30))))) )
-||||||| merged common ancestors
-       ;; (use-package org-caldav
-       ;;   :init
-       ;;   (defvar org-caldav-sync-timer nil
-       ;;           "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-       ;;   (defun org-caldav-sync-with-delay (secs)
-       ;;     (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-       ;;     (setq org-caldav-sync-timer
-       ;;           (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-       ;;   (setq org-caldav-url
-       ;;         "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-       ;;   (setq org-caldav-calendar-id "main")
-       ;;   (setq org-caldav-inbox "~/org/sync2.org")
-       ;;   (setq org-caldav-files '("~/org/master.org"))
-       ;;   :config
-       ;;   (setq org-icalendar-alarm-time 1)
-       ;;   (setq org-caldav-show-sync-results nil)
-       ;;   (setq org-icalendar-include-todo t)
-       ;;   (setq org-icalendar-use-deadline
-       ;;         '(event-if-todo event-if-not-todo todo-due))
-       ;;   (setq org-icalendar-use-scheduled
-       ;;         '(todo-start event-if-todo event-if-not-todo))
-       ;;   :hook (
-       ;;   (kill-emacs . org-caldav-sync)
-       ;;          (after-save .
-       ;;              (lambda ()
-       ;;              (when (eq major-mode
-       ;;                  'org-mode) (org-caldav-sync-with-delay 30))))) )
-=======
-       (use-package org-caldav
-         :init
-         (defvar org-caldav-sync-timer nil
-                 "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-         (defun org-caldav-sync-with-delay (secs)
-           (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-           (setq org-caldav-sync-timer
-                 (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-         (setq org-caldav-url
-               "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-         (setq org-caldav-calendar-id "main")
-         (setq org-caldav-inbox "~/org/sync2.org")
-         (setq org-caldav-files '("~/org/master.org"))
-         :config
-         (setq org-icalendar-alarm-time 1)
-         (setq org-caldav-show-sync-results nil)
-         (setq org-icalendar-include-todo t)
-         (setq org-icalendar-use-deadline
-               '(event-if-todo event-if-not-todo todo-due))
-         (setq org-icalendar-use-scheduled
-               '(todo-start event-if-todo event-if-not-todo))
-         :hook (
-         (kill-emacs . org-caldav-sync)
-                (after-save .
-                    (lambda ()
-                    (when (eq major-mode
-                        'org-mode) (org-caldav-sync-with-delay 30))))) )
->>>>>>> eac8c118fbbf1f90fb6faa24789d84ef26ae6430
-     #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package org-caldav
+  ;;   :init
+  ;;     (defvar org-caldav-sync-timer nil
+  ;;             "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  ;;     (defun org-caldav-sync-with-delay (secs)
+  ;;       (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+  ;;       (setq org-caldav-sync-timer
+  ;;                  (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+  ;;          (setq org-caldav-url
+  ;;                "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+  ;;          (setq org-caldav-calendar-id "main")
+  ;;          (setq org-caldav-inbox "~/org/sync2.org")
+  ;;          (setq org-caldav-files '("~/org/master.org"))
+  ;;          :config
+  ;;          (setq org-icalendar-alarm-time 1)
+  ;;          (setq org-caldav-show-sync-results nil)
+  ;;          (setq org-icalendar-include-todo t)
+  ;;          (setq org-icalendar-use-deadline
+  ;;                '(event-if-todo event-if-not-todo todo-due))
+  ;;          (setq org-icalendar-use-scheduled
+  ;;                '(todo-start event-if-todo event-if-not-todo))
+  ;;          :hook (
+  ;;          (kill-emacs . org-caldav-sync)
+  ;;                 (after-save .
+  ;;                     (lambda ()
+  ;;                     (when (eq major-mode
+  ;;                         'org-mode) (org-caldav-sync-with-delay 30))))) )
+#+END_SRC
 *** Journal
 
     Recently, I started writing a journal about my daily life as I read that
@@ -1994,42 +1949,41 @@ basic default value to enable
 #+END_SRC
 ** project explorer =treemacs=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package doom-themes
-    :config
-    (doom-themes-treemacs-config))
-(use-package treemacs
-       :require all-the-icons
-       :config
-         (treemacs-follow-mode t)
-         (treemacs-filewatch-mode t)
-         (treemacs-fringe-indicator-mode t)
-         (treemacs-git-mode 'deferred)
-       :custom
-         (treemacs-collapse-dirs 3)
-         (treemacs-follow-after-init t)
-	 (treemacs-goto-tag-strategy 'refetch-index)
-	 (treemacs-indentation-string            " ")
-	 (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
-         (treemacs-position                      'left)
-         (treemacs-show-cursor                   t)
-         (treemacs-width                         35)
-       :bind
-         ("M-p"       . treemacs-select-window)
-         ;; ("C-x t 1"   . treemacs-delete-other-windows)
-         ;; ("C-x t t"   . treemacs)
-         ("C-x t B"   . treemacs-bookmark)
-         ("C-x t C-t" . treemacs-find-file)
-         ("C-x t M-t" . treemacs-find-tag))
+  (use-package doom-themes
+      :config
+      (doom-themes-treemacs-config))
+  (use-package treemacs
+	 :config
+	   (treemacs-follow-mode t)
+	   (treemacs-filewatch-mode t)
+	   (treemacs-fringe-indicator-mode t)
+	   (treemacs-git-mode 'deferred)
+	 :custom
+	   (treemacs-collapse-dirs 3)
+	   (treemacs-follow-after-init t)
+	   (treemacs-goto-tag-strategy 'refetch-index)
+	   (treemacs-indentation-string            " ")
+	   (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
+	   (treemacs-position                      'left)
+	   (treemacs-show-cursor                   t)
+	   (treemacs-width                         35)
+	 :bind
+	   ("M-p"       . treemacs-select-window)
+	   ;; ("C-x t 1"   . treemacs-delete-other-windows)
+	   ;; ("C-x t t"   . treemacs)
+	   ;; ("C-x t B"   . treemacs-bookmark)
+	   ;; ("C-x t C-t" . treemacs-find-file)
+	   ;; ("C-x t M-t" . treemacs-find-tag)
+	   )
 
-     (use-package treemacs-projectile
-       :after treemacs projectile)
+       (use-package treemacs-projectile
+	 :after treemacs projectile)
+       ;; (use-package treemacs-icons-dired
+       ;;   :after treemacs dired
+       ;;   :config (treemacs-icons-dired-mode))
 
-     (use-package treemacs-icons-dired
-       :after treemacs dired
-       :config (treemacs-icons-dired-mode))
-
-     (use-package treemacs-magit
-       :after treemacs magit)
+       (use-package treemacs-magit
+	 :after treemacs magit)
    #+END_SRC
 
    #+RESULTS:
