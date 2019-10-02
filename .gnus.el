@@ -1,3 +1,20 @@
+;;Byte Compile .gnus.el if it has changed since the last time visited
+(defun GnusWait! ()
+  "If ~/.gnus.el exists and is newer than ~/.gnus, recompile it to ~/.gnus.elc and move the compiled version to ~/.gnus."
+  (cond
+   ((file-newer-than-file-p "~/.gnus.el" "~/.gnus")
+    (let ((mode-line-format
+           "*** PLEASE STANDBY: RECOMPILING .gnus.el **"))
+      (sit-for 0)
+      (byte-compile-file "~/.gnus.el")
+      (message ".gnus recompiled --- reloading ...")
+      (rename-file "~/.gnus.elc" "~/.gnus" t))
+    (load "~/.gnus" t t t)
+    (message "")
+    )))
+
+(GnusWait!)
+
 ;;ask encryption passw  once
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 
@@ -10,6 +27,15 @@
           (nnir-search-engine imap)
           (nnmail-expiry-target "[Gmail]/Papelera")
           (nnmail-expiry-wait immediate)))
+(setq
+ gnus-secondary-select-methods
+ '((nnimap "cryptium"
+           (nnimap-address "imap.gmail.com")
+           (nnimap-server-port "imaps")
+           (nnimap-stream ssl)
+           (nnir-search-engine imap)
+           (nnmail-expiry-target "nnimap+cryptium:Trash")
+           (nnmail-expiry-wait immediate))))
 
 (setq
  gnus-secondary-select-methods
@@ -31,15 +57,6 @@
            (nnmail-expiry-target "nnimap+movesol:Trash")
            (nnmail-expiry-wait immediate))))
 
-;; (setq message-send-mail-function 'smtpmail-send-it
-;;       smtpmail-default-smtp-server "smtp.movesol.com"
-;;       smtpmail-smtp-service 587
-;;       smtpmail-local-domain "homepc")
-;; (setq message-send-mail-function 'smtpmail-send-it
-;;       smtpmail-default-smtp-server "smtp.gmail.com"
-;;       smtpmail-smtp-service 587
-;;       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
-;;       smtpmail-local-domain "homepc")
 
 ;;To set the yahoo smtp details
 (defun setOutlook ()
@@ -67,6 +84,19 @@
         smtpmail-local-domain "gmail.com"))
 
 ;;To set gmail smtp details
+(defun setCryptium ()
+  (interactive)
+  (message "from cryptium")
+  (setq user-mail-address "sylvain@cryptium.ch")
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+        smtpmail-auth-credentials '(("smtp.gmail.com" 587 "sylvain.ribstein@gmail.com" nil))
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587
+        smtpmail-local-domain "gmail.com"))
+
+;;To set gmail smtp details
 (defun setMovesol ()
   (interactive)
   (message "from movesol")
@@ -85,6 +115,7 @@
           '(lambda ()
              (cond ((string-match "outlook" gnus-newsgroup-name) (setOutlook))
                    ((string-match "movesol" gnus-newsgroup-name) (setMovesol))
+		   ((string-match "cryptium" gnus-newsgroup-name) (setCryptium))
                    (t (setGmail)))))
 
 ;; gnus+davmail bug, so I have to use pop3 for DavMail
@@ -95,7 +126,6 @@
 (setq gnus-thread-sort-functions
       '(gnus-thread-sort-by-most-recent-date
         (not gnus-thread-sort-by-number)))
-
 
 ;; NO 'passive
 (setq gnus-use-cache t)
@@ -153,7 +183,8 @@
               (("Other" invisible ))
               (("Misc" invisible ))
               (("Junk" invisible))
-              )
+	      )
+	     (("Cryptium" visible))
              (("Move" visible))
              (("Outlook" invisible))
              ))
@@ -203,6 +234,9 @@
               "[Gmail]/Spam"
               "[Gmail]/Papelera"
               )
+	     ("Cryptium"
+	      ""
+	      )
              ("Outlook"
               "nnimap+outlook:Inbox"
               "nnimap+outlook:proxGroup"
