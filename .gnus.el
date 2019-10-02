@@ -20,7 +20,7 @@
 
 (setq
  gnus-select-method
- '(nnimap "gmail"
+ '(nnimap "google"
           (nnimap-address "imap.gmail.com")
           (nnimap-server-port "imaps")
           (nnimap-stream ssl)
