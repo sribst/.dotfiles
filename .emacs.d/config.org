@@ -25,7 +25,6 @@
   - [[#reset-config-when-configorg-changes][reset config when config.org changes]]
   - [[#history-savehist][History =savehist=]]
   - [[#keystroke-which-key][keystroke =which-key=]]
-  - [[#autocompletion-ivy][autocompletion =Ivy=]]
   - [[#m-x-enhancement-smex][M-x enhancement =smex=]]
   - [[#text-navigation][Text Navigation]]
   - [[#point-and-region][Point and Region]]
@@ -49,6 +48,7 @@
   - [[#minor-mode-icons-delight][minor-mode icons =delight=]]
 - [[#mini-buffer][mini-buffer]]
   - [[#info-in-mini-buffer][info in mini-buffer]]
+<<<<<<< HEAD
   - [[#function-signature-eldoc][function signature =eldoc=]]
 - [[#organizing-life-org-mode][Organizing life =org-mode=]]
 - [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
@@ -56,6 +56,17 @@
   - [[#git][Git]]
   - [[#project-explorer-treemacs][project explorer =treemacs=]]
   - [[#project-interaction-projectile][project interaction =projectile=]]
+=======
+  - [[#function-information-eldoc][function information =eldoc=]]
+  - [[#autocompletion-ivy][autocompletion =Ivy=]]
+- [[#backups][Backups]]
+- [[#way-of-life-org-mode][way of life =org-mode=]]
+- [[#copy-emacs-config-of-httpixio1uvz][copy emacs config of http://ix.io/1Uvz]]
+- [[#project][project]]
+  - [[#git][Git]]
+  - [[#project-explorer-treemacs][project explorer =treemacs=]]
+  - [[#project-action--projectile][project action  =projectile=]]
+>>>>>>> fd04d4cd5e0433172a411adcdff2b960db433287
 
 * Global configuration
 ** Packages
@@ -252,7 +263,24 @@ I find invasive.
 **** unicode icons ==all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
      (use-package all-the-icons)
+<<<<<<< HEAD
 #+END_SRC
+=======
+     #+END_SRC
+*** nyan-cat =nyan=
+    #+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package nyan-mode
+    :config (nyan-mode)
+    :custom
+    (nyan-animate-nyancat t)
+    (nyan-wavy-trail t)
+    )
+    ;;(nyan-animation-frame-interval 0.1)
+    ;; (nyan-bar-length)
+    ;;(nyan-cat-face-number ":8")
+    ;;(nyan-minimum-window-width )
+    #+END_SRC
+>>>>>>> fd04d4cd5e0433172a411adcdff2b960db433287
 *** tab =centaur-tabs=
     #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package centaur-tabs
@@ -586,8 +614,338 @@ With it I can start a search from within emacs.  I use duckduckgo and bang
 (global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
     #+END_SRC
 
+<<<<<<< HEAD
     #+RESULTS:
     : my/smarter-move-beginning-of-line
+=======
+   #+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package dired
+      :delight ""
+      :ensure nil
+      :bind (:map dired-mode-map
+                ("RET" . dired-find-alternate-file)
+                ("^" . (lambda () (interactive) (find-alternate-file ".."))))
+      :config
+          (put 'dired-find-alternate-file 'disabled nil) ; disables warning
+      :custom
+      (dired-auto-revert-buffer t)
+      (dired-dwim-target t)
+      (dired-hide-details-hide-symlink-targets nil)
+      (dired-omit-files "^\\...+$")
+      (dired-omit-mode t)
+      (dired-listing-switches "-alh")
+      (dired-ls-F-marks-symlinks nil)
+      (dired-recursive-copies 'always))
+
+    (use-package dired-du
+     :after dired)
+
+  (use-package all-the-icons-dired
+     :delight
+     :hook (dired-mode . all-the-icons-dired-mode))
+
+  ;; (use-package dired-x
+  ;;   :ensure nil
+  ;;   :after dired)
+   #+END_SRC
+
+** password-store =pass=
+   Pass helps me to be a bit more secure on my password management
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package pass
+    :delight "")
+   #+END_SRC
+
+** Game
+*** =Typing=
+    A game for fast typers
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package typing :defer t)
+    #+END_SRC
+
+*** Typing training
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      ;; (use-package typing-practice :defer t)
+    #+END_SRC
+
+** Shell =eshell=
+   #+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package eshell
+     :bind (("C-x t" . eshell)
+           ;; (:map eshell-mode-map
+           ;;  ("<tab>" . completion-at-point))
+           )
+     :init
+      (setq ;; eshell-buffer-shorthand t ...  Can't see Bug#19391
+            eshell-scroll-to-bottom-on-input 'all
+            eshell-error-if-no-glob t
+            eshell-hist-ignoredups t
+            eshell-save-history-on-exit t
+            eshell-prefer-lisp-functions nil
+            eshell-destroy-buffer-when-process-dies t))
+   #+END_SRC
+
+* Minor mode
+** Internet interface
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (setq browse-url-browser-function 'browse-url-firefox)
+   #+END_SRC
+*** Search wikipage =wiki-summary=
+
+    It is impossible to know everything, which is why a quick description
+    of a term, without breaking its workflow, is ideal.
+
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package wiki-summary
+    :defer 1
+    :bind ("C-c W" . wiki-summary)
+    :preface
+    (defun my/format-summary-in-buffer (summary)
+      "Given a summary, stick it in the *wiki-summary* buffer and display the buffer"
+      (let ((buf (generate-new-buffer "*wiki-summary*")))
+        (with-current-buffer buf
+          (princ summary buf)
+          (fill-paragraph)
+          (goto-char (point-min))
+          (text-mode)
+          (view-mode))
+        (pop-to-buffer buf))))
+
+  (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
+    #+END_SRC
+
+*** =engine-mode=
+	With it I can start a search from within emacs.
+	I use duckduckgo and bang
+
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package engine-mode
+    :config
+    (engine-mode t)
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :keybinding "d"))
+    #+END_SRC
+** TODO reset config when config.org changes
+
+   not-sur to understand how it works
+   I'm using an =.org= file to maintain my GNU Emacs configuration. However, at his
+   launch, it will loads the =config.el= source file for a faster loading.
+
+   The code below, executes =org-babel-tangle= asynchronously when
+   =config.org= is saved.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package async)
+
+  (defvar *config-file* ".emacs.d/config.org" "The configuration file.")
+
+  (defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+    "Last modification time of the configuration file.")
+
+  (defvar *show-async-tangle-results* nil "Keeps *emacs* async buffers around for later inspection.")
+
+  (defun my/config-updated ()
+    "Checks if the configuration file has been updated since the last time."
+    (time-less-p *config-last-change*
+                 (nth 5 (file-attributes *config-file*))))
+
+  (defun my/config-tangle ()
+    "Tangles the org file asynchronously."
+    (when (my/config-updated)
+      (setq *config-last-change*
+            (nth 5 (file-attributes *config-file*)))
+      (my/async-babel-tangle *config-file*)))
+
+  (defun my/async-babel-tangle (org-file)
+    "Tangles the org file asynchronously."
+    (let ((init-tangle-start-time (current-time))
+          (file (buffer-file-name))
+          (async-quiet-switch "-q"))
+      (async-start
+       `(lambda ()
+          (require 'org)
+          (org-babel-tangle-file ,org-file))
+       (unless *show-async-tangle-results*
+         `(lambda (result)
+            (if result
+                (message "SUCCESS: %s successfully tangled (%.2fs)."
+                         ,org-file
+                         (float-time (time-subtract (current-time)
+                                                    ',init-tangle-start-time)))
+              (message "ERROR: %s as tangle failed." ,org-file)))))))
+   #+END_SRC
+
+** COMMENT Spelling  =flyspell=
+
+   For the other words that would not be in my list of abbreviations, =flyspell=
+   enables spell checking on-the-fly in GNU Emacs.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package flyspell
+    :delight
+    :custom
+    (flyspell-abbrev-p t)
+    (flyspell-issue-message-flag nil)
+    (flyspell-issue-welcome-flag nil)
+    (flyspell-mode 1))
+
+    (use-package flyspell-correct-ivy
+      :bind ("C-M-;" . flyspell-correct-wrapper)
+      :init
+        (setq flyspell-correct-interface #'flyspell-correct-ivy))
+  (use-package ispell
+    :custom
+    (ispell-silently-savep t))
+   #+END_SRC
+
+** History =savehist=
+
+   Provides the ability to have commands and their history saved so that whenever
+   you return to work, you can re-run things as you need them. This is not a
+   radical function, it is part of a good user experience.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package savehist
+    :custom
+    (history-delete-duplicates t)
+    (history-length t)
+    (savehist-additional-variables
+      '(kill-ring search-ring regexp-search-ring))
+    (savehist-file  "~/.emacs.d/history" )
+    (savehist-save-minibuffer-history 1)
+    :config (savehist-mode))
+   #+END_SRC
+
+** COMMENT Undo-redo =undo-tree=
+
+   GNU Emacs's undo system allows you to recover any past state of a buffer. To do
+   this, Emacs treats "undo itself as another editing that can be undone".
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package undo-tree
+  ;;   :delight
+  ;;   :bind ("C--" . undo-tree-redo)
+  ;;   :init (global-undo-tree-mode)
+  ;;   :custom
+  ;;   (undo-tree-visualizer-timestamps t)
+  ;;   (undo-tree-visualizer-diff t))
+   #+END_SRC
+
+** keystroke =which-key=
+
+   It's difficult to remember all the keyboard shortcuts. The =which-key= package
+   helps to solve this.
+
+   I used =guide-key= in my past days, but =which-key= is a good replacement.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package which-key
+    :defer 0.2
+    :delight
+    :config (which-key-mode))
+   #+END_SRC
+** COMMENT autocompletion interface =Helm=
+
+   Helm is more powerful than ivy and as my computer as speed to spare.
+   not a big fan in the end.
+   I prefere the integration of ivy
+   #+BEGIN_QUOTE
+   Ivy is a generic completion mechanism for Emacs. While it operates similarly to
+   other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
+   smaller, simpler, and smoother to use yet highly customizable.
+
+   [[https://github.com/abo-abo/ivy][Oleh Krehel]]
+   #+END_QUOTE
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package helm
+  ;;   :delight
+  ;;   :config (helm-mode)
+  ;;   :bind (
+  ;;        ("C-x C-f" . helm-find-files)
+  ;;        ("M-y"     . helm-show-kill-ring)
+  ;;        ("C-x b"   . helm-buffers-list)
+  ;;        ))
+  ;;  (use-package helm-smex
+  ;;    :after helm
+  ;;    :bind ("M-x" . helm-smex)
+  ;;          ("M-X" . helm-smex-major-mode-commands))
+
+  ;;  (use-package helm-descbinds
+  ;;    :after helm
+  ;;    :bind ("C-h b" . helm-descbinds))
+
+  ;;  (use-package helm-projectile
+  ;;    :after helm projectile
+  ;;    :config (helm-projectile-on))
+
+  ;;  (use-package helm-swoop
+  ;;    :after helm
+  ;;    :bind (("M-i" . helm-swoop)
+  ;;           ("C-s" . helm-swoop)
+  ;;           ("C-r" . helm-swoop)
+  ;;           ("M-I" . helm-swoop-back-to-last-point)
+  ;;           ("C-c M-i" . helm-multi-swoop)
+  ;;           ("C-x M-i" . helm-multi-swoop-all)
+  ;;           (:map helm-swoop-map
+  ;;               (("C-r" . helm-previous-line)
+  ;;                ("C-s" . helm-next-line)
+  ;;                ("M-m" . helm-multi-swoop-current-mode-from-helm-swoop)))
+  ;;           (:map helm-multi-swoop-map
+  ;;                ("C-r" . helm-previous-line)
+  ;;                ("C-s" . helm-next-line))
+  ;;           )
+  ;;    :custom
+  ;;    (helm-swoop-speed-or-color t)
+  ;;    (helm-swoop-move-to-line-cycle t)
+  ;;    (helm-swoop-use-line-number-face t) ;; Optional face for line numbers
+  ;;    )
+   #+END_SRC
+*** COMMENT =helm-org-rifle=
+** M-x enhancement =smex=
+   #+BEGIN_QUOTE
+   Smex is a M-x enhancement for Emacs. Built on top of Ido, it provides a
+   convenient interface to your recently and most frequently used commands. And
+   to all the other commands, too.
+   #+END_QUOTE
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smex)
+   #+END_SRC
+** Text Navigation
+*** goto beginning of line
+    This function is a mix of =C-a= and =M-m=.
+
+    From: http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+
+    #+BEGIN_SRC emacs-lisp :tangle yes
+  (defun my/smarter-move-beginning-of-line (arg)
+  "Moves point back to indentation of beginning of line.
+
+  Move point to the first non-whitespace character on this line.
+  If point is already there, move to the beginning of the line.
+  Effectively toggle between the first non-whitespace character and
+  the beginning of the line.
+
+  If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+  point reaches the beginning or end of the buffer, stop there."
+    (interactive "^p")
+    (setq arg (or arg 1))
+
+    ;; Move lines first
+    (when (/= arg 1)
+      (let ((line-move-visual nil))
+        (forward-line (1- arg))))
+
+    (let ((orig-point (point)))
+      (back-to-indentation)
+      (when (= orig-point (point))
+        (move-beginning-of-line 1))))
+
+(global-set-key [remap org-beginning-of-line] #'my/smarter-move-beginning-of-line)
+(global-set-key [remap move-beginning-of-line] #'my/smarter-move-beginning-of-line)
+    #+END_SRC
+>>>>>>> fd04d4cd5e0433172a411adcdff2b960db433287
 
 ** Point and Region
 
@@ -818,11 +1176,27 @@ With it I can start a search from within emacs.  I use duckduckgo and bang
   (interactive)
   (load-file "~/.emacs.d/init.el"))
    #+END_SRC
+<<<<<<< HEAD
 
    #+RESULTS:
    : reload-dotemacs-file
 
 * Editor
+=======
+** Project management
+*** COMMENT specific search =find-file-in-project=
+    #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package find-file-in-project)
+    #+END_SRC
+
+* kill-ring && clipboard
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (setq kill-ring-max 128 ) ; Maximum length of kill ring
+   (setq mark-ring-max 128 ) ; Maximum length of mark ring
+   (setq select-enable-clipboard t) ; Merge system's and Emacs' clipboard
+#+END_SRC
+* Edition
+>>>>>>> fd04d4cd5e0433172a411adcdff2b960db433287
 ** parameter
 basic default value to enable
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1239,6 +1613,7 @@ to all the other commands, too.
   (projectile-project-search-path
     '("~/CS/Cryptium" "~/CS/Pers" "~/CS/VGED" "~/CS/Wagner" "~/CS/Move")))
 #+END_SRC
+<<<<<<< HEAD
 
 #+RESULTS:
 | lambda | nil | (interactive) | (use-package-autoload-keymap (quote projectile-command-map) (quote projectile) nil) |
@@ -1252,6 +1627,104 @@ One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
 take notes and make my presentations, but you can do lots of things with
 it. =org-mode= it's like the sky, without limits.
 #+BEGIN_SRC emacs-lisp :tangle yes
+=======
+** function information =eldoc=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package eldoc :ensure nil
+   :hook prog-mode)
+(use-package merlin-eldoc
+   :hook tuareg-mode)
+#+END_SRC
+
+** autocompletion =Ivy=
+I used =helm= before, but I find =ivy= faster and lighter.
+
+#+BEGIN_QUOTE
+Ivy is a generic completion mechanism for Emacs. While it operates similarly to
+other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
+smaller, simpler, and smoother to use yet highly customizable.
+[[https://github.com/abo-abo/ivy][Oleh Krehel]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package counsel
+     :defer 0.1 ; force-loading
+     :after ivy smex
+     :delight
+     :bind ("M-x" . counsel-M-x)
+     :config (counsel-mode 1))
+
+   (use-package ivy
+     :defer 0.1 ; force-loading
+     :delight
+     :bind (("C-c C-r" . ivy-resume)
+            ("C-x B" . ivy-switch-buffer-other-window))
+     :custom
+     (ivy-count-format "(%d/%d) ")
+     (ivy-use-virtual-buffers t)
+     (ivy-extra-directories nil)
+     (ivy-magic-slash-non-match-action 'ivy-magic-slash-non
+ match-create)
+     :config
+     (custom-set-faces
+      '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
+      '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
+      '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
+      '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold))))
+     (ivy-mode))
+
+   (use-package ivy-pass
+     :after ivy
+     :commands ivy-pass)
+
+   (use-package ivy-rich
+     :after ivy
+     :init (setq ivy-rich-parse-remote-file-path t)
+     :config (ivy-rich-mode 1))
+      ;; (use-package ivy-rich
+      ;; :after ivy
+      ;; :custom
+      ;; (ivy-virtual-abbreviate
+      ;; 	 'full
+      ;; 	  ivy-rich-switch-buffer-align-virtual-buffer t
+      ;; 	  ivy-rich-path-style 'abbrev)
+      ;; :config
+      ;; (ivy-set-display-transformer 'ivy-switch-buffer
+      ;; 				 'ivy-rich-switch-buffer-transformer)
+      ;; (ivy-rich-mode 1))
+
+   (use-package swiper
+     :after ivy
+     :bind (("C-s" . swiper)
+            ("C-r" . swiper)))
+
+   (use-package all-the-icons-ivy
+     :after ivy
+     :config (all-the-icons-ivy-setup))
+
+#+END_SRC
+
+#+RESULTS:
+: swiper
+
+* Backups
+   It is important to have a stable backup environment. Don't hesitate to save a
+   lot.
+   #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package files
+    :ensure nil ; don't need to ensure as it is default package
+    :custom
+    (backup-directory-alist `(("." . "~/.emacs.d/backup")))
+    (delete-old-versions -1)
+    (vc-make-backup-files t)
+    (version-control t))
+   #+END_SRC
+* way of life =org-mode=
+   One of my favorite modes in GNU Emacs. I mainly use it to organize my life,
+   take notes and make my presentations, but you can do lots of things with
+   it. =org-mode= it's like the sky, without limits.
+   #+BEGIN_SRC emacs-lisp :tangle yes
+>>>>>>> fd04d4cd5e0433172a411adcdff2b960db433287
    (use-package org
      :ensure org-plus-contrib
      :delight ""
@@ -1629,93 +2102,35 @@ it. =org-mode= it's like the sky, without limits.
     # # #+END_SRC
 
 *** syncronize calendar =org-caldav=
-     #+BEGIN_SRC emacs-lisp :tangle yes
-<<<<<<< HEAD
-       ;; (use-package org-caldav
-       ;;   :init
-       ;;   (defvar org-caldav-sync-timer nil
-       ;; 	  "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-       ;;   (defun org-caldav-sync-with-delay (secs)
-       ;;     (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-       ;;     (setq org-caldav-sync-timer
-       ;; 	  (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-       ;;   (setq org-caldav-url
-       ;; 	"https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-       ;;   (setq org-caldav-calendar-id "main")
-       ;;   (setq org-caldav-inbox "~/org/sync2.org")
-       ;;   (setq org-caldav-files '("~/org/master.org"))
-       ;;   :config
-       ;;   (setq org-icalendar-alarm-time 1)
-       ;;   (setq org-caldav-show-sync-results nil)
-       ;;   (setq org-icalendar-include-todo t)
-       ;;   (setq org-icalendar-use-deadline
-       ;; 	'(event-if-todo event-if-not-todo todo-due))
-       ;;   (setq org-icalendar-use-scheduled
-       ;; 	'(todo-start event-if-todo event-if-not-todo))
-       ;;   :hook (
-       ;;   (kill-emacs . org-caldav-sync)
-       ;; 	 (after-save .
-       ;; 	     (lambda ()
-       ;; 	     (when (eq major-mode
-       ;; 		 'org-mode) (org-caldav-sync-with-delay 30))))) )
-||||||| merged common ancestors
-       ;; (use-package org-caldav
-       ;;   :init
-       ;;   (defvar org-caldav-sync-timer nil
-       ;;           "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-       ;;   (defun org-caldav-sync-with-delay (secs)
-       ;;     (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-       ;;     (setq org-caldav-sync-timer
-       ;;           (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-       ;;   (setq org-caldav-url
-       ;;         "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-       ;;   (setq org-caldav-calendar-id "main")
-       ;;   (setq org-caldav-inbox "~/org/sync2.org")
-       ;;   (setq org-caldav-files '("~/org/master.org"))
-       ;;   :config
-       ;;   (setq org-icalendar-alarm-time 1)
-       ;;   (setq org-caldav-show-sync-results nil)
-       ;;   (setq org-icalendar-include-todo t)
-       ;;   (setq org-icalendar-use-deadline
-       ;;         '(event-if-todo event-if-not-todo todo-due))
-       ;;   (setq org-icalendar-use-scheduled
-       ;;         '(todo-start event-if-todo event-if-not-todo))
-       ;;   :hook (
-       ;;   (kill-emacs . org-caldav-sync)
-       ;;          (after-save .
-       ;;              (lambda ()
-       ;;              (when (eq major-mode
-       ;;                  'org-mode) (org-caldav-sync-with-delay 30))))) )
-=======
-       (use-package org-caldav
-         :init
-         (defvar org-caldav-sync-timer nil
-                 "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-         (defun org-caldav-sync-with-delay (secs)
-           (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-           (setq org-caldav-sync-timer
-                 (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-         (setq org-caldav-url
-               "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-         (setq org-caldav-calendar-id "main")
-         (setq org-caldav-inbox "~/org/sync2.org")
-         (setq org-caldav-files '("~/org/master.org"))
-         :config
-         (setq org-icalendar-alarm-time 1)
-         (setq org-caldav-show-sync-results nil)
-         (setq org-icalendar-include-todo t)
-         (setq org-icalendar-use-deadline
-               '(event-if-todo event-if-not-todo todo-due))
-         (setq org-icalendar-use-scheduled
-               '(todo-start event-if-todo event-if-not-todo))
-         :hook (
-         (kill-emacs . org-caldav-sync)
-                (after-save .
-                    (lambda ()
-                    (when (eq major-mode
-                        'org-mode) (org-caldav-sync-with-delay 30))))) )
->>>>>>> eac8c118fbbf1f90fb6faa24789d84ef26ae6430
-     #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package org-caldav
+  ;;   :init
+  ;;     (defvar org-caldav-sync-timer nil
+  ;;             "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  ;;     (defun org-caldav-sync-with-delay (secs)
+  ;;       (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+  ;;       (setq org-caldav-sync-timer
+  ;;                  (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+  ;;          (setq org-caldav-url
+  ;;                "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+  ;;          (setq org-caldav-calendar-id "main")
+  ;;          (setq org-caldav-inbox "~/org/sync2.org")
+  ;;          (setq org-caldav-files '("~/org/master.org"))
+  ;;          :config
+  ;;          (setq org-icalendar-alarm-time 1)
+  ;;          (setq org-caldav-show-sync-results nil)
+  ;;          (setq org-icalendar-include-todo t)
+  ;;          (setq org-icalendar-use-deadline
+  ;;                '(event-if-todo event-if-not-todo todo-due))
+  ;;          (setq org-icalendar-use-scheduled
+  ;;                '(todo-start event-if-todo event-if-not-todo))
+  ;;          :hook (
+  ;;          (kill-emacs . org-caldav-sync)
+  ;;                 (after-save .
+  ;;                     (lambda ()
+  ;;                     (when (eq major-mode
+  ;;                         'org-mode) (org-caldav-sync-with-delay 30))))) )
+#+END_SRC
 *** Journal
 
     Recently, I started writing a journal about my daily life as I read that
@@ -1777,7 +2192,13 @@ it. =org-mode= it's like the sky, without limits.
      ;;   :config
      ;;   (all-the-icons-gnus-setup))
 
+<<<<<<< HEAD
    #+END_SRC
+=======
+* project
+** Git
+*** Git =magit=
+>>>>>>> fd04d4cd5e0433172a411adcdff2b960db433287
 
    #+RESULTS:
 
@@ -1808,6 +2229,7 @@ it. =org-mode= it's like the sky, without limits.
     Before you can use this package, make sure you install =markdown= on your
     operating system.
     #+BEGIN_SRC emacs-lisp :tangle yes
+<<<<<<< HEAD
    (use-package markdown-mode
      :ensure-system-package markdown
      :delight ""
@@ -2087,3 +2509,64 @@ it. =org-mode= it's like the sky, without limits.
   #   :init (auto-sudoedit-mode 1))
   # (use-package counsel-tramp)
   # #+END_SRC
+=======
+  (use-package git-timemachine :delight)
+    #+END_SRC
+*** Git forges =forge=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package forge
+  :after magit
+  :delight
+  :config
+  (add-to-list 'forge-alist '("cosmos.movesol.fr:2222"  "cosmos.movesol.fr/gitlab/api/v4" "cosmos.movesol.fr/gitlab/" forge-gitlab-repository)))
+#+END_SRC
+** project explorer =treemacs=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package doom-themes
+      :config
+      (doom-themes-treemacs-config))
+  (use-package treemacs
+	 :config
+	   (treemacs-follow-mode t)
+	   (treemacs-filewatch-mode t)
+	   (treemacs-fringe-indicator-mode t)
+	   (treemacs-git-mode 'deferred)
+	 :custom
+	   (treemacs-collapse-dirs 3)
+	   (treemacs-follow-after-init t)
+	   (treemacs-goto-tag-strategy 'refetch-index)
+	   (treemacs-indentation-string            " ")
+	   (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
+	   (treemacs-position                      'left)
+	   (treemacs-show-cursor                   t)
+	   (treemacs-width                         35)
+	 :bind
+	   ("M-p"       . treemacs-select-window)
+	   ;; ("C-x t 1"   . treemacs-delete-other-windows)
+	   ;; ("C-x t t"   . treemacs)
+	   ;; ("C-x t B"   . treemacs-bookmark)
+	   ;; ("C-x t C-t" . treemacs-find-file)
+	   ;; ("C-x t M-t" . treemacs-find-tag)
+	   )
+
+       (use-package treemacs-projectile
+	 :after treemacs projectile)
+       ;; (use-package treemacs-icons-dired
+       ;;   :after treemacs dired
+       ;;   :config (treemacs-icons-dired-mode))
+
+       (use-package treemacs-magit
+	 :after treemacs magit)
+   #+END_SRC
+
+   #+RESULTS:
+
+** project action  =projectile=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package projectile
+  :config
+  (setq projectile-completion-system 'ivy)
+  :bind-keymap
+  ("C-c p" . projectile-command-map))
+#+END_SRC
+>>>>>>> fd04d4cd5e0433172a411adcdff2b960db433287
