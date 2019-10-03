@@ -29,6 +29,22 @@
 
 (require 'package)
 (package-initialize)
+
+;; (defun load-directory (directory)
+;;   "Load recursively all `.el' files in DIRECTORY. hidden in org file  "
+;;   (dolist (element (directory-files-and-attributes directory nil nil nil))
+;;     (let* ((path (car element))
+;;            (fullpath (concat directory "/" path))
+;; 	   (isdir (car (cdr element)))
+;;            (ignore-dir (or (string= path ".") (string= path ".."))))
+;;       (cond
+;;        ((and (eq isdir t) (not ignore-dir)) (load-directory fullpath))
+;;        ((and (eq isdir nil) (string= (substring path -3) ".el"))
+;; 	(load (file-name-sans-extension fullpath)))
+;;        ((and (eq isdir nil) (string= (substring path -3) ".org"))
+;; 	(org-babel-load-file fullpath))))))
+;; (load-directory "config")
+
 (setq config-file (expand-file-name "config.el" user-emacs-directory))
 (if (file-exists-p config-file) (load-file config-file)
   (org-babel-load-file (expand-file-name "config.org" user-emacs-directory)))
