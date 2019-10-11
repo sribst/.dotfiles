@@ -1,6 +1,7 @@
 ;;Byte Compile .gnus.el if it has changed since the last time visited
 (defun GnusWait! ()
-  "If ~/.gnus.el exists and is newer than ~/.gnus, recompile it to ~/.gnus.elc and move the compiled version to ~/.gnus."
+  "If ~/.gnus.el exists and is newer than ~/.gnus, recompile it
+to ~/.gnus.elc and move the compiled version to ~/.gnus."
   (cond
    ((file-newer-than-file-p "~/.gnus.el" "~/.gnus")
     (let ((mode-line-format
@@ -15,20 +16,12 @@
 
 (GnusWait!)
 
-;;ask encryption passw  once
+;;ask encryption passw once
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 
 (setq
- gnus-select-method
- '(nnimap "google"
-          (nnimap-address "imap.gmail.com")
-          (nnimap-server-port "imaps")
-          (nnimap-stream ssl)
-          (nnir-search-engine imap)
-          (nnmail-expiry-target "[Gmail]/Papelera")
-          (nnmail-expiry-wait immediate)))
-(setq
  gnus-secondary-select-methods
+ gnus-select-method
  '((nnimap "cryptium"
            (nnimap-address "imap.gmail.com")
            (nnimap-server-port "imaps")
@@ -36,6 +29,16 @@
            (nnir-search-engine imap)
            (nnmail-expiry-target "nnimap+cryptium:Trash")
            (nnmail-expiry-wait immediate))))
+
+(setq
+ gnus-select-method
+ '(nnimap "google"
+	  (nnimap-address "imap.gmail.com")
+	  (nnimap-server-port "imaps")
+	  (nnimap-stream ssl)
+	  (nnir-search-engine imap)
+	  (nnmail-expiry-target "[Gmail]/Papelera")
+	  (nnmail-expiry-wait immediate)))
 
 (setq
  gnus-secondary-select-methods
@@ -47,41 +50,32 @@
            (nnmail-expiry-target "nnimap+outlook:Junk")
            (nnmail-expiry-wait immediate))))
 
-(setq
- gnus-secondary-select-methods
- '((nnimap "movesol"
-           (nnimap-address "mail.movesol.com")
-           (nnimap-server-port "imaps")
-           (nnimap-stream ssl)
-           (nnir-search-engine imap)
-           (nnmail-expiry-target "nnimap+movesol:Trash")
-           (nnmail-expiry-wait immediate))))
-
-
 ;;To set the yahoo smtp details
 (defun setOutlook ()
   (interactive)
   (message "from outlook")
   (setq user-mail-address "sribst_baroud@outlook.com")
   (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-auth-credentials '(("smtp.office365.com" 587 "sribst_baroud@outlook.om" nil))
-        smtpmail-default-smtp-server "smtp.office365.com"
-        smtpmail-smtp-server "smtp.office365.com"
-        smtpmail-smtp-service 587
-        smtpmail-local-domain "outlook.com"))
+	smtpmail-auth-credentials '(("smtp.office365.com" 587 "sribst_baroud@outlook.om" nil))
+	smtpmail-default-smtp-server "smtp.office365.com"
+	smtpmail-smtp-server "smtp.office365.com"
+	smtpmail-smtp-service 587
+        smtpmail-local-domain "outlook.com"
+	))
 
 ;;To set gmail smtp details
-(defun setGmail ()
-  (interactive)
-  (message "from gmail")
-  (setq user-mail-address "sylvain.ribstein@gmail.com")
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-        smtpmail-auth-credentials '(("smtp.gmail.com" 587 "sylvain.ribstein@gmail.com" nil))
-        smtpmail-default-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587
-        smtpmail-local-domain "gmail.com"))
+;; (defun setGmail ()
+;;   (interactive)
+;;   (message "from google")
+;;   (setq user-mail-address "sylvain.ribstein@gmail.com")
+;;   (setq message-send-mail-function 'smtpmail-send-it
+;; 	;;smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+;; 	;;smtpmail-auth-credentials '(("smtp.gmail.com" 587 "sylvain.ribstein@gmail.com" nil))
+;; 	;;smtpmail-default-smtp-server "smtp.gmail.com"
+;; 	;;smtpmail-smtp-server "smtp.gmail.com"
+;; 	;;smtpmail-smtp-service 587
+;; 	;;smtpmail-local-domain "gmail.com"
+;; 	))
 
 ;;To set gmail smtp details
 (defun setCryptium ()
@@ -89,34 +83,21 @@
   (message "from cryptium")
   (setq user-mail-address "sylvain@cryptium.ch")
   (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-        smtpmail-auth-credentials '(("smtp.gmail.com" 587 "sylvain.ribstein@gmail.com" nil))
-        smtpmail-default-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587
-        smtpmail-local-domain "gmail.com"))
-
-;;To set gmail smtp details
-(defun setMovesol ()
-  (interactive)
-  (message "from movesol")
-  (setq user-mail-address "sylvain.ribstein@movesol.com")
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-starttls-credentials '(("mail.movesol.com" 587 nil nil))
-        smtpmail-auth-credentials '(("mail.movesol.com" 587 "sylvain.ribstein@movesol.com" nil))
-        smtpmail-default-smtp-server "mail.movesol.com"
-        smtpmail-smtp-server "mail.movesol.com"
-        smtpmail-smtp-service 587
-        smtpmail-local-domain "movesol.com"))
+	smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+	smtpmail-auth-credentials '(("smtp.gmail.com" 587 "sylvain.ribstein@cryptium.ch" nil))
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-service 587
+	smtpmail-local-domain "cryptium"
+	))
 
 ;;Select automatically while replying
 ;;(add-hook 'message-mode-hook 'showMsg)
 (add-hook 'message-mode-hook
           '(lambda ()
              (cond ((string-match "outlook" gnus-newsgroup-name) (setOutlook))
-                   ((string-match "movesol" gnus-newsgroup-name) (setMovesol))
-		   ((string-match "cryptium" gnus-newsgroup-name) (setCryptium))
-                   (t (setGmail)))))
+		   ;;((string-match "gmail" gnus-newsgroup-name) (setGmail))
+                   (t (setCryptium)))))
 
 ;; gnus+davmail bug, so I have to use pop3 for DavMail
 ;; http://permalink.gmane.org/gmane.emacs.gnus.general/83301
@@ -160,109 +141,103 @@
 (setq gnus-summary-line-format "%U%R%z %4i %([%4L: %-25,25f]%) %I%s\n")
 (setq gnus-summary-same-subject "-||-")
 
-(eval-after-load 'gnus-topic
-  '(progn
-     (setq gnus-message-archive-group
-           '((format-time-string " sent.%Y")))
-     (setq gnus-server-alist
-           '(("Archivo" nnfolder "archive"
-              (nnfolder-directory "~/Mail/archive")
-              (nnfolder-active-file "~/Mail/archive/active")
-              (nnfolder-get-new-mail nil)
-              (nnfolder-inhibit-expiry t))))
+;; (eval-after-load 'gnus-topic
+;;   '(progn
+;;      (setq gnus-message-archive-group
+;;            '((format-time-string " sent.%Y")))
+;;      (setq gnus-server-alist
+;;            '(("Archivo" nnfolder "archive"
+;;               (nnfolder-directory "~/Mail/archive")
+;;               (nnfolder-active-file "~/Mail/archive/active")
+;;               (nnfolder-get-new-mail nil)
+;;               (nnfolder-inhibit-expiry t))))
 
-     ;; "Gnus" is the root folder, and there are three mail accounts,
-     ;; "misc", "hotmail", "gmail"
-     (setq gnus-topic-topology
-           '(("Mail" visible)
-             (("Gmail" visible)
-              (("New" visible))
-              (("Perso" visible))
-              (("Admin" visible))
-              (("Pro" visible ))
-              (("Other" invisible ))
-              (("Misc" invisible ))
-              (("Junk" invisible))
-	      )
-	     (("Cryptium" visible))
-             (("Move" visible))
-             (("Outlook" invisible))
-             ))
+;;      ;; "Gnus" is the root folder, and there are three mail accounts,
+;;      ;; "misc", "hotmail", "gmail"
+;;      (setq gnus-topic-topology
+;;            '(("Mail" visible)
+;;              (("Gmail" visible)
+;;               (("New" visible))
+;;               (("Perso" visible))
+;;               (("Admin" visible))
+;;               (("Pro" visible ))
+;;               (("Other" invisible ))
+;;               (("Misc" invisible ))
+;;               (("Junk" invisible))
+;; 	      )
+;; 	     (("Cryptium" visible))
+;;              (("Outlook" invisible))
+;;              ))
 
-     ;; each topic corresponds to a public imap folder
-     (setq gnus-topic-alist
-           '(
-             ("New"
-              "INBOX"
-              )
-             ("Perso"
-              "Personal"
-              "Volim"
-              "Activitad"
-              "Activitad/Desarconnee"
-              "Activitad/AtelierSoude"
-              "Activitad/MonteeCoinche"
-              )
-             ("Admin"
-              "Administrativo"
-              "Administrativo/Caf"
-              "Administrativo/Contrato/"
-              "Administrativo/AirLiquide/"
-              "Administrativo/Banco/"
-              "Administrativo/Impot/"
-              "Compra"
-              "Compra/Google play"
-              "Apartamento"
-              "Transporte"
-              "Salud"
-              )
-             ("Pro"
-              "Trabajo"
-              "Universidad"
-              )
-             ("Other"
-              "Miscelaneo"
-              )
-             ("Misc"; the key of topic
-              "sent.2019"
-              "nndraft:drafts"
-              "[Gmail]"
-              "[Gmail]/Enviados"
-              "[Gmail]/Borradores"
-              )
-             ("Junk"; the key of topic
-              "[Gmail]/Spam"
-              "[Gmail]/Papelera"
-              )
-	     ("Cryptium"
-	      ""
-	      )
-             ("Outlook"
-              "nnimap+outlook:Inbox"
-              "nnimap+outlook:proxGroup"
-              "nnimap+outlook:POP"
-              "nnimap+outlook:bordel a trier/bobcanard@hotmail.fr"
-              "nnimap+outlook:Drafts"
-              "nnimap+outlook:Sent"
-              "nnimap+outlook:Archivo"
-              "nnimap+outlook:Archivo/bobcanard@hotmail.fr"
-              "nnimap+outlook:Deleted/bordel a trier"
-              "nnimap+outlook:eglise"
-              "nnimap+outlook:Archive"
-              "nnimap+outlook:Envoyes"
-              "nnimap+outlook:bordel a trier"
-              "nnimap+outlook:famillia"
-              "nnimap+outlook:eclais"
-              "nnimap+outlook:Notes"
-              "nnimap+outlook:Outbox"
-              "nnimap+outlook:famille"
-              "nnimap+outlook:Junk"
-              "nnimap+outlook:Corbeille"
-              "nnimap+outlook:Deleted"
-              )
-             ("Move"
-              "nnimap+movesol:INBOX"
-              "nnimap+movesol:Brouillons"
-              "nnimap+movesol:Trash"
-              "nnimap+movesol:Send"
-              )))))
+;;      ;; each topic corresponds to a public imap folder
+;;      (setq gnus-topic-alist
+;;            '(
+;;              ("New"
+;;               "INBOX"
+;;               )
+;;              ("Perso"
+;;               "Personal"
+;;               "Volim"
+;;               "Activitad"
+;;               "Activitad/Desarconnee"
+;;               "Activitad/AtelierSoude"
+;;               "Activitad/MonteeCoinche"
+;;               )
+;;              ("Admin"
+;;               "Administrativo"
+;;               "Administrativo/Caf"
+;;               "Administrativo/Contrato/"
+;;               "Administrativo/AirLiquide/"
+;;               "Administrativo/Banco/"
+;;               "Administrativo/Impot/"
+;;               "Compra"
+;;               "Compra/Google play"
+;;               "Apartamento"
+;;               "Transporte"
+;;               "Salud"
+;;               )
+;;              ("Pro"
+;;               "Trabajo"
+;;               "Universidad"
+;;               )
+;;              ("Other"
+;;               "Miscelaneo"
+;;               )
+;;              ("Misc"; the key of topic
+;;               "sent.2019"
+;;               "nndraft:drafts"
+;;               "[Gmail]"
+;;               "[Gmail]/Enviados"
+;;               "[Gmail]/Borradores"
+;;               )
+;;              ("Junk"; the key of topic
+;;               "[Gmail]/Spam"
+;;               "[Gmail]/Papelera"
+;;               )
+;; 	     ("Cryptium"
+;; 	      ""
+;; 	      )
+;;              ("Outlook"
+;;               "nnimap+outlook:Inbox"
+;;               "nnimap+outlook:proxGroup"
+;;               "nnimap+outlook:POP"
+;;               "nnimap+outlook:bordel a trier/bobcanard@hotmail.fr"
+;;               "nnimap+outlook:Drafts"
+;;               "nnimap+outlook:Sent"
+;;               "nnimap+outlook:Archivo"
+;;               "nnimap+outlook:Archivo/bobcanard@hotmail.fr"
+;;               "nnimap+outlook:Deleted/bordel a trier"
+;;               "nnimap+outlook:eglise"
+;;               "nnimap+outlook:Archive"
+;;               "nnimap+outlook:Envoyes"
+;;               "nnimap+outlook:bordel a trier"
+;;               "nnimap+outlook:famillia"
+;;               "nnimap+outlook:eclais"
+;;               "nnimap+outlook:Notes"
+;;               "nnimap+outlook:Outbox"
+;;               "nnimap+outlook:famille"
+;;               "nnimap+outlook:Junk"
+;;               "nnimap+outlook:Corbeille"
+;;               "nnimap+outlook:Deleted"
+;;               )
+;; 	     ))))

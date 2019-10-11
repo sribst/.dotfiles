@@ -345,9 +345,6 @@ if [ -f ~/.alert ]; then cat ~/.alert; fi
 # opam configuration
 test -r /home/baroud/.opam/opam-init/init.zsh && . /home/baroud/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-# path+=~/bin
-# path+=.
-
 #To save every command before it is executed (this is different from bash's history -a solution):
 setopt inc_append_history
 
@@ -357,25 +354,29 @@ setopt share_history
 # clipboard
 
 x-copy-region-as-kill () {
-  zle copy-region-as-kill
-  print -rn $CUTBUFFER | xsel -i -b
+    zle copy-region-as-kill
+    print -rn $CUTBUFFER | xsel -i -b
 }
 zle -N x-copy-region-as-kill
 
 x-kill-region () {
-  zle kill-region
-  print -rn $CUTBUFFER | xsel -i -b
+    zle kill-region
+    print -rn $CUTBUFFER | xsel -i -b
 }
 zle -N x-kill-region
 
 x-yank () {
-  CUTBUFFER=$(xsel -o -b </dev/null)
-  zle yank
+    CUTBUFFER=$(xsel -o -b </dev/null)
+    zle yank
 }
 zle -N x-yank
 bindkey -e '\ew' x-copy-region-as-kill
 bindkey -e '^W' x-kill-region
 bindkey -e '^Y' x-yank
+
+path+=~/bin
+path+=.
+
 
 # Only load Liquid Prompt in interactive shells, not from a script or from scp
 # [[ $- = *i* ]] && source liquidprompt

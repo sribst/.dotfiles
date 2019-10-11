@@ -269,11 +269,10 @@ bindsym $mod+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p defa
 #bepo
 # bindsym $mod+Menu exec --no-startup-id bepo_switch
 
-assign [class="^Eclipse"]   → $ws1
-assign [class="^Firefox"]   → $ws2
-assign [class="^Slack"]     → $ws4
-assign [class="^Skype"]     → $ws4
-assign [class="^Evolution"] → $ws4
+assign [class="^Firefox"] → $ws2
+assign [class="^Wire"]    → $ws4
+assign [class="^Zoom"]    → $ws4
+assign [class="^Signal"]  → $ws4
 
 # gaps between windows
 
@@ -300,7 +299,9 @@ exec --no-startup-id my_sync
 
 # start firefox emacs urxvt
 exec --no-startup-id firefox
-exec --no-startup-id slack
-exec --no-startup-id skypeforlinux
-exec --no-startup-id eclipse
-exec --no-startup-id i3-msg workspace $ws3 ; emacsclient -c
+exec --no-startup-id xrandr --output DP2 --auto --primary --left-of eDP1
+exec --no-startup-id i3-msg workspace $ws4 ; wire-desktop ; i3-msg layout tabbed
+exec signal-desktop
+exec zoom
+exec i3-msg workspace $ws3 ; emacsclient -c
+exec i3-msg workspace $ws1 ; emacsclient -c
