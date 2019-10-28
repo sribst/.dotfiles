@@ -299,9 +299,10 @@ exec --no-startup-id my_sync
 
 # start firefox emacs urxvt
 exec --no-startup-id firefox
-exec --no-startup-id xrandr --output DP2 --auto --primary --left-of eDP1
-exec --no-startup-id i3-msg workspace $ws4 ; wire-desktop ; i3-msg layout tabbed
+exec --no-startup-id >xrandr --output DP2 --mode 1920x1080 --primary --above eDP1 --mode 1920x1080
+exec --no-startup-id i3-msg workspace $ws4 ; i3-msg layout tabbed
 exec signal-desktop
-exec zoom
+exec wire-desktop
+exec telegram-desktop
 exec i3-msg workspace $ws3 ; emacsclient -c
 exec i3-msg workspace $ws1 ; emacsclient -c
