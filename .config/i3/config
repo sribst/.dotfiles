@@ -306,3 +306,4 @@ exec wire-desktop
 exec telegram-desktop
 exec i3-msg workspace $ws3 ; emacsclient -c
 exec i3-msg workspace $ws1 ; emacsclient -c
+# exec_always --no-startup-id dunst -lb "$bg" -nb "$bg" -cb "$bg" -lf "$fg" -bf "fg" -cf "$fg" -nf "$fg" -fn "ypn envypn 12" -s -geometry "400x60-10+40" -format "<b>%s</b>\n%b" -shrink  -lto 3 -nto 5 -cto 0 -align "left" -transparency 0 -padding 8 -horizontal_padding 8
