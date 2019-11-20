@@ -380,3 +380,5 @@ path+=.
 
 # Only load Liquid Prompt in interactive shells, not from a script or from scp
 # [[ $- = *i* ]] && source liquidprompt
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
