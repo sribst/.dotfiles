@@ -294,8 +294,8 @@ exec_always --no-startup-id apodFetch -r; feh --no-fehbg --bg-center ~/.config/a
 exec --no-startup-id nextcloud
 
 # starting script
-exec --no-startup-id xrandr-start
-exec --no-startup-id my_sync
+# exec --no-startup-id xrandr-start
+exec --no-startup-id autorandr --change
 
 # start firefox emacs urxvt
 # exec --no-startup-id firefox

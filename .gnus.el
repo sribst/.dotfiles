@@ -23,12 +23,12 @@ to ~/.gnus.elc and move the compiled version to ~/.gnus."
 
 ;; personnal google account
 (setq gnus-secondary-select-methods
-      '((nnimap "google"
+      '((nnimap "imap.gmail.com"
 		(nnimap-address "imap.gmail.com")
 		(nnimap-server-port "imaps")
 		(nnimap-stream ssl)
 		(nnir-search-engine imap)
-		(nnmail-expiry-target "[Gmail]/Trash")
+		(nnmail-expiry-target "nnimap+imap.gmail.com:[Gmail]/Trash")
 		(nnmail-expiry-wait immediate))
 	(nnimap "outlook"
 		(nnimap-address "outlook.office365.com")
@@ -54,7 +54,7 @@ to ~/.gnus.elc and move the compiled version to ~/.gnus."
   (setq message-send-mail-function 'smtpmail-send-it
 	nsmtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
 	smtpmail-auth-credentials
-	'(("google" 587 "sylvain.ribstein@gmail.com" nil))
+	'(("smtp.gmail.com" 587 "sylvain.ribstein@gmail.com" nil))
 	smtpmail-default-smtp-server "smtp.gmail.com"
 	smtpmail-smtp-server "smtp.gmail.com"
 	smtpmail-smtp-service 587
