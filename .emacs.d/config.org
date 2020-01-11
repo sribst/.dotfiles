@@ -277,22 +277,16 @@ xresources-theme qui respect les couleurs de Xressources
     (ivy-use-virtual-buffers t)
     (ivy-extra-directories nil)
     (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
-    :config
-    (custom-set-faces
-     '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
-     '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
-     '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
-     '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold))))
-    (ivy-mode))
-(use-package ivy-rich
-  :after ivy
-  :init (setq ivy-rich-parse-remote-file-path t)
-  :config (ivy-rich-mode 1))
+    :config (ivy-mode))
+    (use-package ivy-rich
+    :after ivy
+    :init (setq ivy-rich-parse-remote-file-path t)
+    :config (ivy-rich-mode 1))
 
-(use-package all-the-icons-ivy
+    (use-package all-the-icons-ivy
 :after ivy
 :config (all-the-icons-ivy-setup))
-  #+END_SRC
+    #+END_SRC
 
 *** TODO improved ivy file browsing =ivy-explorer=
 not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
@@ -305,10 +299,30 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
 
 ** search in current buffer =swiper=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package swiper
+  (use-package swiper
   :after ivy
-  :bind ("C-s" . swiper))
-#+END_SRC
+  :config
+  (custom-set-faces '(swiper-minibuffer-match-face-1 ((t
+     :background (x-get-resource "color11" ""))))
+     '(swiper-minibuffer-match-face-2 ((t
+     :background (x-get-resource "color9" "") :weight bold)))
+     '(swiper-minibuffer-match-face-3 ((t
+     :background (x-get-resource "color10" "") :weight bold)))
+     '(swiper-minibuffer-match-face-4 ((t
+     :background (x-get-resource "color12" "") :weight bold))))
+
+     ;;    (custom-set-faces
+  ;; '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
+  ;; '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
+  ;; '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
+  ;; '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold))))
+
+     :bind ("C-s" . swiper))
+     #+END_SRC
+
+#+RESULTS:
+: swiper
+
 ** search somewhere else "M-x/dired/etc" =counsel=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smex)
@@ -316,7 +330,11 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
   :after ivy smex
   :delight
   :init(counsel-mode 1))
+(use-package counsel-major)
+
 #+END_SRC
+
+#+RESULTS:
 
 ** improved text search =ripgrep=
 ripgrep is an alternative of grep that is faster and respect .gitignore
@@ -546,7 +564,7 @@ electric-indent-mode.
 :custom (aggressive-indent-comments-too t))
 #+END_SRC
 ** Decoration
-*** colorize background of text color like green =rainbow-mode=
+*** TODO colorize background of text color like green =rainbow-mode=
 Colorize colors as text with their value.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package rainbow-mode
@@ -554,7 +572,7 @@ Colorize colors as text with their value.
   :custom
     (rainbow-x-colors t)
     (rainbow-r-colors t)
-  :init(rainbow-mode))
+:init(rainbow-mode))
 #+END_SRC
 *** TODO Show line at 80 char =fill-column-indicator=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -634,8 +652,9 @@ Colorize colors as text with their value.
 **** Json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package json-mode
-:mode ("\\.json$" . json-mode))
-#+END_SRC
+ :mode ("\\.json$" . json-mode))
+ #+END_SRC
+
 **** Markdown
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package markdown-mode
@@ -713,7 +732,7 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
-   :bind ("C-x g" . magit-status)
+   :bind ("C-c g" . magit-status)
    :delight " ")
 (use-package git-commit
   :after magit
