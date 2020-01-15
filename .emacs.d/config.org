@@ -222,7 +222,7 @@ xresources-theme qui respect les couleurs de Xressources
     :config
     (set-face-attribute 'region nil :background (x-get-resource "color12" ""))
     (set-face-background 'hl-line (x-get-resource "color8" "")))
-
+    :init
     (defvar my/theme 'xresources)
     (defvar my/theme-window-loaded nil)
     (defvar my/theme-terminal-loaded nil)
@@ -320,21 +320,19 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
      :bind ("C-s" . swiper))
      #+END_SRC
 
-#+RESULTS:
-: swiper
-
 ** search somewhere else "M-x/dired/etc" =counsel=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smex)
 (use-package counsel
   :after ivy smex
   :delight
+  :bind (:map org-mode-map ("C-c o" . counsel-outline))
   :init(counsel-mode 1))
 (use-package counsel-major)
-
 #+END_SRC
 
 #+RESULTS:
+: t
 
 ** improved text search =ripgrep=
 ripgrep is an alternative of grep that is faster and respect .gitignore
@@ -823,7 +821,7 @@ update path of emacs to user path
 * Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
  (use-package gnus
- :bind (("C-x e" . gnus)
+ :bind (("C-c m" . gnus)
  :map gnus-group-mode-map
    ("C-c C-f" . gnus-summary-mail-forward))
  :delight "")
@@ -837,16 +835,17 @@ update path of emacs to user path
  :config
  (all-the-icons-gnus-setup))
 #+END_SRC
+
 * media
 ** TODO mpd interface =mpdel=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package mpdel
-:delight " "
-:bind-keymap
-("C-c m" . mpdel-prefix-key)
-:ensure-system-package (mdp . "yay -S mpd"))
-(use-package ivy-mpdel
-:after mpdel)
+  ;; (use-package mpdel
+  ;; :delight " "
+  ;; :bind-keymap
+  ;; ("C-c m" . mpdel-prefix-key)
+  ;; :ensure-system-package (mdp . "yay -S mpd"))
+  ;; (use-package ivy-mpdel
+  ;; :after mpdel)
 #+END_SRC
 * Organiser/calendar/linker/etc =org-mode=
 Amazing mode of GNU Emacs.
@@ -1026,35 +1025,47 @@ Org super agenda allows a more readible agenda by grouping the todo item
 (cfw:org-overwrite-default-keybinding t))
 #+END_SRC
 
-*** Caldav sync =org-caldav=
+*** TODO Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-caldav
   :init
   (defvar org-caldav-sync-timer nil
     "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-    (defun org-caldav-sync-with-delay (secs)
-    (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-    (setq org-caldav-sync-timer
-                   (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-                   (setq org-caldav-url
-   "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-   (setq org-caldav-calendar-id "calendar")
-   (setq org-caldav-inbox "~/org/sync2.org")
-   (setq org-caldav-files '("~/org/master.org"))
-   :config
-   (setq org-icalendar-alarm-time 1)
-   (setq org-caldav-show-sync-results nil)
-   (setq org-icalendar-include-todo t)
-   (setq org-icalendar-use-deadline
-    '(event-if-todo event-if-not-todo todo-due))
-   (setq org-icalendar-use-scheduled
+  (defun org-caldav-sync-with-delay (secs)
+  (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+  (setq org-caldav-sync-timer
+  (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+  (setq org-caldav-url
+  "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+  (setq org-caldav-backup-file "~/org/backup.org")
+  ;; (setq org-caldav-calendars
+  ;; '((:calendar-id "master"
+  ;;     :files "~/org/master.org"
+  ;;     :inbox "~/org/master-sync.org")
+  ;;     (:calendar-id "claire"
+  ;;     :files "~/org/claire.org"
+  ;;     :inbox "~/org/claire-sync.org")
+  ;;     (:calendar-id "work"
+  ;;     :sync 'cal->org
+  ;;     :url ('google "sylvain@cryptium.ch")
+  ;;     :inbox "~/org/work.org")))
+  (setq org-caldav-calendar-id "calendar")
+  (setq org-caldav-inbox "~/org/master-sync.org")
+  (setq org-caldav-files '("~/org/master.org"))
+  :config
+  (setq org-icalendar-alarm-time 1)
+  (setq org-caldav-show-sync-results nil)
+  (setq org-icalendar-include-todo t)
+  (setq org-icalendar-use-deadline
+  '(event-if-todo event-if-not-todo todo-due))
+  (setq org-icalendar-use-scheduled
     '(todo-start event-if-todo event-if-not-todo))
-   :hook (
+    :hook (
     (kill-emacs . org-caldav-sync)
     (after-save .
       (lambda ()
          (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30))))) )
-#+END_SRC
+         #+END_SRC
 ** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
