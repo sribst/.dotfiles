@@ -326,13 +326,8 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
 (use-package counsel
   :after ivy smex
   :delight
-  :bind (:map org-mode-map ("C-c o" . counsel-outline))
-  :init(counsel-mode 1))
-(use-package counsel-major)
+  :init (counsel-mode 1))
 #+END_SRC
-
-#+RESULTS:
-: t
 
 ** improved text search =ripgrep=
 ripgrep is an alternative of grep that is faster and respect .gitignore
@@ -747,11 +742,8 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
 
 *** Forge =forge=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package forge
-  :after magit
-  :delight
-  )
-#+END_SRC
+  (use-package forge :after magit :delight)
+  #+END_SRC
 *** current modification =git-gutter=
 In addition to that, I like to see the lines that are being modified in the file
 while it is being edited.
@@ -850,23 +842,25 @@ update path of emacs to user path
 * Organiser/calendar/linker/etc =org-mode=
 Amazing mode of GNU Emacs.
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package org
+  (use-package org
   :ensure org-plus-contrib
   :delight " "
   :bind
-   ("C-c l" . org-store-link)
-   ("C-c a" . org-agenda)
-   ("C-c c" . org-capture)
+    (:map org-mode-map ("C-c o" . counsel-outline))
+    ("C-c l" . org-store-link)
+    ("C-c a" . org-agenda)
+    ("C-c c" . org-capture)
   :config
-     (org-babel-do-load-languages
-        'org-babel-lpoad-languages '((calc . t)))
+    (org-babel-do-load-languages
+    'org-babel-lpoad-languages '((calc . t)))
   :custom
-     (org-use-extra-keys t)
-     (org-catch-invisible-edits 'show-and-error)
-     (org-cycle-separator-lines 0)
-     (org-refile-use-outline-path 3)
+    (org-ellipsis " ⤵")
+    (org-use-extra-keys t)
+    (org-catch-invisible-edits 'show-and-error)
+    (org-cycle-separator-lines 0)
+    (org-refile-use-outline-path 3)
   :hook
-     ((after-save . my/config-tangle)
+    ((after-save . my/config-tangle)
       (auto-save . org-save-all-org-buffers)))
 #+END_SRC
 ** Table of content =toc-org=

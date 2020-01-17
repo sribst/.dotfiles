@@ -1,5 +1,7 @@
 ! Font settings
-Emacs.font: DejaVuSansMono-11
+!Emacs.font: Vera-11
+ Emacs.font: DejaVuSansMono-11
+!*.font: xft:Vera:size=11
 *.font: xft:DejaVuSansMono:size=11
 *.FontBackend: xft,x
 

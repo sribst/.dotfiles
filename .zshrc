@@ -375,3 +375,6 @@ path+=.
 # [[ $- = *i* ]] && source liquidprompt
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+
+# remove tezos warning for sandbox
+export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=Y
