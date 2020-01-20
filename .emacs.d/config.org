@@ -663,6 +663,20 @@ Colorize colors as text with their value.
     :init
     (advice-add 'python-mode :before 'elpy-enable))
 #+END_SRC
+**** nix
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package nix-mode
+  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+(use-package nix-drv-mode
+  :ensure nix-mode
+  :mode "\\.drv\\'")
+(use-package nix-shell
+  :ensure nix-mode
+  :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
+(use-package nix-repl
+  :ensure nix-mode
+  :commands (nix-repl))
+#+END_SRC
 *** Pdf =pdf-tools=
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package pdf-tools
