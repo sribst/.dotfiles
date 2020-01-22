@@ -1044,8 +1044,8 @@ Org super agenda allows a more readible agenda by grouping the todo item
   (setq org-caldav-sync-timer
   (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
   (setq org-caldav-url
-  "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-  (setq org-caldav-backup-file "~/org/backup.org")
+    "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+    (setq org-caldav-backup-file "~/org/backup.org")
   ;; (setq org-caldav-calendars
   ;; '((:calendar-id "master"
   ;;     :files "~/org/master.org"
@@ -1057,7 +1057,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
   ;;     :sync 'cal->org
   ;;     :url ('google "sylvain@cryptium.ch")
   ;;     :inbox "~/org/work.org")))
-  (setq org-caldav-calendar-id "calendar")
+  (setq org-caldav-calendar-id "master")
   (setq org-caldav-inbox "~/org/master-sync.org")
   (setq org-caldav-files '("~/org/master.org"))
   :config
