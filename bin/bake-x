@@ -1,0 +1,11 @@
+#!/bin/bash
+
+n=0
+x=60
+# baker="baker1"
+baker="bootstrap1"
+while (( $n <= $x ))
+do
+    tezos-client bake for $baker --minimal-timestamp
+    n=$(( n + 1 ))
+done
