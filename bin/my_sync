@@ -2,8 +2,6 @@
 cd $HOME
 RED='\033[0;31m'
 echo -e "${RED}\033[5mMAJ PASS\033[0m"
-pass git pull
-# pass git add -u
 gopass sync
 rm -f ~/emacs.d/config.el
 echo -e "${RED}\033[5mMAJ DOTFILES\033[0m"
