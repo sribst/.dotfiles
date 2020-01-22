@@ -11,7 +11,7 @@ HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
 
 
-if [ ! -d "${TMP}" ]; then mkdir "${TMP}"; fi
+# if [ ! -d "${TMP}" ]; then mkdir "${TMP}"; fi
 
 # if ! [[ "${PATH}" =~ "^${HOME}/bin" ]]; then
 #     export PATH="${HOME}/bin:${PATH}"
@@ -297,6 +297,7 @@ alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias diff='diff --color=auto'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias private='/usr/bin/git --git-dir=$HOME/.private/ --work-tree=$HOME'
 typeset -A key
 
 # Emacs key binding
