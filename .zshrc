@@ -297,7 +297,7 @@ alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias diff='diff --color=auto'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-alias private='/usr/bin/git --git-dir=$HOME/.private/ --work-tree=$HOME'
+alias privateconf='/usr/bin/git --git-dir=$HOME/.private/ --work-tree=$HOME'
 typeset -A key
 
 # Emacs key binding
