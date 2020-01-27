@@ -11,6 +11,8 @@
 set $mod Mod4
 
 font pango:Open Sans 10
+font-3 = FontAwesome5Free:style=Solid:pixelsize=18:antialias=false;3
+font-4 = FontAwesome5Brands:style=Solid:pixelsize=18:antialias=false;3
 # font pango:Open Sans,file-icons 10
 # font pango:FontAwesome 9
 # font pango:file-icons 9
@@ -263,7 +265,7 @@ bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # Lock screen
-bindsym $mod+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p default && gpg-connect-agent reloadagent /bye"
+bindsym $mod+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p default"
 
 #bepo
 # bindsym $mod+Menu exec --no-startup-id bepo_switch
@@ -306,3 +308,6 @@ exec --no-startup-id autorandr --change
 # exec i3-msg workspace $ws3 ; emacsclient -c
 # exec i3-msg workspace $ws1 ; emacsclient -c
 # exec_always --no-startup-id dunst -lb "$bg" -nb "$bg" -cb "$bg" -lf "$fg" -bf "fg" -cf "$fg" -nf "$fg" -fn "ypn envypn 12" -s -geometry "400x60-10+40" -format "<b>%s</b>\n%b" -shrink  -lto 3 -nto 5 -cto 0 -align "left" -transparency 0 -padding 8 -horizontal_padding 8
+
+# screen keyboard
+exec --no-startup-id onboard &
