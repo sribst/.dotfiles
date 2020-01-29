@@ -99,18 +99,18 @@ Update current package
 
 *** menu/search =paradox=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package paradox
-:init (paradox-enable)
-:custom
-(paradox-column-width-package 27)
-(paradox-column-width-version 13)
-(paradox-execute-asynchronously t)
-(paradox-hide-wiki-packages t)
-:config
-(setq paradox-github-token (cadr (auth-source-user-and-password "api.github.com" "sribst^paradox")))
-(paradox-enable)
-(remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
-#+END_SRC
+  (use-package paradox
+  :init (paradox-enable)
+  :custom
+  (paradox-column-width-package 27)
+  (paradox-column-width-version 13)
+  (paradox-execute-asynchronously t)
+  (paradox-hide-wiki-packages t)
+  :config
+  (setq paradox-github-token (cadr (auth-source-user-and-password "api.github.com" "sribst^paradox")))
+  (paradox-enable)
+  (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
+  #+END_SRC
 
 ** configuration
 *** "global variable"
@@ -305,23 +305,19 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
   (use-package swiper
   :after ivy
   :config
-  (custom-set-faces '(swiper-minibuffer-match-face-1 ((t
-     :background (x-get-resource "color11" ""))))
-     '(swiper-minibuffer-match-face-2 ((t
-     :background (x-get-resource "color9" "") :weight bold)))
-     '(swiper-minibuffer-match-face-3 ((t
-     :background (x-get-resource "color10" "") :weight bold)))
-     '(swiper-minibuffer-match-face-4 ((t
-     :background (x-get-resource "color12" "") :weight bold))))
-
-     ;;    (custom-set-faces
-  ;; '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
-  ;; '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
-  ;; '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
-  ;; '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold))))
-
-     :bind ("C-s" . swiper))
-#+END_SRC
+  ;; (setq ivy-display-style 'fancy)
+  (custom-set-faces
+   `(swiper-line-face ((t (:background ,(x-get-resource "color12" "")))))
+   `(swiper-match-face-1 ((t (:background ,(x-get-resource "color11" "")))))
+   `(swiper-match-face-2 ((t (:background ,(x-get-resource "color9" "") :weight bold))))
+   `(swiper-match-face-3 ((t (:background ,(x-get-resource "color10" "") :weight bold))))
+   `(swiper-match-face-4 ((t (:background ,(x-get-resource "color13" "") :weight bold))))
+   `(swiper-minibuffer-match-face-1 ((t (:background ,(x-get-resource "color11" "")))))
+   `(swiper-minibuffer-match-face-2 ((t (:background ,(x-get-resource "color9" "") :weight bold))))
+   `(swiper-minibuffer-match-face-3 ((t (:background ,(x-get-resource "color10" "") :weight bold))))
+   `(swiper-minibuffer-match-face-4 ((t (:background ,(x-get-resource "color13" "") :weight bold)))))
+   :bind ("C-s" . swiper))
+   #+END_SRC
 
 ** search somewhere else "M-x/dired/etc" =counsel=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -386,9 +382,6 @@ It's show which mode on the main bar
   (nyan-wavy-trail t)
   (nyan-bar-length 15))
 #+END_SRC
-
-#+RESULTS:
-: t
 * Interface interaction
 ** Buffer
 *** parameter
@@ -644,12 +637,13 @@ Colorize colors as text with their value.
       :ensure nil
       :custom
       (ocamlformat-show-errors 'echo)
-      (ocamlformat-enable 'enable-outside-detected-project)
+      (ocamlformat-enable 'disable)
       :ensure-system-package (ocamlformat . "opam install ocamlformat")
       :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
       :hook (before-save . #'ocamlformat-before-save)
       :after tuareg)
 #+END_SRC
+
 **** Json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package json-mode
