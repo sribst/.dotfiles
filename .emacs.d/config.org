@@ -218,26 +218,28 @@ I find invasive.
 *** Theme
 xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package xresources-theme :defer t
-    :config
-    (set-face-attribute 'region nil :background (x-get-resource "color12" ""))
-    (set-face-background 'hl-line (x-get-resource "color8" "")))
-    :init
-    (defvar my/theme 'xresources)
-    (defvar my/theme-window-loaded nil)
-    (defvar my/theme-terminal-loaded nil)
+(use-package xresources-theme :defer t
+:config
+(set-face-attribute 'region nil :background (x-get-resource "color12" ""))
+(set-face-background 'hl-line (x-get-resource "color8" "")))
 
-    (if (daemonp)
+(defvar my/theme 'xresources)
+(defvar my/theme-window-loaded nil)
+(defvar my/theme-terminal-loaded nil)
+
+(global-hl-line-mode 1) ; Hightlight current line
+
+(if (daemonp)
         (add-hook 'after-make-frame-functions
           (lambda (frame)
-            (select-frame frame)
-            (if (window-system frame)
-                (unless my/theme-window-loaded
-                  (if my/theme-terminal-loaded
+          (select-frame frame)
+          (if (window-system frame)
+          (unless my/theme-window-loaded
+          (if my/theme-terminal-loaded
                       (enable-theme my/theme)
                       (load-theme my/theme t))
-                  (setq my/theme-window-loaded t))
-                (unless my/theme-terminal-loaded
+                      (setq my/theme-window-loaded t))
+                  (unless my/theme-terminal-loaded
                   (if my/theme-window-loaded
                     (enable-theme my/theme)
                   (load-theme my/theme t))
@@ -249,22 +251,23 @@ xresources-theme qui respect les couleurs de Xressources
               (setq my/theme-terminal-loaded t))))
 #+END_SRC
 
-#+RESULTS:
-| (lambda (frame) (select-frame frame) (if (window-system frame) (unless my/theme-window-loaded (if my/theme-terminal-loaded (enable-theme my/theme) (load-theme my/theme t)) (setq my/theme-window-loaded t)) (unless my/theme-terminal-loaded (if my/theme-window-loaded (enable-theme my/theme) (load-theme my/theme t)) (setq my/theme-terminal-loaded t)))) | (lambda (frame) (select-frame frame) (if (window-system frame) (if my/theme-window-loaded nil (if my/theme-terminal-loaded (enable-theme my/theme) (load-theme my/theme t)) (setq my/theme-window-loaded t)) (if my/theme-terminal-loaded nil (if my/theme-window-loaded (enable-theme my/theme) (load-theme my/theme t)) (setq my/theme-terminal-loaded t)))) | (lambda (frame) (auto-package-update-maybe)) | x-dnd-init-frame |
-
 *** font
 **** icons ==all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package all-the-icons)
+  ;; (set-frame-font "ProggyClean-14")
+  (use-package all-the-icons)
+  #+END_SRC
+
+**** dimme non focus buffer =dimmer=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dimmer
+:init (dimmer-mode t))
 #+END_SRC
 * Mini-buffer
 ** parameter
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (fset 'yes-or-no-p 'y-or-n-p) ; Replace yes/no prompts with y/n
+(fset 'yes-or-no-p 'y-or-n-p) ; Replace yes/no prompts with y/n
 #+END_SRC
-
-#+RESULTS:
-: y-or-n-p
 
 ** Auto-completion engine =ivy=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -471,7 +474,6 @@ basic default value to enable
 (put 'upcase-region   'disabled nil) ; Allow C-x C-u
 (put 'downcase-region 'disabled nil) ; Allow C-x C-l
 (show-paren-mode 1) ; Show the parenthesis
-(global-hl-line-mode) ; Hightlight current line
 (transient-mark-mode t) ; same mark mouse or keyboard
 (setq blink-cursor-mode nil) ; the cursor wont blink
 (setq indent-tabs-mode nil) ; use space instead of tab to indent
@@ -832,13 +834,13 @@ update path of emacs to user path
 
 * Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package gnus
- :bind (("C-c m" . gnus)
- :map gnus-group-mode-map
+(use-package gnus
+:bind (("C-c m" . gnus)
+:map gnus-group-mode-map
    ("C-c C-f" . gnus-summary-mail-forward))
- :delight "")
+:delight "")
 
- (use-package w3m
+(use-package w3m
  :delight ""
  :after gnus)
 
@@ -1042,17 +1044,34 @@ Org super agenda allows a more readible agenda by grouping the todo item
 
 *** TODO Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-caldav
-  :init
-  (defvar org-caldav-sync-timer nil
+(use-package org-caldav
+:init
+(defvar org-caldav-sync-timer nil
     "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-  (defun org-caldav-sync-with-delay (secs)
+    (defun org-caldav-sync-with-delay (secs)
   (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
   (setq org-caldav-sync-timer
   (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
   (setq org-caldav-url
     "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
     (setq org-caldav-backup-file "~/org/backup.org")
+  (setq org-caldav-calendar-id "master")
+  (setq org-caldav-inbox "~/org/master-sync.org")
+  (setq org-caldav-files '("~/org/master.org"))
+  :config
+  (setq org-icalendar-alarm-time 1)
+  (setq org-caldav-show-sync-results nil)
+  (setq org-icalendar-include-todo t)
+  (setq org-icalendar-use-deadline
+  '(event-if-todo event-if-not-todo todo-due))
+  ;; (setq org-icalendar-use-scheduled
+  ;;   '(todo-start event-if-todo event-if-not-todo))
+  ;;   :hook (
+  ;;   (kill-emacs . org-caldav-sync)
+  ;;   (after-save .
+  ;;     (lambda ()
+  ;;        (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
+  )
   ;; (setq org-caldav-calendars
   ;; '((:calendar-id "master"
   ;;     :files "~/org/master.org"
@@ -1064,23 +1083,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
   ;;     :sync 'cal->org
   ;;     :url ('google "sylvain@cryptium.ch")
   ;;     :inbox "~/org/work.org")))
-  (setq org-caldav-calendar-id "master")
-  (setq org-caldav-inbox "~/org/master-sync.org")
-  (setq org-caldav-files '("~/org/master.org"))
-  :config
-  (setq org-icalendar-alarm-time 1)
-  (setq org-caldav-show-sync-results nil)
-  (setq org-icalendar-include-todo t)
-  (setq org-icalendar-use-deadline
-  '(event-if-todo event-if-not-todo todo-due))
-  (setq org-icalendar-use-scheduled
-    '(todo-start event-if-todo event-if-not-todo))
-    :hook (
-    (kill-emacs . org-caldav-sync)
-    (after-save .
-      (lambda ()
-         (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30))))) )
-#+END_SRC
+  #+END_SRC
 ** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured

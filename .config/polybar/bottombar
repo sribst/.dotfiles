@@ -1,27 +1,26 @@
 [bar/bottombar]
-    monitor = ${env:MONITOR:eDP1}
+    monitor = ${env:MONITOR:}
     width = 100%
-    height = 22
+    height = 16
     bottom = true
 
     background = ${xrdb:background}
-    foreground = ${xrdb:color6}
+    foreground = ${xrdb:color7}
 
-    font-0 = Open Sans:pixelsize=14;1
-    font-1 = file\-icons:style=Regular:pixelsize=14;1
-    font-2 = FontAwesome:style=Regular:pixelsize=14;1
-    font-3 = FontAwesome5Free:style=Solid:pixelsize=14:antialias=false;3
-    font-4 = FontAwesome5Brands:style=Solid:pixelsize=14:antialias=false;3
-    font-5 = Material Icons:style=Regular:pixelsize=14;1
-    font-6 = octicons:style=Regular:pixelsize=14;1
-    font-7 = github\-octicons:style=Regular:pixelsize=14;1
-    font-8 = Icons:style=Regular:pixelsize=14;1
+    font-0 = Open Sans:pixelsize=11;1
+    font-1 = file\-icons:style=Regular:pixelsize=11;1
+    font-2 = FontAwesome:style=Regular:pixelsize=11;1
+    font-3 = FontAwesome5Free:style=Solid:pixelsize=11:antialias=false;3
+    font-4 = FontAwesome5Brands:style=Solid:pixelsize=11:antialias=false;3
+    font-5 = Material Icons:style=Regular:pixelsize=11;1
+    font-6 = octicons:style=Regular:pixelsize=11;1
+    font-7 = github\-octicons:style=Regular:pixelsize=11;1
+    font-8 = Icons:style=Regular:pixelsize=11;1
 
-    separator = " :|: "
+    separator = "  :|:  "
     separator-foreground = ${xrdb:foreground}
-    modules-left   = touchbrightdown backlight touchbrightup touchvoldown alsa touchvolup
-    ;; cpu memory
-    modules-center = i3 i3touchmenu touchredraw  touchkeyboard
+    modules-left   = touchinterface backlight alsa cpu memory
+    modules-center = i3
     modules-right  = wired-network wireless-network battery0 temperature date
 
     tray-position = right
@@ -29,20 +28,6 @@
 
     scroll-up = i3wm-wsnext
     scroll-down = i3wm-wsprev
-
-[module/alsa]
-    type = internal/alsa
-    master-soundcard = default
-    speaker-soundcard = default
-    headphone-soundcard = default
-    format-volume = <label-volume>
-    label-volume =  %percentage%%
-
-    label-muted =  %percentage%%
-    label-muted-foreground = ${xrdb:color8}
-
-    master-mixer = Master
-    interval = 5
 
 [module/wired-network]
     type = internal/network
@@ -58,21 +43,23 @@
     type = internal/backlight
     format = <label>
     label  =  %percentage%%
+    label-foreground=${xrdb:color7}
     card = intel_backlight
 
-[module/touchbrightdown]
-   ;; Brightness down
-   type=custom/text
-   content=
-   content-foreground=${xrdb:color8}
-   click-left=xbacklight -dec 10
+[module/alsa]
+    type = internal/alsa
+    master-soundcard = default
+    speaker-soundcard = default
+    headphone-soundcard = default
+    format-volume = <label-volume>
+    label-volume =  %percentage%%
+    label-foreground = ${xrdb:color7}
 
-[module/touchbrightup]
-;; Brightness up
-type=custom/text
-content= 
-content-foreground=${xrdb:color8}
-click-left=xbacklight -inc 10
+    label-muted =  %percentage%%
+    label-muted-foreground = ${xrdb:color8}
+
+    master-mixer = Master
+    interval = 5
 
 [module/memory]
     type = internal/memory
@@ -118,13 +105,22 @@ click-left=xbacklight -inc 10
     ; Framerate in milliseconds
     animation-discharging-framerate = 500
 
+[module/date]
+    type = internal/date
+    interval = 5
+
+    date = "%y-%m-%d"
+    time = "%H:%M"
+
+    label = %date% %time%
+
 [module/i3]
     type = internal/i3
     index-sort = true
     wrapping-scroll = true
     pin-workspaces = true
 
-label-separator = |
+    label-separator = |
     label-separator-padding = 2
     label-separator-foreground = ${xrdb:foreground}
 
@@ -133,243 +129,9 @@ label-separator = |
     label-focused-foreground   = ${xrdb:color6}
     label-urgent-foreground    = ${xrdb:color1}
 
-[module/date]
-    type = internal/date
-    interval = 5
-
-    date = "%Y-%m-%d"
-    time = " %H:%M"
-
-    label = %date% %time%
-
-[module/touchvoldown]
-;; Volume down
-   type=custom/text
-   content=""
-   content-foreground= ${xrdb:color8}
-   click-left=amixer -D default sset Master 5%-
-
-[module/touchvolup]
-   type=custom/text
-   content=""
-   content-foreground=${xrdb:color6}
-   click-left=amixer -D default sset Master 5%+
-
-[module/touchredraw]
+[module/touchinterface]
 ;; Restart i3 in order to redraw polybar to fit screen orientation
    type=custom/text
-   content = ""
+   content = ""
    content-foreground=${xrdb:color8}
-   click-left = i3-msg 'restart'
-
-[module/touchkeyboard]
-;; Open onscreen keyboard (onboard)
-   type=custom/text
-   content=""
-   content-foreground=${xrdb:color8}
-   click-left=dbus-send --type=method_call --print-reply --dest=org.onboard.Onboard /org/onboard/Onboard/Keyboard org.onboard.Onboard.Keyboard.ToggleVisible
-
-[module/i3touchmenu]
-type = custom/menu
-
-expand-right = true
-
-format-spacing = 1
-
-;; Open the menu
-label-open = "    "
-label-open-foreground = ${xrdb:color8}
-
-;; Close the menu
-label-close = 
-label-close-foreground = ${xrdb:color8}
-label-separator = "    "
-label-separator-foreground = ${xrdb:color8}
-
-;; Launcher
-menu-0-0 = 
-menu-0-0-exec = menu-open-1
-
-;; Move
-menu-0-1 = 
-menu-0-1-exec = menu-open-2
-
-;; Layout
-menu-0-2 = 
-menu-0-2-exec = menu-open-3
-
-;; Split
-menu-0-3 = 
-menu-0-3-exec = menu-open-4
-
-;; Resize
-menu-0-4 = 
-menu-0-4-exec = menu-open-5
-
-;; Move to workspace
-menu-0-5 = 
-menu-0-5-exec = menu-open-6
-
-;; Kill
-menu-0-6 = 
-menu-0-6-exec = menu-open-7
-
-;; Power
-menu-0-7 ="    "
-menu-0-7-exec = menu-open-8
-
-;; Launcher: Back to main menu
-menu-1-0 = 
-menu-1-0-exec = menu-open-0
-
-;; Launcher: chromium
-menu-1-1=
-menu-1-1-exec= firefox &
-
-;; Launcher: urxvt
-menu-1-2="    "
-menu-1-2-exec = urxvt &
-
-;; Move: Back to main menu
-menu-2-0 = 
-menu-2-0-exec = menu-open-0
-
-;; Move: Left
-menu-2-1 = 
-menu-2-1-exec = i3-msg 'move left'
-
-;; Move: Right
-menu-2-2 = 
-menu-2-2-exec = i3-msg 'move right'
-
-;; Move: Up
-menu-2-3 = 
-menu-2-3-exec = i3-msg 'move up'
-
-;; Move: Down
-menu-2-4 = "    "
-menu-2-4-exec = i3-msg 'move down'
-
-;; Layout: Back to main menu
-menu-3-0 = 
-menu-3-0-exec = menu-open-0
-
-;; Layout: Split
-menu-3-1 = 
-menu-3-1-exec = i3-msg 'layout toggle split'
-
-;; Layout: Stacking
-menu-3-2 = 
-menu-3-2-exec = i3-msg 'layout stacking'
-
-;; Layout: Tabbed
-menu-3-3 = 
-menu-3-3-exec = i3-msg 'layout tabbed'
-
-;; Layout: Toggle floating
-menu-3-4 = "    "
-menu-3-4-exec = i3-msg 'floating toggle'
-
-;; Split: Back to main menu
-menu-4-0 = 
-menu-4-0-exec = menu-open-0
-
-;; Split: Vertical
-menu-4-1 = 
-menu-4-1-exec = i3-msg 'split v'
-
-;; Split: Horizontal
-menu-4-2 = "    "
-menu-4-2-exec = i3-msg 'split h'
-
-;; Resize: Back to main menu
-menu-5-0 = 
-menu-5-0-exec = menu-open-0
-
-;; Resize: Grow height
-menu-5-1 = 
-menu-5-1-exec = i3-msg 'resize grow height 5 px or 5 ppt'
-
-;; Resize: Shrink height
-menu-5-2 =
-menu-5-2-exec = i3-msg 'resize shrink height 5 px or 5 ppt'
-
-;; Resize: Grow width
-menu-5-3 = 
-menu-5-3-exec = i3-msg 'resize grow width 5 px or 5 ppt'
-
-;; Resize: Shrink width
-menu-5-4 = "    "
-menu-5-4-exec = i3-msg 'resize shrink width 5 px or 5 ppt'
-
-;; Move to workspace: Back to main menu
-menu-6-0 = 
-menu-6-0-exec = menu-open-0
-
-;; Move to workspace: 1
-menu-6-1 = 1
-menu-6-1-exec = i3-msg 'move container to workspace 1'
-
-;; Move to workspace: 2
-menu-6-2 = 2
-menu-6-2-exec = i3-msg 'move container to workspace 2'
-
-;; Move to workspace: 3
-menu-6-3 = 3
-menu-6-3-exec = i3-msg 'move container to workspace 3'
-
-;; Move to workspace: 4
-menu-6-4 = 4
-menu-6-4-exec = i3-msg 'move container to workspace 4'
-
-;; Move to workspace: 5
-menu-6-5 = 5
-menu-6-5-exec = i3-msg 'move container to workspace 5'
-
-;; Move to workspace: 6
-menu-6-6 = 6
-menu-6-6-exec = i3-msg 'move container to workspace 6'
-
-;; Move to workspace: 7
-menu-6-7 = 7
-menu-6-7-exec = i3-msg 'move container to workspace 7'
-
-;; Move to workspace: 8
-menu-6-8 = 8
-menu-6-8-exec = i3-msg 'move container to workspace 8'
-
-;; Move to workspace: 9
-menu-6-9 = 9
-menu-6-9-exec = i3-msg 'move container to workspace 9'
-
-;; Move to workspace: 10
-menu-6-10 = "10    "
-menu-6-10-exec = i3-msg 'move container to workspace 10'
-
-;; Kill: Back to main menu
-menu-7-0 = 
-menu-7-0-exec = menu-open-0
-
-;; Kill: Kill
-menu-7-1 = "You sure?        "
-menu-7-1-exec = i3-msg 'kill'
-
-;; Power: Back to main menu
-menu-8-0 = 
-menu-8-0-exec = menu-open-0
-
-;; Power: Screen off
-menu-8-1 = 
-menu-8-1-exec = xset dpms force off
-
-;; Power: Lock
-menu-8-2 = 
-menu-8-2-exec = i3lock-fancy-rapid 2 3 -u -p default
-
-;; Power: Reboot
-menu-8-3 = 
-menu-8-3-exec = shutdown -r now
-
-;; Power: Shutdown
-menu-8-4 = "   "
-menu-8-4-exec = shutdown -h now
+   click-left = $HOME/bin/starttouchbar

@@ -2,8 +2,10 @@
 monitor = ${env:MONITOR:}
 width = 100%
 height = 20
+
 offset-x = 0
 offset-y = 7
+
 padding-right = 7
 padding-left = 7
 
