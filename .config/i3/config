@@ -288,24 +288,19 @@ gaps inner $default_gaps_inner
 gaps outer $default_gaps_inner
 # gaps top    all set $default_gaps_outer
 # gaps bottom all set $default_gaps_outer
-
 smart_gaps on
 smart_borders on
 
-exec_always --no-startup-id apodFetch -r; feh --no-fehbg --bg-center ~/.config/apod/apod.png ~/.config/apod/apod.png
 
-#background
-exec --no-startup-id nextcloud
-
-# starting script
-# exec --no-startup-id xrandr-start
-exec --no-startup-id autorandr --change
-
-# start firefox emacs urxvt
-# exec_always --no-startup-id dunst -lb "$bg" -nb "$bg" -cb "$bg" -lf "$fg" -bf "fg" -cf "$fg" -nf "$fg" -fn "ypn envypn 12" -s -geometry "400x60-10+40" -format "<b>%s</b>\n%b" -shrink  -lto 3 -nto 5 -cto 0 -align "left" -transparency 0 -padding 8 -horizontal_padding 8
-
-# rotate screen when pc is turned
+# cloud
+exec --no-startup-id nextcloud &
+# screen detection
+exec --no-startup-id autorandr --change &
+# automount
 exec --no-startup-id udiskie-dmenu &
+# rotate screen when pc is turned
 exec --no-startup-id screenrotator &
+# touchscreen keyboard
 exec --no-startup-id onboard -l fr -a &
+# touchscreen gesture
 exec --no-startup-id touchegg &
