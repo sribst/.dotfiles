@@ -1,15 +1,8 @@
 ! Font settings
-! Emacs.font: Vera-11
-! Emacs.font: ProggyClean-11
 Emacs.font: DejaVuSansMono-11
-
-! *.font: xft:Vera:size=11
 *.font: xft:ProggyClean:size=11
-!* .font: xft:DejaVuSansMono:size=18
 *.FontBackend: xft,x
-
-! *.font: xft:*:size=12
-! *.letterSpace:-2
+*.letterSpace:-4
 URxvt.scrollBar: false
 ! urxvt*depth: 32
 ! urxvt*background: rgba:0000/0000/0200/c800

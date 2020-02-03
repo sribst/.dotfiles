@@ -28,7 +28,36 @@
 
     scroll-up = i3wm-wsnext
     scroll-down = i3wm-wsprev
+[bar/infobar]
+    monitor = ${env:MONITOR:}
+    width = 100%
+    height = 16
+    bottom = true
 
+    background = ${xrdb:background}
+    foreground = ${xrdb:color7}
+
+    font-0 = Open Sans:pixelsize=11;1
+    font-1 = file\-icons:style=Regular:pixelsize=11;1
+    font-2 = FontAwesome:style=Regular:pixelsize=11;1
+    font-3 = FontAwesome5Free:style=Solid:pixelsize=11:antialias=false;3
+    font-4 = FontAwesome5Brands:style=Solid:pixelsize=11:antialias=false;3
+    font-5 = Material Icons:style=Regular:pixelsize=11;1
+    font-6 = octicons:style=Regular:pixelsize=11;1
+    font-7 = github\-octicons:style=Regular:pixelsize=11;1
+    font-8 = Icons:style=Regular:pixelsize=11;1
+
+    separator = "  :|:  "
+    separator-foreground = ${xrdb:foreground}
+    modules-left   = touchinterface backlight alsa cpu memory
+    modules-center = i3
+    modules-right  = wired-network wireless-network battery0 temperature date
+
+    tray-position = right
+    tray-padding = 5
+
+    scroll-up = i3wm-wsnext
+    scroll-down = i3wm-wsprev
 [module/wired-network]
     type = internal/network
     interface = enp0s31f6

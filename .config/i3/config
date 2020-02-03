@@ -280,10 +280,10 @@ assign [class="^Signal"]   → $ws4
 
 # gaps between windows
 
-for_window [class=".*"] border pixel 4
+for_window [class=".*"] border pixel 2
 
-set $default_gaps_inner 5
-set $default_gaps_outer 5
+set $default_gaps_inner 4
+set $default_gaps_outer 8
 gaps inner $default_gaps_inner
 gaps outer $default_gaps_inner
 # gaps top    all set $default_gaps_outer
@@ -302,15 +302,10 @@ exec --no-startup-id nextcloud
 exec --no-startup-id autorandr --change
 
 # start firefox emacs urxvt
-# exec --no-startup-id firefox
-# exec --no-startup-id xrandr --output DP2 --mode 1920x1080 --primary --above eDP1 --mode 1920x1080
-# exec --no-startup-id i3-msg workspace $ws4 ; i3-msg layout tabbed
-# exec signal-desktop
-# exec wire-desktop
-# exec telegram-desktop
-# exec i3-msg workspace $ws3 ; emacsclient -c
-# exec i3-msg workspace $ws1 ; emacsclient -c
 # exec_always --no-startup-id dunst -lb "$bg" -nb "$bg" -cb "$bg" -lf "$fg" -bf "fg" -cf "$fg" -nf "$fg" -fn "ypn envypn 12" -s -geometry "400x60-10+40" -format "<b>%s</b>\n%b" -shrink  -lto 3 -nto 5 -cto 0 -align "left" -transparency 0 -padding 8 -horizontal_padding 8
 
-# screen keyboard
-exec --no-startup-id onboard &
+# rotate screen when pc is turned
+exec --no-startup-id udiskie-dmenu &
+exec --no-startup-id screenrotator &
+exec --no-startup-id onboard -l fr -a &
+exec --no-startup-id touchegg &

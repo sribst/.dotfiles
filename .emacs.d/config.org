@@ -124,10 +124,11 @@ Update current package
   help-window-select t ; Focus new help windows when opened
   load-prefer-newer t ; Prefers the newest version of a file
   scroll-conservatively most-positive-fixnum ; Always scroll by one line
-)
-(cd "~/") ; Move to the user directory
-(set-default-coding-systems 'utf-8) ; Default to utf-8 encoding
-#+END_SRC
+  )
+  (cd "~/") ; Move to the user directory
+  (set-default-coding-systems 'utf-8) ; Default to utf-8 encoding
+  (make-variable-buffer-local 'compile-command) ; be able to set it as a dir-locals
+  #+END_SRC
 *** Customization
 To avoid overloading the GNU Emacs custormization =init.el= file made by the
 user with the UI, I add the generated code in a separate file.
