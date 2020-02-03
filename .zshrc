@@ -379,3 +379,5 @@ source /usr/share/fzf/completion.zsh
 
 # remove tezos warning for sandbox
 export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=Y
+
+export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
