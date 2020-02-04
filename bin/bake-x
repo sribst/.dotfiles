@@ -12,7 +12,7 @@ fi
 echo "bake $x time with $baker"
 
 n=0
-while (( $n <= $x ))
+while (( $n < $x ))
 do
     tezos-client bake for $baker --minimal-timestamp
     n=$(( n + 1 ))
