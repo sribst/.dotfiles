@@ -1,9 +1,17 @@
 #!/bin/bash
 
+if [ $# -ge 1 ]
+then x=$1
+else x=60
+fi
+if [ $# -ge 2 ]
+then baker=$2
+else baker="bootstrap1"
+fi
+
+echo "bake $x time with $baker"
+
 n=0
-x=60
-# baker="baker1"
-baker="bootstrap1"
 while (( $n <= $x ))
 do
     tezos-client bake for $baker --minimal-timestamp

@@ -110,7 +110,7 @@ Update current package
   (setq paradox-github-token (cadr (auth-source-user-and-password "api.github.com" "sribst^paradox")))
   (paradox-enable)
   (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
-  #+END_SRC
+#+END_SRC
 
 ** configuration
 *** "global variable"
@@ -128,7 +128,7 @@ Update current package
   (cd "~/") ; Move to the user directory
   (set-default-coding-systems 'utf-8) ; Default to utf-8 encoding
   (make-variable-buffer-local 'compile-command) ; be able to set it as a dir-locals
-  #+END_SRC
+#+END_SRC
 *** Customization
 To avoid overloading the GNU Emacs custormization =init.el= file made by the
 user with the UI, I add the generated code in a separate file.
@@ -257,7 +257,7 @@ xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (set-frame-font "ProggyClean-14")
   (use-package all-the-icons)
-  #+END_SRC
+#+END_SRC
 
 **** dimme non focus buffer =dimmer=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -318,7 +318,7 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
    `(swiper-minibuffer-match-face-3 ((t (:background ,(x-get-resource "color10" "") :weight bold))))
    `(swiper-minibuffer-match-face-4 ((t (:background ,(x-get-resource "color13" "") :weight bold)))))
    :bind ("C-s" . swiper))
-   #+END_SRC
+#+END_SRC
 
 ** search somewhere else "M-x/dired/etc" =counsel=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -640,8 +640,8 @@ Colorize colors as text with their value.
       (ocamlformat-show-errors 'echo)
       (ocamlformat-enable 'disable)
       :ensure-system-package (ocamlformat . "opam install ocamlformat")
-      :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
-      :hook (before-save . #'ocamlformat-before-save)
+      ;; :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
+      ;; :hook (before-save . #'ocamlformat-before-save)
       :after tuareg)
 #+END_SRC
 
@@ -1078,7 +1078,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
   ;;     :sync 'cal->org
   ;;     :url ('google "sylvain@cryptium.ch")
   ;;     :inbox "~/org/work.org")))
-  #+END_SRC
+#+END_SRC
 ** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured

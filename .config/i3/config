@@ -127,8 +127,6 @@ workspace $ws1 output HDMI-2
 workspace $ws2 output eDP-1
 workspace $ws3 output eDP-1
 workspace $ws4 output eDP-1
-workspace $ws5 output eDP-1
-
 
 # switch to workspace
 bindsym $mod+ampersand workspace $ws1
