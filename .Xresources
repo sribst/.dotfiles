@@ -1,8 +1,8 @@
 ! Font settings
-Emacs.font: DejaVuSansMono-10
-*.font: xft:ProggyClean:size=9
+Emacs.font: DejaVuSansMono-12
+*.font: xft:ProggyClean:size=12
 *.FontBackend: xft,x
-!*.letterSpace: -4
+*.letterSpace: -2
 URxvt.scrollBar: false
 ! urxvt*depth: 32
 ! urxvt*background: rgba:0000/0000/0200/c800

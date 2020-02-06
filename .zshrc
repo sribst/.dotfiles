@@ -382,3 +382,10 @@ export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=Y
 export EDITOR='emacsclient -nw'
 
 export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
+
+# add shh to yubico gpg
+export GPG_TTY="$(tty)"
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+gpgconf --launch gpg-agent
+# disable warning message of opencv
+export OPENCV_LOG_LEVEL=ERROR

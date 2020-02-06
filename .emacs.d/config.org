@@ -51,6 +51,8 @@
   - [[#capture-org-capture][Capture =org-capture=]]
 - [[#start-up][Start-up]]
   - [[#dashboard][Dashboard]]
+- [[#to-order][to order]]
+  - [[#environment-variable][Environment variable]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -194,6 +196,7 @@ user with the UI, I add the generated code in a separate file.
 : my/force-update-config
 
 
+
 ** Backup
 It is important to have a stable backup environment.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -219,10 +222,11 @@ I find invasive.
 *** Theme
 xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package xresources-theme :defer t
+(use-package xresources-theme
 :config
 (set-face-attribute 'region nil :background (x-get-resource "color12" ""))
-(set-face-background 'hl-line (x-get-resource "color8" "")))
+(set-face-background 'hl-line (x-get-resource "color8" ""))
+:init
 
 (defvar my/theme 'xresources)
 (defvar my/theme-window-loaded nil)
@@ -249,7 +253,7 @@ xresources-theme qui respect les couleurs de Xressources
             (load-theme my/theme t)
             (if (display-graphic-p)
               (setq my/theme-window-loaded t)
-              (setq my/theme-terminal-loaded t))))
+              (setq my/theme-terminal-loaded t)))))
 #+END_SRC
 
 *** font
@@ -549,8 +553,8 @@ indented.  It reindents after every change, making it more reliable than
 electric-indent-mode.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package aggressive-indent
-:hook ((prog-mode org-mode) . aggressive-indent-mode)
-:custom (aggressive-indent-comments-too t))
+  :hook ((prog-mode org-mode) . aggressive-indent-mode)
+  :custom (aggressive-indent-comments-too t))
 #+END_SRC
 ** Decoration
 *** TODO colorize background of text color like green =rainbow-mode=
@@ -635,16 +639,15 @@ Colorize colors as text with their value.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ocp-indent :after tuareg)
   (use-package ocamlformat
-      :ensure nil
-      :custom
-      (ocamlformat-show-errors 'echo)
-      (ocamlformat-enable 'disable)
-      :ensure-system-package (ocamlformat . "opam install ocamlformat")
-      ;; :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
-      ;; :hook (before-save . #'ocamlformat-before-save)
-      :after tuareg)
+  :ensure nil
+  :ensure-system-package (ocamlformat . "opam install ocamlformat")
+  :custom
+  (ocamlformat-show-errors 'echo)
+  (ocamlformat-enable 'enable)
+  :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
+  :hook (before-save . #'ocamlformat-before-save)
+  :after tuareg)
 #+END_SRC
-
 **** Json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package json-mode
@@ -1034,8 +1037,19 @@ Org super agenda allows a more readible agenda by grouping the todo item
 :after calfw
 :bind ("C-c z" . cfw:open-org-calendar)
 :custom
-(cfw:org-overwrite-default-keybinding t))
+(cfw:org-overwrite-default-keybinding t)
+:config
+;; Another unicode chars
+(setq cfw:fchar-junction ?╬
+      cfw:fchar-vertical-line ?║
+      cfw:fchar-horizontal-line ?═
+      cfw:fchar-left-junction ?╠
+      cfw:fchar-right-junction ?╣
+      cfw:fchar-top-junction ?╦
+      cfw:fchar-top-left-corner ?╔
+      cfw:fchar-top-right-corner ?╗))
 #+END_SRC
+
 
 *** TODO Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1256,3 +1270,15 @@ Always good to have a dashboard.
 (bookmarks . 2)
 (registers . 2))))
 #+END_SRC
+* to order
+** TODO Environment variable
+
+One of the next two is useless, need to determine wich one
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package keychain-environment
+:config (keychain-refresh-environment))
+(use-package exec-path-from-shell
+:config
+  (exec-path-from-shell-copy-env "SSH_AGENT_PID")
+  (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
+#+end_SRC
