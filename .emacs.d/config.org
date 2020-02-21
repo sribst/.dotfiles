@@ -1,6 +1,7 @@
 #+TITLE: GNU Emacs confidguration
 #+AUTHOR: Sylvain Ribstein
 
+
 * Table of content :TOC:
 - [[#global-configuration][Global configuration]]
   - [[#packages][Packages]]
@@ -53,6 +54,7 @@
   - [[#dashboard][Dashboard]]
 - [[#to-order][to order]]
   - [[#environment-variable][Environment variable]]
+  - [[#file-explorer-ranger][file explorer =ranger=]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -401,50 +403,81 @@ Don't ask before killing a buffer. I know what I'm doing.
 #+END_SRC
 
 *** order buffer list =ibuffer=
+ibuffer is a better buffer mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ibuffer
+  (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)
   :custom
-   (ibuffer-saved-filter-groups
-   '(("default"
-          ("org"   (name . "^.*org$"))
-          ("magit" (or (mode . magit-mode)
-                       (name . "^magit.*$" )))
-          ("dired" (mode . dired-mode))
+     (ibuffer-saved-filter-groups
+     '(("default"
+            ("org"   (name . "^.*org$"))
+            ("magit" (or (mode . magit-mode)
+                         (name . "^magit.*$" )))
+            ("dired" (mode . dired-mode))
 
-          ("IRC"   (or (mode . circe-channel-mode) (mode . circe-server-mode)))
-          ("web"   (or (mode . web-mode) (mode . js2-mode)))
-          ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
-          ("gnus"  (or (mode . message-mode)
-                       (mode . bbdb-mode)
-                       (mode . mail-mode)
-                       (mode . gnus-group-mode)
-                       (mode . gnus-summary-mode)
-                       (mode . gnus-article-mode)
-                       (name . "^\\.bbdb$")
-                       (name . "^\\.newsrc-dribble")))
-          ("programming" (or
-                          (mode . java-mode)
-                          (mode . groovy-mode)
-                          (mode . conf-space-mode)))
-          ("emacs" (or
-                    (name . "^\\*scratch\\*$")
-                    (name . "^\\*Messages\\*$")))
-          ("Ediff" (name . "^\\*Ediff.*\\*$"))
-          )))
-  :hook ('ibuffer-mode .
-     (lambda ()
-       (ibuffer-auto-mode 1)
-       (ibuffer-switch-to-saved-filter-groups "default"))))
+            ("IRC"   (or (mode . circe-channel-mode) (mode . circe-server-mode)))
+            ("web"   (or (mode . web-mode) (mode . js2-mode)))
+            ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
+            ("gnus"  (or (mode . message-mode)
+                         (mode . bbdb-mode)
+                         (mode . mail-mode)
+                         (mode . gnus-group-mode)
+                         (mode . gnus-summary-mode)
+                         (mode . gnus-article-mode)
+                         (name . "^\\.bbdb$")
+                         (name . "^\\.newsrc-dribble")))
+            ("programming" (or
+                            (mode . java-mode)
+                            (mode . groovy-mode)
+                            (mode . conf-space-mode)))
+            ("emacs" (or
+                      (name . "^\\*scratch\\*$")
+                      (name . "^\\*Messages\\*$")))
+            ("Ediff" (name . "^\\*Ediff.*\\*$"))
+            )))
+    :hook ('ibuffer-mode .
+       (lambda ()
+         (ibuffer-auto-mode 1)
+         (ibuffer-switch-to-saved-filter-groups "default"))))
+
+   (use-package ibuffer-projectile
+   :after ibuffer
+     ;; :config
+     ;; (setq ibuffer-formats
+     ;;    '((mark modified read-only " "
+     ;;            (name 18 18 :left :elide)
+     ;;            " "
+     ;;            (size 9 -1 :right)
+     ;;            " "
+     ;;            (mode 16 16 :left :elide)
+     ;;            " "
+     ;;            project-relative-file)))
+     :hook  ('ibuffer-mode .
+      (lambda ()
+        (ibuffer-projectile-set-filter-groups)
+        (unless (eq ibuffer-sorting-mode 'alphabetic)
+          (ibuffer-do-sort-by-alphabetic)))))
 #+END_SRC
+
+#+RESULTS:
+| lambda | nil | (ibuffer-projectile-set-filter-groups) | (unless (eq ibuffer-sorting-mode (quote alphabetic)) (ibuffer-do-sort-by-alphabetic)) |
+| lambda | nil | (ibuffer-auto-mode 1)                  | (ibuffer-switch-to-saved-filter-groups default)                                       |
+
 ** Window
+*** TODO parameter
+split-width-threshold nil does not work for me
+need to find correct config -> use toggle-windows-split atm
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq split-width-threshold nil) ; default split is vertical
+#+END_SRC
+
+#+RESULTS:
+
 *** switch window =ace-window=
-ace window allow to simply switch when only 2 buffer or to choose
-which buffer with key when multiple buff
+ace window allow to simply switch when only 2 window or to choose
+which window with key when multiple buff
 
-ibuffer is a better buffer mode
 
-toggle-window-split : switch layout when two buffers are open
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ace-window
 :bind
@@ -452,8 +485,7 @@ toggle-window-split : switch layout when two buffers are open
 ("M-o" . ace-window))
 :init
 (setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
-(setq aw-scope 'frame)
-)
+(setq aw-scope 'frame))
 #+END_SRC
 *** window configuration =winner-mode=
 Allow to undo and redo buffer configuration to easily open one buffer than
@@ -465,6 +497,40 @@ switch back to multiple open buffer.
   :ensure nil
   :init (winner-mode))
 #+END_SRC
+*** Toggle windows split
+switch layout when two buffers are open
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+	     (next-win-buffer (window-buffer (next-window)))
+	     (this-win-edges (window-edges (selected-window)))
+	     (next-win-edges (window-edges (next-window)))
+	     (this-win-2nd (not (and (<= (car this-win-edges)
+					 (car next-win-edges))
+				     (<= (cadr this-win-edges)
+					 (cadr next-win-edges)))))
+	     (splitter
+	      (if (= (car this-win-edges)
+		     (car (window-edges (next-window))))
+		  'split-window-horizontally
+		'split-window-vertically)))
+	(delete-other-windows)
+	(let ((first-win (selected-window)))
+	  (funcall splitter)
+	  (if this-win-2nd (other-window 1))
+	  (set-window-buffer (selected-window) this-win-buffer)
+	  (set-window-buffer (next-window) next-win-buffer)
+	  (select-window first-win)
+	  (if this-win-2nd (other-window 1))))))
+
+(define-key ctl-x-4-map "t" 'toggle-window-split)
+#+END_SRC
+
+#+RESULTS:
+: toggle-window-split
+
 * Edition
 ** Parameter
 basic default value to enable
@@ -489,12 +555,13 @@ non-whitespace character.
   :delight
   :config (global-hungry-delete-mode))
 #+END_SRC
-** Move text =move-text=
+** TODO Move text =move-text=
 Moves the current line (or if marked, the current region's, whole lines).
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package move-text
-  :config (move-text-default-bindings)) ; M-p M-n
+  :init (move-text-default-bindings)) ; M-p M-n
 #+END_SRC
+
 ** Whitespace =whitespace=
 It is often annoying to see unnecessary blank spaces at the end of a line or
 file.
@@ -635,18 +702,19 @@ Colorize colors as text with their value.
 (utop-minor-mode))))
 #+END_SRC
 
-****** format =ocp-indent,ocamlformat=
+****** TODO format =ocp-indent,ocamlformat=
+ocp-indent seems to fucks ocamlformat
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ocp-indent :after tuareg)
+  ;; (use-package ocp-indent :after tuareg)
   (use-package ocamlformat
-  :ensure nil
-  :ensure-system-package (ocamlformat . "opam install ocamlformat")
-  :custom
-  (ocamlformat-show-errors 'echo)
-  (ocamlformat-enable 'enable)
-  :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
-  :hook (before-save . #'ocamlformat-before-save)
-  :after tuareg)
+   :ensure nil
+   :ensure-system-package (ocamlformat . "opam install ocamlformat")
+   :custom
+   (ocamlformat-show-errors 'echo)
+   (ocamlformat-enable 'enable)
+   :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
+   :hook (before-save . #'ocamlformat-before-save)
+   :after tuareg)
 #+END_SRC
 **** Json
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -727,6 +795,17 @@ Colorize colors as text with their value.
 (use-package counsel-projectile
 :after counsel projectile
 :init (counsel-projectile-mode))
+
+(use-package org-projectile
+:after projectile org
+:bind ("C-c n p" . org-projectile-project-todo-completing-read)
+:custom
+(org-projectile-per-project-filepath "project-todo.org")
+:config
+(setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+ (org-projectile-capture-template (format "%s%s" "* TODO %?")
+(org-projectile-per-project)
+(progn (push (org-projectile-project-todo-entry) org-capture-templates))))
 #+END_SRC
 
 ** Git
@@ -828,8 +907,6 @@ update path of emacs to user path
  :config (exec-path-from-shell-initialize))
 #+END_SRC
 
-
-
 * Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package gnus
@@ -883,7 +960,6 @@ Amazing mode of GNU Emacs.
     ((after-save . my/config-tangle)
       (auto-save . org-save-all-org-buffers)))
 #+END_SRC
-
 ** Table of content =toc-org=
 Create and update automaticaly a table of contents.  =toc-org=
 will maintain a table of contents at the first heading that has a
@@ -1053,46 +1129,46 @@ Org super agenda allows a more readible agenda by grouping the todo item
 
 *** TODO Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package org-caldav
-:init
-(defvar org-caldav-sync-timer nil
-    "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-    (defun org-caldav-sync-with-delay (secs)
-  (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-  (setq org-caldav-sync-timer
-  (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-  (setq org-caldav-url
-    "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-    (setq org-caldav-backup-file "~/org/backup.org")
-  (setq org-caldav-calendar-id "master")
-  (setq org-caldav-inbox "~/org/master-sync.org")
-  (setq org-caldav-files '("~/org/master.org"))
-  :config
-  (setq org-icalendar-alarm-time 1)
-  (setq org-caldav-show-sync-results nil)
-  (setq org-icalendar-include-todo t)
-  (setq org-icalendar-use-deadline
-  '(event-if-todo event-if-not-todo todo-due))
-  ;; (setq org-icalendar-use-scheduled
-  ;;   '(todo-start event-if-todo event-if-not-todo))
-  ;;   :hook (
-  ;;   (kill-emacs . org-caldav-sync)
-  ;;   (after-save .
-  ;;     (lambda ()
-  ;;        (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
-  )
-  ;; (setq org-caldav-calendars
-  ;; '((:calendar-id "master"
-  ;;     :files "~/org/master.org"
-  ;;     :inbox "~/org/master-sync.org")
-  ;;     (:calendar-id "claire"
-  ;;     :files "~/org/claire.org"
-  ;;     :inbox "~/org/claire-sync.org")
-  ;;     (:calendar-id "work"
-  ;;     :sync 'cal->org
-  ;;     :url ('google "sylvain@cryptium.ch")
-  ;;     :inbox "~/org/work.org")))
-#+END_SRC
+  (use-package org-caldav
+  :init
+  (defvar org-caldav-sync-timer nil
+      "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+      (defun org-caldav-sync-with-delay (secs)
+    (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+    (setq org-caldav-sync-timer
+    (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+    (setq org-caldav-url
+      "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+      (setq org-caldav-backup-file "~/org/backup.org")
+    (setq org-caldav-calendar-id "master")
+    (setq org-caldav-inbox "~/org/master-sync.org")
+    (setq org-caldav-files '("~/org/master.org"))
+    :config
+    (setq org-icalendar-alarm-time 1)
+    (setq org-caldav-show-sync-results nil)
+    (setq org-icalendar-include-todo t)
+    (setq org-icalendar-use-deadline
+    '(event-if-todo event-if-not-todo todo-due))
+    ;; (setq org-icalendar-use-scheduled
+    ;;   '(todo-start event-if-todo event-if-not-todo))
+    ;;   :hook (
+    ;;   (kill-emacs . org-caldav-sync)
+    ;;   (after-save .
+    ;;     (lambda ()
+    ;;        (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
+    )
+    (setq org-caldav-calendars
+    '((:calendar-id "master"
+        :files "~/org/master.org"
+        :inbox "~/org/master-sync.org")
+        (:calendar-id "claire"
+        :files "~/org/claire.org"
+        :inbox "~/org/claire-sync.org")
+        (:calendar-id "work"
+        :sync 'cal->org
+        :url ('google "sylvain@cryptium.ch")
+        :inbox "~/org/work.org")))
+        #+END_SRC
 ** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
@@ -1282,3 +1358,14 @@ One of the next two is useless, need to determine wich one
   (exec-path-from-shell-copy-env "SSH_AGENT_PID")
   (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
 #+end_SRC
+** TODO file explorer =ranger=
+find miller column within dired-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package ranger
+  ;; :config
+  ;; (ranger-override-dired-mode t)
+  ;; :custom
+  ;; (ranger-cleanup-eagerly t)
+  ;; (ranger-dont-show-binary t)
+  ;; (ranger-max-preview-size 10))
+#+END_SRC

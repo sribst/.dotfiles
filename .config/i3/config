@@ -39,24 +39,8 @@ font-4 = FontAwesome5Brands:style=Solid:pixelsize=18:antialias=false;3
 floating_modifier $mod
 focus_follows_mouse no
 
-# start a terminal
-bindsym $mod+Return exec urxvt
-bindsym $mod+t exec urxvt
-
-# start an emacs client
-bindsym $mod+e exec emacsclient -c
-
 # kill focused window
 bindsym $mod+Shift+A kill
-
-# start dmenu (a program launcher)
-# bindsym $mod+d exec dmenu_run -q -t   -p ">" -fn Sans
-# bindsym $mod+d exec dmenu_run -q -t   -p ">" -fn Sans
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-bindsym $mod+d exec --no-startup-id rofi -show combi
-bindsym $mod+p exec --no-startup-id ~/bin/rofi-gopass
 
 # change focus
 bindsym $mod+j focus left
@@ -64,23 +48,11 @@ bindsym $mod+k focus down
 bindsym $mod+l focus up
 bindsym $mod+m focus right
 
-# alternatively, you can use the cursor keys:
-# bindsym $mod+Left focus left
-# bindsym $mod+Down focus down
-# bindsym $mod+Up focus up
-# bindsym $mod+Right focus right
-
 # move focused window
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+k move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+M move right
-
-# alternatively, you can use the cursor keys:
-# bindsym $mod+Shift+Left move left
-# bindsym $mod+Shift+Down move down
-# bindsym $mod+Shift+Up move up
-# bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+h split h
@@ -113,9 +85,9 @@ bindsym $mod+q focus parent
 
 set $ws1 ""
 set $ws2 ""
-set $ws3 ""
-set $ws4 ""
-set $ws5 "5"
+set $ws3 "²"
+set $ws4 ""
+set $ws5 ""
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
@@ -125,8 +97,9 @@ set $ws10 "10"
 # two screen output
 workspace $ws1 output HDMI-2
 workspace $ws2 output eDP-1
-workspace $ws3 output eDP-1
+workspace $ws3 output HDMI-2
 workspace $ws4 output eDP-1
+workspace $ws5 output eDP-1
 
 # switch to workspace
 bindsym $mod+ampersand workspace $ws1
@@ -186,8 +159,6 @@ mode "$resize" {
         bindsym $mod+r mode "default"
 }
 
-
-
 # Theme colors
 
 # Colors set from ~/.Xresources
@@ -219,34 +190,12 @@ client.background       $background
 
 
 client.focused         	$foreground $background $color6     $foreground $color6
-client.unfocused       	$background	$background	$color8     $background	$background
+client.unfocused       	$background $background	$color8     $background	$background
 client.focused_inactive	$color8     $background	$color8     $background	$background
-client.urgent		    $foreground	$background	$foreground	$background	$background
-client.placeholder	    $foreground	$background	$foreground	$background	$background
+client.urgent		$foreground $color1	$foreground $background	$background
+client.placeholder	$foreground $background	$foreground $background	$background
 
-# client.focused          #556064 #556064 #80FFF9 #FDF6E3
-# client.focused_inactive #2F3D44 #2F3D44 #027DFF #454948
-# client.unfocused        #2F3D44 #2F3D44 #027DFF #454948
-# client.urgent           #CB4B16 #FDF6E3 #027DFF #268BD2
-# client.placeholder      #000000 #0c0c0c #ffffff #000000
-# client.background       #2B2C2B
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-# exec_always i3status.sh
-# bar {
-#     status_command i3status --config ~/.config/i3status/config
-#     tray_output primary
-#     workspace_buttons no
-#     # separator_symbol ":|:"
-# }
-
-# bar {
-#     mode hide
-#     position top
-#     font pango:file-icons 12
-# }
-
+#polybar
 exec_always --no-startup-id $HOME/bin/startsimplebar
 
 # volume controls
@@ -265,20 +214,20 @@ bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 # Lock screen
 bindsym $mod+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p default"
 
-#bepo
+# between
 # bindsym $mod+Menu exec --no-startup-id bepo_switch
 
-assign [class="^firefox"]  → $ws3
-assign [class="^qutebrowser"]  → $ws3
-assign [class="^Wire"]     → $ws4
-assign [class="^Telegram"] → $ws4
-assign [class="^Zoom"]     → $ws4
-assign [class="^Slack"]    → $ws4
-assign [class="^Signal"]   → $ws4
+assign [class="^qutebrowser"] → $ws4
+assign [class="^firefox"]     → $ws4
+assign [class="^Wire"]        → $ws5
+assign [class="^Telegram"]    → $ws5
+assign [class="^Zoom"]        → $ws5
+assign [class="^Slack"]       → $ws5
+assign [class="^Signal"]      → $ws5
 
 # gaps between windows
 
-for_window [class=".*"] border pixel 2
+for_window [class=".*"] border pixel 4
 
 set $default_gaps_inner 4
 set $default_gaps_outer 8
@@ -292,13 +241,60 @@ smart_borders on
 
 # cloud
 exec --no-startup-id nextcloud &
-# screen detection
-exec --no-startup-id autorandr --change &
-# automount
-exec --no-startup-id udiskie-dmenu &
-# rotate screen when pc is turned
-exec --no-startup-id screenrotator &
-# touchscreen keyboard
+
+# touchscreen
+## keyboard
 exec --no-startup-id onboard -l fr -a &
-# touchscreen gesture
+## gesture
 exec --no-startup-id touchegg &
+
+# Screen
+## check if multiscreen setup and resize touchscreen part
+exec_always --no-startup-id $HOME/bin/xrandr-changed &
+## screen detection
+exec_always --no-startup-id autorandr --change &
+## auto rotate screen when pc is turned
+exec --no-startup-id screenrotator &
+
+# start a terminal
+bindsym $mod+Return exec urxvt
+bindsym $mod+t exec urxvt
+
+# start an emacs client
+bindsym $mod+e exec emacsclient -c
+
+# start rofi (program launcher)
+bindsym $mod+x exec --no-startup-id rofi -show combi
+
+# start gopass (password manager with rofi interface)
+bindsym $mod+p exec --no-startup-id  $HOME/bin/rofi-gopass
+
+#start udiskie (mount manager with rofi interface)
+bindsym $mod+d exec --no-startup-id $HOME/bin/udiskie-rofi
+
+#start firefox
+bindsym $mod+f exec firefox
+
+set $app App: (e) emacs, (f) firefox, (w) wire-desktop, (s) slack, (t) telegram, (l) ledger
+bindsym $mod+c mode "$app"
+mode "$app" {
+        # These bindings trigger as soon as you enter the app mode
+        bindsym f exec firefox
+        bindsym e exec emacs
+	bindsym l exec ledger-live-desktop
+
+	#set $app-social social: (w) wire-desktop, (s) slack, (t) telegram,
+	#bindsym s mode "$app-social"
+
+	#mode "$app-social" {
+	        bindsym s exec slack
+        	bindsym w exec wire-desktop
+		bindsym t exec telegram-desktop
+
+	#}
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+c mode "default"
+}
