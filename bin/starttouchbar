@@ -1,0 +1,13 @@
+#!/bin/sh
+
+pkill polybar
+
+if type "xrandr"; then
+    for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+	MONITOR=$m polybar touchbar -c ~/.config/polybar/touchbar    &
+	MONITOR=$m polybar bottombar -c ~/.config/polybar/bottombar &
+    done
+else
+    polybar touchbar  -c ~/.config/polybar/touchbar  &
+    polybar bottombar -c ~/.config/polybar/bottombar &
+fi
