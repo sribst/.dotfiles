@@ -643,6 +643,13 @@ Colorize colors as text with their value.
   ;; (fci-rule-width '1)
   ;; :hook (prog-mode . fci-mode))
 #+END_SRC
+*** TODO Color parenthesis =rainbow-delimiters=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package rainbow-delimiters
+  ;;   :delight
+  ;;   :hook (prog-mode))
+  #+END_SRC
+
 ** Specific
 *** Programming language
 **** OCaml
@@ -1068,7 +1075,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
 (org-agenda-span '1)
 (org-super-agenda-groups
 '(
-(:name "Agenda" :and (:time-grid t :todo t))
+(:name "Agenda" :time-grid t)
 (:name "Scheduled" :scheduled t)
 (:name "Deadline" :deadline t)
 (:name "Book ASAP"   :todo "BOOK")
@@ -1142,7 +1149,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
       (setq org-caldav-backup-file "~/org/backup.org")
     (setq org-caldav-calendar-id "master")
     (setq org-caldav-inbox "~/org/master-sync.org")
-    (setq org-caldav-files '("~/org/master.org"))
+    (setq org-caldav-files '("~/org/master.org" "~/org/master_save.org" ))
     :config
     (setq org-icalendar-alarm-time 1)
     (setq org-caldav-show-sync-results nil)
@@ -1157,18 +1164,19 @@ Org super agenda allows a more readible agenda by grouping the todo item
     ;;     (lambda ()
     ;;        (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
     )
-    (setq org-caldav-calendars
-    '((:calendar-id "master"
-        :files "~/org/master.org"
-        :inbox "~/org/master-sync.org")
-        (:calendar-id "claire"
-        :files "~/org/claire.org"
-        :inbox "~/org/claire-sync.org")
-        (:calendar-id "work"
-        :sync 'cal->org
-        :url ('google "sylvain@cryptium.ch")
-        :inbox "~/org/work.org")))
-        #+END_SRC
+    ;; (setq org-caldav-calendars
+    ;; '((:calendar-id "master"
+    ;;     :files "~/org/master.org"
+    ;;     :inbox "~/org/master-sync.org")
+    ;;     (:calendar-id "claire"
+    ;;     :files "~/org/claire.org"
+    ;;     :inbox "~/org/claire-sync.org")
+    ;;     (:calendar-id "work"
+    ;;     :sync 'cal->org
+    ;;     :url ('google "sylvain@cryptium.ch")
+    ;;     :inbox "~/org/work.org"))
+
+    #+END_SRC
 ** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
@@ -1348,7 +1356,6 @@ Always good to have a dashboard.
 #+END_SRC
 * to order
 ** TODO Environment variable
-
 One of the next two is useless, need to determine wich one
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package keychain-environment

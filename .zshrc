@@ -368,9 +368,6 @@ bindkey -e '\ew' x-copy-region-as-kill
 bindkey -e '^W' x-kill-region
 bindkey -e '^Y' x-yank
 
-path+=~/bin
-path+=.
-
 
 # Only load Liquid Prompt in interactive shells, not from a script or from scp
 # [[ $- = *i* ]] && source liquidprompt
