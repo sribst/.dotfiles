@@ -37,3 +37,17 @@
 ;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
 (require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
 ;; ## end of OPAM user-setup addition for emacs / base ## keep this line
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (xresources-theme which-key w3m utop use-package-ensure-system-package tuareg toc-org smex ripgrep rainbow-mode paradox org-super-agenda org-projectile org-plus-contrib org-caldav org-bullets nyan-mode nix-mode move-text merlin-eldoc keychain-environment json-mode ivy-rich iedit ibuffer-projectile hungry-delete git-timemachine git-gutter forge exec-path-from-shell elpy dune dired-du dimmer delight dashboard csv-mode counsel-tramp counsel-projectile company-quickhelp company-box calfw-org calfw auto-sudoedit auto-package-update all-the-icons-ivy all-the-icons-gnus all-the-icons-dired aggressive-indent ace-window))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

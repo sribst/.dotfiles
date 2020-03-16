@@ -37,12 +37,13 @@
 - [[#project][Project]]
   - [[#interaction-projectile][interaction =projectile=]]
   - [[#git][Git]]
+- [[#dashboard][Dashboard]]
 - [[#system-interaction][System interaction]]
   - [[#file-explorer-dired][File explorer =dired=]]
   - [[#shell-command-exec-path-from-shell][shell command =exec-path-from-shell=]]
+  - [[#environment-variable][Environment variable]]
+  - [[#file-explorer-ranger][file explorer =ranger=]]
 - [[#mail-gnus][Mail =gnus=]]
-- [[#media][media]]
-  - [[#mpd-interface-mpdel][mpd interface =mpdel=]]
 - [[#organisercalendarlinkeretc-org-mode][Organiser/calendar/linker/etc =org-mode=]]
   - [[#table-of-content-toc-org][Table of content =toc-org=]]
   - [[#org-indentation-org-indent][org indentation =org-indent=]]
@@ -50,11 +51,9 @@
   - [[#face-of-todo][face of TODO]]
   - [[#agenda][Agenda]]
   - [[#capture-org-capture][Capture =org-capture=]]
-- [[#start-up][Start-up]]
-  - [[#dashboard][Dashboard]]
 - [[#to-order][to order]]
-  - [[#environment-variable][Environment variable]]
-  - [[#file-explorer-ranger][file explorer =ranger=]]
+- [[#media][media]]
+  - [[#mpd-interface-mpdel][mpd interface =mpdel=]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -99,8 +98,6 @@ Update current package
        (lambda (frame) (auto-package-update-maybe)))
     (progn (auto-package-update-maybe)))
 #+END_SRC
-
-
 *** menu/search =paradox=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package paradox
@@ -117,7 +114,7 @@ Update current package
 #+END_SRC
 
 ** configuration
-*** "global variable"
+*** global variable
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq-default
   inhibit-startup-screen t ; Disable start-up screen
@@ -193,12 +190,6 @@ user with the UI, I add the generated code in a separate file.
   (org-babel-load-file (expand-file-name "config.org" user-emacs-directory))
 )
 #+END_SRC
-
-#+RESULTS:
-: my/force-update-config
-
-
-
 ** Backup
 It is important to have a stable backup environment.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -263,12 +254,6 @@ xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (set-frame-font "ProggyClean-14")
   (use-package all-the-icons)
-#+END_SRC
-
-**** dimme non focus buffer =dimmer=
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package dimmer
-:init (dimmer-mode t))
 #+END_SRC
 * Mini-buffer
 ** parameter
@@ -463,6 +448,11 @@ ibuffer is a better buffer mode
 | lambda | nil | (ibuffer-projectile-set-filter-groups) | (unless (eq ibuffer-sorting-mode (quote alphabetic)) (ibuffer-do-sort-by-alphabetic)) |
 | lambda | nil | (ibuffer-auto-mode 1)                  | (ibuffer-switch-to-saved-filter-groups default)                                       |
 
+*** dimme non focus buffer =dimmer=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dimmer
+:init (dimmer-mode t))
+#+END_SRC
 ** Window
 *** TODO parameter
 split-width-threshold nil does not work for me
@@ -471,22 +461,19 @@ need to find correct config -> use toggle-windows-split atm
 (setq split-width-threshold nil) ; default split is vertical
 #+END_SRC
 
-#+RESULTS:
-
 *** switch window =ace-window=
 ace window allow to simply switch when only 2 window or to choose
 which window with key when multiple buff
-
-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ace-window
 :bind
 (("C-x o" . ace-window)
 ("M-o" . ace-window))
 :init
-(setq aw-keys '(?q ?s ?d ?f ?g ?h ?j ?k ?l))
+(setq aw-keys '(?j ?k ?l ?m ?u ?i ?o ?p))
 (setq aw-scope 'frame))
 #+END_SRC
+
 *** window configuration =winner-mode=
 Allow to undo and redo buffer configuration to easily open one buffer than
 switch back to multiple open buffer.
@@ -525,11 +512,8 @@ switch layout when two buffers are open
 	  (select-window first-win)
 	  (if this-win-2nd (other-window 1))))))
 
-(define-key ctl-x-4-map "t" 'toggle-window-split)
+      (define-key ctl-x-4-map "t" 'toggle-window-split)
 #+END_SRC
-
-#+RESULTS:
-: toggle-window-split
 
 * Edition
 ** Parameter
@@ -646,24 +630,39 @@ Colorize colors as text with their value.
 *** TODO Color parenthesis =rainbow-delimiters=
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package rainbow-delimiters
-  ;;   :delight
-  ;;   :hook (prog-mode))
-  #+END_SRC
+  ;; :delight
+  ;; :hook (prog-mode org-mode) . rainbow-delimiters-mode)
+#+END_SRC
 
 ** Specific
 *** Programming language
 **** OCaml
-***** major mode =tuareg=
+***** TODO major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package tuareg
-:mode ("\\.ml[ily]?$" . tuareg-mode)
-:delight " "
-:init
-         (dolist
-         (var (car (read-from-string
-               (shell-command-to-string "opam config env --sexp"))))
-         (setenv (car var) (cadr var))))
+   (use-package tuareg
+   :mode ("\\.ml[ily]?$" . tuareg-mode)
+   :delight " "
+   :init
+            (dolist
+            (var (car (read-from-string
+                  (shell-command-to-string "opam config env --sexp"))))
+            (setenv (car var) (cadr var))))
+;; (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
+;; 	  (when (and opam-share (file-directory-p opam-share))
+;; 	    ;; Register Gopcaml mode
+;; 	    (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
+;;         (autoload 'gopcaml-mode "gopcaml-mode" nil t nil)
+;;         (autoload 'tuareg-mode "tuareg" nil t nil)
+;;         (autoload 'merlin-mode "merlin" "Merlin mode" t)
+;; 	    ;; Automatically start it in OCaml buffers
+;; 	    (setq auto-mode-alist
+;; 		  (append '(("\\.ml[ily]?$" . gopcaml-mode)
+;; 			    ("\\.topml$" . gopcaml-mode))
+;; 			  auto-mode-alist))
+;; 	    ))
 #+END_SRC
+soon gopcaml will have a emacs package to install I guess !
+look at https://gitlab.com/gopiandcode/gopcaml-mode
 ***** helpers
 ****** builder =dune=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -865,6 +864,23 @@ Easily see the changes made by previous commits.
 (use-package git-timemachine :delight)
 #+END_SRC
 
+* Dashboard
+Always good to have a dashboard.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dashboard
+:after projectile
+:delight ""
+:custom
+(dashboard-startup-banner 'official)
+(dashboard-center-content t)
+:config
+(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+(dashboard-setup-startup-hook)
+(setq dashboard-items
+'((agenda . 10)
+(projects . 3)
+(recents  . 5))))
+#+END_SRC
 * System interaction
 ** File explorer =dired=
 Dired is a major mode for exploring file
@@ -913,7 +929,27 @@ update path of emacs to user path
 (use-package exec-path-from-shell
  :config (exec-path-from-shell-initialize))
 #+END_SRC
-
+** TODO Environment variable
+One of the next two is useless, need to determine wich one
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package keychain-environment
+:config (keychain-refresh-environment))
+(use-package exec-path-from-shell
+:config
+  (exec-path-from-shell-copy-env "SSH_AGENT_PID")
+  (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
+#+end_SRC
+** TODO file explorer =ranger=
+find miller column within dired-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (use-package ranger
+;; :config
+;; (ranger-override-dired-mode t)
+;; :custom
+;; (ranger-cleanup-eagerly t)
+;; (ranger-dont-show-binary t)
+;; (ranger-max-preview-size 10))
+#+END_SRC
 * Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package gnus
@@ -932,17 +968,6 @@ update path of emacs to user path
  (all-the-icons-gnus-setup))
 #+END_SRC
 
-* media
-** TODO mpd interface =mpdel=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package mpdel
-  ;; :delight " "
-  ;; :bind-keymap
-  ;; ("C-c m" . mpdel-prefix-key)
-  ;; :ensure-system-package (mdp . "yay -S mpd"))
-  ;; (use-package ivy-mpdel
-  ;; :after mpdel)
-#+END_SRC
 * Organiser/calendar/linker/etc =org-mode=
 Amazing mode of GNU Emacs.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -956,21 +981,20 @@ Amazing mode of GNU Emacs.
   (:map org-mode-map ("C-c o" . counsel-outline))
   :config
   (org-babel-do-load-languages
-  'org-babel-lpoad-languages '((calc . t)))
-    :custom
-    (org-ellipsis " ⤵")
-    (org-use-extra-keys t)
-    (org-catch-invisible-edits 'show-and-error)
-    (org-cycle-separator-lines 0)
-    (org-refile-use-outline-path 3)
+  'org-babel-load-languages '((calc . t)))
+  :custom
+  (org-ellipsis " ⤵")
+  (org-use-extra-keys t)
+  (org-catch-invisible-edits 'show-and-error)
+  (org-cycle-separator-lines 0)
+  (org-refile-use-outline-path 3)
   :hook
     ((after-save . my/config-tangle)
       (auto-save . org-save-all-org-buffers)))
 #+END_SRC
 ** Table of content =toc-org=
-Create and update automaticaly a table of contents.  =toc-org=
-will maintain a table of contents at the first heading that has a
-=:TOC:= tag.
+Create and update automaticaly a table of contents.  =toc-org= will maintain a
+table of contents at the first heading that has a =:TOC:= tag.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package toc-org
 :after org
@@ -1176,7 +1200,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
     ;;     :url ('google "sylvain@cryptium.ch")
     ;;     :inbox "~/org/work.org"))
 
-    #+END_SRC
+#+END_SRC
 ** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
@@ -1335,44 +1359,16 @@ information.
 #+END_SRC
 
 #+RESULTS:
-* Start-up
-** Dashboard
-Always good to have a dashboard.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package dashboard
-:delight ""
-:custom
-(dashboard-startup-banner 'official)
-(dashboard-center-content t)
-:config
-(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-(dashboard-setup-startup-hook)
-(setq dashboard-items
-'((agenda . 10)
-(projects . 3)
-(recents  . 5)
-(bookmarks . 2)
-(registers . 2))))
-#+END_SRC
 * to order
-** TODO Environment variable
-One of the next two is useless, need to determine wich one
+
+* media
+** TODO mpd interface =mpdel=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package keychain-environment
-:config (keychain-refresh-environment))
-(use-package exec-path-from-shell
-:config
-  (exec-path-from-shell-copy-env "SSH_AGENT_PID")
-  (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
-#+end_SRC
-** TODO file explorer =ranger=
-find miller column within dired-mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package ranger
-  ;; :config
-  ;; (ranger-override-dired-mode t)
-  ;; :custom
-  ;; (ranger-cleanup-eagerly t)
-  ;; (ranger-dont-show-binary t)
-  ;; (ranger-max-preview-size 10))
+  ;; (use-package mpdel
+  ;; :delight " "
+  ;; :bind-keymap
+  ;; ("C-c m" . mpdel-prefix-key)
+  ;; :ensure-system-package (mdp . "yay -S mpd"))
+  ;; (use-package ivy-mpdel
+  ;; :after mpdel)
 #+END_SRC
