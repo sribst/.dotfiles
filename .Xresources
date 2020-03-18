@@ -33,7 +33,8 @@ URxvt.transparent: true
 *.color11:      #7b5211
 
 ! blue
-*.color4:       #6fc2ef
+*.color4:       #5492b4
+! 6fc2ef
 *.color12:      #115370
 
 ! magenta
@@ -41,7 +42,8 @@ URxvt.transparent: true
 *.color13:      #774682
 
 ! cyan
-*.color6:       #78ccc6
+*.color6:       #548f8b
+! 78ccc6
 *.color14:      #1d9389
 
 ! white
