@@ -353,7 +353,7 @@ Provides minibuffer hints when working with Emacs Lisp.
 (use-package which-key
   :delight
   :config (which-key-mode))
-#+END_SRC
+  #+END_SRC
 * Mode-line
 ** Parameter
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -636,32 +636,39 @@ Colorize colors as text with their value.
 
 ** Specific
 *** Programming language
+**** TODO Language server
+use bind-keymap instead
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package lsp-mode
+  ;;  :after which-key ivy company
+  ;;  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  ;;  :bind-keymap
+  ;;  ("C-c i" .  lsp-command-map)
+  ;;  ;; :init (setq lsp-keymap-prefix "C-c i")
+  ;;  :hook
+  ;;  (prog-mode . lsp-mode)
+  ;;  (lsp-mode . lsp-enable-which-key-integration))
+  ;;  :commands lsp)
+  ;;  ;; optionally
+  ;;  (use-package lsp-ui :commands lsp-ui-mode)
+  ;;  (use-package company-lsp :commands company-lsp)
+  ;;  ;; if you are helm user
+  ;;  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  #+END_SRC
+
 **** OCaml
 ***** TODO major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package tuareg
-   :mode ("\\.ml[ily]?$" . tuareg-mode)
-   :delight " "
-   :init
-            (dolist
-            (var (car (read-from-string
-                  (shell-command-to-string "opam config env --sexp"))))
-            (setenv (car var) (cadr var))))
-;; (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
-;; 	  (when (and opam-share (file-directory-p opam-share))
-;; 	    ;; Register Gopcaml mode
-;; 	    (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
-;;         (autoload 'gopcaml-mode "gopcaml-mode" nil t nil)
-;;         (autoload 'tuareg-mode "tuareg" nil t nil)
-;;         (autoload 'merlin-mode "merlin" "Merlin mode" t)
-;; 	    ;; Automatically start it in OCaml buffers
-;; 	    (setq auto-mode-alist
-;; 		  (append '(("\\.ml[ily]?$" . gopcaml-mode)
-;; 			    ("\\.topml$" . gopcaml-mode))
-;; 			  auto-mode-alist))
-;; 	    ))
+(use-package tuareg
+:mode ("\\.ml[ily]?$" . tuareg-mode)
+:delight " "
+:init
+(dolist
+(var (car (read-from-string
+(shell-command-to-string "opam config env --sexp"))))
+(setenv (car var) (cadr var))))
 #+END_SRC
-soon gopcaml will have a emacs package to install I guess !
+soon gopcaml will have a emacs package to install I guess. might need
 look at https://gitlab.com/gopiandcode/gopcaml-mode
 ***** helpers
 ****** builder =dune=
@@ -702,10 +709,10 @@ look at https://gitlab.com/gopiandcode/gopcaml-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package utop
 :delight " "
+:custom
+(utop-command "utop -emacs")
 :hook
-(tuareg-mode . (lambda ()
-(setq utop-command "utop -emacs")
-(utop-minor-mode))))
+(tuareg-mode . utop-minor-mode))
 #+END_SRC
 
 ****** TODO format =ocp-indent,ocamlformat=
@@ -1364,7 +1371,7 @@ information.
 * media
 ** TODO mpd interface =mpdel=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package mpdel
+;; (use-package mpdel
   ;; :delight " "
   ;; :bind-keymap
   ;; ("C-c m" . mpdel-prefix-key)

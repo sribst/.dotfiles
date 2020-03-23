@@ -44,6 +44,7 @@ bindsym $mod+Shift+A kill
 
 # change focus
 bindsym $mod+o focus next
+
 bindsym $mod+j focus left
 bindsym $mod+k focus down
 bindsym $mod+l focus up
@@ -272,23 +273,17 @@ bindsym $mod+x exec --no-startup-id rofi -show combi
 #start udiskie (mount manager with rofi interface)
 bindsym $mod+d exec --no-startup-id $HOME/bin/udiskie-rofi
 
-set $app App: (e) emacs, (f) firefox, (w) wire-desktop, (s) slack, (t) telegram, (l) ledger
+set $app App: (e) emacs, (q) qutebrowser, (w) wire-desktop, (s) slack, (t) telegram, (l) ledger, (f) firefox
 bindsym $mod+c mode "$app"
 mode "$app" {
         # These bindings trigger as soon as you enter the app mode
         bindsym f exec firefox
         bindsym e exec emacs
 	bindsym l exec ledger-live-desktop
-
-	#set $app-social social: (w) wire-desktop, (s) slack, (t) telegram,
-	#bindsym s mode "$app-social"
-
-	#mode "$app-social" {
-	        bindsym s exec slack
-        	bindsym w exec wire-desktop
-		bindsym t exec telegram-desktop
-
-	#}
+	bindsym s exec slack
+        bindsym w exec wire-desktop
+	bindsym t exec telegram-desktop
+	bindsym q exec qutebrowser
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
