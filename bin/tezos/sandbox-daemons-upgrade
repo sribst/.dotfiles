@@ -1,0 +1,30 @@
+#!/bin/bash
+
+make build-sandbox
+
+./tezos-sandbox daemons-upgrade \
+		src/proto_alpha/lib_protocol/TEZOS_PROTOCOL  \
+		--root-path /tmp/flextesa-daemons-upgrade  \
+		--base-port 50_000 \
+		--extra-dummy-proposals-batch-size 2  \
+		--extra-dummy-proposals-batch-levels 3,5 \
+		--size 2  \
+		--number-of-b 2 \
+		--time-betw 3 \
+		--blocks-per-vot 14 \
+		--with-timestamp \
+		--protocol-hash PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb \
+		--protocol-kind Carthage \
+		--tezos-client tezos-client \
+		--tezos-admin tezos-admin-client \
+		--tezos-node tezos-node \
+		--first-baker tezos-baker-006-PsCARTHA \
+		--first-endorser tezos-endorser-006-PsCARTHA \
+		--first-accuser tezos-accuser-006-PsCARTHA \
+		--second-baker tezos-baker-alpha \
+		--second-endorser tezos-endorser-alpha \
+		--second-accuser tezos-accuser-alpha
+# --second-baker tezos-baker-007-PtbFv2vf \
+    # --second-endorser tezos-endorser-007-PtbFv2vf \
+    # --second-accuser tezos-accuser-007-PtbFv2vf
+# src/proto_007_PtbFv2vf/lib_protocol/TEZOS_PROTOCOL  \

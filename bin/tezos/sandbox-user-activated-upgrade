@@ -1,0 +1,26 @@
+#!/bin/bash
+
+make build-sandbox
+
+./tezos-sandbox mini-net \
+		--root-path /tmp/own-flextesa-hard-fork/ \
+		--base-port 40_000 \
+		--size 2 \
+		--number-of-b 2 \
+		--with-timestamp \
+		--until 20 \
+		--protocol-hash PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb \
+		--protocol-kind Carthage \
+		--tezos-client tezos-client \
+		--tezos-node tezos-node \
+		--tezos-baker tezos-baker-006-PsCARTHA \
+		--tezos-endorser tezos-endorser-006-PsCARTHA \
+		--tezos-accuser tezos-accuser-006-PsCARTHA  \
+		--hard-fork 10:ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK \
+		--hard-fork-baker tezos-baker-alpha \
+		--hard-fork-endorser tezos-endorser-alpha \
+		--hard-fork-accuser  tezos-accuser-alpha
+# --hard-fork-baker tezos-baker-007-PtbFv2vf \
+    # --hard-fork-endorser tezos-endorser-007-PtbFv2vf \
+    # --hard-fork-accuser  tezos-accuser-007-PtbFv2vf
+# --hard-fork 10:PtbFv2vfp92RPL36k8UeZy1JGbqSALXAdKxCT3tdC86Zz67jTw6 \
