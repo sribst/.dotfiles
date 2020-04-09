@@ -1,54 +1,94 @@
-! Font settings
-Emacs.font: DejaVuSansMono-12
-*.font: xft:ProggyClean:size=12
-*.FontBackend: xft,x
-! *.letterSpace: -2
-URxvt.scrollBar: false
-! urxvt*depth: 32
-! urxvt*background: rgba:0000/0000/0200/c800
-URxvt.transparent: true
-*shading: 15
-! urxvt*depth: 32
-! urxvt*background: rgba:0000/0000/0200/c800
 
+! urxvt
+! font
+urxvt.font: xft:Liberation Mono:pixelsize=14
+urxvt.boldFont: xft:Liberation Mono:pixelsize=14:style=bold
+urxvt.italicFont: xft:Liberation Mono:pixelsize=14:style=italic
+urxvt.boldItalicFont: xft:Liberation Mono:pixelsize=14:style=bold italic
+! setting
+URxvt.scrollBar: false
+
+! emacs font
+! Emacs.font: DejaVuSansMono-10
+Emacs.font: monaco-10
+
+*.FontBackend: xft,x
+
+! color
 ! special
-*.foreground:   #d0d0d0
-*.background:   #151515
-*.cursorColor:  #d0d0d0
+*.foreground:   #eceff1
+*.cursorColor:  #0c86bd
+*.background:   #263238
 
 ! black
-*.color0:       #000000
-*.color8:       #505050
+*.color0:       #263238
+*.color8:       #37474f
 
 ! red
-*.color1:       #fb9fb1
-*.color9:       #8e0c25
+*.color1:       #ff9800
+*.color9:       #ffa74d
 
 ! green
-*.color2:       #acc267
-*.color10:      #455a07
+*.color2:       #8bc34a
+*.color10:      #9ccc65
 
 ! yellow
-*.color3:       #ddb26f
-*.color11:      #7b5211
+*.color3:       #ffc107
+*.color11:      #ffa000
 
 ! blue
-*.color4:       #5492b4
-! 6fc2ef
-*.color12:      #115370
+*.color4:       #0c86bd
+*.color12:      #81d4fa
 
 ! magenta
-*.color5:       #e1a3ee
-*.color13:      #774682
+*.color5:       #e91e63
+*.color13:      #ad1457
 
 ! cyan
-*.color6:       #548f8b
-! 78ccc6
-*.color14:      #1d9389
+*.color6:       #009688
+*.color14:      #26a69a
 
 ! white
-*.color7:       #b3b1b1
-*.color15:      #f5f5f5
+*.color7:       #cfd8dc
+*.color15:      #eceff1
+! ! special
+! *.foreground:   #d0d0d0
+! *.background:   #151515
+! *.cursorColor:  #d0d0d0
+
+! ! black
+! *.color0:       #000000
+! *.color8:       #505050
+
+! ! red
+! *.color1:       #fb9fb1
+! *.color9:       #8e0c25
+
+! ! green
+! *.color2:       #acc267
+! *.color10:      #455a07
+
+! ! yellow
+! *.color3:       #ddb26f
+! *.color11:      #7b5211
+
+! ! blue
+! *.color4:       #5492b4
+! ! 6fc2ef
+! *.color12:      #115370
+
+! ! magenta
+! *.color5:       #e1a3ee
+! *.color13:      #774682
+
+! ! cyan
+! *.color6:       #548f8b
+! ! 78ccc6
+! *.color14:      #1d9389
+
+! ! white
+! *.color7:       #b3b1b1
+! *.color15:      #f5f5f5
 
 !OLD
 ! ! special

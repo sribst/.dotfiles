@@ -8,7 +8,9 @@
 # i3 config file (v4)
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
-set $mod Mod4
+set $super Mod4
+set $alt   Mod1
+
 
 font pango:Open Sans 10
 font FontAwesome5Free:style=Solid:pixelsize=18:antialias=false;3
@@ -35,52 +37,63 @@ font FontAwesome5Brands:style=Solid:pixelsize=18:antialias=false;3
 # X core fonts rendering does not support right-to-left and this being a bitmap
 # font, it doesn’t scale on retina/hidpi displays.
 
-# Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+# Use Mouse+$super to drag floating windows to their wanted position
+floating_modifier $super
 focus_follows_mouse no
 
 # kill focused window
-bindsym $mod+Shift+A kill
+bindsym $super+Shift+A kill
+
+set $menu Menu: (k) kill; each command exit mode
+# bindsym $super+$alt+x mode "$menu"
+# mode "$menu" {
+#         # These bindings trigger as soon as you enter the app mode
+#         bindsym k exec kill
+
+#         bindsym Return mode "default"
+#         bindsym Escape mode "default"
+#         bindsym $super+x mode "default"
+# }
 
 # change focus
-bindsym $mod+o focus next
+bindsym $super+o focus next
 
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+m focus right
+bindsym $super+j focus left
+bindsym $super+k focus down
+bindsym $super+l focus up
+bindsym $super+m focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+M move right
+bindsym $super+Shift+j move left
+bindsym $super+Shift+k move down
+bindsym $super+Shift+l move up
+bindsym $super+Shift+M move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $super+h split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $super+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+bindsym $super+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-# bindsym $mod+s layout stacking => I never use that anyway
-bindsym $mod+t layout tabbed
-bindsym $mod+s layout toggle split
+# bindsym $super+s layout stacking => I never use that anyway
+bindsym $super+t layout tabbed
+bindsym $super+s layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $super+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $super+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+q focus parent
+bindsym $super+q focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+#bindsym $super+d focus child
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -104,39 +117,39 @@ workspace $ws4 output eDP-1
 workspace $ws5 output eDP-1
 
 # switch to workspace
-bindsym $mod+ampersand workspace $ws1
-bindsym $mod+eacute workspace $ws2
-bindsym $mod+quotedbl workspace $ws3
-bindsym $mod+apostrophe workspace $ws4
-bindsym $mod+parenleft workspace $ws5
-bindsym $mod+minus workspace $ws6
-bindsym $mod+egrave workspace $ws7
-bindsym $mod+underscore workspace $ws8
-bindsym $mod+ccedilla workspace $ws9
-bindsym $mod+agrave workspace $ws10
+bindsym $super+ampersand workspace $ws1
+bindsym $super+eacute workspace $ws2
+bindsym $super+quotedbl workspace $ws3
+bindsym $super+apostrophe workspace $ws4
+bindsym $super+parenleft workspace $ws5
+bindsym $super+minus workspace $ws6
+bindsym $super+egrave workspace $ws7
+bindsym $super+underscore workspace $ws8
+bindsym $super+ccedilla workspace $ws9
+bindsym $super+agrave workspace $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7
-bindsym $mod+Shift+8 move container to workspace $ws8
-bindsym $mod+Shift+9 move container to workspace $ws9
-bindsym $mod+Shift+0 move container to workspace $ws10
+bindsym $super+Shift+1 move container to workspace $ws1
+bindsym $super+Shift+2 move container to workspace $ws2
+bindsym $super+Shift+3 move container to workspace $ws3
+bindsym $super+Shift+4 move container to workspace $ws4
+bindsym $super+Shift+5 move container to workspace $ws5
+bindsym $super+Shift+6 move container to workspace $ws6
+bindsym $super+Shift+7 move container to workspace $ws7
+bindsym $super+Shift+8 move container to workspace $ws8
+bindsym $super+Shift+9 move container to workspace $ws9
+bindsym $super+Shift+0 move container to workspace $ws10
 
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $super+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
+bindsym $super+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -f pango:OpenSans:20 -m 'Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $super+Shift+e exec "i3-nagbar -t warning -f pango:OpenSans:20 -m 'Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 set $resize Resize: (j) left, (k)down, (l)up, (m)right
-bindsym $mod+r mode "$resize"
+bindsym $super+r mode "$resize"
 mode "$resize" {
         # These bindings trigger as soon as you enter the resize mode
 
@@ -155,10 +168,10 @@ mode "$resize" {
         bindsym Up resize shrink height 6 px or 6 ppt
         bindsym Right resize grow width 6 px or 6 ppt
 
-        # back to normal: Enter or Escape or $mod+r
+        # back to normal: Enter or Escape or $super+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+        bindsym $super+r mode "default"
 }
 
 # Theme colors
@@ -214,10 +227,10 @@ bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # Lock screen
-bindsym $mod+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p default"
+bindsym $super+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p default"
 
 # between
-# bindsym $mod+Menu exec --no-startup-id bepo_switch
+# bindsym $super+Menu exec --no-startup-id bepo_switch
 
 assign [class="^qutebrowser"] → $ws4
 assign [class="^firefox"]     → $ws4
@@ -259,22 +272,22 @@ exec_always --no-startup-id autorandr --change &
 exec --no-startup-id screenrotator &
 
 # start a terminal
-bindsym $mod+Return exec urxvt
+bindsym $super+Return exec urxvt
 
 # start an emacs client
-bindsym $mod+e exec emacsclient -c
+bindsym $super+e exec emacsclient -c
 
 # start rofi (program launcher)
-bindsym $mod+x exec --no-startup-id rofi -show combi
+bindsym $super+x exec --no-startup-id rofi -show combi
 
 # start gopass (password manager with rofi interface)
-# bindsym $mod+p exec --no-startup-id  $HOME/bin/rofi-gopass
+# bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
 
 #start udiskie (mount manager with rofi interface)
-bindsym $mod+d exec --no-startup-id $HOME/bin/udiskie-rofi
+bindsym $super+d exec --no-startup-id $HOME/bin/udiskie-rofi
 
 set $app App: (e) emacs, (q) qutebrowser, (w) wire-desktop, (s) slack, (t) telegram, (l) ledger, (f) firefox
-bindsym $mod+c mode "$app"
+bindsym $super+c mode "$app"
 mode "$app" {
         # These bindings trigger as soon as you enter the app mode
         bindsym f exec firefox
@@ -285,8 +298,8 @@ mode "$app" {
 	bindsym t exec telegram-desktop
 	bindsym q exec qutebrowser
 
-        # back to normal: Enter or Escape or $mod+r
+        # back to normal: Enter or Escape or $super+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym $mod+c mode "default"
+        bindsym $super+c mode "default"
 }

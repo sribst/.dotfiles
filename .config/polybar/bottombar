@@ -4,21 +4,40 @@
     height = 16
     bottom = true
 
-    background = ${xrdb:background}
-    foreground = ${xrdb:color7}
 
-    font-0 = Open Sans:pixelsize=11;1
-    font-1 = file\-icons:style=Regular:pixelsize=11;1
-    font-2 = FontAwesome:style=Regular:pixelsize=11;1
-    font-3 = FontAwesome5Free:style=Solid:pixelsize=11:antialias=false;3
-    font-4 = FontAwesome5Brands:style=Solid:pixelsize=11:antialias=false;3
-    font-5 = Material Icons:style=Regular:pixelsize=11;1
-    font-6 = octicons:style=Regular:pixelsize=11;1
-    font-7 = github\-octicons:style=Regular:pixelsize=11;1
-    font-8 = Icons:style=Regular:pixelsize=11;1
+    color1  = ${xrdb:color1}
+    color2  = ${xrdb:color2}
+    color3  = ${xrdb:color3}
+    color4  = ${xrdb:color4}
+    color5  = ${xrdb:color5}
+    color6  = ${xrdb:color6}
+    color7  = ${xrdb:color7}
+    color8  = ${xrdb:color8}
+    color9  = ${xrdb:color9}
+    color10 = ${xrdb:color10}
+    color11 = ${xrdb:color11}
+    color12 = ${xrdb:color12}
+    color13 = ${xrdb:color13}
+    color14 = ${xrdb:color14}
+
+    background = ${xrdb:background}
+    foreground = ${xrdb:foreground}
+    unfocus-foreground = ${self.color8}
+    notify-foreground = ${self.color6}
+    urgent-foreground = ${self.color1}
+    separator-foreground = ${xrdb:cursorColor}
+
+    font-0 = Open Sans:pixelsize=12;1
+    font-1 = file\-icons:style=Regular:pixelsize=12;1
+    font-2 = Material Icons:style=Regular:pixelsize=12;1
+    font-3 = FontAwesome:style=Regular:pixelsize=12;1
+    font-4 = FontAwesome5Free:style=Solid:pixelsize=12:antialias=false;3
+    font-5 = FontAwesome5Brands:style=Solid:pixelsize=12:antialias=false;3
+    font-6 = octicons:style=Regular:pixelsize=12;1
+    font-7 = github\-octicons:style=Regular:pixelsize=12;1
+    font-8 = Icons:style=Regular:pixelsize=12;1
 
     separator = "  :|:  "
-    separator-foreground = ${xrdb:foreground}
     modules-left   = touchinterface backlight alsa cpu memory
     modules-center = i3
     modules-right  = wired-network wireless-network battery0 temperature date
@@ -28,36 +47,8 @@
 
     scroll-up = i3wm-wsnext
     scroll-down = i3wm-wsprev
-[bar/infobar]
-    monitor = ${env:MONITOR:}
-    width = 100%
-    height = 16
-    bottom = true
-
-    background = ${xrdb:background}
-    foreground = ${xrdb:color7}
-
-    font-0 = Open Sans:pixelsize=11;1
-    font-1 = file\-icons:style=Regular:pixelsize=11;1
-    font-2 = FontAwesome:style=Regular:pixelsize=11;1
-    font-3 = FontAwesome5Free:style=Solid:pixelsize=11:antialias=false;3
-    font-4 = FontAwesome5Brands:style=Solid:pixelsize=11:antialias=false;3
-    font-5 = Material Icons:style=Regular:pixelsize=11;1
-    font-6 = octicons:style=Regular:pixelsize=11;1
-    font-7 = github\-octicons:style=Regular:pixelsize=11;1
-    font-8 = Icons:style=Regular:pixelsize=11;1
-
-    separator = "  :|:  "
-    separator-foreground = ${xrdb:foreground}
-    modules-left   = touchinterface backlight alsa cpu memory
-    modules-center = i3
-    modules-right  = wired-network wireless-network battery0 temperature date
-
-    tray-position = right
-    tray-padding = 5
-
-    scroll-up = i3wm-wsnext
-    scroll-down = i3wm-wsprev
+    padding-left = 4
+    padding-right = 2
 [module/wired-network]
     type = internal/network
     interface = enp0s31f6
@@ -72,7 +63,7 @@
     type = internal/backlight
     format = <label>
     label  =  %percentage%%
-    label-foreground=${xrdb:color7}
+    label-foreground=${root.foreground}
     card = intel_backlight
 
 [module/alsa]
@@ -82,10 +73,10 @@
     headphone-soundcard = default
     format-volume = <label-volume>
     label-volume =  %percentage%%
-    label-foreground = ${xrdb:color7}
+    label-foreground = ${root.foreground}
 
     label-muted =  %percentage%%
-    label-muted-foreground = ${xrdb:color8}
+    label-muted-foreground = ${root.notify-foreground}
 
     master-mixer = Master
     interval = 5
@@ -151,16 +142,15 @@
 
     label-separator = |
     label-separator-padding = 2
-    label-separator-foreground = ${xrdb:foreground}
+    label-separator-foreground = ${root.separator-foreground}
 
-    label-unfocused-foreground = ${xrdb:color8}
-    label-visible-foreground   = ${xrdb:color6}
-    label-focused-foreground   = ${xrdb:color6}
-    label-urgent-foreground    = ${xrdb:color1}
+    label-unfocused-foreground = ${root.unfocus-foreground}
+    label-visible-foreground   = ${root.notify-foreground}
+    label-focused-foreground   = ${root.notify-foreground}
+    label-urgent-foreground    = ${root.urgent-foreground}
 
 [module/touchinterface]
-;; Restart i3 in order to redraw polybar to fit screen orientation
    type=custom/text
-   content = ""
-   content-foreground=${xrdb:color8}
+   content = "A"
+   content-foreground=${root.foreground}
    click-left = $HOME/bin/starttouchbar

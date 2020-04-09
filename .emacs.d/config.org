@@ -52,6 +52,7 @@
   - [[#agenda][Agenda]]
   - [[#capture-org-capture][Capture =org-capture=]]
 - [[#to-order][to order]]
+  - [[#notification-alert][notification =alert=]]
 - [[#media][media]]
   - [[#mpd-interface-mpdel][mpd interface =mpdel=]]
 
@@ -353,7 +354,7 @@ Provides minibuffer hints when working with Emacs Lisp.
 (use-package which-key
   :delight
   :config (which-key-mode))
-  #+END_SRC
+#+END_SRC
 * Mode-line
 ** Parameter
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -458,7 +459,7 @@ ibuffer is a better buffer mode
 split-width-threshold nil does not work for me
 need to find correct config -> use toggle-windows-split atm
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq split-width-threshold nil) ; default split is vertical
+  ;; (setq split-width-threshold nil) ; default split is vertical
 #+END_SRC
 
 *** switch window =ace-window=
@@ -604,8 +605,9 @@ indented.  It reindents after every change, making it more reliable than
 electric-indent-mode.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package aggressive-indent
-  :hook ((prog-mode org-mode) . aggressive-indent-mode)
-  :custom (aggressive-indent-comments-too t))
+:delight ""
+:hook ((prog-mode org-mode) . aggressive-indent-mode)
+:custom (aggressive-indent-comments-too t))
 #+END_SRC
 ** Decoration
 *** TODO colorize background of text color like green =rainbow-mode=
@@ -654,7 +656,7 @@ use bind-keymap instead
   ;;  (use-package company-lsp :commands company-lsp)
   ;;  ;; if you are helm user
   ;;  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-  #+END_SRC
+#+END_SRC
 
 **** OCaml
 ***** TODO major mode =tuareg=
@@ -671,12 +673,18 @@ use bind-keymap instead
 soon gopcaml will have a emacs package to install I guess. might need
 look at https://gitlab.com/gopiandcode/gopcaml-mode
 ***** helpers
+****** TODO opam =opam-update-env=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package opam-update-env
+  ;; :after tuareg)
+#+END_SRC
+
 ****** builder =dune=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package dune :after tuareg)
 #+END_SRC
 
-****** doc and link =merlin=
+****** completion, type, doc,... =merlin=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package merlin
         :hook ((tuareg-mode caml-mode) . merlin-mode)
@@ -802,9 +810,9 @@ ocp-indent seems to fucks ocamlformat
   :custom
   (projectile-grep-default-files "src/")
   (projectile-project-search-path
-  '("~/CS/Cryptium/" "~/CS/Pers/" "~/CS/VGED/" "~/CS/Wagner/"))
-    (projectile-completion-system 'ivy)
-    :init (projectile-mode))
+  '("~/CS/Cryptium/" "~/CS/Pers/" "~/CS/VGED/" "~/CS/Wagner/" "~/.config/"))
+  (projectile-completion-system 'ivy)
+  :init (projectile-mode))
 (use-package counsel-projectile
 :after counsel projectile
 :init (counsel-projectile-mode))
@@ -820,6 +828,9 @@ ocp-indent seems to fucks ocamlformat
 (org-projectile-per-project)
 (progn (push (org-projectile-project-todo-entry) org-capture-templates))))
 #+END_SRC
+
+#+RESULTS:
+: org-projectile-project-todo-completing-read
 
 ** Git
 *** Interaction =magit=
@@ -994,11 +1005,15 @@ Amazing mode of GNU Emacs.
   (org-use-extra-keys t)
   (org-catch-invisible-edits 'show-and-error)
   (org-cycle-separator-lines 0)
-  (org-refile-use-outline-path 3)
+  (org-refile-use-outline-path 'file)
+  (org-outline-path-complete-in-steps nil)
+  (org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
   :hook
     ((after-save . my/config-tangle)
       (auto-save . org-save-all-org-buffers)))
 #+END_SRC
+
+
 ** Table of content =toc-org=
 Create and update automaticaly a table of contents.  =toc-org= will maintain a
 table of contents at the first heading that has a =:TOC:= tag.
@@ -1049,7 +1064,7 @@ Foreground and the weight (bold) of each keywords.
 ("ABORDED"    . (:foreground "grey" ))
 
 
-("IDEA"       . (:foreground "blue"))
+("IDEA"       . (:foreground "cyan"))
 ("FETCH"      . (:foreground "red" ))
 ("GIVE"       . (:foreground "orange"))
 
@@ -1108,33 +1123,19 @@ Org super agenda allows a more readible agenda by grouping the todo item
 '(
 (:name "Agenda" :time-grid t)
 (:name "Scheduled" :scheduled t)
-(:name "Deadline" :deadline t)
-(:name "Book ASAP"   :todo "BOOK")
-(:name "Information" :and (:time-grid t :todo nil))
+(:name "Deadline"  :deadline t)
 ))))
 (alltodo ""
-((org-super-agenda-groups
-'(
-(:name "Agenda"        :and (:date today :time-grid t :todo "GO"))
-(:name "Scheduled"     :scheduled t)
-(:name "Deadline"      :deadline t)
-(:name "Book ASAP"     :todo "BOOK")
-(:name "Information"   :and (:time-grid t :todo nil))
-(:name "Yesterday"     :and (:date t :todo "GO"))
-(:name "Current Work"  :and (:tag "work" :todo "INPROGRESS"))
-(:name "recurrent Work":and (:tag "work" :tag  "recurrent"))
-(:name "Next work"     :and (:tag "work" :todo "TODO"))
-(:name "on pause Work" :todo "WAITING")
-(:name "recurrent"     :tag "recurrent")
-(:name "Current"       :todo "INPROGRESS")
-(:name "Next "         :todo "TODO")
-(:name "Daily"         :and(:todo "FETCH" :tag  "daily"))
-(:name "Fetch asap"    :and (:todo "FETCH" :not (:tag "media")))
-(:name "Download "     :and (:todo "FETCH" :tag "media"))
-(:name "One day"       :todo "SOMEDAY")
-(:name "on pause"      :todo "WAITING")
-(:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
-))))
+ ((org-super-agenda-groups
+ '(
+   (:name "Book"          :todo "BOOK")
+   (:name "TO-DO "        :todo "TODO")
+   (:name "Daily"         :and (:todo "FETCH" :tag  "daily"))
+   (:name "Fetch"         :and (:todo "FETCH" :not (:tag "film")))
+   (:name "Download "     :and (:todo "FETCH" :tag "film"))
+   (:name "One day"       :todo "SOMEDAY")
+   (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
+   ))))
 ))))
 )
 #+END_SRC
@@ -1208,6 +1209,17 @@ Org super agenda allows a more readible agenda by grouping the todo item
     ;;     :inbox "~/org/work.org"))
 
 #+END_SRC
+*** notification =org-wild-notifier=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org-wild-notifier
+:after org-agenda alert
+:custom
+(org-wild-notifier-keyword-whitelist "")
+(org-wild-notifier--day-wide-events t)
+(org-wild-notifier-alert-time '(10))
+:init (org-wild-notifier-mode t))
+#+END_SRC
+
 ** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
@@ -1235,7 +1247,7 @@ information.
 (defvar my/to    (concat "%^{To " my/gare "}"))
 (message (my/gmaps-format "78 rue hippolyte kahn"))
 (defvar my/agenda-template (concat
-"%^{Name} %^g
+"%^{Name} %^G
 :PROPERTIES:
   :Created: %U
   :Name:    %\\1
@@ -1249,11 +1261,11 @@ information.
 
 (defvar my/org-tobook-template (concat "* BOOK " my/agenda-template))
 
-(defvar my/org-togo-template (concat "* GO " my/agenda-template))
+(defvar my/org-togo-template (concat "* " my/agenda-template))
 
 (defvar my/org-trip-template (concat
-  "* GO %\\1 -%\\3-> %\\2
-  :PROPERTIES:
+"* %\\1 -> %\\2
+:PROPERTIES:
   :Created: %U
   :From:   " my/from "
   :To:     "  my/to "
@@ -1264,7 +1276,7 @@ information.
   "))
 
   (defvar my/org-roundtrip-template (concat
-  "* GO %\\1 -> %\\2
+  "* %\\1 -> %\\2
   :PROPERTIES:
   :Created: %U
   :From:   " my/from "
@@ -1272,7 +1284,7 @@ information.
   :Type:    %^{Type}p
   :With:   " my/with "
   :END:
-  %^{When}T\n* GO %\\2 -> %\\1
+  %^{When}T\n* %\\2 -> %\\1
   :PROPERTIES:
   :Created: %U
   :From:      %\\2
@@ -1294,14 +1306,14 @@ information.
   ")
 
   (defvar my/org-todo-template
-  "* TODO %^{What} %^g
+  "* TODO %^{What} %^G
   :PROPERTIES:
   :Created:     %U
   :END:
   ")
 
   (defvar my/org-someday-template
-  "* SOMEDAY %^{What} %^g
+  "* SOMEDAY %^{What} %^G
   :PROPERTIES:
   :Created:     %U
   :END:
@@ -1367,6 +1379,12 @@ information.
 
 #+RESULTS:
 * to order
+** notification =alert=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package alert
+:custom
+(alert-default-style 'libnotify))
+#+END_SRC
 
 * media
 ** TODO mpd interface =mpdel=
@@ -1378,4 +1396,4 @@ information.
   ;; :ensure-system-package (mdp . "yay -S mpd"))
   ;; (use-package ivy-mpdel
   ;; :after mpdel)
-#+END_SRC
+  #+END_SRC
