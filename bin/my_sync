@@ -17,6 +17,6 @@ rm -f ~/emacs.d/config.el
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME push
 echo -e "${green}config file: done${reset}"
 
-echo -e "${red}${blink}contact and calendar: start${reset}"
-vdirsyncer sync
-echo -e "${green}contact and calendar: done${reset}"
+# echo -e "${red}${blink}contact and calendar: start${reset}"
+# vdirsyncer sync
+# echo -e "${green}contact and calendar: done${reset}"
