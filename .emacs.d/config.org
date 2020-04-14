@@ -43,7 +43,9 @@
   - [[#shell-command-exec-path-from-shell][shell command =exec-path-from-shell=]]
   - [[#environment-variable][Environment variable]]
   - [[#file-explorer-ranger][file explorer =ranger=]]
-- [[#contact-bbdb][contact =bbdb=]]
+- [[#contact][contact]]
+  - [[#dav-directory-vdirel][dav directory =vdirel=]]
+- [[#emacs-format-bbdb][emacs format =bbdb=]]
 - [[#mail-gnus][Mail =gnus=]]
 - [[#organisercalendarlinkeretc-org-mode][Organiser/calendar/linker/etc =org-mode=]]
   - [[#table-of-content-toc-org][Table of content =toc-org=]]
@@ -969,14 +971,29 @@ find miller column within dired-mode
 ;; (ranger-dont-show-binary t)
 ;; (ranger-max-preview-size 10))
 #+END_SRC
-* contact =bbdb=
+* TODO contact
+** dav directory =vdirel=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package bbdb
-)
-(use-package bbdb-vcard
-)
+(use-package vdirel
+:custom
+(vdirel-repositories
+'("~/.contacts/contacts" "~/calendar/master" "~/calendar/claire")))
 #+END_SRC
 
+#+RESULTS:
+
+* TODO emacs format =bbdb=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package bbdb
+  ;; :hook gnus-startup
+  ;; :custom
+  ;; (bbdb-file "~/.contacts/bbdb")
+  ;; (bbdb-no-duplicate t)
+  ;; :init
+  ;; (bbdb-initialize 'gnus 'message))
+  ;; (use-package bbdb-vcard
+  ;; )
+  #+END_SRC
 * Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package gnus
