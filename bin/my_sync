@@ -1,11 +1,22 @@
 #!/bin/bash
 cd $HOME
-RED='\033[0;31m'
-echo -e "${RED}\033[5mMAJ PASS\033[0m"
+
+red='\e[31m'
+green='\e[32m'
+reset='\e[0m'
+blink='\e[5m'
+echo -e "${red}${blink}password store: start${reset}"
 gopass sync
+echo -e "${green}password store: done${reset}"
+
+echo -e "${red}${blink}config file: start${reset}"
 rm -f ~/emacs.d/config.el
-echo -e "${RED}\033[5mMAJ DOTFILES\033[0m"
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME pull
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME add -u
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME commit -m "sync"
 /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME push
+echo -e "${green}config file: done${reset}"
+
+echo -e "${red}${blink}contact and calendar: start${reset}"
+vdirsyncer sync
+echo -e "${green}contact and calendar: done${reset}"

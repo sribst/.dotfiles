@@ -281,10 +281,10 @@ bindsym $super+e exec emacsclient -c
 bindsym $super+x exec --no-startup-id rofi -show combi
 
 # start gopass (password manager with rofi interface)
-# bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
+bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
 
 #start udiskie (mount manager with rofi interface)
-bindsym $super+d exec --no-startup-id $HOME/bin/udiskie-rofi
+bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
 set $app App: (e) emacs, (q) qutebrowser, (w) wire-desktop, (s) slack, (t) telegram, (l) ledger, (f) firefox
 bindsym $super+c mode "$app"

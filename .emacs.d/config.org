@@ -43,6 +43,7 @@
   - [[#shell-command-exec-path-from-shell][shell command =exec-path-from-shell=]]
   - [[#environment-variable][Environment variable]]
   - [[#file-explorer-ranger][file explorer =ranger=]]
+- [[#contact-bbdb][contact =bbdb=]]
 - [[#mail-gnus][Mail =gnus=]]
 - [[#organisercalendarlinkeretc-org-mode][Organiser/calendar/linker/etc =org-mode=]]
   - [[#table-of-content-toc-org][Table of content =toc-org=]]
@@ -968,6 +969,14 @@ find miller column within dired-mode
 ;; (ranger-dont-show-binary t)
 ;; (ranger-max-preview-size 10))
 #+END_SRC
+* contact =bbdb=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package bbdb
+)
+(use-package bbdb-vcard
+)
+#+END_SRC
+
 * Mail =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package gnus
@@ -1214,9 +1223,9 @@ Org super agenda allows a more readible agenda by grouping the todo item
 (use-package org-wild-notifier
 :after org-agenda alert
 :custom
-(org-wild-notifier-keyword-whitelist "")
+(org-wild-notifier-keyword-whitelist nil)
 (org-wild-notifier--day-wide-events t)
-(org-wild-notifier-alert-time '(10))
+(org-wild-notifier-alert-time '(1))
 :init (org-wild-notifier-mode t))
 #+END_SRC
 
