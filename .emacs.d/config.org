@@ -1,6 +1,6 @@
 #+TITLE: GNU Emacs confidguration
 #+AUTHOR: Sylvain Ribstein
-
+#+CATEGORY: config
 
 * Table of content :TOC:
 - [[#global-configuration][Global configuration]]
@@ -43,10 +43,10 @@
   - [[#shell-command-exec-path-from-shell][shell command =exec-path-from-shell=]]
   - [[#environment-variable][Environment variable]]
   - [[#file-explorer-ranger][file explorer =ranger=]]
-- [[#contact][contact]]
-  - [[#dav-directory-vdirel][dav directory =vdirel=]]
-- [[#emacs-format-bbdb][emacs format =bbdb=]]
-- [[#mail-gnus][Mail =gnus=]]
+  - [[#system-notification-alert][system notification =alert=]]
+- [[#mail][Mail]]
+  - [[#mu-mu4e][mu =mu4e=]]
+  - [[#gnus-gnus][Gnus =gnus=]]
 - [[#organisercalendarlinkeretc-org-mode][Organiser/calendar/linker/etc =org-mode=]]
   - [[#table-of-content-toc-org][Table of content =toc-org=]]
   - [[#org-indentation-org-indent][org indentation =org-indent=]]
@@ -54,10 +54,15 @@
   - [[#face-of-todo][face of TODO]]
   - [[#agenda][Agenda]]
   - [[#capture-org-capture][Capture =org-capture=]]
+  - [[#journal-org-journal][Journal =org-journal=]]
 - [[#to-order][to order]]
-  - [[#notification-alert][notification =alert=]]
 - [[#media][media]]
   - [[#mpd-interface-mpdel][mpd interface =mpdel=]]
+- [[#to-do][TO-DO]]
+  - [[#add-org_wild_notifier-to-emacs][add org_wild_notifier to emacs]]
+  - [[#change-color-of-merlin-coloring][change color of merlin coloring]]
+  - [[#contact][contact]]
+  - [[#make-qutebrowser-default-browser][make qutebrowser default browser]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -816,20 +821,22 @@ ocp-indent seems to fucks ocamlformat
   '("~/CS/Cryptium/" "~/CS/Pers/" "~/CS/VGED/" "~/CS/Wagner/" "~/.config/"))
   (projectile-completion-system 'ivy)
   :init (projectile-mode))
+
 (use-package counsel-projectile
-:after counsel projectile
-:init (counsel-projectile-mode))
+ :after counsel projectile
+ :init (counsel-projectile-mode))
 
 (use-package org-projectile
-:after projectile org
-:bind ("C-c n p" . org-projectile-project-todo-completing-read)
-:custom
-(org-projectile-per-project-filepath "project-todo.org")
-:config
-(setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
- (org-projectile-capture-template (format "%s%s" "* TODO %?")
-(org-projectile-per-project)
-(progn (push (org-projectile-project-todo-entry) org-capture-templates))))
+ :after projectile org
+ :bind
+ ("C-c n p" . org-projectile-project-todo-completing-read)
+ :custom
+ (org-projectile-per-project-filepath "project-todo.org")
+ :config
+ (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+ (org-projectile-capture-template (format "%s" "* TODO %?")
+ (org-projectile-per-project)
+ (progn (push (org-projectile-project-todo-entry) org-capture-templates))))
 #+END_SRC
 
 #+RESULTS:
@@ -943,6 +950,7 @@ dired-du give the size of directory using du or lisp
     :config
     )
 #+END_SRC
+**
 
 ** shell command =exec-path-from-shell=
 update path of emacs to user path
@@ -971,30 +979,50 @@ find miller column within dired-mode
 ;; (ranger-dont-show-binary t)
 ;; (ranger-max-preview-size 10))
 #+END_SRC
-* TODO contact
-** dav directory =vdirel=
+** system notification =alert=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package vdirel
+(use-package alert
 :custom
-(vdirel-repositories
-'("~/.contacts/contacts" "~/calendar/master" "~/calendar/claire")))
+(alert-default-style 'libnotify))
+#+END_SRC
+
+* Mail
+** mu =mu4e=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package mu4e
+  :ensure nil
+  :ensure-system-package mu
+  :custom
+  ;; (mu4e-attachment-dir "~/Downloads")
+  ;; (mu4e-compose-signature-auto-include nil)
+  ;; (mu4e-drafts-folder "/gmail/Drafts")
+  ;; (mu4e-get-mail-command "mbsync -a")
+  (mu4e-maildir "~/Maildir")
+  ;; (mu4e-refile-folder "/gmail/Archive")
+  ;; (mu4e-sent-folder "/gmail/Sent Mail")
+  ;; (mu4e-maildir-shortcuts
+    ;;  '(("/gmail/INBOX" . ?i)
+    ;;    ("/gmail/All Mail" . ?a)
+    ;;    ("/gmail/Deleted Items" . ?d)
+    ;;    ("/gmail/Drafts" . ?D)
+    ;;    ("/gmail/Important" . ?i)
+    ;;    ("/gmail/Sent Mail" . ?s)
+    ;;    ("/gmail/Starred" . ?S)))
+    ;; (mu4e-trash-folder "/gmail/Trash")
+  (mu4e-update-interval 300)
+  (mu4e-use-fancy-chars t)
+  (mu4e-view-show-addresses t)
+  (mu4e-view-show-images t))
+  (use-package mu4e-alert
+    :after mu4e
+    :hook ((after-init . mu4e-alert-enable-mode-line-display)
+           (after-init . mu4e-alert-enable-notifications))
+    :config (mu4e-alert-set-default-style 'libnotify))
 #+END_SRC
 
 #+RESULTS:
 
-* TODO emacs format =bbdb=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package bbdb
-  ;; :hook gnus-startup
-  ;; :custom
-  ;; (bbdb-file "~/.contacts/bbdb")
-  ;; (bbdb-no-duplicate t)
-  ;; :init
-  ;; (bbdb-initialize 'gnus 'message))
-  ;; (use-package bbdb-vcard
-  ;; )
-  #+END_SRC
-* Mail =gnus=
+** Gnus =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package gnus
 :bind (("C-c m" . gnus)
@@ -1038,7 +1066,6 @@ Amazing mode of GNU Emacs.
     ((after-save . my/config-tangle)
       (auto-save . org-save-all-org-buffers)))
 #+END_SRC
-
 
 ** Table of content =toc-org=
 Create and update automaticaly a table of contents.  =toc-org= will maintain a
@@ -1141,7 +1168,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
 :init (org-super-agenda-mode)
 :custom
 (org-agenda-custom-commands
-'(("b" "My Agenda"
+'(("o" "Overview of agenda and todo"
 ((agenda ""
 (
 (org-agenda-span '1)
@@ -1155,7 +1182,9 @@ Org super agenda allows a more readible agenda by grouping the todo item
  ((org-super-agenda-groups
  '(
    (:name "Book"          :todo "BOOK")
-   (:name "TO-DO "        :todo "TODO")
+   (:name "TO-DO "        :and (:category "agenda" :todo "TODO"))
+   (:name "Tezos"         :and (:category "tezos"  :todo "TODO"))
+   (:name "Config"        :and (:category "config" :todo "TODO"))
    (:name "Daily"         :and (:todo "FETCH" :tag  "daily"))
    (:name "Fetch"         :and (:todo "FETCH" :not (:tag "film")))
    (:name "Download "     :and (:todo "FETCH" :tag "film"))
@@ -1167,7 +1196,6 @@ Org super agenda allows a more readible agenda by grouping the todo item
 #+END_SRC
 
 #+RESULTS:
-
 
 *** calendar view =calfw=
 
@@ -1404,14 +1432,19 @@ information.
 #+END_SRC
 
 #+RESULTS:
-* to order
-** notification =alert=
+
+** Journal =org-journal=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package alert
-:custom
-(alert-default-style 'libnotify))
+  (use-package org-journal
+  :after org
+  :delight ""
+  :custom
+  (org-journal-dir "~/org/journal")
+  :bind
+  ("C-c n j" . org-journal-new-entry))
 #+END_SRC
 
+* to order
 * media
 ** TODO mpd interface =mpdel=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1422,4 +1455,31 @@ information.
   ;; :ensure-system-package (mdp . "yay -S mpd"))
   ;; (use-package ivy-mpdel
   ;; :after mpdel)
-  #+END_SRC
+#+END_SRC
+* TO-DO
+** TODO add org_wild_notifier to emacs
+** TODO change color of merlin coloring
+** TODO contact
+*** dav directory =vdirel=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package vdirel
+:custom
+(vdirel-repositories
+'("~/.contacts/contacts" "~/calendar/master" "~/calendar/claire")))
+#+END_SRC
+*** TODO emacs format =bbdb=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package bbdb
+  ;; :hook gnus-startup
+  ;; :custom
+  ;; (bbdb-file "~/.contacts/bbdb")
+  ;; (bbdb-no-duplicate t)
+  ;; :init
+  ;; (bbdb-initialize 'gnus 'message))
+  ;; (use-package bbdb-vcard
+  ;; )
+#+END_SRC
+** TODO make qutebrowser default browser
+:PROPERTIES:
+:Created:  [2020-04-15 mer. 15:06]
+:END:

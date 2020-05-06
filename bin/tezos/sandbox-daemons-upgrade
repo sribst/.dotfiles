@@ -1,5 +1,7 @@
 #!/bin/bash
 
+make
+
 make build-sandbox
 
 ./tezos-sandbox daemons-upgrade \

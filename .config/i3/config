@@ -39,7 +39,9 @@ font FontAwesome5Brands:style=Solid:pixelsize=18:antialias=false;3
 
 # Use Mouse+$super to drag floating windows to their wanted position
 floating_modifier $super
-focus_follows_mouse no
+
+
+focus_follows_mouse yes
 
 # kill focused window
 bindsym $super+Shift+A kill
@@ -171,7 +173,7 @@ mode "$resize" {
         # back to normal: Enter or Escape or $super+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym $super+r mode "default"
+        bindsym $super+g mode "default"
 }
 
 # Theme colors
@@ -219,7 +221,6 @@ bindsym XF86AudioLowerVolume exec amixer -D default sset Master 5%-
 bindsym XF86AudioRaiseVolume exec amixer -D default sset Master 5%+
 bindsym XF86AudioPlay        exec amixer -D default sset Master toggle
 bindsym XF86AudioMute        exec amixer -D default sset Master toggle
-# bindsym XF86MicMute          exec amixer set Capture toggle
 bindsym XF86AudioMicMute     exec amixer set Capture toggle
 
 # backlight
@@ -239,6 +240,7 @@ assign [class="^Telegram"]    → $ws5
 assign [class="^zoom"]        → $ws5
 assign [class="^Slack"]       → $ws5
 assign [class="^Signal"]      → $ws5
+assign [class="^teamspeak3"]  → $ws5
 
 # gaps between windows
 
@@ -286,20 +288,18 @@ bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
 #start udiskie (mount manager with rofi interface)
 bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
-set $app App: (e) emacs, (q) qutebrowser, (w) wire-desktop, (s) slack, (t) telegram, (l) ledger, (f) firefox
+set $app App: (q) qutebrowser, (m) mirage, (w) wire-desktop, (s) slack, (t) telegram
 bindsym $super+c mode "$app"
 mode "$app" {
         # These bindings trigger as soon as you enter the app mode
-        bindsym f exec firefox
-        bindsym e exec emacs
-	bindsym l exec ledger-live-desktop
-	bindsym s exec slack
-        bindsym w exec wire-desktop
-	bindsym t exec telegram-desktop
+	bindsym m exec mirage
 	bindsym q exec qutebrowser
+        bindsym w exec wire-desktop
+	bindsym s exec slack
+	bindsym t exec telegram-desktop
 
         # back to normal: Enter or Escape or $super+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym $super+c mode "default"
+        bindsym $super+g mode "default"
 }
