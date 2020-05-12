@@ -228,7 +228,7 @@ bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # Lock screen
-bindsym $super+twosuperior exec --no-startup-id "i3lock-fancy-rapid 2 3 -u -p default"
+bindsym $super+twosuperior exec --no-startup-id "i3lock-fancy-rapid 5 10 -u -p default"
 
 # between
 # bindsym $super+Menu exec --no-startup-id bepo_switch
@@ -239,6 +239,7 @@ assign [class="^Wire"]        → $ws5
 assign [class="^Telegram"]    → $ws5
 assign [class="^zoom"]        → $ws5
 assign [class="^Slack"]       → $ws5
+assign [class="^Riot"]        → $ws5
 assign [class="^Signal"]      → $ws5
 assign [class="^teamspeak3"]  → $ws5
 
@@ -288,15 +289,14 @@ bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
 #start udiskie (mount manager with rofi interface)
 bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
-set $app App: (q) qutebrowser, (m) mirage, (w) wire-desktop, (s) slack, (t) telegram
+set $app App: (q) qutebrowser, (r) riot, (w) wire-desktop, (s) slack
 bindsym $super+c mode "$app"
 mode "$app" {
         # These bindings trigger as soon as you enter the app mode
-	bindsym m exec mirage
+	bindsym r exec riot-desktop
 	bindsym q exec qutebrowser
         bindsym w exec wire-desktop
 	bindsym s exec slack
-	bindsym t exec telegram-desktop
 
         # back to normal: Enter or Escape or $super+r
         bindsym Return mode "default"

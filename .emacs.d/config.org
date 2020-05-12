@@ -224,38 +224,42 @@ I find invasive.
 *** Theme
 xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package xresources-theme
-:config
-(set-face-attribute 'region nil :background (x-get-resource "color12" ""))
-(set-face-background 'hl-line (x-get-resource "color8" ""))
-:init
+  (use-package xresources-theme
+  :config
+  (set-face-attribute 'region nil :background (x-get-resource "color12" ""))
+  :init
 
-(defvar my/theme 'xresources)
-(defvar my/theme-window-loaded nil)
-(defvar my/theme-terminal-loaded nil)
+  (defvar my/theme 'xresources)
+  (defvar my/theme-window-loaded nil)
+  (defvar my/theme-terminal-loaded nil)
 
-(global-hl-line-mode 1) ; Hightlight current line
+  (global-hl-line-mode 1) ; Hightlight current line
 
-(if (daemonp)
+  (if (daemonp)
         (add-hook 'after-make-frame-functions
-          (lambda (frame)
-          (select-frame frame)
-          (if (window-system frame)
-          (unless my/theme-window-loaded
-          (if my/theme-terminal-loaded
-                      (enable-theme my/theme)
-                      (load-theme my/theme t))
-                      (setq my/theme-window-loaded t))
-                  (unless my/theme-terminal-loaded
-                  (if my/theme-window-loaded
-                    (enable-theme my/theme)
-                  (load-theme my/theme t))
-                (setq my/theme-terminal-loaded t)))))
-         (progn
-            (load-theme my/theme t)
-            (if (display-graphic-p)
-              (setq my/theme-window-loaded t)
-              (setq my/theme-terminal-loaded t)))))
+                  (lambda (frame)
+                    (select-frame frame)
+                    (if (window-system frame)
+                        (unless my/theme-window-loaded
+                          (if my/theme-terminal-loaded
+                              (enable-theme my/theme)
+                            (progn
+                              (load-theme my/theme t)
+                              (set-face-background 'hl-line (x-get-resource "color8" ""))))
+                          (setq my/theme-window-loaded t))
+                      (unless my/theme-terminal-loaded
+                        (if my/theme-window-loaded
+                            (enable-theme my/theme)
+                          (progn
+                            (load-theme my/theme t)
+                            (set-face-background 'hl-line (x-get-resource "color8" ""))))
+                        (setq my/theme-terminal-loaded t)))))
+      (progn
+        (load-theme my/theme t)
+        (set-face-background 'hl-line (x-get-resource "color8" ""))
+        (if (display-graphic-p)
+            (setq my/theme-window-loaded t)
+          (setq my/theme-terminal-loaded t)))))
 #+END_SRC
 
 *** font
@@ -474,13 +478,13 @@ need to find correct config -> use toggle-windows-split atm
 ace window allow to simply switch when only 2 window or to choose
 which window with key when multiple buff
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ace-window
-:bind
-(("C-x o" . ace-window)
-("M-o" . ace-window))
-:init
-(setq aw-keys '(?j ?k ?l ?m ?u ?i ?o ?p))
-(setq aw-scope 'frame))
+  (use-package ace-window
+  :bind
+  (("C-x o" . ace-window)
+     ("M-o" . ace-window))
+     :init
+     (setq aw-keys '(?j ?k ?l ?m ?u ?i ?o ?p))
+     (setq aw-scope 'frame))
 #+END_SRC
 
 *** window configuration =winner-mode=
@@ -496,32 +500,32 @@ switch back to multiple open buffer.
 *** Toggle windows split
 switch layout when two buffers are open
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defun toggle-window-split ()
+  (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-	     (next-win-buffer (window-buffer (next-window)))
-	     (this-win-edges (window-edges (selected-window)))
-	     (next-win-edges (window-edges (next-window)))
-	     (this-win-2nd (not (and (<= (car this-win-edges)
-					 (car next-win-edges))
-				     (<= (cadr this-win-edges)
-					 (cadr next-win-edges)))))
-	     (splitter
-	      (if (= (car this-win-edges)
-		     (car (window-edges (next-window))))
-		  'split-window-horizontally
-		'split-window-vertically)))
-	(delete-other-windows)
-	(let ((first-win (selected-window)))
-	  (funcall splitter)
-	  (if this-win-2nd (other-window 1))
-	  (set-window-buffer (selected-window) this-win-buffer)
-	  (set-window-buffer (next-window) next-win-buffer)
-	  (select-window first-win)
-	  (if this-win-2nd (other-window 1))))))
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
 
-      (define-key ctl-x-4-map "t" 'toggle-window-split)
+  (define-key ctl-x-4-map "t" 'toggle-window-split)
 #+END_SRC
 
 * Edition
@@ -987,20 +991,20 @@ find miller column within dired-mode
 #+END_SRC
 
 * Mail
-** mu =mu4e=
+** TODO mu =mu4e=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package mu4e
-  :ensure nil
-  :ensure-system-package mu
-  :custom
-  ;; (mu4e-attachment-dir "~/Downloads")
-  ;; (mu4e-compose-signature-auto-include nil)
-  ;; (mu4e-drafts-folder "/gmail/Drafts")
-  ;; (mu4e-get-mail-command "mbsync -a")
-  (mu4e-maildir "~/Maildir")
-  ;; (mu4e-refile-folder "/gmail/Archive")
-  ;; (mu4e-sent-folder "/gmail/Sent Mail")
-  ;; (mu4e-maildir-shortcuts
+(use-package mu4e
+:ensure nil
+:ensure-system-package mu
+:custom
+;; (mu4e-attachment-dir "~/Downloads")
+;; (mu4e-compose-signature-auto-include nil)
+;; (mu4e-drafts-folder "/gmail/Drafts")
+;; (mu4e-get-mail-command "mbsync -a")
+(mu4e-maildir "~/Maildir")
+;; (mu4e-refile-folder "/gmail/Archive")
+;; (mu4e-sent-folder "/gmail/Sent Mail")
+;; (mu4e-maildir-shortcuts
     ;;  '(("/gmail/INBOX" . ?i)
     ;;    ("/gmail/All Mail" . ?a)
     ;;    ("/gmail/Deleted Items" . ?d)
@@ -1022,22 +1026,22 @@ find miller column within dired-mode
 
 #+RESULTS:
 
-** Gnus =gnus=
+** TODO Gnus =gnus=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package gnus
-:bind (("C-c m" . gnus)
-:map gnus-group-mode-map
-   ("C-c C-f" . gnus-summary-mail-forward))
-:delight "")
+  ;; (use-package gnus
+  ;; :bind (("C-c m" . gnus)
+  ;; :map gnus-group-mode-map
+  ;;    ("C-c C-f" . gnus-summary-mail-forward))
+  ;; :delight "")
 
-(use-package w3m
- :delight ""
- :after gnus)
+  ;; (use-package w3m
+  ;;  :delight ""
+  ;;  :after gnus)
 
- (use-package all-the-icons-gnus
- :after gnus all-the-icons
- :config
- (all-the-icons-gnus-setup))
+  ;;  (use-package all-the-icons-gnus
+  ;;  :after gnus all-the-icons
+  ;;  :config
+  ;;  (all-the-icons-gnus-setup))
 #+END_SRC
 
 * Organiser/calendar/linker/etc =org-mode=
@@ -1265,13 +1269,13 @@ Org super agenda allows a more readible agenda by grouping the todo item
 #+END_SRC
 *** notification =org-wild-notifier=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package org-wild-notifier
-:after org-agenda alert
-:custom
-(org-wild-notifier-keyword-whitelist nil)
-(org-wild-notifier--day-wide-events t)
-(org-wild-notifier-alert-time '(1))
-:init (org-wild-notifier-mode t))
+  (use-package org-wild-notifier
+  :after org-agenda alert
+  :custom
+  (org-wild-notifier-keyword-whitelist nil)
+  (org-wild-notifier--day-wide-events t)
+  (org-wild-notifier-alert-time '(10 9 8 7 6 5 3 2 1))
+  :init (org-wild-notifier-mode t))
 #+END_SRC
 
 ** Capture =org-capture=
