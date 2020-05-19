@@ -339,12 +339,12 @@ if [ -f ~/.alert ]; then cat ~/.alert; fi
 # opam configuration
 test -r /home/baroud/.opam/opam-init/init.zsh && . /home/baroud/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-#To save every command before it is executed (this is different from bash's history -a solution):
+#To save every command before it is executed (this is different from bash's
+# history -a solution):
 setopt inc_append_history
 
 #To retrieve the history file everytime history is called upon.
 setopt share_history
-
 # clipboard
 
 x-copy-region-as-kill () {
@@ -374,16 +374,14 @@ bindkey -e '^Y' x-yank
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 
-# remove tezos warning for sandbox
-export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=Y
-export EDITOR='emacsclient -nw'
-
 export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
 
 # add shh to yubico gpg
 export GPG_TTY="$(tty)"
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
 gpgconf --launch gpg-agent
+
 # disable warning message of opencv
 export OPENCV_LOG_LEVEL=ERROR
 
