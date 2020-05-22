@@ -12,9 +12,10 @@ application/xhtml+xml=qutebrowser.desktop;
 application/x-extension-xhtml=qutebrowser.desktop;
 application/x-extension-xht=qutebrowser.desktop;
 text/plain=feh.desktop;eog.desktop;
-video/x-matroska=mpv.desktop;
+video/x-matroska=vlc.desktop;mpv.desktop;
 application/pdf=xpdf.desktop;
 video/mp4=mpv.desktop;
+text/x-microdvd=emacs.desktop;
 
 [Default Applications]
 x-scheme-handler/http=qutebrowser.desktop

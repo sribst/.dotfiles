@@ -374,25 +374,16 @@ bindkey -e '^Y' x-yank
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 
-export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
-
-# add shh to yubico gpg
-export GPG_TTY="$(tty)"
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-
 gpgconf --launch gpg-agent
-
-# disable warning message of opencv
-export OPENCV_LOG_LEVEL=ERROR
 
 # pip zsh completion start
 function _pip_completion {
-  local words cword
-  read -Ac words
-  read -cn cword
-  reply=( $( COMP_WORDS="$words[*]" \
-             COMP_CWORD=$(( cword-1 )) \
-             PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null ))
+    local words cword
+    read -Ac words
+    read -cn cword
+    reply=( $( COMP_WORDS="$words[*]" \
+			 COMP_CWORD=$(( cword-1 )) \
+			 PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null ))
 }
 compctl -K _pip_completion pip3
 # pip zsh completion end

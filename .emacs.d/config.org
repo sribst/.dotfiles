@@ -71,7 +71,7 @@ Here is configuration that is used across all emacs mode
 The sources of package. So
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq package-archives
-  '(("gnu" . "http://elpa.gnu.org/packages/") ;; Official
+        '(("gnu" . "http://elpa.gnu.org/packages/") ;; Official
           ("melpa" . "http://melpa.org/packages/")  ;; Unofficial but use everywhere
           ("org" . "http://orgmode.org/elpa/")      ;; Org-mode package source
           ))
@@ -83,8 +83,8 @@ src: https://github.com/jwiegley/use-package
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+    (package-refresh-contents)
+    (package-install 'use-package))
 
   (use-package use-package-ensure-system-package
     :ensure t
@@ -96,46 +96,46 @@ src: https://github.com/jwiegley/use-package
 Update current package
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package auto-package-update
-  :defer t
-  :custom
-  (auto-package-update-interval 1)
-  (auto-package-update-delete-old-versions  t)
-  (auto-package-update-hide-results         t)
-  (auto-package-update-prompt-before-update ))
+    :defer t
+    :custom
+    (auto-package-update-interval 1)
+    (auto-package-update-delete-old-versions  t)
+    (auto-package-update-hide-results         t)
+    (auto-package-update-prompt-before-update ))
+
   (if (daemonp)
       (add-hook 'after-make-frame-functions
                 (lambda (frame) (auto-package-update-maybe)))
     (progn (auto-package-update-maybe)))
 #+END_SRC
-*** menu/search =paradox=
+*** TODO menu =paradox=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package paradox
-  :init (paradox-enable)
-  :custom
-  (paradox-column-width-package 27)
-  (paradox-column-width-version 13)
-  (paradox-execute-asynchronously t)
-  (paradox-hide-wiki-packages t)
-  :config
-  (setq paradox-github-token (cadr (auth-source-user-and-password "api.github.com" "sribst^paradox")))
-  (paradox-enable)
-  (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
+    :init (paradox-enable)
+    :custom
+    (paradox-column-width-package 27)
+    (paradox-column-width-version 13)
+    (paradox-execute-asynchronously t)
+    (paradox-hide-wiki-packages t)
+    (paradox-github-token (cadr (auth-source-user-and-password "api.github.com" "sribst^paradox")))
+    :config
+    (paradox-enable)
+    (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
 #+END_SRC
 
 ** configuration
 *** global variable
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq-default
-  inhibit-startup-screen t ; Disable start-up screen
-  initial-scratch-message "" ; Empty the initial *scratch* buffer
-  initial-major-mode 'text-mode ; major mode of  *scratch* buffer
-  ad-redefinition-action 'accept ; Silence warnings for redefinition
-  fill-column 80 ; Set width for automatic line breaks
-  help-window-select t ; Focus new help windows when opened
-  load-prefer-newer t ; Prefers the newest version of a file
-  scroll-conservatively most-positive-fixnum ; Always scroll by one line
-  )
-  (cd "~/") ; Move to the user directory
+  (setq-default
+   inhibit-startup-screen t ; Disable start-up screen
+   initial-scratch-message "" ; Empty the initial *scratch* buffer
+   initial-major-mode 'text-mode ; major mode of  *scratch* buffer
+   ad-redefinition-action 'accept ; Silence warnings for redefinition
+   fill-column 80 ; Set width for automatic line breaks
+   help-window-select t ; Focus new help windows when opened
+   load-prefer-newer t ; Prefers the newest version of a file
+   scroll-conservatively most-positive-fixnum ; Always scroll by one line
+   )
   (set-default-coding-systems 'utf-8) ; Default to utf-8 encoding
   (make-variable-buffer-local 'compile-command) ; be able to set it as a dir-locals
 #+END_SRC
@@ -143,61 +143,61 @@ Update current package
 To avoid overloading the GNU Emacs custormization =init.el= file made by the
 user with the UI, I add the generated code in a separate file.
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq-default custom-file (expand-file-name "~/.emacs.d/custom.el"))
-(when (file-exists-p custom-file) (load custom-file t))
+  (setq-default custom-file (expand-file-name "~/.emacs.d/custom.el"))
+  (when (file-exists-p custom-file) (load custom-file t))
 #+END_SRC
 
 *** update
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package async)
-(defvar *config-file* (expand-file-name "config.org" user-emacs-directory)
-  "The configuration file.")
+  (use-package async)
+  (defvar *config-file* (expand-file-name "config.org" user-emacs-directory)
+    "The configuration file.")
 
-(defvar *config-last-change* (nth 5 (file-attributes *config-file*))
-  "Last modification time of the configuration file.")
+  (defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+    "Last modification time of the configuration file.")
 
-(defvar *show-async-tangle-results* nil "Keeps *emacs* async buffers around for later inspection.")
+  (defvar *show-async-tangle-results* nil "Keeps *emacs* async buffers around for later inspection.")
 
-(defun my/config-updated ()
-  "Checks if the configuration file has been updated since the last time."
-  (time-less-p *config-last-change*
-               (nth 5 (file-attributes *config-file*))))
+  (defun my/config-updated ()
+    "Checks if the configuration file has been updated since the last time."
+    (time-less-p *config-last-change*
+                 (nth 5 (file-attributes *config-file*))))
 
-(defun my/async-babel-tangle (org-file)
-  "Tangles the org file asynchronously."
-  (let ((init-tangle-start-time (current-time))
-        (file (buffer-file-name))
-        (async-quiet-switch "-q"))
-    (async-start
-     `(lambda ()
-        (require 'org)
-        (org-babel-tangle-file ,org-file))
-     (unless *show-async-tangle-results*
-       `(lambda (result)
-          (if result
-              (message "SUCCESS: %s successfully tangled (%.2fs)."
-                       ,org-file
-                       (float-time (time-subtract (current-time)
-                                                  ',init-tangle-start-time)))
-           (message "ERROR: %s as tangle failed." ,org-file)))))))
+  (defun my/async-babel-tangle (org-file)
+    "Tangles the org file asynchronously."
+    (let ((init-tangle-start-time (current-time))
+          (file (buffer-file-name))
+          (async-quiet-switch "-q"))
+      (async-start
+       `(lambda ()
+          (require 'org)
+          (org-babel-tangle-file ,org-file))
+       (unless *show-async-tangle-results*
+         `(lambda (result)
+            (if result
+                (message "SUCCESS: %s successfully tangled (%.2fs)."
+                         ,org-file
+                         (float-time (time-subtract (current-time)
+                                                    ',init-tangle-start-time)))
+              (message "ERROR: %s as tangle failed." ,org-file)))))))
 
-(defun my/config-tangle ()
-  "Tangles the org file asynchronously."
-  (when (my/config-updated)
-    (setq *config-last-change*
-          (nth 5 (file-attributes *config-file*)))
-    (my/async-babel-tangle *config-file*)))
+  (defun my/config-tangle ()
+    "Tangles the org file asynchronously."
+    (when (my/config-updated)
+      (setq *config-last-change*
+            (nth 5 (file-attributes *config-file*)))
+      (my/async-babel-tangle *config-file*)))
 
-(defun my/reload-config-file ()
-  "reload config of emacs on-the-fly"
-  (interactive)
-  (load-file (expand-file-name "config.el" user-emacs-directory)))
+  (defun my/reload-config-file ()
+    "reload config of emacs on-the-fly"
+    (interactive)
+    (load-file (expand-file-name "config.el" user-emacs-directory)))
 
-(defun my/force-update-config ()
-  "Force the update of the configuration."
-  (interactive)
-  (org-babel-load-file (expand-file-name "config.org" user-emacs-directory))
-)
+  (defun my/force-update-config ()
+    "Force the update of the configuration."
+    (interactive)
+    (org-babel-load-file (expand-file-name "config.org" user-emacs-directory))
+    )
 #+END_SRC
 ** Backup
 It is important to have a stable backup environment.
@@ -216,26 +216,23 @@ Since I never use the mouse with GNU Emacs, I prefer not to use certain
 graphical elements as seen as the menu bar, toolbar, scrollbar and tooltip that
 I find invasive.
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (menu-bar-mode -1)                              ; Disable the menu bar
-    (scroll-bar-mode -1)                            ; Disable the scroll bar
-    (tool-bar-mode -1)                              ; Disable the tool bar
-    (tooltip-mode -1)                               ; Disable the tooltips
+  (menu-bar-mode -1)      ; Disable the menu bar
+  (scroll-bar-mode -1)    ; Disable the scroll bar
+  (tool-bar-mode -1)      ; Disable the tool bar
+  (tooltip-mode -1)       ; Disable the tooltips
+  (global-hl-line-mode 1) ; Hightlight current line
 #+END_SRC
 *** Theme
 xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package xresources-theme
-  :config
-  (set-face-attribute 'region nil :background (x-get-resource "color12" ""))
-  :init
+    :init
+    (defvar my/theme-window-loaded nil)
+    (defvar my/theme-terminal-loaded nil)
+    :config
+    (defvar my/theme 'xresources)
 
-  (defvar my/theme 'xresources)
-  (defvar my/theme-window-loaded nil)
-  (defvar my/theme-terminal-loaded nil)
-
-  (global-hl-line-mode 1) ; Hightlight current line
-
-  (if (daemonp)
+    (if (daemonp)
         (add-hook 'after-make-frame-functions
                   (lambda (frame)
                     (select-frame frame)
@@ -260,7 +257,7 @@ xresources-theme qui respect les couleurs de Xressources
         (if (display-graphic-p)
             (setq my/theme-window-loaded t)
           (setq my/theme-terminal-loaded t)))))
-#+END_SRC
+k#+END_SRC
 
 *** font
 **** icons ==all-the-icons=
@@ -492,13 +489,19 @@ which window with key when multiple buff
 *** window configuration =winner-mode=
 Allow to undo and redo buffer configuration to easily open one buffer than
 switch back to multiple open buffer.
-- "C . <left>"  -> undo
-- "C . <right>" -> redo
+- "C . b"  -> undo
+- "C . f" -> redo
   #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package winner
-  :ensure nil
-  :init (winner-mode))
+    (use-package winner
+      :ensure nil
+      :bind (("C-c b" . winner-undo)
+             ("C-c f" . winner-redo))
+      :init (winner-mode))
   #+END_SRC
+
+  #+RESULTS:
+  : winner-redo
+
 *** Toggle windows split
 switch layout when two buffers are open
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -554,11 +557,13 @@ non-whitespace character.
   :delight
   :config (global-hungry-delete-mode))
 #+END_SRC
-** TODO Move text =move-text=
+** Move text =move-text=
 Moves the current line (or if marked, the current region's, whole lines).
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package move-text
-  :init (move-text-default-bindings)) ; M-p M-n
+  (use-package move-text
+  :bind
+  (("M-p" . move-text-up)
+   ("M-n" . move-text-down)))
 #+END_SRC
 
 ** Whitespace =whitespace=
@@ -613,27 +618,32 @@ containing the candidates.
 
 #+RESULTS:
 : iedit-mode
-** Auto-indentation =aggressive-indent=
+** TODO Auto-indentation =aggressive-indent=
 =aggressive-indent-mode= is a minor mode that keeps your code *always*
 indented.  It reindents after every change, making it more reliable than
 electric-indent-mode.
+
+Aggressive indent is too aggressive, I need to make it a bit less stronger
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package aggressive-indent
-:delight ""
-:hook ((prog-mode org-mode) . aggressive-indent-mode)
-:custom (aggressive-indent-comments-too t))
+  ;; (use-package aggressive-indent
+  ;; :delight ""
+  ;; :hook (prog-mode . aggressive-indent-mode)
+  ;; :custom (aggressive-indent-comments-too t))
 #+END_SRC
 ** Decoration
 *** TODO colorize background of text color like green =rainbow-mode=
 Colorize colors as text with their value.
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package rainbow-mode
+  (use-package rainbow-mode
+  :after xresources-theme
   :delight
-  :custom
-    (rainbow-x-colors t)
-    (rainbow-r-colors t)
-:init(rainbow-mode))
+  ;; :custom
+  ;; (rainbow-x-colors-major-mode-list '(prog-mode org-mode))
+  ;; (rainbow-x-colors t)
+  ;; (rainbow-r-colors t)
+   :config (rainbow-mode))
 #+END_SRC
+
 *** TODO Show line at 80 char =fill-column-indicator=
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package fill-column-indicator
@@ -643,11 +653,11 @@ Colorize colors as text with their value.
   ;; (fci-rule-width '1)
   ;; :hook (prog-mode . fci-mode))
 #+END_SRC
-*** TODO Color parenthesis =rainbow-delimiters=
+*** Color parenthesis =rainbow-delimiters=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package rainbow-delimiters
-  ;; :delight
-  ;; :hook (prog-mode org-mode) . rainbow-delimiters-mode)
+  (use-package rainbow-delimiters
+    :delight ""
+    :config (rainbow-delimiters-mode))
 #+END_SRC
 
 ** Specific
@@ -675,15 +685,16 @@ use bind-keymap instead
 **** OCaml
 ***** TODO major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package tuareg
-:mode ("\\.ml[ily]?$" . tuareg-mode)
-:delight " "
-:init
-(dolist
-(var (car (read-from-string
-(shell-command-to-string "opam config env --sexp"))))
-(setenv (car var) (cadr var))))
+  (use-package tuareg
+    :mode ("\\.ml[ily]?$" . tuareg-mode)
+    :delight " "
+    :init
+    (dolist
+        (var (car (read-from-string
+                   (shell-command-to-string "opam config env --sexp"))))
+      (setenv (car var) (cadr var))))
 #+END_SRC
+
 soon gopcaml will have a emacs package to install I guess. might need
 look at https://gitlab.com/gopiandcode/gopcaml-mode
 ***** helpers
@@ -700,57 +711,57 @@ look at https://gitlab.com/gopiandcode/gopcaml-mode
 
 ****** completion, type, doc,... =merlin=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package merlin
-        :hook ((tuareg-mode caml-mode) . merlin-mode)
-        :bind (:map merlin-mode-map
-                   ("M-." . merlin-locate)
-                   ("M-," . merlin-pop-stack))
-        :delight ""
-        :custom
-        (merlin-locate-preference 'ml)
-        (merlin-command 'opam)
-        :config
-        (with-eval-after-load 'company
-          (add-hook 'merlin-mode-hook 'company-mode)
-          (add-to-list 'company-backends 'merlin-company-backend)))
-(use-package merlin-eldoc
-:after merlin
-:custom
-(eldoc-echo-area-use-multiline-p t) ; use multiple lines when necessary
-(merlin-eldoc-max-lines 8)          ; but not more than 8
-(merlin-eldoc-type-verbosity 'min)  ; don't display verbose types
-(merlin-eldoc-function-arguments nil) ; don't show function arguments
-(merlin-eldoc-doc t)                ; don't show the documentation
-:bind (:map merlin-mode-map
-("C-c m p" . merlin-eldoc-jump-to-prev-occurrence)
-("C-c m n" . merlin-eldoc-jump-to-next-occurrence))
-:hook (tuareg-mode . merlin-eldoc-setup))
+  (use-package merlin
+    :hook ((tuareg-mode caml-mode) . merlin-mode)
+    :bind (:map merlin-mode-map
+                ("M-." . merlin-locate)
+                ("M-," . merlin-pop-stack))
+    :delight ""
+    :custom
+    (merlin-locate-preference 'ml)
+    (merlin-command 'opam)
+    :config
+    (with-eval-after-load 'company
+      (add-hook 'merlin-mode-hook 'company-mode)
+      (add-to-list 'company-backends 'merlin-company-backend)))
+  (use-package merlin-eldoc
+    :after merlin
+    :custom
+    (eldoc-echo-area-use-multiline-p t) ; use multiple lines when necessary
+    (merlin-eldoc-max-lines 8)          ; but not more than 8
+    (merlin-eldoc-type-verbosity 'min)  ; don't display verbose types
+    (merlin-eldoc-function-arguments nil) ; don't show function arguments
+    (merlin-eldoc-doc t)                ; don't show the documentation
+    :bind (:map merlin-mode-map
+                ("C-c m p" . merlin-eldoc-jump-to-prev-occurrence)
+                ("C-c m n" . merlin-eldoc-jump-to-next-occurrence))
+    :hook (tuareg-mode . merlin-eldoc-setup))
 #+END_SRC
 
 ****** repl =utop=
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package utop
-:delight " "
-:custom
-(utop-command "utop -emacs")
-:hook
-(tuareg-mode . utop-minor-mode))
+  (use-package utop
+    :delight " "
+    :custom
+    (utop-command "utop -emacs")
+    :hook
+    (tuareg-mode . utop-minor-mode))
 #+END_SRC
 
 ****** TODO format =ocp-indent,ocamlformat=
-ocp-indent seems to fucks ocamlformat
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package ocp-indent :after tuareg)
   (use-package ocamlformat
-   :ensure nil
-   :ensure-system-package (ocamlformat . "opam install ocamlformat")
-   :custom
-   (ocamlformat-show-errors 'echo)
-   (ocamlformat-enable 'enable)
-   :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
-   :hook (before-save . #'ocamlformat-before-save)
-   :after tuareg)
+    :ensure nil
+    :ensure-system-package (ocamlformat . "opam install ocamlformat")
+    :custom
+    (ocamlformat-show-errors 'echo)
+    (ocamlformat-enable 'enable)
+    :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
+    :hook (before-save . #'ocamlformat-before-save)
+    :after tuareg)
 #+END_SRC
+
 **** Json
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package json-mode
@@ -1092,7 +1103,7 @@ find miller column within dired-mode
       (use-package mu4e-maildirs-extension
       :after mu4e
       :init (mu4e-maildirs-extension))
-      #+END_SRC
+#+END_SRC
 
 #+RESULTS:
 
