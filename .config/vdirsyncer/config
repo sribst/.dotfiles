@@ -1,35 +1,53 @@
-[general]
-status_path = "~/.vdirsyncer/status/"
+# [general]
+# status_path = "~/.vdirsyncer/status/"
 
-[pair my_contacts]
-a = "my_contacts_local"
-b = "my_contacts_remote"
+# [pair my_contacts]
+# a = "my_contacts_local"
+# b = "my_contacts_remote"
+# collections = ["from a", "from b"]
+
+# [storage my_contacts_local]
+# type = "filesystem"
+# path = "~/.contacts/"
+# fileext = ".vcf"
+
+# [storage my_contacts_remote]
+# type = "carddav"
+
+# # We can simplify this URL here as well. In theory it shouldn't matter.
+# url = "https://cloud.frontir.cc/remote.php/carddav/"
+# username = "sylvainr"
+# password.fetch = ["prompt","pass for cloud.frontir.cc"]
+
+[pair my_calendar_nextcloud]
+a = "my_calendar_nextcloud_local"
+b = "my_calendar_nextcloud_remote"
 collections = ["from a", "from b"]
 
-[storage my_contacts_local]
-type = "filesystem"
-path = "~/.contacts/"
-fileext = ".vcf"
-
-[storage my_contacts_remote]
-type = "carddav"
-
-# We can simplify this URL here as well. In theory it shouldn't matter.
-url = "https://cloud.frontir.cc/remote.php/carddav/"
-username = "sylvainr"
-password.fetch = ["prompt","pass for cloud.frontir.cc"]
-
-[pair my_calender]
-a = "my_calendar_local"
-b = "my_calendar_remote"
-collections = ["from a", "from b"]
-
-[storage my_calendar_local]
+[storage my_calendar_nextcloud_local]
 type = "filesystem"
 path = "~/.calendar/"
 fileext = ".ics"
 
-[storage my_calendar_remote]
+[storage my_calendar_nextcloud_remote]
+type = "caldav"
+
+# We can simplify this URL here as well. In theory it shouldn't matter.
+url = "https://cloud.frontir.cc/remote.php/caldav/"
+username = "sylvainr"
+password.fetch = ["prompt","pass for cloud.frontir.cc"]
+
+[pair my_calendar_gmail]
+a = "my_calendar_gmail_local"
+b = "my_calendar_gmail_remote"
+collections = ["from a", "from b"]
+
+[storage my_calendar_gmail_local]
+type = "filesystem"
+path = "~/.calendar/"
+fileext = ".ics"
+
+[storage my_calendar_gmail_remote]
 type = "caldav"
 
 # We can simplify this URL here as well. In theory it shouldn't matter.

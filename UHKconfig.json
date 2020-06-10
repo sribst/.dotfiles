@@ -2,7 +2,7 @@
   "userConfigMajorVersion": 4,
   "userConfigMinorVersion": 0,
   "userConfigPatchVersion": 0,
-  "deviceName": "My UHK",
+  "deviceName": "Baroud UHK",
   "doubleTapSwitchLayerTimeout": 250,
   "iconsAndLayerTextsBrightness": 255,
   "alphanumericSegmentsBrightness": 255,
@@ -3459,7 +3459,11 @@
                 null,
                 null,
                 null,
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "media",
+                  "scancode": 226
+                },
                 null,
                 null,
                 null,

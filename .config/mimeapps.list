@@ -31,3 +31,4 @@ application/x-extension-xhtml=qutebrowser.desktop
 application/x-extension-xht=qutebrowser.desktop
 video/mp4=mpv.desktop
 image/jpeg=feh.desktop
+x-scheme-handler/magnet=rtorrent-magnet.desktop

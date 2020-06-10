@@ -112,11 +112,11 @@ set $ws9 "9"
 set $ws10 "10"
 
 # two screen output
-workspace $ws1 output HDMI-2
-workspace $ws2 output eDP-1
-workspace $ws3 output HDMI-2
-workspace $ws4 output eDP-1
-workspace $ws5 output eDP-1
+# workspace $ws1 output HDMI-2
+# workspace $ws2 output eDP-1
+# workspace $ws3 output HDMI-2
+# workspace $ws4 output eDP-1
+# workspace $ws5 output eDP-1
 
 # switch to workspace
 bindsym $super+ampersand workspace $ws1
@@ -216,13 +216,17 @@ client.placeholder	$foreground $background	$foreground $background	$background
 exec_always --no-startup-id $HOME/bin/startsimplebar
 
 # volume controls
-bindsym Pause                exec amixer -D default sset Master toggle
 bindsym XF86AudioLowerVolume exec amixer -D default sset Master 5%-
 bindsym XF86AudioRaiseVolume exec amixer -D default sset Master 5%+
-bindsym XF86AudioPlay        exec amixer -D default sset Master toggle
+
 bindsym XF86AudioMute        exec amixer -D default sset Master toggle
 bindsym XF86AudioMicMute     exec amixer set Capture toggle
 
+# media controls
+bindsym XF86AudioPlay exec "mpc toggle"
+bindsym XF86AudioStop exec "mpc stop"
+bindsym XF86AudioNext exec "mpc next"
+bindsym XF86AudioPrev exec "mpc prev"
 # backlight
 bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
@@ -258,7 +262,7 @@ smart_borders on
 
 
 # cloud
-exec --no-startup-id nextcloud &
+execmm --no-startup-id nextcloud &
 
 # touchscreen
 ## keyboard
@@ -272,7 +276,7 @@ exec_always --no-startup-id $HOME/bin/xrandr-changed &
 ## screen detection
 exec_always --no-startup-id autorandr --change &
 ## auto rotate screen when pc is turned
-exec --no-startup-id screenrotator &
+exec --no-startup-id systemctl --user start 2in1screen.service &
 
 # start a terminal
 bindsym $super+Return exec urxvt
@@ -286,7 +290,8 @@ bindsym $super+x exec --no-startup-id rofi -show combi
 # start gopass (password manager with rofi interface)
 bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
 
-#start udiskie (mount manager with rofi interface)
+#start udiskie and bind manager with rofi interface
+exec udiskie
 bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
 set $app App: (q) qutebrowser, (r) riot, (w) wire-desktop, (s) slack
