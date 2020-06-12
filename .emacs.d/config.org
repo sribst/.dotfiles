@@ -913,7 +913,7 @@ look at https://gitlab.com/gopiandcode/gopcaml-mode
 #+end_src
 
 * Project
-** interaction =projectile=
+** TODO interaction =projectile=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
     :delight " "
@@ -924,15 +924,16 @@ look at https://gitlab.com/gopiandcode/gopcaml-mode
     (projectile-project-search-path
      '("~/CS/Cryptium/" "~/CS/Pers/" "~/CS/VGED/" "~/CS/Wagner/"))
     (projectile-completion-system 'ivy)
-    :config
-    (counsel-projectile-modify-action
-     'counsel-projectile-switch-project-action
-     '((default counsel-projectile-switch-project-action-vc)))
     :init (projectile-mode))
 
   (use-package counsel-projectile
     :after counsel projectile
-    :init (counsel-projectile-mode))
+    :init (counsel-projectile-mode)
+    :config
+    (counsel-projectile-modify-action
+     'counsel-projectile-switch-project-action
+     '((default counsel-projectile-switch-project-action-vc)))
+    )
 
   (use-package org-projectile
     :after projectile org
@@ -947,9 +948,6 @@ look at https://gitlab.com/gopiandcode/gopcaml-mode
      (org-projectile-per-project)
      (progn (push (org-projectile-project-todo-entry) org-capture-templates))))
 #+END_SRC
-
-#+RESULTS:
-: org-projectile-project-todo-completing-read
 
 ** Git
 *** Interaction =magit=

@@ -2,7 +2,7 @@
 
 if [ $# -ge 1 ]
 then x=$1
-else x=60
+else x=1
 fi
 if [ $# -ge 2 ]
 then baker=$2

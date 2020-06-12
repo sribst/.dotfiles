@@ -262,7 +262,7 @@ smart_borders on
 
 
 # cloud
-execmm --no-startup-id nextcloud &
+exec --no-startup-id nextcloud &
 
 # touchscreen
 ## keyboard

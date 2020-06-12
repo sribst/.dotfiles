@@ -2,4 +2,4 @@
 
 protocol=$1
 
-tezos-client -block genesis activate protocol $protocol with fitness 1 and key activator and parameters _build/default/sandbox-parameters.json --timestamp $(TZ='AAA+1' date +%FT%TZ)
+tezos-client -block genesis activate protocol $protocol with fitness 1 and key activator and parameters _build/default/src/proto_alpha/parameters/sandbox-parameters.json --timestamp $(TZ='AAA+1' date +%FT%TZ)
