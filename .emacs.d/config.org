@@ -14,6 +14,7 @@
     - [[#customization][Customization]]
     - [[#update][update]]
   - [[#backup][Backup]]
+  - [[#auto-save-mode][auto-save-mode]]
   - [[#apparence][apparence]]
     - [[#turn-off-mouse-interface][Turn off mouse interface]]
     - [[#theme][Theme]]
@@ -26,6 +27,7 @@
   - [[#search-in-current-buffer-swiper][search in current buffer =swiper=]]
   - [[#search-somewhere-else-m-xdiredetc-counsel][search somewhere else "M-x/dired/etc" =counsel=]]
   - [[#improved-text-search-ripgrep][improved text search =ripgrep=]]
+  - [[#modify-grep-result-wgrep][modify grep result =wgrep=]]
   - [[#open-with-sudo-auto-sudoedit][open with sudo =auto-sudoedit=]]
   - [[#hintsinformation-of-current-mark-eldoc][hints/information of current mark =eldoc=]]
   - [[#keystroke-helper-which-key][keystroke helper =which-key=]]
@@ -48,6 +50,7 @@
     - [[#cursor-beacon-hl][cursor =beacon= =hl=]]
 - [[#edition][Edition]]
   - [[#parameter-4][Parameter]]
+  - [[#my-biding][my biding]]
   - [[#delete-all-space-in-front-hungry-delete][delete all space in front =hungry-delete=]]
   - [[#move-text-move-text][Move text =move-text=]]
   - [[#whitespace-whitespace][Whitespace =whitespace=]]
@@ -97,7 +100,6 @@
     - [[#notification-org-wild-notifier][notification =org-wild-notifier=]]
   - [[#org-search-ivy-omni-org][Org search =ivy-omni-org=]]
   - [[#capture-org-capture][Capture =org-capture=]]
-  - [[#journal-org-journal][Journal =org-journal=]]
 - [[#read-only-major-mode][read-only major-mode]]
   - [[#mail][Mail]]
     - [[#mu-mu4e][mu =mu4e=]]
@@ -112,6 +114,8 @@
 - [[#not-used-anymore][not used anymore]]
   - [[#file-explorer-ranger][file explorer =ranger=]]
   - [[#gnus-gnus][Gnus =gnus=]]
+  - [[#journal-org-journal][Journal =org-journal=]]
+  - [[#opam-opam-update-env][opam =opam-update-env=]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -262,6 +266,13 @@ It is important to have a stable backup environment.
     (vc-make-backup-files t)
     (version-control t))
 #+END_SRC
+
+** auto-save-mode
+#+begin_src emacs-lisp :tangle yes
+  (auto-save-visited-mode t)
+#+END_SRC
+
+
 ** apparence
 *** Turn off mouse interface
 Since I never use the mouse with GNU Emacs, I prefer not to use certain
@@ -388,6 +399,13 @@ ripgrep is an alternative of grep that is faster and respect .gitignore
 :delight
 :ensure-system-package (rg . "yay -S ripgrep"))
 #+END_SRC
+
+** modify grep result =wgrep=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package wgrep
+:delight)
+#+END_SRC
+
 ** open with sudo =auto-sudoedit=
 automaticaly open with tramp when needed
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -626,6 +644,16 @@ basic default value to enable
       (interactive)
       (insert (gui-get-primary-selection))))
 #+END_SRC
+** my biding
+#+begin_src emacs-lisp :tangle yes
+  (use-package replace
+  :ensure nil
+  :bind
+    (("C-c r s" . replace-string)
+     ("C-c r r" . replace-regexp))
+     )
+#+end_src
+
 ** delete all space in front =hungry-delete=
 #+begin_src emacs-lisp :tangle yes
   (use-package hungry-delete
@@ -704,7 +732,9 @@ Aggressive indent is too aggressive, I need to make it a bit less stronger
   (use-package aggressive-indent
   :delight ""
   :hook ((tuareg-mode org-mode) . aggressive-indent-mode)
-  :custom (aggressive-indent-comments-too t))
+  :custom
+  (aggressive-indent-comments-too t)
+  (aggressive-indent-sit-for-time 0.2)  )
 #+END_SRC
 
 ** Decoration
@@ -772,14 +802,9 @@ use bind-keymap instead
       (setenv (car var) (cadr var))))
 #+END_SRC
 
-soon gopcaml will have a emacs package to install I guess. might need
-look at https://gitlab.com/gopiandcode/gopcaml-mode
+soon gopcaml will have a emacs package to install I guess. keep an eye on
+https://gitlab.com/gopiandcode/gopcaml-mode
 ***** helpers
-****** TODO opam =opam-update-env=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package opam-update-env
-  ;; :after tuareg)
-#+END_SRC
 
 ****** builder =dune=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -827,11 +852,19 @@ look at https://gitlab.com/gopiandcode/gopcaml-mode
 #+END_SRC
 
 ****** TODO format =ocp-indent,ocamlformat=
+it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package ocp-indent :after tuareg)
   (use-package ocamlformat
     :ensure nil
     :ensure-system-package (ocamlformat . "opam install ocamlformat")
+    :config
+    (defun my/deactivate-ocamlformat ()
+      (interactive)
+      (setq ocamlformat-enable 'disable))
+    (defun my/activate-ocamlformat ()
+      (interactive)
+      (setq ocamlformat-enable 'enable))
     :custom
     (ocamlformat-show-errors 'echo)
     (ocamlformat-enable 'enable)
@@ -841,6 +874,9 @@ look at https://gitlab.com/gopiandcode/gopcaml-mode
     )
     :after tuareg)
 #+END_SRC
+
+#+RESULTS:
+: ocamlformat
 
 **** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1355,40 +1391,55 @@ information.
   :after org
   :preface
   (defun my/gmaps-format (addr)
-    "return a googlemaps link that is correctly formated"
-    (format "https://www.google.fr/maps/search/%s"
-    (replace-regexp-in-string " " "+" addr)))
+      "return a googlemaps link that is correctly formated"
+      (format "https://www.google.fr/maps/search/%s"
+              (replace-regexp-in-string " " "+" addr)))
 
-  (defun my/org-timestamp-add-reminder (date day)
-  "add a reminder to a timestamp like : <2019-11-14 -5d>"
-  (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
+              (defun my/org-timestamp-add-reminder (date day)
+      "add a reminder to a timestamp like : <2019-11-14 -5d>"
+      (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
 
-  (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Cryptium|Casa Rosada}")
-  (defvar my/place "%^{Place |78 rue Hippolyte Kahn|Théâtre|Cinéma|Parc|}")
-  (defvar my/gare "Lyon Part-dieu|Lyon Perrache|Paris GdL|Montpellier St-Roch")
-  (defvar my/stop "Lyon Brasserie Georges|Montpellier")
-  (defvar my/from  (concat "%^{From " my/gare "}"))
-  (defvar my/to    (concat "%^{To " my/gare "}"))
-  (message (my/gmaps-format "78 rue hippolyte kahn"))
-  (defvar my/agenda-template (concat
-  "%^{Name} %^G
+      (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Cryptium|Casa Rosada}")
+      (defvar my/place "%^{Place |78 rue Hippolyte Kahn|Théâtre|Cinéma|Parc|}")
+      (defvar my/gare "Lyon Part-dieu|Lyon Perrache|Paris GdL|Montpellier St-Roch")
+      (defvar my/stop "Lyon Brasserie Georges|Montpellier")
+      (defvar my/type_event "Theater|Circus|Concert|Talk|")
+      (defvar my/from  (concat "%^{From " my/gare "}"))
+      (defvar my/to    (concat "%^{To " my/gare "}"))
+      (message (my/gmaps-format "78 rue hippolyte kahn"))
+      (defvar my/agenda-template
+      (concat
+       "%^{Name} %^G
   :PROPERTIES:
-    :Created: %U
-    :Name:    %\\1
-    :Place: " my/place "
-    :Gmaps: [[%(my/gmaps-format \"%\\2\")][\"%\\2\"]]
-    :With:    " my/with "
-    :END:
-    %^{When}T
-    "))
+  :Created: %U
+  :Name:    %\\1
+  :Place: " my/place "
+  :Gmaps: [[%(my/gmaps-format \"%\\2\")][\"%\\2\"]]
+  :With:    " my/with "
+  :END:
+  %^{When}T
+  "))
 
   (defvar my/org-tobook-template (concat "* BOOK " my/agenda-template))
 
-  (defvar my/org-togo-template (concat "* " my/agenda-template))
+  (defvar my/org-meeting-template (concat "* " my/agenda-template))
+
+  (defvar my/org-spectacle-template (concat
+                                       "%^{Name}
+  :PROPERTIES:
+  :Created: %U
+  :Name:    %\\1
+  :Place: " my/place "
+  :Type: " my/type_event"
+  :Gmaps: [[%(my/gmaps-format \"%\\2\")][\"%\\2\"]]
+  :With:    " my/with "
+  :END:
+  %^{When}T
+  "))
 
   (defvar my/org-trip-template (concat
-  "* %\\1 -> %\\2
-  :PROPERTIES:
+                                    "* %\\1 -> %\\2
+    :PROPERTIES:
     :Created: %U
     :From:   " my/from "
     :To:     "  my/to "
@@ -1399,7 +1450,7 @@ information.
     "))
 
     (defvar my/org-roundtrip-template (concat
-    "* %\\1 -> %\\2
+                                         "* %\\1 -> %\\2
     :PROPERTIES:
     :Created: %U
     :From:   " my/from "
@@ -1419,7 +1470,7 @@ information.
     "))
 
     (defvar my/org-voucher-template
-    "* USE %^{Valor}
+        "* USE %^{Valor}
     DEADLINE:%^{Before}t
     :PROPERTIES:
     :Reduction:     %^{Reduction}
@@ -1429,28 +1480,28 @@ information.
     ")
 
     (defvar my/org-todo-template
-    "* TODO %^{What} %^G
+        "* TODO %^{What} %(org-set-tags-command)
     :PROPERTIES:
     :Created:     %U
     :END:
     ")
 
     (defvar my/org-someday-template
-    "* SOMEDAY %^{What} %^G
+        "* SOMEDAY %^{What} %^G
     :PROPERTIES:
     :Created:     %U
     :END:
     ")
 
     (defvar my/org-stuff-buy-template
-    "* FETCH %^{What}
+        "* FETCH %^{What}
     :PROPERTIES:
     :Created:     %U
     :END:
     ")
 
     (defvar my/org-stuff-gift-template
-    "* IDEA %^{What}
+        "* IDEA %^{What}
     :PROPERTIES:
     :Created:     %U
     :For: %^{For}
@@ -1459,7 +1510,7 @@ information.
     ")
 
     (defvar my/org-stuff-flat-template
-    "* BUY %^{What}
+        "* BUY %^{What}
     :PROPERTIES:
     :Created:     %U
     :Room: %^{Room}p
@@ -1469,53 +1520,37 @@ information.
 
     :custom
     (org-capture-templates
-    `(("e" "Event")
-    ("es" "Show")
-    ("esb" "To book" entry (file+headline "~/org/master.org" "Show"),
-    my/org-tobook-template)
-    ("esg" "To go" entry (file+headline "~/org/master.org" "Show"),
-    my/org-togo-template)
-    ("eb" "To book" entry (file+headline "~/org/master.org" "Agenda"),
-    my/org-tobook-template)
-    ("eg" "To go" entry (file+headline "~/org/master.org" "Agenda"),
-    my/org-togo-template)
-    ("et" "Trip")
-    ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
-    my/org-trip-template)
-    ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
-    my/org-roundtrip-template)
-    ("t" "TO-DO")
-    ("tt" "todo" entry (file+headline "~/org/master.org" "TO-DO"),
-    my/org-todo-template)
-    ("to" "oneday" entry (file+headline "~/org/master.org" "TO-DO"),
-    my/org-someday-template)
-    ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
-    my/org-voucher-template)
-    ("s" "stuff")
-    ("sf" "fetch" entry (file+headline "~/org/master.org" "objet"),
-    my/org-stuff-buy-template)
-    ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
-    my/org-stuff-gift-template)
-    ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
-    my/org-stuff-flat-template)
-    ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
-     "* %?\n:PROPERTIES:\n:CREATED:%U:\n:END:\n"))))
-#+END_SRC
-
-#+RESULTS:
-
-** TODO Journal =org-journal=
-replaced by my own org-capture
-I can delete this setting
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package org-journal
-  ;; :after org
-  ;; :delight ""
-  ;; :custom
-  ;; (org-journal-dir "~/org/journal")
-  ;; :bind
-  ;; ("C-c n j" . org-journal-new-entry)
-  ;; )
+       `(("e" "Event")
+         ("es" "Show")
+         ("esb" "To book" entry (file+headline "~/org/master.org" "Show"),
+          my/org-tobook-template)
+         ("esg" "To attend" entry (file+headline "~/org/master.org" "Show"),
+          my/org-meeting-template)
+         ("eb" "To book" entry (file+headline "~/org/master.org" "Agenda"),
+          my/org-tobook-template)
+         ("eg" "To be" entry (file+headline "~/org/master.org" "Agenda"),
+          my/org-meeting-template)
+         ("et" "Trip")
+         ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+          my/org-trip-template)
+         ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+          my/org-roundtrip-template)
+         ("t" "Tasks")
+         ("tt" "todo" entry (file+headline "~/org/master.org" "Tasks"),
+          my/org-todo-template)
+         ("to" "oneday" entry (file+headline "~/org/master.org" "Tasks"),
+          my/org-someday-template)
+         ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
+          my/org-voucher-template)
+         ("s" "stuff")
+         ("sf" "fetch" entry (file+headline "~/org/master.org" "objet"),
+          my/org-stuff-buy-template)
+         ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
+          my/org-stuff-gift-template)
+         ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
+          my/org-stuff-flat-template)
+         ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+          "* %?\n:PROPERTIES:\n:CREATED:%U:\n:END:\n"))))
 #+END_SRC
 
 #+RESULTS:
@@ -1689,7 +1724,7 @@ Always good to have a dashboard.
   ;; (use-package bbdb-vcard
   ;; )
 #+END_SRC
-** TODO make qutebrowser default browser
+** DONE make qutebrowser default browser
 :PROPERTIES:
 :Created:  [2020-04-15 mer. 15:06]
 :END:
@@ -1726,3 +1761,24 @@ with directory filed with large file.
   ;;  :config
   ;;  (all-the-icons-gnus-setup))
 #+END_SRC
+** DONE Journal =org-journal=
+replaced by my own org-capture
+I can delete this setting
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package org-journal
+  ;; :after org
+  ;; :delight ""
+  ;; :custom
+  ;; (org-journal-dir "~/org/journal")
+  ;; :bind
+  ;; ("C-c n j" . org-journal-new-entry)
+  ;; )
+#+END_SRC
+
+#+RESULTS:
+** DONE opam =opam-update-env=
+not work as intended, but not needed anymore as I've pute opam (update... into my .profile
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (use-package opam-update-env
+  ;; :after tuareg)
+  #+END_SRC

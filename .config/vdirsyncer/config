@@ -1,5 +1,5 @@
-# [general]
-# status_path = "~/.vdirsyncer/status/"
+[general]
+status_path = "~/.vdirsyncer/status/"
 
 # [pair my_contacts]
 # a = "my_contacts_local"
