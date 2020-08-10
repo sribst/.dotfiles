@@ -274,7 +274,8 @@ alias chown="chown -c"
 
 alias ".."="cd .."
 
-alias e="emacsclient"
+alias ec="/usr/bin/emacsclient -s /tmp/emacs1000/server -nw"
+alias e="emacs -nw"
 
 alias sudo='sudo'               # to have alias within sudo
 alias suspend='systemctl suspend'

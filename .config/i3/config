@@ -111,9 +111,12 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-# two screen output
-# workspace $ws1 output HDMI-2
-# workspace $ws2 output eDP-1
+# 3 screen output
+workspace $ws1 output DP-1
+workspace $ws2 output eDP-1
+workspace $ws3 output HDMI-2
+workspace $ws4 output HDMI-2
+workspace $ws5 output HDMI-2
 # workspace $ws3 output HDMI-2
 # workspace $ws4 output eDP-1
 # workspace $ws5 output eDP-1
@@ -141,6 +144,10 @@ bindsym $super+Shift+7 move container to workspace $ws7
 bindsym $super+Shift+8 move container to workspace $ws8
 bindsym $super+Shift+9 move container to workspace $ws9
 bindsym $super+Shift+0 move container to workspace $ws10
+
+# bindsym $super+1 move workspace to output eDP-1
+# bindsym $super+2 move workspace to output DP-1
+# bindsym $super+3 move workspace to output HDMI-2
 
 # reload the configuration file
 bindsym $super+Shift+c reload

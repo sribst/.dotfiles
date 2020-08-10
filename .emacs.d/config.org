@@ -738,7 +738,7 @@ Aggressive indent is too aggressive, I need to make it a bit less stronger
 #+END_SRC
 
 ** Decoration
-*** TODO colorize background of text color like green =rainbow-mode=
+*** colorize background of text color like green =rainbow-mode=
 Colorize colors as text with their value.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rainbow-mode
@@ -851,7 +851,7 @@ https://gitlab.com/gopiandcode/gopcaml-mode
     (tuareg-mode . utop-minor-mode))
 #+END_SRC
 
-****** TODO format =ocp-indent,ocamlformat=
+****** format =ocp-indent,ocamlformat=
 it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package ocp-indent :after tuareg)
@@ -1300,7 +1300,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
 ;; Another unicode chars
 (setq cfw:fchar-junction ?╬
       cfw:fchar-vertical-line ?║
-      cfw:fchar-horizontal-line ?═
+      cfw:fchar-horizontal-line ?=
       cfw:fchar-left-junction ?╠
       cfw:fchar-right-junction ?╣
       cfw:fchar-top-junction ?╦
@@ -1308,50 +1308,93 @@ Org super agenda allows a more readible agenda by grouping the todo item
       cfw:fchar-top-right-corner ?╗))
 #+END_SRC
 
-
 *** TODO Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
+  ;;   (use-package org-caldav
+  ;;   :init
+  ;;   (defvar org-caldav-sync-timer nil
+  ;;       "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  ;;       (defun org-caldav-sync-with-delay (secs)
+  ;;       (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+  ;;       (setq org-caldav-sync-timer
+  ;;             (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+  ;;             (setq org-caldav-url
+  ;;           "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
+  ;;           (setq org-caldav-backup-file "~/org/backup.org")
+  ;;           (setq org-caldav-calendar-id "master")
+  ;;           (setq org-caldav-inbox "~/org/master-sync.org")
+  ;;           (setq org-caldav-files '("~/org/master.org" "~/org/master_save.org" ))
+  ;;           :config
+  ;;           (setq org-icalendar-alarm-time 1)
+  ;;           (setq org-caldav-show-sync-results nil)
+  ;;           (setq org-icalendar-include-todo t)
+  ;; (setq org-icalendar-use-deadline
+  ;;           '(event-if-todo event-if-not-todo todo-due))
+  ;;     ;; (setq org-icalendar-use-scheduled
+  ;;     ;;   '(todo-start event-if-todo event-if-not-todo))
+  ;;     ;;   :hook (
+  ;;     ;;   (kill-emacs . org-caldav-sync)
+  ;;     ;;   (after-save .
+  ;;     ;;     (lambda ()
+  ;;     ;;        (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
+  ;;     )
+  ;;   ;; (setq org-caldav-calendars
+  ;;   ;; '((:calendar-id "master"
+  ;;   ;;     :files "~/org/master.org"
+  ;;   ;;     :inbox "~/org/master-sync.org")
+  ;;   ;;     (:calendar-id "claire"
+  ;;   ;;     :files "~/org/claire.org"
+  ;;   ;;     :inbox "~/org/claire-sync.org")
+  ;;   ;;     (:calendar-id "work"
+  ;;   ;;     :sync 'cal->org
+  ;;   ;;     :url ('google "sylvain@cryptium.ch")
+  ;;   ;;     :inbox "~/org/work.org"))
   (use-package org-caldav
-  :init
-  (defvar org-caldav-sync-timer nil
+    :init
+    (defvar org-caldav-sync-timer nil
       "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-      (defun org-caldav-sync-with-delay (secs)
-    (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-    (setq org-caldav-sync-timer
-    (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-    (setq org-caldav-url
-      "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-      (setq org-caldav-backup-file "~/org/backup.org")
+    (defun org-caldav-sync-with-delay (secs)
+      (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+      (setq org-caldav-sync-timer
+            (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+    :config
+    (setq org-caldav-url "file:///home/baroud/.personal/calendar")
+    (setq org-caldav-calendars
+          '((:calendar-id "personal/personal"
+          :sync 'cal->org
+                          :files ("~/org/master.org")
+                          :inbox "~/org/master-sync.org")
+            (:calendar-id "claire/49-5F0F4080-3-715B4880"
+            :sync 'cal->org
+                          :files ("~/org/claire.org")
+                          :inbox "~/org/claire-sync.org")
+            ;; (:calendar-id "work"
+            ;;               :sync 'cal->org
+            ;;               :url ('google "sylvain@cryptium.ch")
+            ;;               :inbox "~/org/work.org")
+            ))
+    (setq org-caldav-backup-file "~/org/backup.org")
     (setq org-caldav-calendar-id "master")
     (setq org-caldav-inbox "~/org/master-sync.org")
     (setq org-caldav-files '("~/org/master.org" "~/org/master_save.org" ))
-    :config
     (setq org-icalendar-alarm-time 1)
     (setq org-caldav-show-sync-results nil)
     (setq org-icalendar-include-todo t)
     (setq org-icalendar-use-deadline
-    '(event-if-todo event-if-not-todo todo-due))
-    ;; (setq org-icalendar-use-scheduled
-    ;;   '(todo-start event-if-todo event-if-not-todo))
-    ;;   :hook (
-    ;;   (kill-emacs . org-caldav-sync)
-    ;;   (after-save .
-    ;;     (lambda ()
-    ;;        (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
+          '(event-if-todo event-if-not-todo todo-due))
+    (setq org-icalendar-use-scheduled
+          '(todo-start event-if-todo event-if-not-todo))
+    ;; :hook (
+    ;;        (kill-emacs . org-caldav-sync)
+    ;;        (after-save .
+    ;;                    (lambda ()
+    ;;                      (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
     )
-    ;; (setq org-caldav-calendars
-    ;; '((:calendar-id "master"
-    ;;     :files "~/org/master.org"
-    ;;     :inbox "~/org/master-sync.org")
-    ;;     (:calendar-id "claire"
-    ;;     :files "~/org/claire.org"
-    ;;     :inbox "~/org/claire-sync.org")
-    ;;     (:calendar-id "work"
-    ;;     :sync 'cal->org
-    ;;     :url ('google "sylvain@cryptium.ch")
-    ;;     :inbox "~/org/work.org"))
-
 #+END_SRC
+
+#+RESULTS:
+: t
+
 *** TODO notification =org-wild-notifier=
 bug dans le code, ilfaut pas ce qu'il faut
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1566,11 +1609,14 @@ information.
     :ensure-system-package mu
     :custom
     (mu4e-maildir "~/Maildir")
-    (mu4e-update-interval 300)
-    (mu4e-use-fancy-chars t)
+    ;; (mu4e-update-interval 300) this is of no use, offlineimap already do
+    ;; it. Also it annoyingly keep asking for my password
+    (mu4e-use-fancy-chars nil)
     (mu4e-view-show-addresses t)
     (mu4e-view-show-images t)
     (message-send-mail-function 'smtpmail-send-it)
+    ;; do not automatically mark as read when I open a msg
+    (mu4e-view-auto-mark-as-read  nil)
     (user-mail-address "sylvain.ribstein@gmail.com")
     (smtpmail-smtp-user "sylvain.ribstein")
     (smtpmail-default-smtp-server "smtp.gmail.com" )
@@ -1582,10 +1628,10 @@ information.
     (mu4e-drafts-folder "/Gmail/[Gmail]/Drafts" )
     (mu4e-sent-folder "/Gmail/[Gmail]/Sent Mail" )
     (mu4e-compose-signature
-    (concat
-    "Sylvain Ribstein\n"
-    "sylvain.ribstein@gmail.com\n"
-    "00336 66 26 05 28\n"))
+     (concat
+      "Sylvain Ribstein\n"
+      "sylvain.ribstein@gmail.com\n"
+      "00336 66 26 05 28\n"))
     (smtpmail-stream-type 'starttls)
     (smtpmail-smtp-service 587)
     (mu4e-get-mail-command "offlineimap -o")
@@ -1666,9 +1712,15 @@ information.
   (use-package mu4e-maildirs-extension
     :after mu4e
     :init (mu4e-maildirs-extension))
-#+END_SRC
+
+  (use-package mu4e-contrib
+    :after mu4e)
+
+  (setq shr-color-visible-luminance-min 80)
+  #+END_SRC
 
 #+RESULTS:
+: 80
 
 ** compilation
 add ansi color to the compilation buffer
@@ -1681,9 +1733,6 @@ add ansi color to the compilation buffer
         :hook
     (compilation-filter . my/colorize-compilation-buffer))
 #+END_SRC
-
-#+RESULTS:
-| my/colorize-compilation-buffer |
 
 ** Dashboard
 Always good to have a dashboard.
@@ -1780,5 +1829,5 @@ I can delete this setting
 not work as intended, but not needed anymore as I've pute opam (update... into my .profile
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; (use-package opam-update-env
-  ;; :after tuareg)
-  #+END_SRC
+;; :after tuareg)
+#+END_SRC
