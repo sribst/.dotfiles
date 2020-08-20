@@ -223,11 +223,11 @@ client.placeholder	$foreground $background	$foreground $background	$background
 exec_always --no-startup-id $HOME/bin/startsimplebar
 
 # volume controls
-bindsym XF86AudioLowerVolume exec amixer -D default sset Master 5%-
-bindsym XF86AudioRaiseVolume exec amixer -D default sset Master 5%+
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
 
-bindsym XF86AudioMute        exec amixer -D default sset Master toggle
-bindsym XF86AudioMicMute     exec amixer set Capture toggle
+bindsym XF86AudioMute        exec pactl set-sink-mute 0 toggle
+bindsym XF86AudioMicMute     exec pactl set-source-mute 1 toggle
 
 # media controls
 bindsym XF86AudioPlay exec "mpc toggle"
