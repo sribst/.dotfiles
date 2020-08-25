@@ -383,8 +383,10 @@ function _pip_completion {
     read -Ac words
     read -cn cword
     reply=( $( COMP_WORDS="$words[*]" \
-			 COMP_CWORD=$(( cword-1 )) \
-			 PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null ))
+                         COMP_CWORD=$(( cword-1 )) \
+                         PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null ))
 }
 compctl -K _pip_completion pip3
 # pip zsh completion end
+
+eval "$(pyenv virtualenv-init -)"

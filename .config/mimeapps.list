@@ -18,11 +18,11 @@ video/mp4=mpv.desktop;
 text/x-microdvd=emacs.desktop;
 
 [Default Applications]
-x-scheme-handler/http=qutebrowser.desktop
-x-scheme-handler/https=qutebrowser.desktop
+x-scheme-handler/http=org.qutebrowser.qutebrowser.desktop
+x-scheme-handler/https=org.qutebrowser.qutebrowser.desktop
 x-scheme-handler/ftp=qutebrowser.desktop
 x-scheme-handler/chrome=qutebrowser.desktop
-text/html=qutebrowser.desktop
+text/html=org.qutebrowser.qutebrowser.desktop
 application/x-extension-htm=qutebrowser.desktop
 application/x-extension-html=qutebrowser.desktop
 application/x-extension-shtml=qutebrowser.desktop
@@ -33,3 +33,5 @@ video/mp4=mpv.desktop
 image/jpeg=feh.desktop
 x-scheme-handler/magnet=rtorrent-magnet.desktop
 x-scheme-handler/fcade=fcade-quark.desktop
+x-scheme-handler/about=org.qutebrowser.qutebrowser.desktop
+x-scheme-handler/unknown=org.qutebrowser.qutebrowser.desktop
