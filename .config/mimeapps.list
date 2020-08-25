@@ -35,3 +35,5 @@ x-scheme-handler/magnet=rtorrent-magnet.desktop
 x-scheme-handler/fcade=fcade-quark.desktop
 x-scheme-handler/about=org.qutebrowser.qutebrowser.desktop
 x-scheme-handler/unknown=org.qutebrowser.qutebrowser.desktop
+application/x-directory=emacs-dired.desktop
+inode/directory=emacs-dired.desktop
