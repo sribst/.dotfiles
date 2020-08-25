@@ -1,0 +1,8 @@
+[Unit]
+Description=Auto rotation of screen
+
+[Service]
+ExecStart=/home/baroud/bin/2in1screen
+
+[Install]
+WantedBy=default.target
