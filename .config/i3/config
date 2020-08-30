@@ -274,6 +274,7 @@ bindsym $super+x exec --no-startup-id rofi -show combi
 
 # start gopass (password manager with rofi interface)
 bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
+bindsym $super+y exec --no-startup-id  $HOME/bin/rofi-ykman
 
 #start udiskie and bind manager with rofi interface
 exec udiskie
@@ -281,6 +282,9 @@ bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
 #start nm-applet
 exec nm-applet
+
+#start clight
+exec clight
 
 set $app App: (q) qutebrowser, (e) element, (w) wire-desktop, (s) slack
 bindsym $super+c mode "$app"

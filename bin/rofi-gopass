@@ -1,7 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Simple gopass manager with rofi
 # It displays a list of available passwords defined with gopass
 # and types them once an item is selected with enter
 ## wrong xdotool command, need to check what is happening
-gopass ls --flat | rofi -dmenu | xargs --no-run-if-empty gopass show -f | head -n 1 | xdotool type --clearmodifiers --file -
+gopass ls --flat | rofi -dmenu | xargs --no-run-if-empty gopass show -c
+# gopass ls --flat | rofi -dmenu | xargs --no-run-if-empty gopass show -f | head -n 1 | xdotool type --clearmodifiers --file -
+# gopass ls --flat | rofi -dmenu | xargs --no-run-if-empty gopass show -f | head -n 1 | xdotool type --clearmodifiers --file -

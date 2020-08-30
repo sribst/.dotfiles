@@ -204,9 +204,10 @@ if [ ! -d "${ZSHDDIR}" ]; then
     mkdir -p "${ZSHDDIR}" && echo "# Put your user-specified config here." > "${ZSHDDIR}/example.zsh"
 fi
 
-for zshd in $(ls -A ${HOME}/.config/zsh.d/^*.(z)sh$); do
-    . "${zshd}"
-done
+# parse file in .config/zsh.d/
+# for zshd in $(ls -A ${HOME}/.config/zsh.d/^*.(z)sh$); do
+#     . "${zshd}"
+# done
 
 # Completion.
 autoload -Uz compinit
