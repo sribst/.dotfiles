@@ -11,13 +11,6 @@ HISTSIZE='10000'
 SAVEHIST="${HISTSIZE}"
 
 
-# if [ ! -d "${TMP}" ]; then mkdir "${TMP}"; fi
-
-# if ! [[ "${PATH}" =~ "^${HOME}/bin" ]]; then
-#     export PATH="${HOME}/bin:${PATH}"
-# fi
-
-
 # Colors.
 red='\e[0;31m'
 RED='\e[1;31m'
