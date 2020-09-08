@@ -1,8 +1,8 @@
-[Unit]
+k[Unit]
 Description=Auto rotation of screen
 
 [Service]
-ExecStart=/home/baroud/bin/2in1screen
+ExecStart=/home/baroud/CS/Pers/2in1screen/2in1screen
 
 [Install]
 WantedBy=default.target

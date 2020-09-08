@@ -25,7 +25,7 @@
   - [[#auto-completion-engine-ivy][Auto-completion engine =ivy=]]
     - [[#improved-ivy-file-browsing-ivy-explorer][improved ivy file browsing =ivy-explorer=]]
   - [[#search-in-current-buffer-swiper][search in current buffer =swiper=]]
-  - [[#search-somewhere-else-m-xdiredetc-counsel][search somewhere else "M-x/dired/etc" =counsel=]]
+  - [[#search-somewhere-else-m-xdiredetc-smexcounsel][search somewhere else "M-x/dired/etc" =smex,counsel=]]
   - [[#improved-text-search-ripgrep][improved text search =ripgrep=]]
   - [[#modify-grep-result-wgrep][modify grep result =wgrep=]]
   - [[#open-with-sudo-auto-sudoedit][open with sudo =auto-sudoedit=]]
@@ -100,17 +100,21 @@
     - [[#caldav-sync-org-caldav][Caldav sync =org-caldav=]]
     - [[#notification-org-wild-notifier][notification =org-wild-notifier=]]
   - [[#org-search-ivy-omni-org][Org search =ivy-omni-org=]]
+  - [[#org-link][Org link]]
   - [[#capture-org-capture][Capture =org-capture=]]
 - [[#read-only-major-mode][read-only major-mode]]
   - [[#mail][Mail]]
     - [[#mu-mu4e][mu =mu4e=]]
   - [[#compilation][compilation]]
-  - [[#dashboard][Dashboard]]
+  - [[#dashboard-dashboard][Dashboard =dashboard=]]
+  - [[#web-browser-xwwp-follow-link][Web browser =xwwp-follow-link=]]
 - [[#to-order][to order]]
+  - [[#diff-diffview][diff =diffview=]]
 - [[#to-do][TO-DO]]
   - [[#contact][contact]]
     - [[#dav-directory-vdirel][dav directory =vdirel=]]
     - [[#emacs-format-bbdb][emacs format =bbdb=]]
+    - [[#new-bbdb-ebdb][new bbdb =ebdb=]]
   - [[#make-qutebrowser-default-browser][make qutebrowser default browser]]
 - [[#not-used-anymore][not used anymore]]
   - [[#file-explorer-ranger][file explorer =ranger=]]
@@ -384,17 +388,21 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
    :bind ("C-s" . swiper))
 #+END_SRC
 
-** search somewhere else "M-x/dired/etc" =counsel=
+** search somewhere else "M-x/dired/etc" =smex,counsel=
+smex order last command/mode by most used and recent
+
+counsel is intergrate launcher for exec alternative ("M-x")
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smex)
 (use-package counsel
-  :after ivy smex
-  :delight
-  :init (counsel-mode 1))
+    :after ivy smex
+    :delight
+    :bind ("C-c r" . counsel-recentf)
+    :init (counsel-mode 1))
 #+END_SRC
 
 ** improved text search =ripgrep=
-ripgrep is an alternative of grep that is faster and respect .gitignore
+ripgrep is an alternative of grep that is faster and respect project (.gitignore, ...)
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ripgrep
 :delight
@@ -862,6 +870,7 @@ https://gitlab.com/gopiandcode/gopcaml-mode
 it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package ocp-indent :after tuareg)
+
   (use-package ocamlformat
     :ensure nil
     :ensure-system-package (ocamlformat . "opam install ocamlformat")
@@ -959,15 +968,15 @@ it format also dune file, which is annoying
 ** TODO interaction =projectile=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
-    :delight " "
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
-    :custom
-    (projectile-grep-default-files "src/")
-    (projectile-project-search-path
+  :delight " "
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :custom
+  (projectile-grep-default-files "src/")
+  (projectile-project-search-path
      '("~/CS/Cryptium/" "~/CS/Pers/" "~/CS/VGED/" "~/CS/Wagner/"))
-    (projectile-completion-system 'ivy)
-    :init (projectile-mode))
+     (projectile-completion-system 'ivy)
+     :init (projectile-mode))
 
   (use-package counsel-projectile
     :after counsel projectile
@@ -1317,86 +1326,45 @@ Org super agenda allows a more readible agenda by grouping the todo item
 
 *** TODO Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;;   (use-package org-caldav
-  ;;   :init
-  ;;   (defvar org-caldav-sync-timer nil
-  ;;       "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-  ;;       (defun org-caldav-sync-with-delay (secs)
-  ;;       (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-  ;;       (setq org-caldav-sync-timer
-  ;;             (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-  ;;             (setq org-caldav-url
-  ;;           "https://cloud.frontir.cc/remote.php/dav/calendars/sylvainr/")
-  ;;           (setq org-caldav-backup-file "~/org/backup.org")
-  ;;           (setq org-caldav-calendar-id "master")
-  ;;           (setq org-caldav-inbox "~/org/master-sync.org")
-  ;;           (setq org-caldav-files '("~/org/master.org" "~/org/master_save.org" ))
-  ;;           :config
-  ;;           (setq org-icalendar-alarm-time 1)
-  ;;           (setq org-caldav-show-sync-results nil)
-  ;;           (setq org-icalendar-include-todo t)
-  ;; (setq org-icalendar-use-deadline
-  ;;           '(event-if-todo event-if-not-todo todo-due))
-  ;;     ;; (setq org-icalendar-use-scheduled
-  ;;     ;;   '(todo-start event-if-todo event-if-not-todo))
-  ;;     ;;   :hook (
-  ;;     ;;   (kill-emacs . org-caldav-sync)
-  ;;     ;;   (after-save .
-  ;;     ;;     (lambda ()
-  ;;     ;;        (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
-  ;;     )
-  ;;   ;; (setq org-caldav-calendars
-  ;;   ;; '((:calendar-id "master"
-  ;;   ;;     :files "~/org/master.org"
-  ;;   ;;     :inbox "~/org/master-sync.org")
-  ;;   ;;     (:calendar-id "claire"
-  ;;   ;;     :files "~/org/claire.org"
-  ;;   ;;     :inbox "~/org/claire-sync.org")
-  ;;   ;;     (:calendar-id "work"
-  ;;   ;;     :sync 'cal->org
-  ;;   ;;     :url ('google "sylvain@cryptium.ch")
-  ;;   ;;     :inbox "~/org/work.org"))
   (use-package org-caldav
-    :init
-    (defvar org-caldav-sync-timer nil
+  :init
+  (defvar org-caldav-sync-timer nil
       "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-    (defun org-caldav-sync-with-delay (secs)
+      (defun org-caldav-sync-with-delay (secs)
       (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
       (setq org-caldav-sync-timer
             (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-    :config
-    (setq org-caldav-url "file:///home/baroud/.personal/calendar")
-    (setq org-caldav-calendars
-          '((:calendar-id "personal/personal"
-          :sync 'cal->org
+            :custom
+            (org-caldav-url "https://cloud.cowfa.xyz/remote.php/dav/calendars/baroud/")
+            (org-caldav-backup-file "~/org/org-caldav-backup.org")
+            (org-icalendar-alarm-time 10) ; set alarm 10 minutes before for calendar
+            (org-caldav-show-sync-results nil)
+            (org-icalendar-include-todo t)
+            :config
+            (setq org-caldav-calendars
+          '((:calendar-id "master"
                           :files ("~/org/master.org")
-                          :inbox "~/org/master-sync.org")
-            (:calendar-id "claire/49-5F0F4080-3-715B4880"
-            :sync 'cal->org
+                          :inbox (file+headline "~/org/master.org" "sync"))
+            (:calendar-id "projects"
+                          :sync 'org->cal
+                          :files ("~/org/projects.org")
+                          :inbox (file+headline "~/org/projects.org" "sync"))
+            (:calendar-id "claire"
                           :files ("~/org/claire.org")
-                          :inbox "~/org/claire-sync.org")
-            ;; (:calendar-id "work"
-            ;;               :sync 'cal->org
-            ;;               :url ('google "sylvain@cryptium.ch")
-            ;;               :inbox "~/org/work.org")
-            ))
-    (setq org-caldav-backup-file "~/org/backup.org")
-    (setq org-caldav-calendar-id "master")
-    (setq org-caldav-inbox "~/org/master-sync.org")
-    (setq org-caldav-files '("~/org/master.org" "~/org/master_save.org" ))
-    (setq org-icalendar-alarm-time 1)
-    (setq org-caldav-show-sync-results nil)
-    (setq org-icalendar-include-todo t)
-    (setq org-icalendar-use-deadline
+                          :inbox (file+headline "~/org/claire.org" "sync"))
+                          (:calendar-id "wwwfacebookcom"
+            :sync 'cal->org
+                          :inbox  "~/org/facebook.org")
+                          ))
+                          (setq org-icalendar-use-deadline
           '(event-if-todo event-if-not-todo todo-due))
-    (setq org-icalendar-use-scheduled
+          (setq org-icalendar-use-scheduled
           '(todo-start event-if-todo event-if-not-todo))
-    ;; :hook (
-    ;;        (kill-emacs . org-caldav-sync)
-    ;;        (after-save .
-    ;;                    (lambda ()
-    ;;                      (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30)))))
-    )
+          :hook (
+           (kill-emacs . org-caldav-sync)
+           (after-save .
+                       (lambda ()
+                         (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30))))))
 #+END_SRC
 
 #+RESULTS:
@@ -1430,6 +1398,18 @@ bug dans le code, ilfaut pas ce qu'il faut
   ;;   (ivy-omni-org-file-sources '(org-agenda-files)))
 #+end_src
 
+** Org link
+[[gmap:test test][test test]]
+#+begin_src emacs-lisp :tangle yes
+  (setq
+  org-link-abbrev-alist
+  '(("google"    . "http://www.google.com/search?q=")
+     ("ddg"       . "https://duckduckgo.com/?q=")
+     ("gmaps"     . "http://maps.google.com/maps?q=%s")
+     ("omap"      . "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")))
+
+#+end_src
+
 ** TODO Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
@@ -1448,23 +1428,21 @@ information.
               (defun my/org-timestamp-add-reminder (date day)
       "add a reminder to a timestamp like : <2019-11-14 -5d>"
       (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
-
       (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Cryptium|Casa Rosada}")
-      (defvar my/place "%^{Place |78 rue Hippolyte Kahn|Théâtre|Cinéma|Parc|}")
-      (defvar my/gare "Lyon Part-dieu|Lyon Perrache|Paris GdL|Montpellier St-Roch")
-      (defvar my/stop "Lyon Brasserie Georges|Montpellier")
+      (defvar my/place "%^{Place |78 rue Hippolyte Kahn, Villeurbanne |17 rue Crozatier, Paris |12 ter rue Etienne Cardaire, Montpellier |12 rue Jules Ferry, Ivry-sur-seine |18 rue du square Carpeaux, Paris|Théâtre |Cinéma |Parc}")
+      (defvar my/gare "|Lyon Part-dieu|Lyon Perrache|Paris GdL|Montpellier St-Roch")
+      (defvar my/stop "|Lyon Brasserie Georges|Montpellier")
       (defvar my/type_event "Theater|Circus|Concert|Talk|")
       (defvar my/from  (concat "%^{From " my/gare "}"))
       (defvar my/to    (concat "%^{To " my/gare "}"))
-      (message (my/gmaps-format "78 rue hippolyte kahn"))
       (defvar my/agenda-template
       (concat
-       "%^{Name} %^G
+       "%^{Name} @ [[gmaps:%\\2][%\\2]] %^G
   :PROPERTIES:
   :Created: %U
   :Name:    %\\1
   :Place: " my/place "
-  :Gmaps: [[%(my/gmaps-format \"%\\2\")][\"%\\2\"]]
+  :Gmaps: [[gmaps:%\\2][%\\2]]
   :With:    " my/with "
   :END:
   %^{When}T
@@ -1488,7 +1466,7 @@ information.
   "))
 
   (defvar my/org-trip-template (concat
-                                    "* %\\1 -> %\\2
+                                  "* %\\1 -> %\\2
     :PROPERTIES:
     :Created: %U
     :From:   " my/from "
@@ -1500,7 +1478,7 @@ information.
     "))
 
     (defvar my/org-roundtrip-template (concat
-                                         "* %\\1 -> %\\2
+                                       "* %\\1 -> %\\2
     :PROPERTIES:
     :Created: %U
     :From:   " my/from "
@@ -1520,7 +1498,7 @@ information.
     "))
 
     (defvar my/org-voucher-template
-        "* USE %^{Valor}
+      "* USE %^{Valor}
     DEADLINE:%^{Before}t
     :PROPERTIES:
     :Reduction:     %^{Reduction}
@@ -1530,28 +1508,28 @@ information.
     ")
 
     (defvar my/org-todo-template
-        "* TODO %^{What} %(org-set-tags-command)
+      "* TODO %^{What} %(org-set-tags-command)
     :PROPERTIES:
     :Created:     %U
     :END:
     ")
 
     (defvar my/org-someday-template
-        "* SOMEDAY %^{What} %^G
+      "* SOMEDAY %^{What} %^G
     :PROPERTIES:
     :Created:     %U
     :END:
     ")
 
-    (defvar my/org-stuff-buy-template
-        "* FETCH %^{What}
+    (defvar my/org-fetch-template
+      "* FETCH %^{What}
     :PROPERTIES:
     :Created:     %U
     :END:
     ")
 
-    (defvar my/org-stuff-gift-template
-        "* IDEA %^{What}
+    (defvar my/org-gift-template
+      "* IDEA %^{What}
     :PROPERTIES:
     :Created:     %U
     :For: %^{For}
@@ -1559,48 +1537,40 @@ information.
     :END:
     ")
 
-    (defvar my/org-stuff-flat-template
-        "* BUY %^{What}
-    :PROPERTIES:
-    :Created:     %U
-    :Room: %^{Room}p
-    :CATEGORY: %\\2
-    :END:
-    ")
-
     :custom
     (org-capture-templates
-       `(("e" "Event")
-         ("es" "Show")
-         ("esb" "To book" entry (file+headline "~/org/master.org" "Show"),
-          my/org-tobook-template)
-         ("esg" "To attend" entry (file+headline "~/org/master.org" "Show"),
-          my/org-meeting-template)
-         ("eb" "To book" entry (file+headline "~/org/master.org" "Agenda"),
-          my/org-tobook-template)
-         ("eg" "To be" entry (file+headline "~/org/master.org" "Agenda"),
-          my/org-meeting-template)
-         ("et" "Trip")
-         ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
-          my/org-trip-template)
-         ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
-          my/org-roundtrip-template)
-         ("t" "Tasks")
-         ("tt" "todo" entry (file+headline "~/org/master.org" "Tasks"),
-          my/org-todo-template)
-         ("to" "oneday" entry (file+headline "~/org/master.org" "Tasks"),
-          my/org-someday-template)
-         ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
-          my/org-voucher-template)
-         ("s" "stuff")
-         ("sf" "fetch" entry (file+headline "~/org/master.org" "objet"),
-          my/org-stuff-buy-template)
-         ("sg" "gift" entry (file+headline "~/org/master.org" "objet"),
-          my/org-stuff-gift-template)
-         ("sa" "Flat" entry (file+headline "~/org/master.org" "Flat"),
-          my/org-stuff-flat-template)
-         ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
-          "* %?\n:PROPERTIES:\n:CREATED:%U:\n:END:\n"))))
+     `(("e" "Event")
+       ("es" "Show")
+       ("esb" "To book" entry (file+headline "~/org/master.org" "Show"),
+        my/org-tobook-template)
+       ("esg" "To attend" entry (file+headline "~/org/master.org" "Show"),
+        my/org-meeting-template)
+       ("eb" "To book" entry (file+headline "~/org/master.org" "Agenda"),
+        my/org-tobook-template)
+       ("eg" "To be" entry (file+headline "~/org/master.org" "Agenda"),
+        my/org-meeting-template)
+       ("et" "Trip")
+       ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+        my/org-trip-template)
+       ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+        my/org-roundtrip-template)
+       ("t" "Tasks")
+       ("tt" "todo" entry (file+headline "~/org/master.org" "Tasks"),
+        my/org-todo-template)
+       ("to" "oneday" entry (file+headline "~/org/master.org" "Tasks"),
+        my/org-someday-template)
+       ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
+        my/org-voucher-template)
+       ("s" "stuff")
+       ("sf" "fetch" entry (file+headline "~/org/master.org" "Stuff"),
+        my/org-fetch-template)
+       ("sg" "gift" entry (file+headline "~/org/master.org" "Stuff"),
+        my/org-gift-template)
+       ("m" "media" entry (file+headline "~/org/master.org" "Media"),
+        my/org-fetch-template)
+
+       ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+        "* %?\n:PROPERTIES:\n:CREATED:%U:\n:END:\n"))))
 #+END_SRC
 
 #+RESULTS:
@@ -1616,24 +1586,21 @@ information.
     :ensure-system-package mu
     :custom
     (mu4e-maildir "~/Maildir")
-    ;; (mu4e-update-interval 300) this is of no use, offlineimap already do
-    ;; it. Also it annoyingly keep asking for my password
     (mu4e-use-fancy-chars nil)
     (mu4e-view-show-addresses t)
     (mu4e-view-show-images t)
     (message-send-mail-function 'smtpmail-send-it)
-    ;; do not automatically mark as read when I open a msg
     (mu4e-view-auto-mark-as-read  nil)
-    (user-mail-address "sylvain.ribstein@gmail.com")
-    (smtpmail-smtp-user "sylvain.ribstein")
-    (smtpmail-default-smtp-server "smtp.gmail.com" )
-    (smtpmail-smtp-server "smtp.gmail.com" )
-    (smtpmail-local-domain "gmail.com")
-    (user-full-name "Sylvain Ribstein" )
-    (mu4e-trash-folder "/Gmail/[Gmail]/Trash" )
-    (mu4e-refile-folder "/Gmail/[Gmail]/Archive" )
-    (mu4e-drafts-folder "/Gmail/[Gmail]/Drafts" )
-    (mu4e-sent-folder "/Gmail/[Gmail]/Sent Mail" )
+    ;; (user-mail-address "sylvain.ribstein@gmail.com")
+    ;; (smtpmail-smtp-user "sylvain.ribstein")
+    ;; (smtpmail-default-smtp-server "smtp.gmail.com" )
+    ;; (smtpmail-smtp-server "smtp.gmail.com" )
+    ;; (smtpmail-local-domain "gmail.com")
+    ;; (user-full-name "Sylvain Ribstein" )
+    ;; (mu4e-trash-folder "/Gmail/[Gmail]/Trash" )
+    ;; (mu4e-refile-folder "/Gmail/[Gmail]/Archive" )
+    ;; (mu4e-drafts-folder "/Gmail/[Gmail]/Drafts" )
+    ;; (mu4e-sent-folder "/Gmail/[Gmail]/Sent Mail" )
     (mu4e-compose-signature
      (concat
       "Sylvain Ribstein\n"
@@ -1641,7 +1608,7 @@ information.
       "00336 66 26 05 28\n"))
     (smtpmail-stream-type 'starttls)
     (smtpmail-smtp-service 587)
-    (mu4e-get-mail-command "offlineimap -o")
+    (mu4e-get-mail-command "offlineimap -o -q")
     (message-kill-buffer-on-exit t)
     (mu4e-completing-read-function 'ivy-completing-read)
     (mu4e-headers-fields
@@ -1653,14 +1620,6 @@ information.
        (:thread-subject)
        ))
     (mu4e-confirm-quit nil)
-    ;; (mu4e-trash-folder "/Ribstein/Trash" )
-    ;; (mu4e-sent-folder "/Ribstein/Sent" )
-    ;; (mu4e-refile-folder "/Ribstein/Archive" )
-    ;; (mu4e-drafts-folder "/Ribstein/Drafts" )
-    ;; (user-mail-address "sylvain@ribstein.club")
-    ;; (smtpmail-default-smtp-server "mail.ribstein.club")
-    ;; (smtpmail-local-domain "ribstein.club")
-    ;; (smtpmail-smtp-server "mail.ribstein.club")
     :config
     (setq
      mu4e-contexts
@@ -1686,28 +1645,51 @@ information.
                  "Sylvain Ribstein\n"
                  "sylvain.ribstein@gmail.com\n"
                  "00336 66 26 05 28\n"))))
+       ;; ,(make-mu4e-context
+       ;;   :name "Ribstein"
+       ;;   :enter-func (lambda () (mu4e-message "Entering the Ribstein context"))
+       ;;   :leave-func (lambda () (mu4e-message "Leaving Ribstein context"))
+       ;;   ;; we match based on the maildir of the message
+       ;;   :match-func
+       ;;   (lambda (msg)
+       ;;     (when msg
+       ;;       (string-match-p "^/Ribstein" (mu4e-message-field msg :maildir))))
+       ;;       :vars
+       ;;       '( ( user-mail-address . "sylvain@ribstein.club" )
+       ;;      ( smtpmail-smtp-user . "sylvain@ribstein.club" )
+       ;;      ( smtpmail-smtp-server . "mail.ribstein.club" )
+       ;;      ( user-full-name . "Sylvain Ribstein" )
+       ;;      ( mu4e-trash-folder . "/Ribstein/Trash" )
+       ;;      ( mu4e-refile-folder . "/Ribstein/Archive" )
+       ;;      ( mu4e-drafts-folder . "/Ribstein/Drafts" )
+       ;;      (mu4e-sent-folder . "/Ribstein/Sent" )
+       ;;      ( mu4e-compose-signature
+       ;;        . (concat
+       ;;           "Sylvain Ribstein\n"
+       ;;           "sylvain@ribstein.club\n"
+       ;;           "00336 66 26 05 28\n"))))
        ,(make-mu4e-context
-         :name "Ribstein"
-         :enter-func (lambda () (mu4e-message "Entering the Ribstein context"))
-         :leave-func (lambda () (mu4e-message "Leaving Ribstein context"))
+         :name "Cowfa"
+         :enter-func (lambda () (mu4e-message "Entering the Cowfa context"))
+         :leave-func (lambda () (mu4e-message "Leaving Cowfa context"))
          ;; we match based on the maildir of the message
          :match-func
          (lambda (msg)
            (when msg
-             (string-match-p "^/Ribstein" (mu4e-message-field msg :maildir))))
+             (string-match-p "^/Cowfa" (mu4e-message-field msg :maildir))))
          :vars
-         '( ( user-mail-address . "sylvain@ribstein.club" )
-            ( smtpmail-smtp-user . "sylvain@ribstein.club" )
-            ( smtpmail-smtp-server . "mail.ribstein.club" )
-            ( user-full-name . "Sylvain Ribstein" )
-            ( mu4e-trash-folder . "/Ribstein/Trash" )
-            ( mu4e-refile-folder . "/Ribstein/Archive" )
-            ( mu4e-drafts-folder . "/Ribstein/Drafts" )
-            (mu4e-sent-folder . "/Ribstein/Sent" )
+         '( ( user-mail-address . "baroud@cowfa.xyz" )
+            ( smtpmail-smtp-user . "baroud@cowfa.xyz" )
+            ( smtpmail-smtp-server . "mail.cowfa.xyz" )
+            ( user-full-name . "Baroud" )
+            ( mu4e-trash-folder . "/Cowfa/Trash" )
+            ( mu4e-refile-folder . "/Cowfa/Archive" )
+            ( mu4e-drafts-folder . "/Cowfa/Drafts" )
+            (mu4e-sent-folder . "/Cowfa/Sent" )
             ( mu4e-compose-signature
               . (concat
-                 "Sylvain Ribstein\n"
-                 "sylvain@ribstein.club\n"
+                 "Cowfa\n"
+                 "baroud@cowfa.xyz\n"
                  "00336 66 26 05 28\n")))))))
 
   (use-package mu4e-alert
@@ -1724,7 +1706,22 @@ information.
     :after mu4e)
 
   (setq shr-color-visible-luminance-min 80)
-#+END_SRC
+
+  ;; needs to be compiled with gtk stuff
+  ;; (use-package mu4e-views
+  ;;   :after mu4e
+  ;;   :bind
+  ;;   (:map mu4e-headers-mode-map
+  ;;         ("v" . mu4e-views-mu4e-select-view-msg-method) ;; select viewing method
+  ;;         ("M-n" . mu4e-views-cursor-msg-view-window-down) ;; from headers window scroll the email view
+  ;;         ("M-p" . mu4e-views-cursor-msg-view-window-up) ;; from headers window scroll the email view
+  ;;         )
+  ;;   :config
+  ;;   (setq mu4e-views-completion-method 'ivy) ;; use ivy for completion
+  ;;   (setq mu4e-views-default-view-method "html") ;; make xwidgets default
+  ;;   (mu4e-views-mu4e-use-view-msg-method "html") ;; select the default
+  ;;   (setq mu4e-views-next-previous-message-behaviour 'stick-to-current-window)) ;; when pressing n and p stay in the current window)
+  #+END_SRC
 
 #+RESULTS:
 : 80
@@ -1741,7 +1738,7 @@ add ansi color to the compilation buffer
     (compilation-filter . my/colorize-compilation-buffer))
 #+END_SRC
 
-** Dashboard
+** Dashboard =dashboard=
 Always good to have a dashboard.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package dashboard
@@ -1758,7 +1755,24 @@ Always good to have a dashboard.
 (projects . 3)
 (recents  . 5))))
 #+END_SRC
+
+** TODO Web browser =xwwp-follow-link=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package xwwp-follow-link
+  ;; :load-path "~/.emacs.d/xwwp-follow-link"
+  ;; :custom
+  ;; (xwwp-follow-link-completion-system 'ivy)
+  ;; :bind (:map xwidget-webkit-mode-map
+  ;;               ("v" . xwwp-follow-link)))
+#+END_SRC
+
 * to order
+** diff =diffview=
+This package allow to view diff side by side
+#+begin_src  emacs-lisp :tangle yes
+(use-package diffview)
+#+end_src
+
 * TO-DO
 ** TODO contact
 *** dav directory =vdirel=
@@ -1770,7 +1784,7 @@ Always good to have a dashboard.
 #+END_SRC
 *** TODO emacs format =bbdb=
 #+BEGIN_SRC emacs-lisp :tangle yes
-    ;; (use-package bbdb
+;; (use-package bbdb
   ;; :hook gnus-startup
   ;; :custom
   ;; (bbdb-file "~/.contacts/bbdb")
@@ -1780,6 +1794,8 @@ Always good to have a dashboard.
   ;; (use-package bbdb-vcard
   ;; )
 #+END_SRC
+*** TODO new bbdb =ebdb=
+This one will at some point incorporate a carddav sync
 ** DONE make qutebrowser default browser
 :PROPERTIES:
 :Created:  [2020-04-15 mer. 15:06]
