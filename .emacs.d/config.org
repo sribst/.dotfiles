@@ -801,8 +801,9 @@ use bind-keymap instead
 #+begin_src emacs-lisp :tangle yes
   (use-package shfmt
   :ensure-system-package shfmt
-  :hook (sh-mode . shfmt-on-save-mode))
-#+end_src
+  ;; :hook (sh-mode . sh-electric-here-document-mode)
+  )
+  #+end_src
 
 **** OCaml
 ***** TODO major mode =tuareg=
