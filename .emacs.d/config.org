@@ -65,6 +65,7 @@
     - [[#programming-language][Programming language]]
       - [[#language-server][Language server]]
       - [[#shell-script][Shell script]]
+      - [[#rust][Rust]]
       - [[#ocaml][OCaml]]
       - [[#python][Python]]
       - [[#nix][nix]]
@@ -803,8 +804,16 @@ use bind-keymap instead
   :ensure-system-package shfmt
   ;; :hook (sh-mode . sh-electric-here-document-mode)
   )
-  #+end_src
+#+end_src
 
+**** Rust
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rust-mode
+  ;; :ensure-system-package rustfmt cargo rustup
+  :custom
+  (rust-format-on-save t)
+  )
+#+END_SRC
 **** OCaml
 ***** TODO major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1722,7 +1731,7 @@ information.
   ;;   (setq mu4e-views-default-view-method "html") ;; make xwidgets default
   ;;   (mu4e-views-mu4e-use-view-msg-method "html") ;; select the default
   ;;   (setq mu4e-views-next-previous-message-behaviour 'stick-to-current-window)) ;; when pressing n and p stay in the current window)
-  #+END_SRC
+#+END_SRC
 
 #+RESULTS:
 : 80
