@@ -89,7 +89,7 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-# 3 screen output
+# 2 screen output
 workspace $ws1 output DP-1
 workspace $ws2 output eDP-1
 workspace $ws3 output HDMI-2
@@ -100,16 +100,16 @@ workspace $ws5 output HDMI-2
 # workspace $ws5 output eDP-1
 
 # switch to workspace
-bindsym $super+ampersand workspace $ws1
-bindsym $super+eacute workspace $ws2
-bindsym $super+quotedbl workspace $ws3
+bindsym $super+ampersand  workspace $ws1
+bindsym $super+eacute     workspace $ws2
+bindsym $super+quotedbl   workspace $ws3
 bindsym $super+apostrophe workspace $ws4
-bindsym $super+parenleft workspace $ws5
-bindsym $super+minus workspace $ws6
-bindsym $super+egrave workspace $ws7
+bindsym $super+parenleft  workspace $ws5
+bindsym $super+minus      workspace $ws6
+bindsym $super+egrave     workspace $ws7
 bindsym $super+underscore workspace $ws8
-bindsym $super+ccedilla workspace $ws9
-bindsym $super+agrave workspace $ws10
+bindsym $super+ccedilla   workspace $ws9
+bindsym $super+agrave     workspace $ws10
 
 # move focused container to workspace
 bindsym $super+Shift+1 move container to workspace $ws1
@@ -137,28 +137,29 @@ bindsym $super+Shift+e exec "i3-nagbar -t warning -f pango:OpenSans:20 -m 'Do yo
 # resize window (you can also use the mouse for that)
 set $resize Resize: (j) left, (k)down, (l)up, (m)right
 bindsym $super+r mode "$resize"
+
 mode "$resize" {
-        # These bindings trigger as soon as you enter the resize mode
+         # These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 6 px or 6 ppt
-        bindsym k resize grow height 6 px or 6 ppt
-        bindsym l resize shrink height 6 px or 6 ppt
-        bindsym m resize grow width 6 px or 6 ppt
+         # Pressing left will shrink the window’s width.
+         # Pressing right will grow the window’s width.
+         # Pressing up will shrink the window’s height.
+         # Pressing down will grow the window’s height.
+         bindsym j resize shrink width 6 px or 6 ppt
+         bindsym k resize grow height 6 px or 6 ppt
+         bindsym l resize shrink height 6 px or 6 ppt
+         bindsym m resize grow width 6 px or 6 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 6 px or 6 ppt
-        bindsym Down resize grow height 6 px or 6 ppt
-        bindsym Up resize shrink height 6 px or 6 ppt
-        bindsym Right resize grow width 6 px or 6 ppt
+         # same bindings, but for the arrow keys
+         bindsym Left resize shrink width 6 px or 6 ppt
+         bindsym Down resize grow height 6 px or 6 ppt
+         bindsym Up resize shrink height 6 px or 6 ppt
+         bindsym Right resize grow width 6 px or 6 ppt
 
-        # back to normal: Enter or Escape or $super+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $super+g mode "default"
+         # back to normal: Enter or Escape or $super+r
+         bindsym Return mode "default"
+         bindsym Escape mode "default"
+         bindsym $super+g mode "default"
 }
 
 # Theme colors
@@ -201,11 +202,11 @@ client.placeholder	$foreground $background	$foreground $background	$background
 exec_always --no-startup-id $HOME/bin/startsimplebar
 
 # volume controls
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 
-bindsym XF86AudioMute        exec pactl set-sink-mute 0 toggle
-bindsym XF86AudioMicMute     exec pactl set-source-mute 1 toggle
+bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 # media controls
 bindsym XF86AudioPlay exec "mpc toggle"
@@ -223,6 +224,8 @@ bindsym $super+twosuperior exec --no-startup-id "i3lock-fancy-rapid 5 10 -u -p d
 # bindsym $super+Menu exec --no-startup-id bepo_switch
 
 assign [class="^qutebrowser"] → $ws4
+assign [class="^Chromium"]    → $ws4
+assign [class="^next"]        → $ws4
 assign [class="^firefox"]     → $ws4
 assign [class="^Wire"]        → $ws5
 assign [class="^Telegram"]    → $ws5
@@ -230,7 +233,7 @@ assign [class="^zoom"]        → $ws5
 assign [class="^Slack"]       → $ws5
 assign [class="^Element"]     → $ws5
 assign [class="^Signal"]      → $ws5
-assign [class="^teamspeak3"]  → $ws5
+assign [class="^TeamSpeak 3"] → $ws5
 
 # gaps between windows
 
@@ -289,14 +292,74 @@ exec clight
 set $app App: (q) qutebrowser, (e) element, (w) wire-desktop, (s) slack
 bindsym $super+c mode "$app"
 mode "$app" {
-        # These bindings trigger as soon as you enter the app mode
-	bindsym e exec element-desktop
-	bindsym q exec qutebrowser
-        bindsym w exec wire-desktop
-	bindsym s exec slack
+          # These bindings trigger as soon as you enter the app mode
+          bindsym e exec element-desktop
+          bindsym q exec qutebrowser
+          bindsym w exec wire-desktop
+          bindsym s exec slack
 
-        # back to normal: Enter or Escape or $super+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $super+g mode "default"
+          # back to normal: Enter or Escape or $super+r
+          bindsym Return mode "default"
+          bindsym Escape mode "default"
+          bindsym $super+g mode "default"
+          bindsym $super+c mode "default"
+}
+
+
+set $i3_resurrect i3-resurrect
+
+# Save workspace mode.
+set $save Save workspace: (&) , (é) , (\") ², ...
+bindsym $super+u mode "save"
+mode "save" {
+         bindsym $super+ampersand  exec "$i3_resurrect save -w 1 --swallow=class,instance,title"
+         bindsym $super+eacute     exec "$i3_resurrect save -w 2 --swallow=class,instance,title"
+         bindsym $super+quotedbl   exec "$i3_resurrect save -w 3 --swallow=class,instance,title"
+         bindsym $super+apostrophe exec "$i3_resurrect save -w 4 --swallow=class,instance,title"
+         bindsym $super+parenleft  exec "$i3_resurrect save -w 5 --swallow=class,instance,title"
+         bindsym $super+minus      exec "$i3_resurrect save -w 6 --swallow=class,instance,title"
+         bindsym $super+egrave     exec "$i3_resurrect save -w 7 --swallow=class,instance,title"
+         bindsym $super+underscore exec "$i3_resurrect save -w 8 --swallow=class,instance,title"
+         bindsym $super+ccedilla   exec "$i3_resurrect save -w 9 --swallow=class,instance,title"
+         bindsym $super+agrave     exec "$i3_resurrect save -w 10 --swallow=class,instance,title"
+
+          # back to normal: Enter or Escape or $super+r
+          bindsym Return mode "default"
+          bindsym Escape mode "default"
+          bindsym $super+g mode "default"
+          bindsym $super+u mode "default"
+}
+
+
+# Restore workspace mode.
+set $restore Restore workspace: (&) , (é) , (\") ², ...
+bindsym $super+i mode "restore"
+mode "restore" {
+         bindsym $super+ampersand  exec "$i3_resurrect restore -w 1 --programs-only"
+         bindsym $super+eacute     exec "$i3_resurrect restore -w 2 --programs-only"
+         bindsym $super+quotedbl   exec "$i3_resurrect restore -w 3 --programs-only"
+         bindsym $super+apostrophe exec "$i3_resurrect restore -w 4 --programs-only"
+         bindsym $super+parenleft  exec "$i3_resurrect restore -w 5 --programs-only"
+         bindsym $super+minus      exec "$i3_resurrect restore -w 6 --programs-only"
+         bindsym $super+egrave     exec "$i3_resurrect restore -w 7 --programs-only"
+         bindsym $super+underscore exec "$i3_resurrect restore -w 8 --programs-only"
+         bindsym $super+ccedilla   exec "$i3_resurrect restore -w 9 --programs-only"
+         bindsym $super+agrave     exec "$i3_resurrect restore -w 10 --programs-only"
+
+         bindsym $super+ampersand  exec "$i3_resurrect restore -w 1 --layout-only"
+         bindsym $super+eacute     exec "$i3_resurrect restore -w 2 --layout-only"
+         bindsym $super+quotedbl   exec "$i3_resurrect restore -w 3 --layout-only"
+         bindsym $super+apostrophe exec "$i3_resurrect restore -w 4 --layout-only"
+         bindsym $super+parenleft  exec "$i3_resurrect restore -w 5 --layout-only"
+         bindsym $super+minus      exec "$i3_resurrect restore -w 6 --layout-only"
+         bindsym $super+egrave     exec "$i3_resurrect restore -w 7 --layout-only"
+         bindsym $super+underscore exec "$i3_resurrect restore -w 8 --layout-only"
+         bindsym $super+ccedilla   exec "$i3_resurrect restore -w 9 --layout-only"
+         bindsym $super+agrave     exec "$i3_resurrect restore -w 10 --layout-only"
+
+          # back to normal: Enter or Escape or $super+r
+          bindsym Return mode "default"
+          bindsym Escape mode "default"
+          bindsym $super+g mode "default"
+          bindsym $super+i mode "default"
 }

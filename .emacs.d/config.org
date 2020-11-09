@@ -81,6 +81,7 @@
   - [[#interaction-projectile][interaction =projectile=]]
   - [[#git][Git]]
     - [[#interaction-magit][Interaction =magit=]]
+    - [[#add-git-message-git-commit][add git message =git-commit=]]
     - [[#forge-forge][Forge =forge=]]
     - [[#current-modification-git-gutter][current modification =git-gutter=]]
     - [[#show-last-commit-modification-git-timemachine][show last commit modification =git-timemachine=]]
@@ -105,6 +106,8 @@
   - [[#org-search-ivy-omni-org][Org search =ivy-omni-org=]]
   - [[#org-link][Org link]]
   - [[#capture-org-capture][Capture =org-capture=]]
+  - [[#org-export][org export]]
+    - [[#use-pandoc-to-export-ox-pandoc][use pandoc to export =ox-pandoc=]]
 - [[#read-only-major-mode][read-only major-mode]]
   - [[#mail][Mail]]
     - [[#mu-mu4e][mu =mu4e=]]
@@ -159,7 +162,7 @@ Update current package
   (use-package auto-package-update
     :defer t
     :custom
-    (auto-package-update-interval 1)
+    (auto-package-update-interval 7)
     (auto-package-update-delete-old-versions  t)
     (auto-package-update-hide-results         t)
     (auto-package-update-prompt-before-update ))
@@ -494,14 +497,6 @@ ibuffer is a better buffer mode
         ("IRC"   (or (mode . circe-channel-mode) (mode . circe-server-mode)))
         ("web"   (or (mode . web-mode) (mode . js2-mode)))
         ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
-        ("gnus"  (or (mode . message-mode)
-                     (mode . bbdb-mode)
-                     (mode . mail-mode)
-                     (mode . gnus-group-mode)
-                     (mode . gnus-summary-mode)
-                     (mode . gnus-article-mode)
-                     (name . "^\\.bbdb$")
-                     (name . "^\\.newsrc-dribble")))
         ("programming" (or
                         (mode . java-mode)
                         (mode . groovy-mode)
@@ -544,13 +539,17 @@ ibuffer is a better buffer mode
   (use-package dimmer
     :init (dimmer-mode t))
 #+END_SRC
+
 ** Window
-*** TODO parameter
+*** parameter
 split-width-threshold nil does not work for me
 need to find correct config -> use toggle-windows-split atm
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (setq split-width-threshold nil) ; default split is vertical
+(setq split-height-threshold 180)
+(setq split-width-threshold 90)
 #+END_SRC
+
 
 *** switch window =ace-window=
 ace window allow to simply switch when only 2 window or to choose
@@ -661,8 +660,8 @@ basic default value to enable
   (use-package replace
     :ensure nil
     :bind
-    (("C-c r s" . replace-string)
-     ("C-c r r" . replace-regexp))
+    (("C-c C-r s" . replace-string)
+     ("C-c C-r r" . replace-regexp))
     )
 #+end_src
 
@@ -744,7 +743,7 @@ Aggressive indent is too aggressive, I need to make it a bit less stronger
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package aggressive-indent
     :delight ""
-    :hook ((tuareg-mode org-mode) . aggressive-indent-mode)
+    :hook (tuareg-mode . aggressive-indent-mode)
     :custom
     (aggressive-indent-comments-too t)
     (aggressive-indent-sit-for-time 0.2)  )
@@ -836,7 +835,7 @@ cargo.el gives set of combination to perform cargo (rust builder) task
            (racer-mode . eldoc-mode))
     :config
     (advice-add 'rust-compile :before #'save-current-buffer-if-modified))
-    #+END_SRC
+#+END_SRC
 **** OCaml
 ***** TODO major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -918,9 +917,13 @@ it format also dune file, which is annoying
     (ocamlformat-show-errors 'echo)
     (ocamlformat-enable 'enable)
     :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
-    :hook (
-           (before-save . #'ocamlformat-before-save)
-           )
+    :hook
+    (before-save
+     .
+     (lambda ()
+       (when
+           (eq major-mode 'tuareg-mode)
+         (ocamlformat-before-save))))
     :after tuareg)
 #+END_SRC
 
@@ -1055,6 +1058,15 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
     (after-save . magit-after-save-refresh-buffers)
     :delight " ")
 
+  ;; (use-package magit-delta
+  ;;   :after magit
+  ;;   :hook (magit-mode . magit-delta-mode))
+
+
+#+END_SRC
+
+*** add git message =git-commit=
+#+BEGIN_SRC emacs-lisp :tangle yes
   (use-package git-commit
     :after magit
     :hook (git-commit-mode . my/git-commit-auto-fill-everywhere)
@@ -1363,7 +1375,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
     :init
     (defvar org-caldav-sync-timer nil
       "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-    (defun org-caldav-sync-with-delay (secs)
+    (defun my/org-caldav-sync-with-delay (secs)
       (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
       (setq org-caldav-sync-timer
             (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
@@ -1395,9 +1407,10 @@ Org super agenda allows a more readible agenda by grouping the todo item
           '(todo-start event-if-todo event-if-not-todo))
     :hook (
            (kill-emacs . org-caldav-sync)
-           (after-save .
-                       (lambda ()
-                         (when (eq major-mode 'org-mode) (org-caldav-sync-with-delay 30))))))
+           (after-save
+            .
+            (lambda ()
+              (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
 #+END_SRC
 
 #+RESULTS:
@@ -1607,6 +1620,27 @@ information.
 #+END_SRC
 
 #+RESULTS:
+
+** org export
+
+*** use pandoc to export =ox-pandoc=
+#+begin_src emacs-lisp :tangle yes
+  (use-package ox-pandoc
+    :after org
+    ;; :hook
+    ;; (after-save
+    ;;  .
+    ;;  (lambda ()
+    ;;    (when
+    ;;        (and
+    ;;         (string-equal (file-name-extension buffer-file-name) "org")
+    ;;         (eq major-mode 'org-mode)
+    ;;         (string-equal (file-name-directory (directory-file-name (expand-file-name buffer-file-name)))
+    ;;                       (expand-file-name "~/notes/")))
+    ;;      (org-pandoc-export-to-markdown_mmd))
+       )
+#+end_src
+
 * read-only major-mode
 ** Mail
 *** mu =mu4e=

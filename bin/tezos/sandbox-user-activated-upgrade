@@ -9,13 +9,13 @@ make build-sandbox
 		--number-of-b 2 \
 		--with-timestamp \
 		--until 20 \
-		--protocol-hash PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb \
-		--protocol-kind Carthage \
+		--protocol-hash PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo \
+		--protocol-kind Delphi \
 		--tezos-client tezos-client \
 		--tezos-node tezos-node \
-		--tezos-baker tezos-baker-006-PsCARTHA \
-		--tezos-endorser tezos-endorser-006-PsCARTHA \
-		--tezos-accuser tezos-accuser-006-PsCARTHA  \
+		--tezos-baker tezos-baker-007-PsDELPH1 \
+		--tezos-endorser tezos-endorser-007-PsDELPH1 \
+		--tezos-accuser tezos-accuser-007-PsDELPH1  \
 		--hard-fork 10:ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK \
 		--hard-fork-baker tezos-baker-alpha \
 		--hard-fork-endorser tezos-endorser-alpha \
