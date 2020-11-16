@@ -268,7 +268,7 @@ alias chown="chown -c"
 
 alias ".."="cd .."
 
-alias ec="/usr/bin/emacsclient -s /tmp/emacs1000/server -nw"
+alias ec="/usr/bin/emacsclient -nw"
 alias e="emacs -nw"
 
 alias sudo='sudo'               # to have alias within sudo
@@ -280,7 +280,6 @@ alias reboot='systemctl reboot'
 alias meteo='curl wttr.in/Lyon'
 alias moon='curl wttr.in/moon'
 alias clock='tty-clock -c -C 1 -B -s -x'
-alias email='emacsclient -c --eval "(gnus)"'
 
 if command -v colordiff > /dev/null 2>&1; then
     alias diff="colordiff -Nuar"
