@@ -1,5 +1,5 @@
 [Added Associations]
-image/jpeg=feh.desktop;
+image/jpeg=org.gnome.eog.desktop;feh.desktop;
 x-scheme-handler/http=qutebrowser.desktop;firefox.desktop;
 x-scheme-handler/https=qutebrowser.desktop;firefox.desktop;
 x-scheme-handler/ftp=qutebrowser.desktop;firefox.desktop;
@@ -17,6 +17,7 @@ application/pdf=com.github.xournalpp.xournalpp.desktop;xpdf.desktop;
 video/mp4=mpv.desktop;
 text/x-microdvd=emacs.desktop;
 video/x-msvideo=vlc.desktop;
+image/gif=org.gnome.eog.desktop;
 
 [Default Applications]
 x-scheme-handler/http=firefox.desktop

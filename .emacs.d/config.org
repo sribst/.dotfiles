@@ -1332,17 +1332,20 @@ Org super agenda allows a more readible agenda by grouping the todo item
                   ((org-super-agenda-groups
                     '(
                       (:name "Book"          :todo "BOOK")
-                      (:name "TO-DO "        :and (:category "agenda" :todo "TODO"))
-                      (:name "Tezos"         :and (:category "tezos"  :todo "TODO"))
-                      (:name "Config"        :and (:category "config" :todo "TODO"))
-                      (:name "Daily"         :and (:todo "FETCH" :tag  "daily"))
-                      (:name "Fetch"         :and (:todo "FETCH" :not (:tag "film")))
-                      (:name "Download "     :and (:todo "FETCH" :tag "film"))
-                      (:name "One day"       :todo "SOMEDAY")
-                      (:discard (:todo ("TOGO" "GO"  "TOUSE" "USE" "IDEA")))
+                      (:name "Tasks"
+                             :and
+                             (:category "agenda"
+                              :todo ("TODO" "INPROGRESS" "WAITING")
+                              :not (:tag "config")
+                              ))
+                      (:name "Tezos"         :and (:category "project" :todo t))
+                      (:name "Config"        :and (:tag "config"  :todo ("TODO" "INPROGRESS" "WAITING")))
+                      (:name "Daily"         :and (:todo "FETCH" :tag "daily"))
+                      (:name "Fetch"         :and (:todo "FETCH" :not (:tag "movie")))
+                      (:name "Download"      :and (:todo "FETCH" :tag "movie"))
+                      (:discard (:todo "IDEA"))
                       ))))
-         ))))
-    )
+         )))))
 #+END_SRC
 
 #+RESULTS:
@@ -1466,29 +1469,20 @@ information.
     :ensure nil
     :after org
     :preface
-    (defun my/gmaps-format (addr)
-      "return a googlemaps link that is correctly formated"
-      (format "https://www.google.fr/maps/search/%s"
-              (replace-regexp-in-string " " "+" addr)))
 
-    (defun my/org-timestamp-add-reminder (date day)
-      "add a reminder to a timestamp like : <2019-11-14 -5d>"
-      (format "%s -%dd%s"  (substring date 0 -1) day (substring date -1)))
     (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Cryptium|Casa Rosada}")
-    (defvar my/place "%^{Place |78 rue Hippolyte Kahn, Villeurbanne |17 rue Crozatier, Paris |12 ter rue Etienne Cardaire, Montpellier |12 rue Jules Ferry, Ivry-sur-seine |18 rue du square Carpeaux, Paris|Théâtre |Cinéma |Parc}")
-    (defvar my/gare "|Lyon Part-dieu|Lyon Perrache|Paris GdL|Montpellier St-Roch")
-    (defvar my/stop "|Lyon Brasserie Georges|Montpellier")
-    (defvar my/type_event "Theater|Circus|Concert|Talk|")
-    (defvar my/from  (concat "%^{From " my/gare "}"))
-    (defvar my/to    (concat "%^{To " my/gare "}"))
+    (defvar my/place "%^{Place |78 rue Hippolyte Kahn, Villeurbanne |17 rue Crozatier, Paris |12 ter rue Etienne Cardaire, Montpellier |12 rue Jules Ferry, Ivry-sur-seine |18 rue du square Carpeaux, Paris}")
+    (defvar my/gare "|Lyon Part-dieu | Lyon Perrache | Paris Gare de Lyon |Montpellier St-Roch")
+    (defvar my/stop "|Lyon Brasserie Georges|Montpellier ")
+    (defvar my/from  (concat "%^{From " my/gare my/stop "}"))
+    (defvar my/to    (concat "%^{To " my/gare my/stop "}"))
     (defvar my/agenda-template
       (concat
        "%^{Name} @ [[gmaps:%\\2][%\\2]] %^G
   :PROPERTIES:
   :Created: %U
   :Name:    %\\1
-  :Place: " my/place "
-  :Gmaps: [[gmaps:%\\2][%\\2]]
+  :Place: [[gmaps:%\\2][%\\2]]
   :With:    " my/with "
   :END:
   %^{When}T
@@ -1497,19 +1491,6 @@ information.
     (defvar my/org-tobook-template (concat "* BOOK " my/agenda-template))
 
     (defvar my/org-meeting-template (concat "* " my/agenda-template))
-
-    (defvar my/org-spectacle-template (concat
-                                       "%^{Name}
-  :PROPERTIES:
-  :Created: %U
-  :Name:    %\\1
-  :Place: " my/place "
-  :Type: " my/type_event"
-  :Gmaps: [[%(my/gmaps-format \"%\\2\")][\"%\\2\"]]
-  :With:    " my/with "
-  :END:
-  %^{When}T
-  "))
 
     (defvar my/org-trip-template (concat
                                   "* %\\1 -> %\\2
@@ -1585,36 +1566,27 @@ information.
 
     :custom
     (org-capture-templates
-     `(("e" "Event")
-       ("es" "Show")
-       ("esb" "To book" entry (file+headline "~/org/master.org" "Show"),
+     `(("b" "Book" entry (file+headline "~/org/master.org" "Agenda"),
         my/org-tobook-template)
-       ("esg" "To attend" entry (file+headline "~/org/master.org" "Show"),
+       ("m" "Meeting" entry (file+headline "~/org/master.org" "Agenda"),
         my/org-meeting-template)
-       ("eb" "To book" entry (file+headline "~/org/master.org" "Agenda"),
-        my/org-tobook-template)
-       ("eg" "To be" entry (file+headline "~/org/master.org" "Agenda"),
-        my/org-meeting-template)
-       ("et" "Trip")
-       ("ets" "Single trip" entry (file+headline "~/org/master.org" "Trip"),
+       ("g" "Go")
+       ("go" "On way trip" entry (file+headline "~/org/master.org" "Trip"),
         my/org-trip-template)
-       ("etr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+       ("gr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
         my/org-roundtrip-template)
-       ("t" "Tasks")
-       ("tt" "todo" entry (file+headline "~/org/master.org" "Tasks"),
-        my/org-todo-template)
-       ("to" "oneday" entry (file+headline "~/org/master.org" "Tasks"),
-        my/org-someday-template)
-       ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
-        my/org-voucher-template)
        ("s" "stuff")
        ("sf" "fetch" entry (file+headline "~/org/master.org" "Stuff"),
         my/org-fetch-template)
        ("sg" "gift" entry (file+headline "~/org/master.org" "Stuff"),
         my/org-gift-template)
-       ("m" "media" entry (file+headline "~/org/master.org" "Media"),
-        my/org-fetch-template)
-
+       ("t" "Tasks")
+       ("tt" "todo" entry (file+headline "~/org/master.org" "Tasks"),
+        my/org-todo-template)
+       ("to" "One day" entry (file+headline "~/org/master.org" "Tasks"),
+        my/org-someday-template)
+       ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
+        my/org-voucher-template)
        ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
         "* %?\n:PROPERTIES:\n:CREATED:%U:\n:END:\n"))))
 #+END_SRC
