@@ -223,20 +223,23 @@ bindsym $super+twosuperior exec --no-startup-id "i3lock-fancy-rapid 5 10 -u -p d
 # between
 # bindsym $super+Menu exec --no-startup-id bepo_switch
 
+# browser
 assign [class="^qutebrowser"] → $ws4
 assign [class="^Chromium"]    → $ws4
 assign [class="^next"]        → $ws4
 assign [class="^firefox"]     → $ws4
+
+# social
 assign [class="^Wire"]        → $ws5
 assign [class="^Telegram"]    → $ws5
 assign [class="^zoom"]        → $ws5
 assign [class="^Slack"]       → $ws5
 assign [class="^Element"]     → $ws5
+assign [class="^Spectral"]    → $ws5
 assign [class="^Signal"]      → $ws5
 assign [class="^TeamSpeak 3"] → $ws5
 
 # gaps between windows
-
 for_window [class=".*"] border pixel 4
 
 set $default_gaps_inner 4
@@ -289,22 +292,13 @@ exec nm-applet
 #start clight
 exec clight
 
-set $app App: (q) qutebrowser, (e) element, (w) wire-desktop, (s) slack
-bindsym $super+c mode "$app"
-mode "$app" {
-          # These bindings trigger as soon as you enter the app mode
-          bindsym e exec element-desktop
-          bindsym q exec qutebrowser
-          bindsym w exec wire-desktop
-          bindsym s exec slack
+# tabbed layout for social
+for_window [workspace=$ws5] layout tabbed
 
-          # back to normal: Enter or Escape or $super+r
-          bindsym Return mode "default"
-          bindsym Escape mode "default"
-          bindsym $super+g mode "default"
-          bindsym $super+c mode "default"
-}
+# start all common social software
+bindsym $super+c exec element-desktop; exec wire-desktop; exec slack
 
+bindsym $super+n firefox
 
 set $i3_resurrect i3-resurrect
 

@@ -1587,12 +1587,9 @@ information.
         my/org-someday-template)
        ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
         my/org-voucher-template)
-       ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+       ("j" "Journal" entry (file+olp+datetree "~/org/master.org" "journal")
         "* %?\n:PROPERTIES:\n:CREATED:%U:\n:END:\n"))))
 #+END_SRC
-
-#+RESULTS:
-
 ** org export
 
 *** use pandoc to export =ox-pandoc=
