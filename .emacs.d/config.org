@@ -1388,6 +1388,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
     (org-icalendar-alarm-time 10) ; set alarm 10 minutes before for calendar
     (org-caldav-show-sync-results nil)
     (org-icalendar-include-todo t)
+    (org-caldav-delete-calendar-entries "always")
     :config
     (setq org-caldav-calendars
           '((:calendar-id "master"
@@ -1417,7 +1418,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
 #+END_SRC
 
 #+RESULTS:
-: t
+| (lambda nil (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))) | rmail-after-save-hook | (lambda nil (if (eq major-mode 'org-mode) (progn (my/org-caldav-sync-with-delay 30)))) | my/config-tangle | magit-after-save-refresh-buffers |
 
 *** TODO notification =org-wild-notifier=
 bug dans le code, ilfaut pas ce qu'il faut
