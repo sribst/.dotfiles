@@ -18,6 +18,7 @@ video/mp4=mpv.desktop;
 text/x-microdvd=emacs.desktop;
 video/x-msvideo=vlc.desktop;
 image/gif=org.gnome.eog.desktop;
+image/png=feh.desktop;
 
 [Default Applications]
 x-scheme-handler/http=firefox.desktop

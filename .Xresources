@@ -1,24 +1,32 @@
+! *font:                     xft:inconsolatazi4:size=10
+! Urxvt
 
-! urxvt font
-URxvt*font: xft:Dejavu Sans Mono:pixelsize=15! \
-	    ! xft:Iosevka:style=Regular:size=9,\
-	    ! xft:DejaVuSansMono Nerd Font:style=Book,\
-	    ! xft:Symbola:style=Rugular,\
-	    ! xft:FontAwesome:style=Regular
+! Extensions
+URxvt*perl-ext-common:          default,matcher,vtwheel,clipboard
+! Looks
+URxvt*font:                     xft:inconsolatazi4:size=10
+URxvt*scrollBar:                false
+URxvt.internalBorder:           10
+! Clickable urls
+URxvt.url-select.underline:     true
+URxvt.url-launcher:             /usr/bin/firefox
+URxvt.matcher.button:           1
+! Change keybinding for copy/paste
+URxvt*iso14755:                 false
+! add copy-past
+! add copy-past
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+! URxvt.keysym.Shift-Control-C:   perl:clipboard:copy
+! URxvt.keysym.Shift-Control-V:   perl:clipboard:paste
+URxvt.lineSpace: 2
 
-! URxvt*boldFont:
-! urxvt.font: xft:inconsolata:pixelsize=12
-! urxvt.boldFont: xft:Liberation Mono:pixelsize=14:style=bold
-! urxvt.italicFont: xft:Liberation Mono:pixelsize=14:style=italic
-! urxvt.boldItalicFont: xft:Liberation Mono:pixelsize=14:style=bold italic
-! setting
-URxvt.scrollBar: false
 
 ! emacs font
-! Emacs.font: DejaVuSansMono-10
-Emacs.font: monaco-10
+Emacs.font: DejaVuSansMono-10
+! Emacs.font: monaco-10
 
-*.FontBackend: xft,x
+! *.FontBackend: xft,x
 
 ! color
 ! special
@@ -57,11 +65,3 @@ Emacs.font: monaco-10
 ! white
 *.color7:       #cfd8dc
 *.color15:      #eceff1
-
-! desactivate iso-mode
-! URxvt.iso14755: false
-! URxvt.iso14755_52: false
-
-! add copy-past
-URxvt.keysym.Shift-Control-V: eval:paste_clipboard
-URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard

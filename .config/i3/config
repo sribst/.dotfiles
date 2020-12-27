@@ -80,10 +80,10 @@ bindsym $super+q focus parent
 
 set $ws1 ""
 set $ws2 ""
-set $ws3 "²"
+set $ws3 ""
 set $ws4 ""
 set $ws5 ""
-set $ws6 "6"
+set $ws6 ""
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
@@ -91,13 +91,18 @@ set $ws10 "10"
 
 # 2 screen output
 workspace $ws1 output DP-1
+workspace $ws1 output DP-2
+workspace $ws1 output HDMI-1
+workspace $ws1 output HDMI-2
 workspace $ws2 output eDP-1
-workspace $ws3 output HDMI-2
-workspace $ws4 output HDMI-2
-workspace $ws5 output HDMI-2
-# workspace $ws3 output HDMI-2
-# workspace $ws4 output eDP-1
-# workspace $ws5 output eDP-1
+workspace $ws3 output eDP-1
+workspace $ws4 output eDP-1
+workspace $ws5 output eDP-1
+workspace $ws6 output DP-1
+workspace $ws6 output DP-2
+workspace $ws6 output HDMI-1
+workspace $ws6 output HDMI-2
+
 
 # switch to workspace
 bindsym $super+ampersand  workspace $ws1
@@ -184,19 +189,21 @@ set_from_resource	$color13	color13
 set_from_resource	$color14	color14
 set_from_resource	$color15	color15
 
+# window title alignement left|center|right
+# title_align center
 
-# class                   border  backgr. text    indic.
-# child_border
-#                       BORDER      BACKGROUND  TEXT        INDICATOR   CHILD_BORDER
+# border aroud between windows
+default_border pixel 1
+default_floating_border pixel 3
+hide_edge_borders smart
 
-client.background       $background
-
-
-client.focused         	$foreground $background $color6     $foreground $color6
-client.unfocused       	$background $background	$color8     $background	$background
-client.focused_inactive	$color8     $background	$color8     $background	$background
+# child_border          BORDER      BACKGROUND  TEXT        INDICATOR   CHILD_BORDER
+client.focused         	$color3     $background $color2     $foreground $color3
+client.focused_inactive	$color7     $background	$color6     $background	$background
+client.unfocused       	$background $color8	$color4     $background	$background
 client.urgent		$foreground $color1	$foreground $background	$background
 client.placeholder	$foreground $background	$foreground $background	$background
+client.background       $background
 
 #polybar
 exec_always --no-startup-id $HOME/bin/startsimplebar
@@ -227,7 +234,7 @@ bindsym $super+twosuperior exec --no-startup-id "i3lock-fancy-rapid 5 10 -u -p d
 assign [class="^qutebrowser"] → $ws4
 assign [class="^Chromium"]    → $ws4
 assign [class="^next"]        → $ws4
-assign [class="^firefox"]     → $ws4
+assign [class="Firefox"]      → $ws4
 
 # social
 assign [class="^Wire"]        → $ws5
@@ -238,18 +245,6 @@ assign [class="^Element"]     → $ws5
 assign [class="^Spectral"]    → $ws5
 assign [class="^Signal"]      → $ws5
 assign [class="^TeamSpeak 3"] → $ws5
-
-# gaps between windows
-for_window [class=".*"] border pixel 4
-
-set $default_gaps_inner 4
-set $default_gaps_outer 8
-gaps inner $default_gaps_inner
-gaps outer $default_gaps_inner
-# gaps top    all set $default_gaps_outer
-# gaps bottom all set $default_gaps_outer
-smart_gaps on
-smart_borders on
 
 
 # cloud
@@ -289,16 +284,13 @@ bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 #start nm-applet
 exec nm-applet
 
-#start clight
-exec clight
-
 # tabbed layout for social
 for_window [workspace=$ws5] layout tabbed
 
 # start all common social software
 bindsym $super+c exec element-desktop; exec wire-desktop; exec slack
 
-bindsym $super+n firefox
+bindsym $super+b exec firefox
 
 set $i3_resurrect i3-resurrect
 
@@ -356,4 +348,55 @@ mode "restore" {
           bindsym Escape mode "default"
           bindsym $super+g mode "default"
           bindsym $super+i mode "default"
+}
+#############################
+### settings for i3-gaps: ###
+#############################
+# gaps top    all set $default_gaps_outer
+# gaps bottom all set $default_gaps_outer
+smart_gaps on
+# smart_borders on
+
+# Set inner/outer gaps
+gaps inner 10
+gaps outer 10
+
+# Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $super+Shift+g mode "$mode_gaps"
+
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym $super+g mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $super+g mode "default"
+}
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $super+g mode "default"
 }

@@ -63,6 +63,7 @@
     - [[#color-parenthesis-rainbow-delimiters][Color parenthesis =rainbow-delimiters=]]
   - [[#specific][Specific]]
     - [[#programming-language][Programming language]]
+      - [[#css-css-mode][CSS =css-mode=]]
       - [[#language-server][Language server]]
       - [[#protocol-protobuf][protocol =protobuf=]]
       - [[#shell-script][Shell script]]
@@ -781,6 +782,15 @@ Colorize colors as text with their value.
 
 ** Specific
 *** Programming language
+**** CSS =css-mode=
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package css-mode
+    :ensure nil
+    :mode ("\\.css$" "\\.rasi$")
+    )
+#+end_src
+
 **** TODO Language server
 use bind-keymap instead
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1009,8 +1019,7 @@ it format also dune file, which is annoying
     ("C-c p" . projectile-command-map)
     :custom
     (projectile-grep-default-files "src/")
-    (projectile-project-search-path
-     '("~/CS/Cryptium/" "~/CS/Pers/" "~/CS/VGED/" "~/CS/Wagner/"))
+    (projectile-project-search-path '("~/CS/Project/"))
     (projectile-completion-system 'ivy)
     :init (projectile-mode))
 
@@ -1417,9 +1426,6 @@ Org super agenda allows a more readible agenda by grouping the todo item
               (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
 #+END_SRC
 
-#+RESULTS:
-| (lambda nil (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))) | rmail-after-save-hook | (lambda nil (if (eq major-mode 'org-mode) (progn (my/org-caldav-sync-with-delay 30)))) | my/config-tangle | magit-after-save-refresh-buffers |
-
 *** TODO notification =org-wild-notifier=
 bug dans le code, ilfaut pas ce qu'il faut
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1427,10 +1433,14 @@ bug dans le code, ilfaut pas ce qu'il faut
     :after org-agenda alert
     :custom
     (org-wild-notifier-keyword-whitelist nil)
+    (org-wild-notifier-keyword-blacklist '("CANCELED" "DONE" "ABORDED" "HAVE" "GIVEN" "CONSUMED" "LOST"))
     (org-wild-notifier--day-wide-events t)
     (org-wild-notifier-alert-time '(10 9 8 7 6 5 3 2 1))
     :init (org-wild-notifier-mode t))
 #+END_SRC
+
+#+RESULTS:
+
 ** Org search =ivy-omni-org=
 
 #+begin_src emacs-lisp :tangle yes
