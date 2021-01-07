@@ -65,3 +65,12 @@ Emacs.font: DejaVuSansMono-10
 ! white
 *.color7:       #cfd8dc
 *.color15:      #eceff1
+
+
+rofi.font: Inconsolata 20
+!           State: 'bg',    'fg',    'bgalt', 'hlbg',  'hlfg'
+! rofi.color-normal: #353944, #FFFFFF, #353944, #5294E2, #FFFFFF
+rofi.color-normal: #263238, #eceff1, #263238, #0c86bd, #cfd8dc
+
+! 'background', 'border'
+rofi.color-window: #263238, #263238

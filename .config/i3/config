@@ -36,6 +36,8 @@ set $menu Menu: (k) kill; each command exit mode
 # }
 
 # change focus
+bindsym $super+Tab focus next
+bindsym $super+Shift+Tab focus prev
 bindsym $super+o focus next
 
 bindsym $super+j focus left

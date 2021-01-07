@@ -19,6 +19,7 @@ text/x-microdvd=emacs.desktop;
 video/x-msvideo=vlc.desktop;
 image/gif=org.gnome.eog.desktop;
 image/png=feh.desktop;
+x-scheme-handler/tg=userapp-Telegram Desktop-YA8KW0.desktop;
 
 [Default Applications]
 x-scheme-handler/http=firefox.desktop
@@ -41,3 +42,4 @@ x-scheme-handler/unknown=org.qutebrowser.qutebrowser.desktop
 application/x-directory=emacs-dired.desktop
 inode/directory=emacs-dired.desktop
 x-scheme-handler/msteams=teams.desktop
+x-scheme-handler/tg=userapp-Telegram Desktop-YA8KW0.desktop
