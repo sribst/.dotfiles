@@ -1,0 +1,34 @@
+* create a new synced directory
+** create a new bare git repository
+#+begin_src shell
+     git init --bare $HOME/.cfg
+     alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/\
+           --work-tree=$HOME'config config\
+           --local status.showUntrackedFiles no
+     echo "alias config='/usr/bin/git\
+           --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> $HOME/.zshrc
+#+end_src
+** operation
+All git operation are permitted, you just have to use config instead of git. For example:
+#+begin_src shell
+  config status
+  config add ~/.zshrc
+  config commit -m "Add vimrc"
+  config add ~/.xvimrc
+  config commit -m "Add xvimrc"
+#+end_src
+** add remote
+#+begin_src shell
+  config remote add origin git@github.com:sribst/dotfiles.git
+  config push -u origin master
+#+end_src
+* sync an existing directory
+#+begin_src shell
+    alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/\
+          --work-tree=$HOME'config config\
+          --local status.showUntrackedFiles no
+    echo "alias config='/usr/bin/git\
+          --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> $HOME/.zshrc
+    git clone --bare git@github.com:sribst/dotfiles.git $HOME/.dotfiles
+#+end_src
+From here, you can pull, push, merge and checkout to your hearts content.
