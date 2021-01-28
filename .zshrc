@@ -388,3 +388,7 @@ eval "$(pyenv virtualenv-init -)"
 source /usr/share/undistract-me/long-running.bash
 notify_when_long_running_commands_finish_install
 # source /etc/profile.d/undistract-me.sh
+
+# export GPG_TTY="$(tty)"
+# export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+# gpgconf --launch gpg-agent

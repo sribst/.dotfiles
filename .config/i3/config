@@ -38,7 +38,6 @@ set $menu Menu: (k) kill; each command exit mode
 # change focus
 bindsym $super+Tab focus next
 bindsym $super+Shift+Tab focus prev
-bindsym $super+o focus next
 
 bindsym $super+j focus left
 bindsym $super+k focus down
@@ -285,6 +284,9 @@ bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
 #start nm-applet
 exec nm-applet
+
+# start notification center
+exec deadd-notification-center
 
 # tabbed layout for social
 for_window [workspace=$ws5] layout tabbed

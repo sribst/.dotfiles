@@ -1435,7 +1435,7 @@ bug dans le code, ilfaut pas ce qu'il faut
     (org-wild-notifier-keyword-whitelist nil)
     (org-wild-notifier-keyword-blacklist '("CANCELED" "DONE" "ABORDED" "HAVE" "GIVEN" "CONSUMED" "LOST"))
     (org-wild-notifier--day-wide-events t)
-    (org-wild-notifier-alert-time '(10 9 8 7 6 5 3 2 1))
+    (org-wild-notifier-alert-time '(120 60 30 10 5))
     :init (org-wild-notifier-mode t))
 #+END_SRC
 
