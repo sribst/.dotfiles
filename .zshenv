@@ -31,3 +31,4 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 
 export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
+export TERM='xterm-256color'
