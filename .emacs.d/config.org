@@ -115,14 +115,11 @@
   - [[#compilation][compilation]]
   - [[#dashboard-dashboard][Dashboard =dashboard=]]
   - [[#web-browser-xwwp-follow-link][Web browser =xwwp-follow-link=]]
-- [[#to-order][to order]]
-  - [[#diff-diffview][diff =diffview=]]
-- [[#to-do][TO-DO]]
+- [[#tasks][Tasks]]
   - [[#contact][contact]]
     - [[#dav-directory-vdirel][dav directory =vdirel=]]
     - [[#emacs-format-bbdb][emacs format =bbdb=]]
     - [[#new-bbdb-ebdb][new bbdb =ebdb=]]
-  - [[#make-qutebrowser-default-browser][make qutebrowser default browser]]
 - [[#not-used-anymore][not used anymore]]
   - [[#file-explorer-ranger][file explorer =ranger=]]
   - [[#gnus-gnus][Gnus =gnus=]]
@@ -826,11 +823,12 @@ use bind-keymap instead
   (use-package go-mode)
 #+END_SRC
 **** Rust
-cargo.el gives set of combination to perform cargo (rust builder) task
+cargo gives set of combination to perform cargo (rust builder) task
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rust-mode
     :mode ("\\.rust$" . rust-mode)
+    :config (rust-format-on-save t)
     :commands (rust-mode))
 
   (use-package cargo
@@ -847,7 +845,7 @@ cargo.el gives set of combination to perform cargo (rust builder) task
     (advice-add 'rust-compile :before #'save-current-buffer-if-modified))
 #+END_SRC
 **** OCaml
-***** TODO major mode =tuareg=
+***** major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package tuareg
     :mode ("\\.ml[ily]?$" . tuareg-mode)
@@ -1031,20 +1029,20 @@ it format also dune file, which is annoying
      'counsel-projectile-switch-project-action
      '((default counsel-projectile-switch-project-action-vc)))
     )
-
+#+END_SRC
+#+begin_src emacs-lisp :tangle yes
   (use-package org-projectile
     :after projectile org
     :bind
-    ("C-c n p" . org-projectile-project-todo-completing-read)
-    :custom
-    (org-projectile-per-project-filepath "todo.org")
+        (:map projectile-command-map ("C-c p n" . org-projectile-capture-for-current-project))
     :config
-    (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
-    (org-projectile-capture-template
-     (format "%s" "* TODO %?")
-     (org-projectile-per-project)
-     (progn (push (org-projectile-project-todo-entry) org-capture-templates))))
-#+END_SRC
+    (push (org-projectile-project-todo-entry) org-capture-templates)
+    :custom
+    (org-projectile-capture-template (format "%s" "* TODO %?"))
+    (org-projectile-projects-file (file+headline "~/org/master.org" "Projects")))
+#+end_src
+
+#+RESULTS:
 
 ** Git
 *** Interaction =magit=
@@ -1208,6 +1206,8 @@ Amazing mode of GNU Emacs.
     ("C-c l" . org-store-link)
     ("C-c a" . org-agenda)
     ("C-c c" . org-capture)
+    ("C-c B" . org-switchb)
+
     (:map org-mode-map ("C-c o" . counsel-outline))
     :config
     (org-babel-do-load-languages
@@ -1225,6 +1225,9 @@ Amazing mode of GNU Emacs.
      (org-edit-src-save  . delete-trailing-whitespace)
      (auto-save . org-save-all-org-buffers)))
 #+END_SRC
+
+#+RESULTS:
+: counsel-outline
 
 ** Table of content =toc-org=
 Create and update automaticaly a table of contents.  =toc-org= will maintain a
@@ -1397,7 +1400,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
     (org-icalendar-alarm-time 10) ; set alarm 10 minutes before for calendar
     (org-caldav-show-sync-results nil)
     (org-icalendar-include-todo t)
-    (org-caldav-delete-calendar-entries "always")
+    (org-caldav-delete-calendar-entries 'always)
     :config
     (setq org-caldav-calendars
           '((:calendar-id "master"
@@ -1409,8 +1412,15 @@ Org super agenda allows a more readible agenda by grouping the todo item
                           :inbox (file+headline "~/org/projects.org" "sync"))
             (:calendar-id "claire"
                           :files ("~/org/claire.org")
-                          :inbox (file+headline "~/org/claire.org" "sync"))
-            (:calendar-id "wwwfacebookcom"
+                           :inbox (file+headline "~/org/master.org" "sync"))
+            (:calendar-id "contact_birthdays"
+                          :sync 'cal->org
+                          :inbox  "~/org/professional.org")
+            (:calendar-id "calendargooglecom"
+                          :sync 'cal->org
+                          :inbox  "~/org/professional.org")
+            (:calendar-id "wwwfacebookcom-1"
+                          ;; :url "https://www.facebook.com/events/ical/upcoming/?uid=525297993&key=ShuJLNbIhhWI0VBp"
                           :sync 'cal->org
                           :inbox  "~/org/facebook.org")
             ))
@@ -1425,6 +1435,9 @@ Org super agenda allows a more readible agenda by grouping the todo item
             (lambda ()
               (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))) | rmail-after-save-hook | (lambda nil (if (eq major-mode 'org-mode) (progn (my/org-caldav-sync-with-delay 30)))) | my/config-tangle | magit-after-save-refresh-buffers |
 
 *** TODO notification =org-wild-notifier=
 bug dans le code, ilfaut pas ce qu'il faut
@@ -1481,7 +1494,7 @@ information.
     :after org
     :preface
 
-    (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Cryptium|Casa Rosada}")
+    (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Heliax}")
     (defvar my/place "%^{Place |78 rue Hippolyte Kahn, Villeurbanne |17 rue Crozatier, Paris |12 ter rue Etienne Cardaire, Montpellier |12 rue Jules Ferry, Ivry-sur-seine |18 rue du square Carpeaux, Paris}")
     (defvar my/gare "|Lyon Part-dieu | Lyon Perrache | Paris Gare de Lyon |Montpellier St-Roch")
     (defvar my/stop "|Lyon Brasserie Georges|Montpellier ")
@@ -1489,12 +1502,12 @@ information.
     (defvar my/to    (concat "%^{To " my/gare my/stop "}"))
     (defvar my/agenda-template
       (concat
-       "%^{Name} @ [[gmaps:%\\2][%\\2]] %^G
+       "%^{Name}
   :PROPERTIES:
-  :Created: %U
-  :Name:    %\\1
-  :Place: [[gmaps:%\\2][%\\2]]
-  :With:    " my/with "
+  :CREATED: %U
+  :LOCATION: " my/place "
+  :GMAPS: [[gmaps:%\\2][%\\2]]
+  :WITH:    " my/with "
   :END:
   %^{When}T
   "))
@@ -1503,77 +1516,93 @@ information.
 
     (defvar my/org-meeting-template (concat "* " my/agenda-template))
 
-    (defvar my/org-trip-template (concat
-                                  "* %\\1 -> %\\2
+    (defvar my/org-trip-template
+      (concat
+       "* %\\1 -> %\\2
     :PROPERTIES:
-    :Created: %U
-    :From:   " my/from "
-    :To:     "  my/to "
-    :Type:    %^{Type}p
-    :With:   " my/with "
+    :CREATED: %U
+    :FROM:   " my/from "
+    :TO:     "  my/to "
+    :TYPE:    %^{Type}p
+    :WITH:   " my/with "
     :END:
     %^{When}T
-    "))
+  "))
 
-    (defvar my/org-roundtrip-template (concat
-                                       "* %\\1 -> %\\2
+    (defvar my/org-roundtrip-template
+      (concat
+       "* %\\1 -> %\\2
     :PROPERTIES:
-    :Created: %U
-    :From:   " my/from "
-    :To:     "  my/to "
-    :Type:    %^{Type}p
-    :With:   " my/with "
-    :END:
-    %^{When}T\n* %\\2 -> %\\1
-    :PROPERTIES:
-    :Created: %U
-    :From:      %\\2
-    :To:       %\\1
-    :Type:    %^{Type}p
-    :With:   " my/with "
+    :CREATED: %U
+    :LOCATION:   " my/from "
+    :TO:     "  my/to "
+    :TYPE:    %^{Type}p
+    :WITH:   " my/with "
     :END:
     %^{When}T
-    "))
+  ,* %\\2 -> %\\1
+    :PROPERTIES:
+    :CREATED: %U
+    :LOCATION: %\\2
+    :TO:       %\\1
+    :TYPE:    %^{Type}p
+    :WITH:   " my/with "
+    :END:
+    %^{When}T
+  "))
 
     (defvar my/org-voucher-template
       "* USE %^{Valor}
     DEADLINE:%^{Before}t
     :PROPERTIES:
-    :Reduction:     %^{Reduction}
-    :At:     %^{At|oui.sncf|ouibus|ouigo...}
+    :REDUCTION:     %^{Reduction}
+    :COMPANY:     %^{At|oui.sncf|ouibus|ouigo...}
     :END:
-    %^{Cuando}t
-    ")
+  ")
 
-    (defvar my/org-todo-template
-      "* TODO %^{What} %(org-set-tags-command)
+    (defvar my/org-task-template
+      "* TODO %^{What}
     :PROPERTIES:
-    :Created:     %U
+    :CREATED:     %U
     :END:
-    ")
+  ")
 
     (defvar my/org-someday-template
       "* SOMEDAY %^{What} %^G
     :PROPERTIES:
-    :Created:     %U
+    :CREATED:     %U
     :END:
-    ")
+  ")
 
     (defvar my/org-fetch-template
       "* FETCH %^{What}
     :PROPERTIES:
-    :Created:     %U
+    :CREATED:     %U
     :END:
-    ")
+  ")
 
     (defvar my/org-gift-template
       "* IDEA %^{What}
     :PROPERTIES:
-    :Created:     %U
-    :For: %^{For}
-    :When: %^{When}t
+    :CREATED:     %U
+    :FOR: %^{For}
+    :WHEN: %^{When}t
     :END:
-    ")
+  ")
+
+    (defvar my/org-journal-template
+      "* %?
+    :PROPERTIES:
+    :CREATED:%U:
+    :END:
+  ")
+
+    (defvar my/org-budget-template
+      "* %?
+    :PROPERTIES:
+    :CREATED:%U:
+    :END:
+  ")
 
     :custom
     (org-capture-templates
@@ -1593,13 +1622,14 @@ information.
         my/org-gift-template)
        ("t" "Tasks")
        ("tt" "todo" entry (file+headline "~/org/master.org" "Tasks"),
-        my/org-todo-template)
+        my/org-task-template)
        ("to" "One day" entry (file+headline "~/org/master.org" "Tasks"),
         my/org-someday-template)
        ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
         my/org-voucher-template)
        ("j" "Journal" entry (file+olp+datetree "~/org/master.org" "journal")
-        "* %?\n:PROPERTIES:\n:CREATED:%U:\n:END:\n"))))
+        my/org-journal-template)
+       )))
 #+END_SRC
 ** org export
 
@@ -1692,29 +1722,27 @@ information.
                  "Sylvain Ribstein\n"
                  "sylvain.ribstein@gmail.com\n"
                  "00336 66 26 05 28\n"))))
-       ;; ,(make-mu4e-context
-       ;;   :name "Ribstein"
-       ;;   :enter-func (lambda () (mu4e-message "Entering the Ribstein context"))
-       ;;   :leave-func (lambda () (mu4e-message "Leaving Ribstein context"))
-       ;;   ;; we match based on the maildir of the message
-       ;;   :match-func
-       ;;   (lambda (msg)
-       ;;     (when msg
-       ;;       (string-match-p "^/Ribstein" (mu4e-message-field msg :maildir))))
-       ;;       :vars
-       ;;       '( ( user-mail-address . "sylvain@ribstein.club" )
-       ;;      ( smtpmail-smtp-user . "sylvain@ribstein.club" )
-       ;;      ( smtpmail-smtp-server . "mail.ribstein.club" )
-       ;;      ( user-full-name . "Sylvain Ribstein" )
-       ;;      ( mu4e-trash-folder . "/Ribstein/Trash" )
-       ;;      ( mu4e-refile-folder . "/Ribstein/Archive" )
-       ;;      ( mu4e-drafts-folder . "/Ribstein/Drafts" )
-       ;;      (mu4e-sent-folder . "/Ribstein/Sent" )
-       ;;      ( mu4e-compose-signature
-       ;;        . (concat
-       ;;           "Sylvain Ribstein\n"
-       ;;           "sylvain@ribstein.club\n"
-       ;;           "00336 66 26 05 28\n"))))
+       ,(make-mu4e-context
+         :name "Gmail"
+         :enter-func (lambda () (mu4e-message "Entering Heliax context"))
+         :leave-func (lambda () (mu4e-message "Leaving Heliax context"))
+         :match-func
+         (lambda (msg)
+           (when msg
+             (string-match-p "^/Heliax" (mu4e-message-field msg :maildir))))
+         :vars
+         '( ( user-mail-address . "sylvain@heliax.dev"  )
+            (smtpmail-smtp-user . "sylvain@heliax.dev")
+            ( smtpmail-smtp-server . "smtp.gmail.com" )
+            ( user-full-name . "Sylvain Ribstein" )
+            ( mu4e-trash-folder . "/Heliax/[Gmail]/Trash" )
+            ( mu4e-refile-folder . "/Heliax/[Gmail]/Archive" )
+            ( mu4e-drafts-folder . "/Heliax/[Gmail]/Drafts" )
+            (mu4e-sent-folder . "/Heliax/[Gmail]/Sent Mail" )
+            ( mu4e-compose-signature
+              . (concat
+                 "Sylvain Ribstein\n"
+                 "sylvain@heliax.dev\n"))))
        ,(make-mu4e-context
          :name "Cowfa"
          :enter-func (lambda () (mu4e-message "Entering the Cowfa context"))
@@ -1741,16 +1769,27 @@ information.
 
   (use-package mu4e-alert
     :after mu4e
+    :config
+    (mu4e-alert-interesting-mail-query
+          (concat
+           "flag:unread maildir:/iclcoolster/INBOX"))
+    :init
+    (mu4e-alert-enable-mode-line-display)
+    (defun my/mu4e-alert-mode-line-refresh ()
+      (interactive)
+      (mu4e~proc-kill)
+      (mu4e-alert-enable-mode-line-display))
+    (run-with-timer 0 60 'gjstein-refresh-mu4e-alert-mode-line))
+
+  (use-package mu4e-alert
+    :after mu4e
+    :init
     :hook ((after-init . mu4e-alert-enable-mode-line-display)
-           (after-init . mu4e-alert-enable-notifications))
-    :config (mu4e-alert-set-default-style 'libnotify))
+           (after-init . mu4e-alert-enable-notifications)))
 
   (use-package mu4e-maildirs-extension
     :after mu4e
     :init (mu4e-maildirs-extension))
-
-  (use-package mu4e-contrib
-    :after mu4e)
 
   (setq shr-color-visible-luminance-min 80)
 
@@ -1813,14 +1852,7 @@ Always good to have a dashboard.
   ;;               ("v" . xwwp-follow-link)))
 #+END_SRC
 
-* to order
-** diff =diffview=
-This package allow to view diff side by side
-#+begin_src  emacs-lisp :tangle yes
-  (use-package diffview)
-#+end_src
-
-* TO-DO
+* Tasks
 ** TODO contact
 *** dav directory =vdirel=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1829,7 +1861,7 @@ This package allow to view diff side by side
     (vdirel-repositories
      '("~/.contacts/contacts" "~/calendar/master" "~/calendar/claire")))
 #+END_SRC
-*** TODO emacs format =bbdb=
+*** emacs format =bbdb=
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (use-package bbdb
   ;; :hook gnus-startup
@@ -1841,12 +1873,8 @@ This package allow to view diff side by side
   ;; (use-package bbdb-vcard
   ;; )
 #+END_SRC
-*** TODO new bbdb =ebdb=
+*** new bbdb =ebdb=
 This one will at some point incorporate a carddav sync
-** DONE make qutebrowser default browser
-:PROPERTIES:
-:Created:  [2020-04-15 mer. 15:06]
-:END:
 * not used anymore
 ** DONE file explorer =ranger=
 Miller column within dired-mode

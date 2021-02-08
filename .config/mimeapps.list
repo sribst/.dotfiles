@@ -20,6 +20,7 @@ video/x-msvideo=vlc.desktop;
 image/gif=org.gnome.eog.desktop;
 image/png=feh.desktop;
 x-scheme-handler/tg=userapp-Telegram Desktop-YA8KW0.desktop;
+application/octet-stream=firefox.desktop;
 
 [Default Applications]
 x-scheme-handler/http=firefox.desktop

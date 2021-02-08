@@ -31,3 +31,6 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 
 export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
+source "$HOME/.cargo/env"
