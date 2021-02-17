@@ -1,6 +1,7 @@
 #+TITLE: Gnu Emacs Confidguration
 #+AUTHOR: Sylvain Ribstein
 #+CATEGORY: config
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
 * Table of content :TOC_4:
 - [[#global-configuration][Global configuration]]
@@ -61,6 +62,7 @@
     - [[#colorize-background-of-text-color-like-green-rainbow-mode][colorize background of text color like green =rainbow-mode=]]
     - [[#show-line-at-80-char-fill-column-indicator][Show line at 80 char =fill-column-indicator=]]
     - [[#color-parenthesis-rainbow-delimiters][Color parenthesis =rainbow-delimiters=]]
+    - [[#highligh-indent-level][highligh indent level]]
   - [[#specific][Specific]]
     - [[#programming-language][Programming language]]
       - [[#css-css-mode][CSS =css-mode=]]
@@ -109,6 +111,7 @@
   - [[#capture-org-capture][Capture =org-capture=]]
   - [[#org-export][org export]]
     - [[#use-pandoc-to-export-ox-pandoc][use pandoc to export =ox-pandoc=]]
+  - [[#protocol-org-protocol][protocol =org-protocol=]]
 - [[#read-only-major-mode][read-only major-mode]]
   - [[#mail][Mail]]
     - [[#mu-mu4e][mu =mu4e=]]
@@ -296,37 +299,40 @@ I find invasive.
 *** Theme
 xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package xresources-theme
-    :init
-    (defvar my/theme-window-loaded nil)
-    (defvar my/theme-terminal-loaded nil)
-    (defvar my/theme 'xresources)
-    (if (daemonp)
-        (add-hook 'after-make-frame-functions
-                  (lambda (frame)
-                    (select-frame frame)
-                    (if (window-system frame)
-                        (unless my/theme-window-loaded
-                          (if my/theme-terminal-loaded
-                              (enable-theme my/theme)
-                            (progn
-                              (load-theme my/theme t)
-                              (set-face-background 'hl-line (x-get-resource "color8" ""))))
-                          (setq my/theme-window-loaded t))
-                      (unless my/theme-terminal-loaded
-                        (if my/theme-window-loaded
+  (use-package xresources-theme)
+
+  (defvar my/theme-window-loaded nil)
+  (defvar my/theme-terminal-loaded nil)
+  (defvar my/theme 'xresources)
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+                (lambda (frame)
+                  (select-frame frame)
+                  (if (window-system frame)
+                      (unless my/theme-window-loaded
+                        (if my/theme-terminal-loaded
                             (enable-theme my/theme)
                           (progn
                             (load-theme my/theme t)
                             (set-face-background 'hl-line (x-get-resource "color8" ""))))
-                        (setq my/theme-terminal-loaded t)))))
-      (progn
-        (load-theme my/theme t)
-        (set-face-background 'hl-line (x-get-resource "color8" ""))
-        (if (display-graphic-p)
-            (setq my/theme-window-loaded t)
-          (setq my/theme-terminal-loaded t)))))
+                        (setq my/theme-window-loaded t))
+                    (unless my/theme-terminal-loaded
+                      (if my/theme-window-loaded
+                          (enable-theme my/theme)
+                        (progn
+                          (load-theme my/theme t)
+                          (set-face-background 'hl-line (x-get-resource "color8" ""))))
+                      (setq my/theme-terminal-loaded t)))))
+    (progn
+      (load-theme my/theme t)
+      (set-face-background 'hl-line (x-get-resource "color8" ""))
+      (if (display-graphic-p)
+          (setq my/theme-window-loaded t)
+        (setq my/theme-terminal-loaded t))))
 #+END_SRC
+
+#+RESULTS:
+| (lambda (frame) (select-frame frame) (if (window-system frame) (unless my/theme-window-loaded (if my/theme-terminal-loaded (enable-theme my/theme) (progn (load-theme my/theme t) (set-face-background 'hl-line (x-get-resource color8 )))) (setq my/theme-window-loaded t)) (unless my/theme-terminal-loaded (if my/theme-window-loaded (enable-theme my/theme) (progn (load-theme my/theme t) (set-face-background 'hl-line (x-get-resource color8 )))) (setq my/theme-terminal-loaded t)))) | (lambda (frame) (auto-package-update-maybe)) | x-dnd-init-frame |
 
 *** font
 **** icons =all-the-icons=
@@ -376,7 +382,7 @@ not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
 ** search in current buffer =swiper=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package swiper
-    :after ivy
+    :after ivy xresources-theme
     :config
     ;; (setq ivy-display-style 'fancy)
     (custom-set-faces
@@ -776,6 +782,16 @@ Colorize colors as text with their value.
     :delight
     :hook ((prog-mode org-mode) . rainbow-delimiters-mode))
 #+END_SRC
+*** highligh indent level
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package highlight-indent-guides
+    :delight
+    ;; :config (highlight-indent-guides-mode t)
+    :custom
+    (highlight-indent-guides-responsive stack)
+    :hook (prog-mode . highlight-indent-guides-mode))
+#+END_SRC
+
 
 ** Specific
 *** Programming language
@@ -791,26 +807,43 @@ Colorize colors as text with their value.
 **** TODO Language server
 use bind-keymap instead
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package lsp-mode
-  ;;  :after which-key ivy company
-  ;;  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  ;;  :bind-keymap
-  ;;  ("C-c i" .  lsp-command-map)
-  ;;  ;; :init (setq lsp-keymap-prefix "C-c i")
-  ;;  :hook
-  ;;  (prog-mode . lsp-mode)
-  ;;  (lsp-mode . lsp-enable-which-key-integration))
-  ;;  :commands lsp)
-  ;;  ;; optionally
-  ;;  (use-package lsp-ui :commands lsp-ui-mode)
-  ;;  (use-package company-lsp :commands company-lsp)
-  ;;  ;; if you are helm user
-  ;;  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  (use-package lsp-mode
+    :after which-key ivy company
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    :bind-keymap
+    ("C-c i" .  lsp-command-map)
+    ;; :init (setq lsp-keymap-prefix "C-c i")
+    :hook
+    (prog-mode . lsp-mode)
+    (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+  ;; optionally
+  (use-package lsp-ui
+    :after lsp-mode
+    :commands lsp-ui-mode
+    :hook (lsp-mode . lsp-ui-mode))
+
+  (use-package company-lsp
+    :after lsp-mode
+    :commands company-lsp)
+
+  (use-package lsp-ivy
+    :after lsp-mode
+    :commands lsp-ivy-workspace-symbol)
+
+  (use-package company-lsp
+    :after lsp-mode company
+    :init
+    (push 'company-lsp company-backend))
 #+END_SRC
+
 **** protocol =protobuf=
+
 #+begin_src emacs-lisp :tangle yes
   (use-package protobuf-mode)
 #+end_src
+
 **** Shell script
 #+begin_src emacs-lisp :tangle yes
   (use-package shfmt
@@ -828,22 +861,44 @@ cargo gives set of combination to perform cargo (rust builder) task
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rust-mode
     :mode ("\\.rust$" . rust-mode)
-    :config (rust-format-on-save t)
-    :commands (rust-mode))
+    :custom (rust-format-on-save t)
+    :commands (rust-mode)
+    :bind (:map rust-mode-map ("TAB" . company-indent-or-complete-common))
+    :hook (rust-mode .lsp)
+    :config
+    (advice-add 'rust-compile :before #'save-current-buffer-if-modified)
+    )
 
   (use-package cargo
     :after rust-mode
     :hook (rust-mode . cargo-minor-mode))
 
-  (use-package racer
-    :after rust-mode
-    :bind (:map rust-mode-map
-                ("C-c C-t" . racer-describe))
-    :hook ((rust-mode . racer-mode)
-           (racer-mode . eldoc-mode))
-    :config
-    (advice-add 'rust-compile :before #'save-current-buffer-if-modified))
+  ;; (use-package racer
+  ;;   :after rust-mode
+  ;;   :bind (:map rust-mode-map
+  ;;               ("C-c C-t" . racer-describe)
+  ;;               ("C-c C-l" . racer-find-definition)
+  ;;               ("TAB" . company-indent-or-complete-common))
+  ;;   :hook ((rust-mode . racer-mode)
+  ;;          (racer-mode . eldoc-mode)
+  ;;          (racer-mode . company-mode))
+  ;;   :config
+  ;;   (advice-add 'rust-compile :before #'save-current-buffer-if-modified)
+  ;;   (setq racer-rust-src-path
+  ;;         (let* ((sysroot (s-trim-right
+  ;;                          (shell-command-to-string
+  ;;                           (format "%s --print sysroot" (executable-find "rustc")))))
+  ;;                (src-path (f-join sysroot "lib/rustlib/src/rust/library")))
+  ;;           (when (file-exists-p src-path)
+  ;;             src-path)
+  ;;             src-path)))
+
+
 #+END_SRC
+
+#+RESULTS:
+| rust-mode | racer-mode | cargo-minor-mode |
+
 **** OCaml
 ***** major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1034,15 +1089,17 @@ it format also dune file, which is annoying
   (use-package org-projectile
     :after projectile org
     :bind
-        (:map projectile-command-map ("C-c p n" . org-projectile-capture-for-current-project))
+        (:map projectile-command-map ("n" . org-projectile-capture-for-current-project))
     :config
     (push (org-projectile-project-todo-entry) org-capture-templates)
     :custom
     (org-projectile-capture-template (format "%s" "* TODO %?"))
-    (org-projectile-projects-file (file+headline "~/org/master.org" "Projects")))
+    (org-projectile-projects-file "~/org/projects.org"))
+  ;; (file+headline "~/org/master.org" "Projects")))
 #+end_src
 
 #+RESULTS:
+: org-projectile-capture-for-current-project
 
 ** Git
 *** Interaction =magit=
@@ -1300,7 +1357,7 @@ Foreground and the weight (bold) of each keywords.
     :delight " "
     :after org
     :custom
-    (org-directory "~/org")
+    (org-directory "~/org/")
     (org-agenda-files '("~/org/"))
     (org-agenda-dim-blocked-tasks t)
     (org-agenda-inhibit-startup t)
@@ -1323,6 +1380,7 @@ Foreground and the weight (bold) of each keywords.
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
     (org-agenda-skip-timestamp-if-done t))
 #+END_SRC
+
 *** improved agenda view =org-super-agenda=
 Org super agenda allows a more readible agenda by grouping the todo item
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1407,21 +1465,22 @@ Org super agenda allows a more readible agenda by grouping the todo item
                           :files ("~/org/master.org")
                           :inbox (file+headline "~/org/master.org" "sync"))
             (:calendar-id "projects"
-                          :sync 'org->cal
+                          :sync-direction 'org->cal
                           :files ("~/org/projects.org")
-                          :inbox (file+headline "~/org/projects.org" "sync"))
+                          ;; :inbox (file+headline "~/org/projects.org" "sync")
+                          )
             (:calendar-id "claire"
                           :files ("~/org/claire.org")
-                           :inbox (file+headline "~/org/master.org" "sync"))
+                          :inbox (file+headline "~/org/claire.org" "sync"))
             (:calendar-id "contact_birthdays"
-                          :sync 'cal->org
+                          :sync-direction 'cal->org
+                          :inbox (file+headline "~/org/master.org" "sync"))
+            (:calendar-id "calendargooglecom-1"
+                          :sync-direction 'cal->org
                           :inbox  "~/org/professional.org")
-            (:calendar-id "calendargooglecom"
-                          :sync 'cal->org
-                          :inbox  "~/org/professional.org")
-            (:calendar-id "wwwfacebookcom-1"
+            (:calendar-id "wwwfacebookcom"
                           ;; :url "https://www.facebook.com/events/ical/upcoming/?uid=525297993&key=ShuJLNbIhhWI0VBp"
-                          :sync 'cal->org
+                          :sync-direction 'cal->org
                           :inbox  "~/org/facebook.org")
             ))
     (setq org-icalendar-use-deadline
@@ -1435,9 +1494,6 @@ Org super agenda allows a more readible agenda by grouping the todo item
             (lambda ()
               (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
 #+END_SRC
-
-#+RESULTS:
-| (lambda nil (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))) | rmail-after-save-hook | (lambda nil (if (eq major-mode 'org-mode) (progn (my/org-caldav-sync-with-delay 30)))) | my/config-tangle | magit-after-save-refresh-buffers |
 
 *** TODO notification =org-wild-notifier=
 bug dans le code, ilfaut pas ce qu'il faut
@@ -1549,15 +1605,21 @@ information.
     :WITH:   " my/with "
     :END:
     %^{When}T
+
+
+  %?
   "))
 
     (defvar my/org-voucher-template
-      "* USE %^{Valor}
+      "* USE %^{Value}
     DEADLINE:%^{Before}t
     :PROPERTIES:
     :REDUCTION:     %^{Reduction}
     :COMPANY:     %^{At|oui.sncf|ouibus|ouigo...}
     :END:
+
+
+  %?
   ")
 
     (defvar my/org-task-template
@@ -1565,6 +1627,9 @@ information.
     :PROPERTIES:
     :CREATED:     %U
     :END:
+
+
+  %?
   ")
 
     (defvar my/org-someday-template
@@ -1572,6 +1637,9 @@ information.
     :PROPERTIES:
     :CREATED:     %U
     :END:
+
+
+  %?
   ")
 
     (defvar my/org-fetch-template
@@ -1579,58 +1647,120 @@ information.
     :PROPERTIES:
     :CREATED:     %U
     :END:
+
+
+  %?
   ")
 
     (defvar my/org-gift-template
       "* IDEA %^{What}
     :PROPERTIES:
-    :CREATED:     %U
+    :CREATED: %U
     :FOR: %^{For}
     :WHEN: %^{When}t
     :END:
+
+  %?
   ")
 
     (defvar my/org-journal-template
-      "* %?
-    :PROPERTIES:
-    :CREATED:%U:
-    :END:
+            "* %^{My though}
+  :PROPERTIES:
+  :CREATED: %U
+  :END:
+
+
+  %?")
+
+    (defvar my/org-bookmark-desc-template
+      "* [[%:link][%:description]]
+  :PROPERTIES:
+  :CREATED: %U
+  ,#+BEGIN_QUOTE
+  %i
+  ,#+END_QUOTE
+  :END:
+
+
+  %?")
+
+    (defvar my/org-bookmark-template
+      "* [[%:link][%:description]]
+  :PROPERTIES:
+  :CREATED: %U
+  :END:
+
+  %?
   ")
 
-    (defvar my/org-budget-template
-      "* %?
-    :PROPERTIES:
-    :CREATED:%U:
-    :END:
-  ")
+  ;; :init
+  ;;   (defun my/transform-square-brackets-to-round-ones(string-to-transform)
+  ;;     "Transforms [ into ( and ] into ), other chars left unchanged."
+  ;;     (concat
+  ;;      (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
+  ;;     )
+
+  ;;   (defvar my/delete-frame-after-capture 0 "Whether to delete the last frame after the current capture")
+
+  ;;   (defun my/delete-frame-if-neccessary (&rest r)
+  ;;     (cond
+  ;;      ((= my/delete-frame-after-capture 0) nil)
+  ;;      ((> my/delete-frame-after-capture 1)
+  ;;       (setq my/delete-frame-after-capture (- my/delete-frame-after-capture 1)))
+  ;;      (t
+  ;;       (setq my/delete-frame-after-capture 0)
+  ;;       (delete-frame))))
+
+  ;;   (advice-add 'org-capture-finalize :after 'my/delete-frame-if-neccessary)
+  ;;   (advice-add 'org-capture-kill :after 'my/delete-frame-if-neccessary)
+  ;;   (advice-add 'org-capture-refile :after 'my/delete-frame-if-neccessary)
 
     :custom
     (org-capture-templates
-     `(("b" "Book" entry (file+headline "~/org/master.org" "Agenda"),
+     `(("b" "Book" entry
+        (file+headline "~/org/master.org" "Agenda"),
         my/org-tobook-template)
-       ("m" "Meeting" entry (file+headline "~/org/master.org" "Agenda"),
+       ("m" "Meeting"
+        entry (file+headline "~/org/master.org" "Agenda"),
         my/org-meeting-template)
        ("g" "Go")
-       ("go" "On way trip" entry (file+headline "~/org/master.org" "Trip"),
+       ("go" "On way trip"
+        entry (file+headline "~/org/master.org" "Trip"),
         my/org-trip-template)
-       ("gr" "Round trip" entry (file+headline "~/org/master.org" "Trip"),
+       ("gr" "Round trip"
+        entry (file+headline "~/org/master.org" "Trip"),
         my/org-roundtrip-template)
        ("s" "stuff")
-       ("sf" "fetch" entry (file+headline "~/org/master.org" "Stuff"),
+       ("sf" "fetch"
+        entry (file+headline "~/org/master.org" "Stuff"),
         my/org-fetch-template)
-       ("sg" "gift" entry (file+headline "~/org/master.org" "Stuff"),
+       ("sg" "gift"
+        entry (file+headline "~/org/master.org" "Stuff"),
         my/org-gift-template)
        ("t" "Tasks")
-       ("tt" "todo" entry (file+headline "~/org/master.org" "Tasks"),
+       ("tt" "todo"
+        entry (file+headline "~/org/master.org" "Tasks"),
         my/org-task-template)
-       ("to" "One day" entry (file+headline "~/org/master.org" "Tasks"),
+       ("to" "One day"
+        entry (file+headline "~/org/master.org" "Tasks"),
         my/org-someday-template)
-       ("v" "voucher" entry (file+headline "~/org/master.org" "Voucher"),
+       ("v" "voucher"
+        entry (file+headline "~/org/master.org" "Voucher"),
         my/org-voucher-template)
-       ("j" "Journal" entry (file+olp+datetree "~/org/master.org" "journal")
+       ("j" "Journal"
+        entry (file+olp+datetree "~/org/master.org" "Journal"),
         my/org-journal-template)
+       ("p" "Bookmark-description"
+        entry (file+headline ,"~/org/master.org" "Bookmarks"),
+        my/org-bookmark-desc-template)
+       ("L" "Bookmark"
+        entry (file+headline ,"~/org/master.org" "Bookmarks"),
+        my/org-bookmark-template)
        )))
 #+END_SRC
+
+#+RESULTS:
+
 ** org export
 
 *** use pandoc to export =ox-pandoc=
@@ -1649,6 +1779,12 @@ information.
     ;;                       (expand-file-name "~/notes/")))
     ;;      (org-pandoc-export-to-markdown_mmd))
        )
+#+end_src
+** protocol =org-protocol=
+#+begin_src emacs-lisp :tangle yes
+    (use-package org-protocol
+    :ensure nil
+    :after org)
 #+end_src
 
 * read-only major-mode
@@ -1768,24 +1904,9 @@ information.
                  "00336 66 26 05 28\n")))))))
 
   (use-package mu4e-alert
-    :after mu4e
-    :config
-    (mu4e-alert-interesting-mail-query
-          (concat
-           "flag:unread maildir:/iclcoolster/INBOX"))
-    :init
-    (mu4e-alert-enable-mode-line-display)
-    (defun my/mu4e-alert-mode-line-refresh ()
-      (interactive)
-      (mu4e~proc-kill)
-      (mu4e-alert-enable-mode-line-display))
-    (run-with-timer 0 60 'gjstein-refresh-mu4e-alert-mode-line))
-
-  (use-package mu4e-alert
-    :after mu4e
-    :init
-    :hook ((after-init . mu4e-alert-enable-mode-line-display)
-           (after-init . mu4e-alert-enable-notifications)))
+    :hook
+    (after-init . mu4e-alert-enable-notifications)
+    (after-init . mu4e-alert-enable-mode-line-display))
 
   (use-package mu4e-maildirs-extension
     :after mu4e

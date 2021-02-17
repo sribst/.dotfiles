@@ -34,3 +34,5 @@ export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
 source "$HOME/.cargo/env"
+
+export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
