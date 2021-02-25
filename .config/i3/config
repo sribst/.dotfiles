@@ -285,6 +285,7 @@ bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
 #start nm-applet
 exec nm-applet
+exec blueman-applet
 
 # start notification center
 exec deadd-notification-center

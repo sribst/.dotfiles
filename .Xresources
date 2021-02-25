@@ -1,10 +1,18 @@
 ! *font:                     xft:inconsolatazi4:size=10
 ! Urxvt
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: false
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+
 
 ! Extensions
 URxvt*perl-ext-common:          default,matcher,vtwheel,clipboard
 ! Looks
-URxvt*font:                     xft:inconsolatazi4:size=10
+URxvt*font:                     xft:hack:size=10
 URxvt*scrollBar:                false
 URxvt.internalBorder:           10
 ! Clickable urls
@@ -23,7 +31,8 @@ URxvt.lineSpace: 2
 
 
 ! emacs font
-Emacs.font: DejaVuSansMono-10
+! Emacs.font: DejaVuSansMono-10
+Emacs.font: Hack-10
 ! Emacs.font: monaco-10
 
 ! *.FontBackend: xft,x
