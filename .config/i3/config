@@ -235,7 +235,7 @@ bindsym $super+twosuperior exec --no-startup-id "i3lock-fancy-rapid 5 10 -u -p d
 assign [class="^qutebrowser"] → $ws4
 assign [class="^Chromium"]    → $ws4
 assign [class="^next"]        → $ws4
-assign [class="^Firefox"]     → $ws4
+assign [class="^firefox"]     → $ws4
 
 # social
 assign [class="^Wire"]        → $ws5
@@ -283,9 +283,11 @@ bindsym $super+y exec --no-startup-id  $HOME/bin/rofi-ykman
 exec udiskie
 bindsym $super+d exec --no-startup-id $HOME/bin/rofi-udiskie
 
-#start nm-applet
+#network manager applet
 exec nm-applet
-exec blueman-applet
+
+# bluetooth applet
+# exec blueman-applet
 
 # start notification center
 exec deadd-notification-center
@@ -294,7 +296,7 @@ exec deadd-notification-center
 for_window [workspace=$ws5] layout tabbed
 
 # start all common social software
-bindsym $super+c exec element-desktop; exec telegram-desktop; exec slack; exec discord; exec signal-desktop
+bindsym $super+c exec telegram-desktop; exec slack; exec discord; exec signal-desktop
 
 bindsym $super+b exec firefox
 
