@@ -1,12 +1,15 @@
 #!/bin/bash
 
-version=$(echo "$1" | sed 's/.*proto_\([0-9]\{3\}\)_.*/\1/')
-full_hash=$(jq -r .hash <src/proto_${version}_*/lib_protocol/TEZOS_PROTOCOL)
+# version=$(echo "$1" | sed 's/.*proto_\([0-9]\{3\}\)_.*/\1/')
+# full_hash=$(jq -r .hash <src/proto_${version}_*/lib_protocol/TEZOS_PROTOCOL)
+full_hash=$(jq -r .hash <"$1"/lib_protocol/TEZOS_PROTOCOL)
 
 
-echo "tezos-client -block genesis activate protocol $full_hash with fitness 1 and key activator and parameters _build/default/src/proto_${version}_*/parameters/sandbox-parameters.json --timestamp $(TZ='AAA+1' date +%FT%TZ)"
+# echo "tezos-client -block genesis activate protocol $full_hash with fitness 1 and key activator and parameters _build/default/src/proto_${version}_*/parameters/sandbox-parameters.json --timestamp $(TZ='AAA+1' date +%FT%TZ)"
+echo "tezos-client -block genesis activate protocol $full_hash with fitness 1\
+      and key activator and parameters _build/default/$1/parameters/sandbox-parameters.json --timestamp $(TZ='AAA+1' date +%FT%TZ)"
 
 tezos-client -block genesis activate protocol "$full_hash" with fitness 1\
              and key activator and\
-             parameters _build/default/src/proto_${version}_*/parameters/sandbox-parameters.json\
+             parameters _build/default/"$1"/parameters/sandbox-parameters.json\
              --timestamp $(TZ='AAA+1' date +%FT%TZ)
