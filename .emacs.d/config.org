@@ -1533,10 +1533,10 @@ Org super agenda allows a more readible agenda by grouping the todo item
             (:calendar-id "contact_birthdays"
                           :sync-direction 'cal->org
                           :inbox (file+headline "~/org/master.org" "sync"))
-            (:calendar-id "calendargooglecom-1"
+            (:calendar-id "calendargooglecom"
                           :sync-direction 'cal->org
                           :inbox  "~/org/professional.org")
-            (:calendar-id "wwwfacebookcom"
+            (:calendar-id "wwwfacebookcom-1"
                           :sync-direction 'cal->org
                           :inbox  "~/org/facebook.org")
             ))
@@ -1750,6 +1750,27 @@ information.
   %?
   ")
 
+  (defvar my/org-bd-template
+      "*** %^{Name}
+  :PROPERTIES:
+  :CREATED: %U
+  :END:
+
+  %?
+  ")
+
+  (defvar my/org-game-template
+      "*** %^{Name}
+  :PROPERTIES:
+  :CREATED: %U
+  :PLAYER: %^{Number of player |1-2|2|2-4|2-5|3-4|3-5|3-6}
+  :TIME: %^{TIME}p
+  :COMPLEXITY: %^{COMPLEXITY}p
+  :END:
+
+  %?
+  ")
+
   ;; :init
   ;;   (defun my/transform-square-brackets-to-round-ones(string-to-transform)
   ;;     "Transforms [ into ( and ] into ), other chars left unchanged."
@@ -1777,7 +1798,7 @@ information.
      `(("b" "Book" entry
         (file+headline "~/org/master.org" "Agenda"),
         my/org-tobook-template)
-       ("m" "Meeting"
+       ("a" "Appointment"
         entry (file+headline "~/org/master.org" "Agenda"),
         my/org-meeting-template)
        ("g" "Go")
@@ -1813,8 +1834,17 @@ information.
        ("L" "Bookmark"
         entry (file+headline ,"~/org/master.org" "Bookmarks"),
         my/org-bookmark-template)
+       ("m" "media")
+       ("mg" "Game"
+        entry (file+headline ,"~/org/master.org" "Tabletop game"),
+        my/org-game-template)
+       ("mb" "BD"
+        entry (file+headline ,"~/org/master.org" "BD"),
+        my/org-bd-template)
        )))
 #+END_SRC
+
+#+RESULTS:
 
 ** org export
 
