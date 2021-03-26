@@ -334,6 +334,9 @@ xresources-theme qui respect les couleurs de Xressources
         (setq my/theme-terminal-loaded t))))
 #+END_SRC
 
+#+RESULTS:
+: t
+
 *** font
 **** icons =all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -733,7 +736,7 @@ containing the candidates.
            ("M->" . company-select-last)))
 
   (use-package yasnippet
-    :ensure
+    :delight
     :config
     (yas-reload-all)
     (add-hook 'prog-mode-hook 'yas-minor-mode)
@@ -851,7 +854,7 @@ Colorize colors as text with their value.
     (lsp-mode . lsp-enable-which-key-integration)
     :commands (lsp lsp-deferred)
     :custom
-    (lsp-eldoc-render-all t)
+    (lsp-eldoc-render-all nil)
     (lsp-idle-delay 0.6)
     )
 
@@ -864,7 +867,7 @@ Colorize colors as text with their value.
     :custom
     (lsp-ui-peek-always-show t)
     (lsp-ui-sideline-show-hover t)
-    (lsp-ui-doc-enable nil)
+    (lsp-ui-doc-enable t)
     (lsp-ui-doc-max-height 45)
     (lsp-ui-doc-max-width 100)
     :hook (lsp-mode . lsp-ui-mode))
@@ -924,6 +927,7 @@ cargo gives set of combination to perform cargo (rust builder) task
 rustic takes care of starting
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rustic
+    :delight
     :mode ("\\.rs$" . rustic-mode)
     :hook
     (rustic-mode . lsp)
