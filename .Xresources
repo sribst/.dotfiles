@@ -32,7 +32,7 @@ URxvt.lineSpace: 2
 
 ! emacs font
 ! Emacs.font: DejaVuSansMono-10
-Emacs.font: Hack-9
+Emacs.font: Hack-12
 ! Emacs.font: monaco-10
 
 ! *.FontBackend: xft,x
