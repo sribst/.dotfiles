@@ -854,6 +854,7 @@ Colorize colors as text with their value.
     (lsp-mode . lsp-enable-which-key-integration)
     :commands (lsp lsp-deferred)
     :custom
+    ;; only show the symbol info
     (lsp-eldoc-render-all nil)
     (lsp-idle-delay 0.6)
     ;; :bind
@@ -871,32 +872,53 @@ Colorize colors as text with their value.
   (use-package lsp-ui
     :after lsp-mode
     :commands lsp-ui-mode
+    :custom-face
+    (lsp-ui-sideline-code-action ((t (:inherit warning))))
     :bind
-    (:map lsp-command-map
-          ("C-c C-c i" . lsp-ui-imenu))
+    (:map lsp-ui-mode-map
+          ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+          ([remap xref-find-references] . lsp-ui-peek-find-references))
     :custom
-    (lsp-ui-doc-delay 0.6)
-    (lsp-ui-peek-always-show t)
+    ;; lsp-ui-sideline
     (lsp-ui-sideline-show-hover t)
+    ;; symbol is already shown by eldocand ui-doc
+    (lsp-ui-sideline-show-symbol nil)
+    (lsp-ui-sideline-update-mode 'line)
+
+    ;; lsp-ui-doc
+    (lsp-ui-doc-position 'at-point)
     (lsp-ui-doc-enable t)
-    (lsp-ui-doc-max-height 40)
+    (lsp-ui-doc-delay 0.8)
+    (lsp-ui-doc-max-height 30)
     (lsp-ui-doc-max-width 80)
+
+    ;; lsp-ui-peek
+    (lsp-ui-peek-always-show nil)
+    (lsp-ui-peek-enable)
+    (lsp-ui-peek-show-directory t)
+    (lsp-ui-peek-list-width 30)
+    (lsp-ui-peek-peek-height 30)
+
+    ;; lsp-ui-imenu
+
     :hook (lsp-mode . lsp-ui-mode))
 
   (use-package lsp-ivy
     :after lsp-mode ivy
+    :bind
+    (:map projectile-mode-map
+          ([remap projectile-ag] . lsp-ivy-workspace-symbol))
     :commands lsp-ivy-workspace-symbol)
 
   (use-package company-lsp
     :ensure nil
     :after lsp-mode company
     :commands company-lsp
+    ;; :custom
+    ;; (company-lsp-enable-recompletion t)
     :init
     (push 'company-lsp company-backend))
 #+END_SRC
-
-#+RESULTS:
-| company-lsp |
 
 *** syntax checking =flycheck=
 #+begin_src emacs-lisp :tangle yes
