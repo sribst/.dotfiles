@@ -18,6 +18,7 @@
   - [[#auto-save-mode][auto-save-mode]]
   - [[#apparence][apparence]]
     - [[#turn-off-mouse-interface][Turn off mouse interface]]
+    - [[#xcolor-x-get-resource][XColor =x-get-resource=]]
     - [[#theme][Theme]]
     - [[#font][font]]
       - [[#icons-all-the-icons][icons =all-the-icons=]]
@@ -65,12 +66,13 @@
     - [[#highligh-indent-level][highligh indent level]]
   - [[#specific][Specific]]
     - [[#language-server-lsp-mode][Language server =lsp-mode=]]
+    - [[#spell-checking-flyspell][spell checking =flyspell=]]
     - [[#syntax-checking-flycheck][syntax checking =flycheck=]]
     - [[#programming-language][Programming language]]
       - [[#protocol-protobuf][protocol =protobuf=]]
       - [[#shell-script-shfmt][Shell script =shfmt=]]
       - [[#golang][Golang]]
-      - [[#rust-rust-mode][Rust =rust-mode=]]
+      - [[#rust-rustic-mode][Rust =rustic-mode=]]
       - [[#ocaml][OCaml]]
       - [[#python][Python]]
       - [[#nix][nix]]
@@ -297,6 +299,29 @@ I find invasive.
   (tool-bar-mode -1)      ; Disable the tool bar
   (tooltip-mode -1)       ; Disable the tooltips
 #+END_SRC
+*** XColor =x-get-resource=
+set color var
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (setq color0  (x-get-resource "color0" "")
+  ;;       color1  (x-get-resource "color1" "")
+  ;;       color2  (x-get-resource "color2" "")
+  ;;       color3  (x-get-resource "color3" "")
+  ;;       color4  (x-get-resource "color4" "")
+  ;;       color5  (x-get-resource "color5" "")
+  ;;       color6  (x-get-resource "color6" "")
+  ;;       color7  (x-get-resource "color7" "")
+  ;;       color8  (x-get-resource "color8" "")
+  ;;       color9  (x-get-resource "color9" "")
+  ;;       color10 (x-get-resource "color10" "")
+  ;;       color11 (x-get-resource "color11" "")
+  ;;       color12 (x-get-resource "color12" "")
+  ;;       color13 (x-get-resource "color13" "")
+  ;;       color14 (x-get-resource "color14" "")
+  ;;       color15 (x-get-resource "color15" "")
+  ;;       )
+#+END_SRC
+
+
 *** Theme
 xresources-theme qui respect les couleurs de Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -333,9 +358,6 @@ xresources-theme qui respect les couleurs de Xressources
           (setq my/theme-window-loaded t)
         (setq my/theme-terminal-loaded t))))
 #+END_SRC
-
-#+RESULTS:
-: t
 
 *** font
 **** icons =all-the-icons=
@@ -488,6 +510,7 @@ Don't ask before killing a buffer. I know what I'm doing.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key [remap kill-buffer] #'kill-current-buffer)
 #+END_SRC
+
 
 *** order buffer list =ibuffer=
 ibuffer is a better buffer mode
@@ -692,13 +715,16 @@ Moves the current line (or if marked, the current region's, whole lines).
 ** Whitespace =whitespace=
 It is often annoying to see unnecessary blank spaces at the end of a line or
 file.
+# to remove the hook eval
+# (remove-hook 'before-save-hook 'delete-trailing-whitespace nil)
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package whitespace
     :delight
     :hook
     (((prog-mode text-mode org-mode) . whitespace-mode)
-     (before-save . delete-trailing-whitespace)
-     )
+     (before-save . delete-trailing-whitespace))
+
     :custom
     (whitespace-style '(face trailing tabs lines-tail newline empty
                              tab-mark newline-mark))
@@ -915,10 +941,30 @@ Colorize colors as text with their value.
     :after lsp-mode company
     :commands company-lsp
     ;; :custom
+    ;; Breaks a lot of stuff for some reason...
     ;; (company-lsp-enable-recompletion t)
     :init
     (push 'company-lsp company-backend))
 #+END_SRC
+
+*** spell checking =flyspell=
+#+begin_src emacs-lisp :tangle yes
+  (use-package flyspell
+    ;; :custom
+    ;; original value: '(font-lock-string-face font-lock-comment-face font-lock-doc-face)
+    ;; (flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face))
+    :hook
+    ((text-mode . flyspell-mode)
+     (prog-mode . flyspell-prog-mode)))
+
+  (use-package flyspell-correct
+    :after flyspell
+    :bind (:map flyspell-mode-map ("M-§" . flyspell-correct-wrapper)))
+
+
+  (use-package flyspell-correct-ivy
+    :after flyspell-correct)
+#+end_src
 
 *** syntax checking =flycheck=
 #+begin_src emacs-lisp :tangle yes
@@ -956,7 +1002,7 @@ Colorize colors as text with their value.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package go-mode)
 #+END_SRC
-**** Rust =rust-mode=
+**** Rust =rustic-mode=
 cargo gives set of combination to perform cargo (rust builder) task
 rustic takes care of starting
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -986,15 +1032,21 @@ rustic takes care of starting
     (rustic-format-on-save nil)
     (rustic-format-display-method 'pop-to-buffer)
     :config
-    ;; I don't like default color used by rustic
+    ;; This does not work, from what I understood, that uses ansi and xterm-color
+    ;; (custom-set-variables
+    ;;  '(rustic-ansi-faces
+    ;;    [,color8 ,color9 ,color10 ,color11 ,color12 ,color13 ,color14 ,color15]))
+
+    (push 'rustic-clippy flycheck-checkers)
+    ;; this works expect for the line
     (custom-set-faces
-     '(rustic-compilation-column ((t (:inherit compilation-column-number))))
-     '(rustic-compilation-line ((t (:inherit compilation-line-number))))
-     '(rustic-compilation-error ((t (:inherit compilation-error))))
-     '(rustic-compilation-info ((t (:inherit compilation-line))))
-     '(rustic-compilation-warning ((t (:inherit compilation-warning))))
-     )
-    )
+     `(rustic-message ((t (:foreground ,(x-get-resource "color14" "" )))))
+     `(rustic-compilation-column ((t (:foreground ,(x-get-resource "color12" "" )))))
+     `(rustic-compilation-line ((t (:foreground ,(x-get-resource "color12" "" )))))
+     `(rustic-compilation-error ((t (:foreground ,(x-get-resource "color5" "" )))))
+     `(rustic-compilation-info ((t (:foreground ,(x-get-resource "color11" "" )))))
+     `(rustic-compilation-warning ((t (:foreground ,(x-get-resource "color9)" "" ))))))
+  )
 #+END_SRC
 
 **** OCaml
@@ -1928,26 +1980,16 @@ information.
     :ensure-system-package mu
     :custom
     (mu4e-maildir "~/Maildir")
-    (mu4e-use-fancy-chars nil)
+    (mu4e-use-fancy-chars t)
     (mu4e-view-show-addresses t)
     (mu4e-view-show-images t)
     (message-send-mail-function 'smtpmail-send-it)
     (mu4e-view-auto-mark-as-read  nil)
-    ;; (user-mail-address "sylvain.ribstein@gmail.com")
-    ;; (smtpmail-smtp-user "sylvain.ribstein")
-    ;; (smtpmail-default-smtp-server "smtp.gmail.com" )
-    ;; (smtpmail-smtp-server "smtp.gmail.com" )
-    ;; (smtpmail-local-domain "gmail.com")
-    ;; (user-full-name "Sylvain Ribstein" )
-    ;; (mu4e-trash-folder "/Gmail/[Gmail]/Trash" )
-    ;; (mu4e-refile-folder "/Gmail/[Gmail]/Archive" )
-    ;; (mu4e-drafts-folder "/Gmail/[Gmail]/Drafts" )
-    ;; (mu4e-sent-folder "/Gmail/[Gmail]/Sent Mail" )
-    (mu4e-compose-signature
-     (concat
-      "Sylvain Ribstein\n"
-      "sylvain.ribstein@gmail.com\n"
-      "00336 66 26 05 28\n"))
+    ;; (mu4e-compose-signature
+    ;;  (concat
+    ;;   "Sylvain Ribstein\n"
+    ;;   "sylvain.ribstein@gmail.com\n"
+    ;;   "00336 66 26 05 28\n"))
     (smtpmail-stream-type 'starttls)
     (smtpmail-smtp-service 587)
     (mu4e-get-mail-command "offlineimap -o -q")
@@ -1966,9 +2008,9 @@ information.
     (setq
      mu4e-contexts
      `(,(make-mu4e-context
-         :name "Gmail"
-         :enter-func (lambda () (mu4e-message "Entering Gmail context"))
-         :leave-func (lambda () (mu4e-message "Leaving Gmail context"))
+         :name "Personnal Gmail"
+         :enter-func (lambda () (mu4e-message "Entering personnal Gmail context"))
+         :leave-func (lambda () (mu4e-message "Leaving personnal Gmail context"))
          :match-func
          (lambda (msg)
            (when msg
@@ -1988,7 +2030,7 @@ information.
                  "sylvain.ribstein@gmail.com\n"
                  "00336 66 26 05 28\n"))))
        ,(make-mu4e-context
-         :name "Gmail"
+         :name "Heliax"
          :enter-func (lambda () (mu4e-message "Entering Heliax context"))
          :leave-func (lambda () (mu4e-message "Leaving Heliax context"))
          :match-func
@@ -2042,25 +2084,7 @@ information.
     :init (mu4e-maildirs-extension))
 
   (setq shr-color-visible-luminance-min 80)
-
-  ;; needs to be compiled with gtk stuff
-  ;; (use-package mu4e-views
-  ;;   :after mu4e
-  ;;   :bind
-  ;;   (:map mu4e-headers-mode-map
-  ;;         ("v" . mu4e-views-mu4e-select-view-msg-method) ;; select viewing method
-  ;;         ("M-n" . mu4e-views-cursor-msg-view-window-down) ;; from headers window scroll the email view
-  ;;         ("M-p" . mu4e-views-cursor-msg-view-window-up) ;; from headers window scroll the email view
-  ;;         )
-  ;;   :config
-  ;;   (setq mu4e-views-completion-method 'ivy) ;; use ivy for completion
-  ;;   (setq mu4e-views-default-view-method "html") ;; make xwidgets default
-  ;;   (mu4e-views-mu4e-use-view-msg-method "html") ;; select the default
-  ;;   (setq mu4e-views-next-previous-message-behaviour 'stick-to-current-window)) ;; when pressing n and p stay in the current window)
 #+END_SRC
-
-#+RESULTS:
-: 80
 
 ** compilation
 add ansi color to the compilation buffer

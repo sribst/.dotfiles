@@ -292,6 +292,9 @@ exec nm-applet
 # start notification center
 exec deadd-notification-center
 
+# start battery signal
+exec batsignal
+
 # tabbed layout for social
 for_window [workspace=$ws5] layout tabbed
 
