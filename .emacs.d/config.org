@@ -52,7 +52,7 @@
     - [[#cursor-beacon-hl][cursor =beacon= =hl=]]
 - [[#edition][Edition]]
   - [[#parameter-4][Parameter]]
-  - [[#my-biding][my biding]]
+  - [[#replace-string-visual-replace][replace string =visual-replace=]]
   - [[#delete-all-space-in-front-hungry-delete][delete all space in front =hungry-delete=]]
   - [[#move-text-move-text][Move text =move-text=]]
   - [[#whitespace-whitespace][Whitespace =whitespace=]]
@@ -61,9 +61,9 @@
   - [[#auto-indentation-aggressive-indent][Auto-indentation =aggressive-indent=]]
   - [[#decoration][Decoration]]
     - [[#colorize-background-of-text-color-like-green-rainbow-mode][colorize background of text color like green =rainbow-mode=]]
+    - [[#show-indentation-level-highlight-indent-guides][Show indentation level =highlight-indent-guides=]]
     - [[#show-line-at-80-char-fill-column-indicator][Show line at 80 char =fill-column-indicator=]]
     - [[#color-parenthesis-rainbow-delimiters][Color parenthesis =rainbow-delimiters=]]
-    - [[#highligh-indent-level][highligh indent level]]
   - [[#specific][Specific]]
     - [[#language-server-lsp-mode][Language server =lsp-mode=]]
     - [[#spell-checking-flyspell][spell checking =flyspell=]]
@@ -75,7 +75,6 @@
       - [[#rust-rustic-mode][Rust =rustic-mode=]]
       - [[#ocaml][OCaml]]
       - [[#python][Python]]
-      - [[#nix][nix]]
     - [[#pdf-pdf-tools][Pdf =pdf-tools=]]
     - [[#description-language][Description language]]
       - [[#csv-csv-mode][csv =csv-mode=]]
@@ -88,17 +87,12 @@
   - [[#git][Git]]
     - [[#interaction-magit][Interaction =magit=]]
     - [[#add-git-message-git-commit][add git message =git-commit=]]
-    - [[#forge-forge][Forge =forge=]]
     - [[#current-modification-git-gutter][current modification =git-gutter=]]
     - [[#show-last-commit-modification-git-timemachine][show last commit modification =git-timemachine=]]
 - [[#system-interaction][System interaction]]
   - [[#file-explorer-dired][File explorer =dired=]]
-  - [[#shell-command-exec-path-from-shell][shell command =exec-path-from-shell=]]
   - [[#environment-variable][Environment variable]]
   - [[#system-notification-alert][system notification =alert=]]
-- [[#software-interface][software interface]]
-  - [[#password-manager-pass][Password manager =pass=]]
-  - [[#mpd-interface-mpdel][mpd interface =mpdel=]]
 - [[#organisercalendarlinkeretc-org-mode][Organiser/calendar/linker/etc =org-mode=]]
   - [[#table-of-content-toc-org][Table of content =toc-org=]]
   - [[#org-indentation-org-indent][Org indentation =org-indent=]]
@@ -112,9 +106,6 @@
   - [[#org-search-ivy-omni-org][Org search =ivy-omni-org=]]
   - [[#org-link][Org link]]
   - [[#capture-org-capture][Capture =org-capture=]]
-  - [[#org-export][org export]]
-    - [[#use-pandoc-to-export-ox-pandoc][use pandoc to export =ox-pandoc=]]
-  - [[#protocol-org-protocol][protocol =org-protocol=]]
 - [[#read-only-major-mode][read-only major-mode]]
   - [[#mail][Mail]]
     - [[#mu-mu4e][mu =mu4e=]]
@@ -122,15 +113,8 @@
   - [[#dashboard-dashboard][Dashboard =dashboard=]]
   - [[#web-browser-xwwp-follow-link][Web browser =xwwp-follow-link=]]
 - [[#tasks][Tasks]]
-  - [[#contact][contact]]
-    - [[#dav-directory-vdirel][dav directory =vdirel=]]
-    - [[#emacs-format-bbdb][emacs format =bbdb=]]
-    - [[#new-bbdb-ebdb][new bbdb =ebdb=]]
+    - [[#contact-database-ebdb][contact database =ebdb=]]
 - [[#not-used-anymore][not used anymore]]
-  - [[#file-explorer-ranger][file explorer =ranger=]]
-  - [[#gnus-gnus][Gnus =gnus=]]
-  - [[#journal-org-journal][Journal =org-journal=]]
-  - [[#opam-opam-update-env][opam =opam-update-env=]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -686,16 +670,16 @@ basic default value to enable
       (interactive)
       (insert (gui-get-primary-selection))))
 #+END_SRC
-** my biding
+** replace string =visual-replace=
 #+begin_src emacs-lisp :tangle yes
-  (use-package replace
-    :ensure nil
+  (use-package visual-regexp
     :bind
     (("C-c C-r s" . replace-string)
-     ("C-c C-r r" . replace-regexp))
+     ("C-c C-r r" . vr/replace)
+     ("C-c C-r q" . vr/query-replace)
+     )
     )
 #+end_src
-
 ** delete all space in front =hungry-delete=
 #+begin_src emacs-lisp :tangle yes
   (use-package hungry-delete
@@ -713,8 +697,6 @@ Moves the current line (or if marked, the current region's, whole lines).
 #+END_SRC
 
 ** Whitespace =whitespace=
-It is often annoying to see unnecessary blank spaces at the end of a line or
-file.
 # to remove the hook eval
 # (remove-hook 'before-save-hook 'delete-trailing-whitespace nil)
 
@@ -726,12 +708,12 @@ file.
      (before-save . delete-trailing-whitespace))
 
     :custom
-    (whitespace-style '(face trailing tabs lines-tail newline empty
-                             tab-mark newline-mark))
-    (whitespace-display-mappings ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 ; FULL STOP 「.」
+    (whitespace-style
+     '(face trailing tabs newline empty tab-mark newline-mark))
+    (whitespace-display-mappings
      '((space-mark 32 [183] [46])
-       (newline-mark 10 [182 10]) ; LINE FEED
-       (tab-mark 9 [9655 9] [92 9])))) ; tab
+       (newline-mark 10 [182 10])
+       (tab-mark 9 [9655 9] [92 9]))))
 #+END_SRC
 
 ** Auto-Completion =company=
@@ -827,7 +809,7 @@ Aggressive indent is too aggressive, I need to make it a bit less stronger
     :hook (tuareg-mode . aggressive-indent-mode)
     :custom
     (aggressive-indent-comments-too t)
-    (aggressive-indent-sit-for-time 0.2)  )
+    (aggressive-indent-sit-for-time 0.5)  )
 #+END_SRC
 
 ** Decoration
@@ -842,16 +824,25 @@ Colorize colors as text with their value.
     (rainbow-r-colors t)
     :hook ((prog-mode org-mode) .  rainbow-mode))
 #+END_SRC
+*** Show indentation level =highlight-indent-guides=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package highlight-indent-guides
+    :delight
+    :custom
+    (highlight-indent-guides-method 'character)
+    (highlight-indent-guides-character ?║)
+    (highlight-indent-guides-responsive 'stack)
+    :hook ((prog-mode org-mode) .  highlight-indent-guides-mode))
+#+END_SRC
 
 *** TODO Show line at 80 char =fill-column-indicator=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package fill-column-indicator
-  ;; :delight
-  ;; :custom
-  ;; (fci-rule-color (x-get-resource "color1" ""))
-  ;; (fci-rule-width '1)
-  ;; :hook (prog-mode . fci-mode))
+  (setq display-fill-column-indicator-column t)
 #+END_SRC
+
+#+RESULTS:
+: |
+
 *** Color parenthesis =rainbow-delimiters=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -859,17 +850,6 @@ Colorize colors as text with their value.
     :delight
     :hook ((prog-mode org-mode) . rainbow-delimiters-mode))
 #+END_SRC
-*** TODO highligh indent level
-    It's not working
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package highlight-indent-guides
-  ;;   :delight
-  ;;   ;; :config (highlight-indent-guides-mode t)
-  ;;   :custom
-  ;;   (highlight-indent-guides-responsive stack)
-  ;;   :hook (prog-mode . highlight-indent-guides-mode))
-#+END_SRC
-
 
 ** Specific
 *** Language server =lsp-mode=
@@ -883,16 +863,6 @@ Colorize colors as text with their value.
     ;; only show the symbol info
     (lsp-eldoc-render-all nil)
     (lsp-idle-delay 0.6)
-    ;; :bind
-    ;; (:map lsp-command-map
-    ;;       ("C-c C-f" . lsp-find-references)
-    ;;       ("C-c C-l" . lsp-find-definition)
-    ;;       ("C-c C-c ?" . lsp-describe-thing-at-point)
-    ;;       ("C-c C-c !" . lsp-execute-code-action)
-    ;;       ("C-c C-c r" . lsp-rename)
-    ;;       ("C-c C-c q" . lsp-workspace-restart)
-    ;;       ("C-c C-c Q" . lsp-workspace-shutdown)
-    ;;       )
     )
 
   (use-package lsp-ui
@@ -950,10 +920,8 @@ Colorize colors as text with their value.
 *** spell checking =flyspell=
 #+begin_src emacs-lisp :tangle yes
   (use-package flyspell
-    ;; :custom
-    ;; original value: '(font-lock-string-face font-lock-comment-face font-lock-doc-face)
-    ;; (flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face))
-    :hook
+      :delight ""
+      :hook
     ((text-mode . flyspell-mode)
      (prog-mode . flyspell-prog-mode)))
 
@@ -969,24 +937,27 @@ Colorize colors as text with their value.
 *** syntax checking =flycheck=
 #+begin_src emacs-lisp :tangle yes
   (use-package flycheck
-    :delight
+    :delight ""
     :commands flycheck-mode
     :init (global-flycheck-mode))
 
   (use-package flycheck-color-mode-line
+    :delight ""
     :after flycheck
     :hook
     (flycheck-mode . flycheck-color-mode-line-mode))
 
   (use-package flycheck-pos-tip
+    :delight ""
     :after flycheck)
 #+end_src
 
 *** Programming language
 **** protocol =protobuf=
-
 #+begin_src emacs-lisp :tangle yes
-  (use-package protobuf-mode)
+    (use-package protobuf-mode
+      :delight ""
+      )
 #+end_src
 
 **** Shell script =shfmt=
@@ -994,7 +965,7 @@ Colorize colors as text with their value.
 #+begin_src emacs-lisp :tangle yes
   (use-package shfmt
     :ensure-system-package shfmt
-    ;; :hook (sh-mode . sh-electric-here-document-mode)
+    :delight ""
     )
 #+end_src
 
@@ -1068,7 +1039,9 @@ https://gitlab.com/gopiandcode/gopcaml-mode
 
 ****** builder =dune=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dune :after tuareg)
+  (use-package dune
+    :delight ""
+    :after tuareg)
 #+END_SRC
 
 ****** completion, type, doc,... =merlin=
@@ -1114,8 +1087,6 @@ https://gitlab.com/gopiandcode/gopcaml-mode
 ****** format =ocp-indent,ocamlformat=
 it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package ocp-indent :after tuareg)
-
   (use-package ocamlformat
     :ensure nil
     :ensure-system-package (ocamlformat . "opam install ocamlformat")
@@ -1141,54 +1112,22 @@ it format also dune file, which is annoying
     :after tuareg)
 #+END_SRC
 
-#+RESULTS:
-: ocamlformat
-
 **** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package elpy
+    :delight " "
     :ensure-system-package (markdown . "yay -S python")
     :defer t
+    :mode "\\.py$"
     :init
     (advice-add 'python-mode :before 'elpy-enable))
 #+END_SRC
-**** nix
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package nix-mode
-    :mode ("\\.nix\\'" "\\.nix.in\\'"))
-  (use-package nix-drv-mode
-    :ensure nix-mode
-    :mode "\\.drv\\'")
-  (use-package nix-shell
-    :ensure nix-mode
-    :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
-  (use-package nix-repl
-    :ensure nix-mode
-    :commands (nix-repl))
-#+END_SRC
 *** Pdf =pdf-tools=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package pdf-tools
-  ;;        :mode "\\.pdf\\"
-  ;;        :init (pdf-tools-install :no-query))
-
-  ;;        (use-package pdf-view
-  ;;        :ensure nil
-  ;;        :after pdf-tools
-  ;;        :bind (:map pdf-view-mode-map
-  ;;        ("C-s" . isearch-forward)
-  ;;        ("d" . pdf-annot-delete)
-  ;;        ("h" . pdf-annot-add-highlight-markup-annotation)
-  ;;        ("t" . pdf-annot-add-text-annotation))
-  ;;                    :custom
-  ;;                    (pdf-view-display-size 'fit-page)
-  ;;                    (pdf-view-resize-factor 1.1)
-  ;;                    (pdf-view-use-unicode-ligther nil))
-#+End_SRC
 *** Description language
 **** csv =csv-mode=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package csv-mode
+      :delight ""
     :mode "\\.[Cc][Ss][Vv]\\'"
     :custom
     (csv-separators '(";" ",")
@@ -1199,6 +1138,7 @@ it format also dune file, which is annoying
 #+begin_src emacs-lisp :tangle yes
   (use-package css-mode
     :ensure nil
+      :delight " "
     :mode ("\\.css$" "\\.rasi$")
     )
 #+end_src
@@ -1206,6 +1146,7 @@ it format also dune file, which is annoying
 **** =Json=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package json-mode
+    :delight " "
     :mode ("\\.json$" . json-mode))
 #+END_SRC
 **** =Markdown=
@@ -1246,15 +1187,15 @@ it format also dune file, which is annoying
     )
 #+END_SRC
 #+begin_src emacs-lisp :tangle yes
-  (use-package org-projectile
-    :after projectile org
-    :bind
-    (:map projectile-command-map ("n" . org-projectile-capture-for-current-project))
-    :config
-    (push (org-projectile-project-todo-entry) org-capture-templates)
-    :custom
-    (org-projectile-capture-template (format "%s" "* TODO %?"))
-    (org-projectile-projects-file "~/org/projects.org"))
+  ;; (use-package org-projectile
+  ;;   :after projectile org
+  ;;   :bind
+  ;;   (:map projectile-command-map ("n" . org-projectile-capture-for-current-project))
+  ;;   :config
+  ;;   (push (org-projectile-project-todo-entry) org-capture-templates)
+  ;;   :custom
+  ;;   (org-projectile-capture-template (format "%s" "* TODO %?"))
+  ;;   (org-projectile-projects-file "~/org/projects.org"))
 #+end_src
 
 ** Git
@@ -1273,16 +1214,10 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit
+    :delight " "
     :bind ("C-c g" . magit-status)
     :hook
-    (after-save . magit-after-save-refresh-buffers)
-    :delight " ")
-
-  ;; (use-package magit-delta
-  ;;   :after magit
-  ;;   :hook (magit-mode . magit-delta-mode))
-
-
+    (after-save . magit-after-save-refresh-buffers))
 #+END_SRC
 
 *** add git message =git-commit=
@@ -1296,17 +1231,8 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
       "Ensures that the commit body does not exceed 72 characters."
       (setq fill-column 72)
       (setq-local comment-auto-fill-only-comments nil)))
-
-  ;; (use-package magit-org-todos
-  ;;   :after magit
-  ;;   :config
-  ;;   (magit-org-todos-autoinsert))
 #+END_SRC
 
-*** Forge =forge=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package forge :after magit :delight)
-#+END_SRC
 *** current modification =git-gutter=
 In addition to that, I like to see the lines that are being modified in the file
 while it is being edited.
@@ -1334,7 +1260,7 @@ dired-x is a minor that brings a lot to dired like hidding
 
   #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package dired
-      :delight ""
+      :delight " "
       :ensure nil
       :bind (:map dired-mode-map
                   ("RET" . dired-find-alternate-file)
@@ -1352,26 +1278,21 @@ dired-x is a minor that brings a lot to dired like hidding
       (dired-recursive-copies 'always))
 
     (use-package dired-du
+      :delight ""
       :after dired) ; recursive size of files
 
     (use-package all-the-icons-dired ; icons
       :after dired
-      :delight
+      :delight ""
       :config
       (all-the-icons-dired-mode))
 
     (use-package dired-x
+      :delight ""
       :ensure nil
       :after dired)
   #+END_SRC
 
-  #+RESULTS:
-
-** shell command =exec-path-from-shell=
-update path of emacs to user path
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package exec-path-from-shell
-    :config (exec-path-from-shell-initialize))
 #+END_SRC
 ** TODO Environment variable
 One of the next two is useless, need to determine wich one
@@ -1388,25 +1309,6 @@ One of the next two is useless, need to determine wich one
   (use-package alert
     :custom
     (alert-default-style 'libnotify))
-#+END_SRC
-* software interface
-** TODO Password manager =pass=
-#+begin_src emacs-lisp :tangle yes
-  ;; (use-package auth-source-pass
-  ;;   :ensure nil
-  ;;   :config (auth-source-pass-enable))
-  (use-package pass)
-#+end_src
-
-** TODO mpd interface =mpdel=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package mpdel
-    :delight " "
-    ;; :bind-keymap
-    ;; ("C-c m" . mpdel-prefix-key)
-    :ensure-system-package (mpd . "yay -S mpd"))
-  (use-package ivy-mpdel
-    :after mpdel)
 #+END_SRC
 
 * Organiser/calendar/linker/etc =org-mode=
@@ -1438,9 +1340,6 @@ Amazing mode of GNU Emacs.
      (org-edit-src-save  . delete-trailing-whitespace)
      (auto-save . org-save-all-org-buffers)))
 #+END_SRC
-
-#+RESULTS:
-: counsel-outline
 
 ** Table of content =toc-org=
 Create and update automaticaly a table of contents.  =toc-org= will maintain a
@@ -1490,7 +1389,6 @@ Foreground and the weight (bold) of each keywords.
 
        ("DONE"       . (:foreground "green"))
        ("ABORDED"    . (:foreground "grey" ))
-
 
        ("IDEA"       . (:foreground "cyan"))
        ("FETCH"      . (:foreground "red" ))
@@ -1560,24 +1458,35 @@ Org super agenda allows a more readible agenda by grouping the todo item
                       (:name "Book"          :todo "BOOK")
                       (:name "Tasks"
                              :and
-                             (:category "agenda"
+                             (
+                              :category "agenda"
                               :todo ("TODO" "INPROGRESS" "WAITING")
-                              :not (:tag "config")
+                              :not (:tag ("config" "DIY"))
                               ))
-                      (:name "Tezos"         :and (:category "project" :todo t))
-                      (:name "Config"        :and (:tag "config"  :todo ("TODO" "INPROGRESS" "WAITING")))
-                      (:name "Daily"         :and (:todo "FETCH" :tag "daily"))
-                      (:name "Fetch"         :and (:todo "FETCH" :not (:tag "movie")))
-                      (:name "Download"      :and (:todo "FETCH" :tag "movie"))
-                      (:discard (:todo "IDEA"))
+                      (:name "Personnal Project"
+                             :and
+                             (
+                              :category "agenda"
+                              :tag "DIY"
+                              ))
+                      (:name "Personnal Config"
+                             :and
+                             (
+                              :tag "config"
+                              :todo ("TODO" "INPROGRESS" "WAITING")
+                              )
+                             )
+                      (:name "Daily" :and (:todo "FETCH" :tag "daily"))
+                      (:name "Fetch" :and (:todo "FETCH" :not (:tag "movie")))
+                      (:name "Download" :and (:todo "FETCH" :tag "movie"))
                       ))))
          )))))
 #+END_SRC
 
 #+RESULTS:
 
-*** calendar view =calfw=
-
+*** TODO calendar view =calfw=
+It's buggy, the view show an event starting on each day it set
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package calfw :after org-agenda)
 
@@ -1648,8 +1557,7 @@ Org super agenda allows a more readible agenda by grouping the todo item
               (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
 #+END_SRC
 
-*** TODO notification =org-wild-notifier=
-bug dans le code, ilfaut pas ce qu'il faut
+*** notification =org-wild-notifier=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-wild-notifier
     :after org-agenda alert
@@ -1661,24 +1569,7 @@ bug dans le code, ilfaut pas ce qu'il faut
     :init (org-wild-notifier-mode t))
 #+END_SRC
 
-#+RESULTS:
-
 ** Org search =ivy-omni-org=
-
-#+begin_src emacs-lisp :tangle yes
-  ;; (use-package org-ql)
-
-  ;; (use-package ivy-omni-org
-  ;;   :after org ivy org-ql
-  ;;   :custom
-  ;;   (ivy-omni-org-content-types
-  ;;    '(agenda-commands
-  ;;      org-ql-views
-  ;;      buffers
-  ;;      files
-  ;;      bookmarks))
-  ;;   (ivy-omni-org-file-sources '(org-agenda-files)))
-#+end_src
 
 ** Org link
 [[gmap:test test][test test]]
@@ -1692,7 +1583,7 @@ bug dans le code, ilfaut pas ce qu'il faut
 
 #+end_src
 
-** TODO Capture =org-capture=
+** Capture =org-capture=
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
 information.
@@ -1939,35 +1830,6 @@ information.
         my/org-bd-template)
        )))
 #+END_SRC
-
-#+RESULTS:
-
-** org export
-
-*** use pandoc to export =ox-pandoc=
-#+begin_src emacs-lisp :tangle yes
-  (use-package ox-pandoc
-    :after org
-    ;; :hook
-    ;; (after-save
-    ;;  .
-    ;;  (lambda ()
-    ;;    (when
-    ;;        (and
-    ;;         (string-equal (file-name-extension buffer-file-name) "org")
-    ;;         (eq major-mode 'org-mode)
-    ;;         (string-equal (file-name-directory (directory-file-name (expand-file-name buffer-file-name)))
-    ;;                       (expand-file-name "~/notes/")))
-    ;;      (org-pandoc-export-to-markdown_mmd))
-       )
-#+end_src
-** protocol =org-protocol=
-#+begin_src emacs-lisp :tangle yes
-    (use-package org-protocol
-    :ensure nil
-    :after org)
-#+end_src
-
 * read-only major-mode
 ** Mail
 *** mu =mu4e=
@@ -2127,79 +1989,7 @@ Always good to have a dashboard.
 #+END_SRC
 
 * Tasks
-** TODO contact
-*** dav directory =vdirel=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package vdirel
-  ;;   :custom
-  ;;   (vdirel-repositories
-  ;;    '("~/.contacts/contacts" "~/calendar/master" "~/calendar/claire")))
 #+END_SRC
-*** emacs format =bbdb=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package bbdb
-  ;; :hook gnus-startup
-  ;; :custom
-  ;; (bbdb-file "~/.contacts/bbdb")
-  ;; (bbdb-no-duplicate t)
-  ;; :init
-  ;; (bbdb-initialize 'gnus 'message))
-  ;; (use-package bbdb-vcard
-  ;; )
-#+END_SRC
-*** new bbdb =ebdb=
+*** TODO contact database =ebdb=
 This one will at some point incorporate a carddav sync
 * not used anymore
-** DONE file explorer =ranger=
-Miller column within dired-mode
-
-I'm a bit bother by that package because it use the vi keybinding not default
-emacs one... I could rewrite all keybinding. Also it does not seems to work well
-with directory filed with large file.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package ranger
-  ;;   :config
-  ;;   (ranger-override-dired-mode t)
-  ;;   :custom
-  ;;   (ranger-cleanup-eagerly t)
-  ;;   (ranger-dont-show-binary t)
-  ;;   (ranger-max-preview-size 10))
-#+END_SRC
-** DONE Gnus =gnus=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package gnus
-  ;; :bind (("C-c m" . gnus)
-  ;; :map gnus-group-mode-map
-  ;;    ("C-c C-f" . gnus-summary-mail-forward))
-  ;; :delight "")
-
-  ;; (use-package w3m
-  ;;  :delight ""
-  ;;  :after gnus)
-
-  ;;  (use-package all-the-icons-gnus
-  ;;  :after gnus all-the-icons
-  ;;  :config
-  ;;  (all-the-icons-gnus-setup))
-#+END_SRC
-** DONE Journal =org-journal=
-replaced by my own org-capture
-I can delete this setting
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package org-journal
-  ;; :after org
-  ;; :delight ""
-  ;; :custom
-  ;; (org-journal-dir "~/org/journal")
-  ;; :bind
-  ;; ("C-c n j" . org-journal-new-entry)
-  ;; )
-#+END_SRC
-
-#+RESULTS:
-** DONE opam =opam-update-env=
-not work as intended, but not needed anymore as I've pute opam (update... into my .profile
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package opam-update-env
-  ;; :after tuareg)
-#+END_SRC

@@ -32,7 +32,7 @@ QMICLI=/usr/bin/qmicli
 QMI_NETWORK=/usr/bin/qmi-network
 # the places of following commands vary depending on your distribution
 IFCONFIG=/bin/ifconfig
-DHCPCD=/sbin/dhcpcd
+DHCPCD=/bin/dhcpcd
 SUDO=/usr/bin/sudo
 
 function helpmsg {
