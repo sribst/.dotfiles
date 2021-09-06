@@ -1018,7 +1018,7 @@ rustic takes care of starting
      `(rustic-compilation-info ((t (:foreground ,(x-get-resource "color11" "" )))))
      `(rustic-compilation-warning ((t (:foreground ,(x-get-resource "color9)" "" ))))))
   )
-#+END_SRC
+#+END_SEC
 
 **** OCaml
 ***** major mode =tuareg=

@@ -380,10 +380,6 @@ function _pip_completion {
                          PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null ))
 }
 compctl -K _pip_completion pip3
-# pip zsh completion end
-
-
-eval "$(pyenv virtualenv-init -)"
 
 source /usr/share/undistract-me/long-running.bash
 notify_when_long_running_commands_finish_install
@@ -392,3 +388,13 @@ notify_when_long_running_commands_finish_install
 # export GPG_TTY="$(tty)"
 # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 # gpgconf --launch gpg-agent
+
+# Load pyenv into the shell by adding
+# the following to ~/.zshrc:
+
+eval "$(pyenv init -)"
+
+# Make sure to restart your entire logon session
+# for changes to profile files to take effect.
+
+eval "$(pyenv virtualenv-init -)"

@@ -19,7 +19,7 @@ eval `opam config env`
 
 # pyenv config
 path+=$HOME/.pyenv/bin
-eval "$(pyenv init -)"
+# eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 # disable warning message of opencv
