@@ -1021,58 +1021,105 @@ rustic takes care of starting
 #+END_SEC
 
 **** OCaml
-***** major mode =tuareg=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package tuareg
-    :mode ("\\.ml[ily]?$" . tuareg-mode)
-    :delight " "
-    :init
-    (dolist
-        (var (car (read-from-string
-                   (shell-command-to-string "opam config env --sexp"))))
-      (setenv (car var) (cadr var))))
+  (defun shell-cmd (cmd)
+    "Returns the stdout output of a shell command or nil if the command returned
+       an error"
+    (car (ignore-errors (apply 'process-lines (split-string cmd)))))
+
+  (setq opam-p (shell-cmd "which opam"))
 #+END_SRC
 
-soon gopcaml will have a emacs package to install I guess. keep an eye on
-https://gitlab.com/gopiandcode/gopcaml-mode
+***** load opam
+Setup environment variables and opam-lib using opam
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (if opam-p
+      (dolist (var (car (read-from-string (shell-command-to-string "opam config env --sexp"))))
+        (setenv (car var) (cadr var))))
+
+  (if opam-p
+      (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
+        (when (and opam-share (file-directory-p opam-share))
+          (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share)))))
+#+END_SRC
+
+***** load major mode =caml= =tuareg=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package caml) ; needed for merlin
+  (use-package tuareg
+    :ensure nil ; comes from opam
+    :if opam-p
+  :mode ("\\.ml[ily]?$" . tuareg-mode))
+#+END_SRC
+
 ***** helpers
+
+****** Ocp tools
+comes with opam
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ocp-indent
+    :ensure nil
+    :if opam-p)
+  (use-package ocp-index
+    :ensure nil
+    :if opam-p)
+#+END_SRC
 
 ****** builder =dune=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dune
-    :delight ""
-    :after tuareg)
+    :delight " "
+    :if opam-p)
 #+END_SRC
 
 ****** completion, type, doc,... =merlin=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package merlin
-    :hook ((tuareg-mode caml-mode) . merlin-mode)
+    :custom
+    (merlin-completion-with-doc t)
     :bind (:map merlin-mode-map
                 ("M-." . merlin-locate)
-                ("M-," . merlin-pop-stack))
-    :delight ""
-    :custom
-    (merlin-locate-preference 'ml)
-    (merlin-command 'opam)
-    :config
-    (with-eval-after-load 'company
-      (add-hook 'merlin-mode-hook 'company-mode)
-      (add-to-list 'company-backends 'merlin-company-backend)))
+                ("M-," . merlin-pop-stack)
+                ("M-?" . merlin-occurrences)
+                ("C-c C-j" . merlin-jump)
+                ("C-c i" . merlin-locate-ident)
+                ("C-c C-e" . merlin-iedit-occurrences)
+                )
+    :hook
+    ;; Start merlin on ml files
+    ((tuareg-mode caml-mode) . merlin-mode)
+    ;; (use-package merlin
+    ;;     :hook ((tuareg-mode caml-mode) . merlin-mode)
+    ;;     :bind (:map merlin-mode-map
+    ;;                 ("M-." . merlin-locate)
+    ;;                 ("M-," . merlin-pop-stack))
+    ;;     :delight ""
+    ;;     :custom
+    ;;     (merlin-locate-preference 'ml)
+    ;;     (merlin-command 'opam)
+    ;;     :config
+    ;;     (with-eval-after-load 'company
+    ;;       (add-hook 'merlin-mode-hook 'company-mode)
+    ;;       ;; (add-to-list 'company-backends 'merlin-company-backend)
+    ;;       ))
 
-  (use-package merlin-eldoc
-    :after merlin
-    :custom
-    (eldoc-echo-area-use-multiline-p t) ; use multiple lines when necessary
-    (merlin-eldoc-max-lines 8)          ; but not more than 8
-    (merlin-eldoc-type-verbosity 'min)  ; don't display verbose types
-    (merlin-eldoc-function-arguments nil) ; don't show function arguments
-    (merlin-eldoc-doc t)                ; don't show the documentation
-    :bind (:map merlin-mode-map
-                ("C-c o p" . merlin-eldoc-jump-to-prev-occurrence)
-                ("C-c o n" . merlin-eldoc-jump-to-next-occurrence))
-    :hook (tuareg-mode . merlin-eldoc-setup))
+    (use-package merlin-eldoc
+      :after merlin
+      :custom
+      (eldoc-echo-area-use-multiline-p t) ; use multiple lines when necessary
+      (merlin-eldoc-max-lines 8)          ; but not more than 8
+      (merlin-eldoc-type-verbosity 'min)  ; don't display verbose types
+      (merlin-eldoc-function-arguments nil) ; don't show function arguments
+      (merlin-eldoc-doc t)                ; don't show the documentation
+      :bind (:map merlin-mode-map
+                  ("C-c o p" . merlin-eldoc-jump-to-prev-occurrence)
+                  ("C-c o n" . merlin-eldoc-jump-to-next-occurrence))
+      :hook (tuareg-mode . merlin-eldoc-setup))
 #+END_SRC
+
+#+RESULTS:
+: merlin-eldoc-jump-to-next-occurrence
 
 ****** repl =utop=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1087,30 +1134,32 @@ https://gitlab.com/gopiandcode/gopcaml-mode
 ****** format =ocp-indent,ocamlformat=
 it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package ocamlformat
+  ;;   :config
+  ;;   (defun my/deactivate-ocamlformat ()
+  ;;     (interactive)
+  ;;     (setq ocamlformat-enable 'disable))
+  ;;   (defun my/activate-ocamlformat ()
+  ;;     (interactive)
+  ;;     (setq ocamlformat-enable 'enable))
+  ;;   :custom
+  ;;   (ocamlformat-enable 'enable-outside-detected-project)
+  ;;   (ocamlformat-show-errors 'echo)
+  ;;   (ocamlformat-enable 'enable)
+  ;;   :bind
+  ;;   (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
+  ;;   :hook
+  ;;   (before-save . ocamlformat-before-save))
   (use-package ocamlformat
     :ensure nil
-    :ensure-system-package (ocamlformat . "opam install ocamlformat")
-    :config
-    (defun my/deactivate-ocamlformat ()
-      (interactive)
-      (setq ocamlformat-enable 'disable))
-    (defun my/activate-ocamlformat ()
-      (interactive)
-      (setq ocamlformat-enable 'enable))
-    :custom
-    (ocamlformat-show-errors 'echo)
-    (ocamlformat-enable 'enable)
-    :bind (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
-    :hook
-
-    (before-save
-     .
-     (lambda ()
-       (when
-           (eq major-mode 'tuareg-mode)
-         (ocamlformat-before-save))))
-    :after tuareg)
+    :if opam-p
+    ;; :ensure-system-package (ocamlformat . "opam install ocamlformat")
+    :custom (ocamlformat-enable 'enable-outside-detected-project)
+    :hook (before-save . ocamlformat-before-save) )
 #+END_SRC
+
+#+RESULTS:
+: ocamlformat
 
 **** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
