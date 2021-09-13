@@ -128,6 +128,7 @@ The sources of package. So
           ("org" . "http://orgmode.org/elpa/")      ;; Org-mode package source
           ))
 #+END_SRC
+
 *** Configuration =use-package=
 Use package allow to install and configure package in a fancy way.
 It permit also to defer loading of package.
@@ -346,9 +347,13 @@ xresources-theme qui respect les couleurs de Xressources
 *** font
 **** icons =all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (set-frame-font "ProggyClean-14")
+    ;; (set-frame-font "ProggyClean-14")
+  (setq default-frame-alist '((font . "Fantasque Sans Mono-11")))
   (use-package all-the-icons)
 #+END_SRC
+
+#+RESULTS:
+
 * Mini-buffer
 ** parameter
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1018,7 +1023,7 @@ rustic takes care of starting
      `(rustic-compilation-info ((t (:foreground ,(x-get-resource "color11" "" )))))
      `(rustic-compilation-warning ((t (:foreground ,(x-get-resource "color9)" "" ))))))
   )
-#+END_SEC
+#+END_SRC
 
 **** OCaml
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1089,6 +1094,7 @@ comes with opam
     :hook
     ;; Start merlin on ml files
     ((tuareg-mode caml-mode) . merlin-mode)
+  )
     ;; (use-package merlin
     ;;     :hook ((tuareg-mode caml-mode) . merlin-mode)
     ;;     :bind (:map merlin-mode-map
