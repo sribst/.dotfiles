@@ -1639,6 +1639,9 @@ It's buggy, the view show an event starting on each day it set
 #+end_src
 
 ** Capture =org-capture=
+:LOGBOOK:
+CLOCK: [2021-09-22 Wed 10:47]--[2021-09-22 Wed 10:47] =>  0:00
+:END:
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
 information.
@@ -1647,6 +1650,9 @@ information.
   (use-package org-capture
     :ensure nil
     :after org
+    :bind
+    ("C-c s" . org-clock-in)
+    ("C-c f" . org-clock-out)
     :preface
 
     (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Heliax}")
@@ -1867,9 +1873,13 @@ information.
        ("v" "voucher"
         entry (file+headline "~/org/master.org" "Voucher"),
         my/org-voucher-template)
-       ("j" "Journal"
+       ("j" "Journal")
+       ("je" "Entry"
         entry (file+olp+datetree "~/org/master.org" "Journal"),
         my/org-journal-template)
+       ("ji" "Tasks Interruption"
+        entry (file+olp+datetree "~/org/master.org" "Journal"),
+        my/org-journal-template :clock-in t :clock-resume t)
        ("p" "Bookmark-description"
         entry (file+headline ,"~/org/master.org" "Bookmarks"),
         my/org-bookmark-desc-template)
@@ -1883,6 +1893,7 @@ information.
        ("mb" "BD"
         entry (file+headline ,"~/org/master.org" "BD"),
         my/org-bd-template)
+
        )))
 #+END_SRC
 * read-only major-mode
