@@ -105,6 +105,7 @@
     - [[#notification-org-wild-notifier][notification =org-wild-notifier=]]
   - [[#org-search-ivy-omni-org][Org search =ivy-omni-org=]]
   - [[#org-link][Org link]]
+  - [[#clock-org-clock][clock =org-clock=]]
   - [[#capture-org-capture][Capture =org-capture=]]
 - [[#read-only-major-mode][read-only major-mode]]
   - [[#mail][Mail]]
@@ -1638,10 +1639,29 @@ It's buggy, the view show an event starting on each day it set
 
 #+end_src
 
+** clock =org-clock=
+#+begin_src emacs-lisp :tangle yes
+  (use-package org-clock
+    :ensure nil
+    :after org
+    :bind
+    ("C-c t s" . org-clock-in)
+    ("C-c t f" . org-clock-out)
+    ("C-c t c" . org-clock-cancel)
+    ("C-c t l" . org-clock-in-last)
+    )
+
+  (use-package counsel-org-clock
+    :after org
+    :bind
+    ("C-c t g" . counsel-org-clock-goto)
+    ("C-c t g" . counsel-org-clock-history)
+    )
+#+end_src
+
+#+RESULTS:
+
 ** Capture =org-capture=
-:LOGBOOK:
-CLOCK: [2021-09-22 Wed 10:47]--[2021-09-22 Wed 10:47] =>  0:00
-:END:
 =org-capture= templates saves you a lot of time when adding new entries. I use
 it to quickly record tasks, ledger entries, notes and other semi-structured
 information.
@@ -1650,12 +1670,8 @@ information.
   (use-package org-capture
     :ensure nil
     :after org
-    :bind
-    ("C-c s" . org-clock-in)
-    ("C-c f" . org-clock-out)
     :preface
-
-    (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J|Heliax}")
+    (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J}")
     (defvar my/place "%^{Place |78 rue Hippolyte Kahn, Villeurbanne |17 rue Crozatier, Paris |12 ter rue Etienne Cardaire, Montpellier |12 rue Jules Ferry, Ivry-sur-seine |18 rue du square Carpeaux, Paris}")
     (defvar my/gare "|Lyon Part-dieu | Lyon Perrache | Paris Gare de Lyon |Montpellier St-Roch")
     (defvar my/stop "|Lyon Brasserie Georges|Montpellier ")
