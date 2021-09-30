@@ -793,7 +793,7 @@ containing the candidates.
 #+END_SRC
 
 #+RESULTS:
-| company-box-mode | company-mode-set-explicitly |
+| company-mode-set-explicitly | company-box-mode |
 
 ** Edit all occurence =iedit=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1517,6 +1517,13 @@ Org super agenda allows a more readible agenda by grouping the todo item
                              (
                               :category "agenda"
                               :todo ("TODO" "INPROGRESS" "WAITING")
+                              :tag "tezos"
+                              ))
+                      (:name "Tasks"
+                             :and
+                             (
+                              :category "agenda"
+                              :todo ("TODO" "INPROGRESS" "WAITING")
                               :not (:tag ("config" "DIY"))
                               ))
                       (:name "Personnal Project"
@@ -1594,12 +1601,6 @@ It's buggy, the view show an event starting on each day it set
             (:calendar-id "contact_birthdays"
                           :sync-direction 'cal->org
                           :inbox (file+headline "~/org/master.org" "sync"))
-            (:calendar-id "calendargooglecom"
-                          :sync-direction 'cal->org
-                          :inbox  "~/org/professional.org")
-            (:calendar-id "wwwfacebookcom-1"
-                          :sync-direction 'cal->org
-                          :inbox  "~/org/facebook.org")
             ))
     (setq org-icalendar-use-deadline
           '(event-if-todo event-if-not-todo todo-due))
