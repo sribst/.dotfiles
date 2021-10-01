@@ -21,7 +21,6 @@ eval `opam config env`
 path+=$HOME/.pyenv/bin
 # eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
-
 # disable warning message of opencv
 export OPENCV_LOG_LEVEL=ERROR
 
@@ -32,11 +31,11 @@ gpgconf --launch gpg-agent
 
 export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
 
-# golang 
+# golang
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
 
 
-# rust 
+# rust
 # source "$HOME/.cargo/env"
 # export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"

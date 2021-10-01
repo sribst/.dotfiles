@@ -302,7 +302,7 @@ exec --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 for_window [workspace=$ws5] layout tabbed
 
 # start all common social software
-bindsym $super+c exec telegram-desktop; exec slack; exec discord; exec signal-desktop
+bindsym $super+c exec telegram-desktop; exec slack; exec signal-desktop # ;exec discord
 
 bindsym $super+b exec firefox
 

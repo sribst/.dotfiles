@@ -1064,12 +1064,15 @@ Setup environment variables and opam-lib using opam
 ****** Ocp tools
 comes with opam
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ocp-indent
-    :ensure nil
-    :if opam-p)
-  (use-package ocp-index
-    :ensure nil
-    :if opam-p)
+    (use-package ocp-indent
+      :ensure nil
+      :if opam-p
+      :config
+      (load-file "/home/baroud/.opam/default/share/typerex/ocp-indent/ocp-indent.el")
+      )
+    (use-package ocp-index
+      :ensure nil
+      :if opam-p)
 #+END_SRC
 
 ****** builder =dune=
@@ -2076,3 +2079,4 @@ Always good to have a dashboard.
 *** TODO contact database =ebdb=
 This one will at some point incorporate a carddav sync
 * not used anymore
+

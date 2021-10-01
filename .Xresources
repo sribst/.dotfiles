@@ -12,7 +12,8 @@ Xft.lcdfilter: lcddefault
 ! Extensions
 URxvt*perl-ext-common:          default,matcher,vtwheel,clipboard
 ! Looks
-URxvt*font:                     xft:hack:size=10
+! URxvt*font:                     xft:hack:size=10
+URxvt*font:                     xft:meslo:size=9
 URxvt*scrollBar:                false
 URxvt.internalBorder:           10
 ! Clickable urls
@@ -32,7 +33,7 @@ URxvt.lineSpace: 2
 
 ! emacs font
 ! Emacs.font: DejaVuSansMono-10
-Emacs.font: Hack-12
+! Emacs.font: Hack-12
 ! Emacs.font: monaco-10
 
 ! *.FontBackend: xft,x
