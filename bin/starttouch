@@ -1,0 +1,14 @@
+#!/bin/sh
+
+pkill polybar
+sleep 0.1
+
+if type "xrandr"; then
+    for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+	MONITOR=$m polybar infotop &
+	MONITOR=$m polybar touch &
+    done
+else
+    polybar infotop
+    polybar touch
+fi

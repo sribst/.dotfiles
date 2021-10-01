@@ -1,0 +1,13 @@
+#!/bin/bash
+
+voters=("bootstrap1" "bootstrap2" "bootstrap3" "bootstrap4" "bootstrap5")
+
+x=5
+n=0
+while (( $n < $x ))
+do
+
+    echo "tezos-client submit ballot for ${voters[$n]} $1 $2"
+    tezos-client submit ballot for ${voters[$n]} "$1" "$2"
+    n=$(( n + 1 ))
+done

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+make
+
+make build-sandbox
+
+./tezos-sandbox voting\
+		src/proto_demo_noops/lib_protocol/TEZOS_PROTOCOL\
+		src/proto_demo_noops/lib_protocol/TEZOS_PROTOCOL\
+		--root-path /tmp/flextesa-voting-demo-noops/\
+		--base-port 30_000\
+		--size 3\
+		--with-timestamp\
+		--winning-client-is-clueless\
+		--winner-client-binary tezos-client\
+		--current-client-binary tezos-client\
+		--current-admin-client-binary tezos-admin-client\
+		--current-node-binary tezos-node
