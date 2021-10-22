@@ -1,8 +1,6 @@
 path+=~/bin
 path+=~/bin/tezos
-path+=.
 
-export GPG_TTY=$(tty)
 export EDITOR="/usr/bin/emacsclient -nw"
 export ALTERNATE_EDITOR="/usr/bin/nano"
 

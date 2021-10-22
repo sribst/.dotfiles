@@ -267,7 +267,8 @@ exec_always --no-startup-id autorandr --change &
 exec --no-startup-id systemctl --user start 2in1screen.service &
 
 # start a terminal
-bindsym $super+Return exec urxvt
+# bindsym $super+Return exec urxvt
+bindsym $super+Return exec alacritty
 
 # start an emacs client
 bindsym $super+e exec emacsclient -c

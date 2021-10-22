@@ -13,9 +13,11 @@ Xft.lcdfilter: lcddefault
 URxvt*perl-ext-common:          default,matcher,vtwheel,clipboard
 ! Looks
 ! URxvt*font:                     xft:hack:size=10
-URxvt*font:                     xft:meslo:size=9
+! URxvt*font:                     xft:meslo:size=9
+URxvt*font:                 xft:Fira Code Retina:pixelsize=12:minspace=True, xft:DejaVu Sans:pixelsize=8, xft:Symbola
+URxvt*boldFont:             xft:Fira Code Retina:pixelsize=12:minspace=True, xft:DejaVu Sans:pixelsize=8, xft:Symbola
 URxvt*scrollBar:                false
-URxvt.internalBorder:           10
+! URxvt.internalBorder:           10
 ! Clickable urls
 URxvt.url-select.underline:     true
 URxvt.url-launcher:             /usr/bin/firefox
@@ -84,3 +86,9 @@ rofi.color-normal: #263238, #eceff1, #263238, #0c86bd, #cfd8dc
 
 ! 'background', 'border'
 rofi.color-window: #263238, #263238
+
+
+! color into terminal
+URxvt.colorIT:      #87af5f
+URxvt.colorBD:      #d7d7d7
+URxvt.colorUL:      #87afd7
