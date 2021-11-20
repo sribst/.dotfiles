@@ -1163,13 +1163,11 @@ it format also dune file, which is annoying
   (use-package ocamlformat
     :ensure nil
     :if opam-p
-    ;; :ensure-system-package (ocamlformat . "opam install ocamlformat")
-    :custom (ocamlformat-enable 'enable-outside-detected-project)
+    :custom
+    (ocamlformat-enable 'enable-outside-detected-project)
+    (ocamlformat-show-errors 'echo)
     :hook (before-save . ocamlformat-before-save) )
 #+END_SRC
-
-#+RESULTS:
-: ocamlformat
 
 **** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1595,20 +1593,23 @@ It's buggy, the view show an event starting on each day it set
           '((:calendar-id "master"
                           :files ("~/org/master.org")
                           :inbox (file+headline "~/org/master.org" "sync"))
-            (:calendar-id "projects"
-                          :sync-direction 'org->cal
-                          :files ("~/org/projects.org"))
             (:calendar-id "claire"
                           :files ("~/org/claire.org")
                           :inbox (file+headline "~/org/claire.org" "sync"))
-            (:calendar-id "contact_birthdays"
-                          :sync-direction 'cal->org
-                          :inbox (file+headline "~/org/master.org" "sync"))
+            ;; (:calendar-id "calendargooglecom-1"
+            ;;               :sync-direction 'cal->org
+            ;;               :inbox ("~/org/nomadic labs.org"))
+            ;; (:url "https://www.facebook.com/events/ical/upcoming/?uid=525297993&key=ShuJLNbIhhWI0VBp"
+            ;;       :sync-direction 'cal->org
+            ;;       :inbox ("~/org/facebook.org"))
+            ;; (:calendar-id "contact_birthdays"
+            ;;               :sync-direction 'cal->org
+            ;;               :inbox (file+headline "~/org/master.org" "Contact birthdays"))
             ))
     (setq org-icalendar-use-deadline
-          '(event-if-todo event-if-not-todo todo-due))
+          '(event-if-todo-not-done todo-due))
     (setq org-icalendar-use-scheduled
-          '(todo-start event-if-todo event-if-not-todo))
+          '(todo-start event-if-todo-not-done))
     :hook (
            (kill-emacs . org-caldav-sync)
            (after-save
@@ -1616,6 +1617,9 @@ It's buggy, the view show an event starting on each day it set
             (lambda ()
               (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))) | rmail-after-save-hook | (lambda nil (if (eq major-mode 'org-mode) (progn (my/org-caldav-sync-with-delay 30)))) | my/config-tangle | magit-after-save-refresh-buffers |
 
 *** notification =org-wild-notifier=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1976,51 +1980,8 @@ information.
               . (concat
                  "Sylvain Ribstein\n"
                  "sylvain.ribstein@gmail.com\n"
-                 "00336 66 26 05 28\n"))))
-       ,(make-mu4e-context
-         :name "Heliax"
-         :enter-func (lambda () (mu4e-message "Entering Heliax context"))
-         :leave-func (lambda () (mu4e-message "Leaving Heliax context"))
-         :match-func
-         (lambda (msg)
-           (when msg
-             (string-match-p "^/Heliax" (mu4e-message-field msg :maildir))))
-         :vars
-         '( ( user-mail-address . "sylvain@heliax.dev"  )
-            (smtpmail-smtp-user . "sylvain@heliax.dev")
-            ( smtpmail-smtp-server . "smtp.gmail.com" )
-            ( user-full-name . "Sylvain Ribstein" )
-            ( mu4e-trash-folder . "/Heliax/[Gmail]/Trash" )
-            ( mu4e-refile-folder . "/Heliax/[Gmail]/Archive" )
-            ( mu4e-drafts-folder . "/Heliax/[Gmail]/Drafts" )
-            (mu4e-sent-folder . "/Heliax/[Gmail]/Sent Mail" )
-            ( mu4e-compose-signature
-              . (concat
-                 "Sylvain Ribstein\n"
-                 "sylvain@heliax.dev\n"))))
-       ,(make-mu4e-context
-         :name "Cowfa"
-         :enter-func (lambda () (mu4e-message "Entering the Cowfa context"))
-         :leave-func (lambda () (mu4e-message "Leaving Cowfa context"))
-         ;; we match based on the maildir of the message
-         :match-func
-         (lambda (msg)
-           (when msg
-             (string-match-p "^/Cowfa" (mu4e-message-field msg :maildir))))
-         :vars
-         '( ( user-mail-address . "baroud@cowfa.xyz" )
-            ( smtpmail-smtp-user . "baroud@cowfa.xyz" )
-            ( smtpmail-smtp-server . "mail.cowfa.xyz" )
-            ( user-full-name . "Baroud" )
-            ( mu4e-trash-folder . "/Cowfa/Trash" )
-            ( mu4e-refile-folder . "/Cowfa/Archive" )
-            ( mu4e-drafts-folder . "/Cowfa/Drafts" )
-            (mu4e-sent-folder . "/Cowfa/Sent" )
-            ( mu4e-compose-signature
-              . (concat
-                 "Cowfa\n"
-                 "baroud@cowfa.xyz\n"
                  "00336 66 26 05 28\n")))))))
+
 
   (use-package mu4e-alert
     :hook
@@ -2079,4 +2040,3 @@ Always good to have a dashboard.
 *** TODO contact database =ebdb=
 This one will at some point incorporate a carddav sync
 * not used anymore
-

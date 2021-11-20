@@ -23,7 +23,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 # antigen bundle unixorn/fzf-zsh-plugin
 antigen bundle zsh-users/zsh-history-substring-search
 
-
 # Load the theme.
 antigen theme dogenpunk
 

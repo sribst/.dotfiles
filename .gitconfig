@@ -3,7 +3,7 @@
 	name = Sylvain Ribstein
 	signingkey = 0379A8A166E2CE77
 [commit]
-	gpgsign = true
+	gpgSign = true
 [core]
 	excludesfile = /home/baroud/.gitignore_global
 [pull]
