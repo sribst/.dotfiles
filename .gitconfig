@@ -3,7 +3,7 @@
 	name = Sylvain Ribstein
 	signingkey = 0379A8A166E2CE77
 [commit]
-	gpgSign = true
+	gpgsign = true
 [core]
 	excludesfile = /home/baroud/.gitignore_global
 [pull]
@@ -43,3 +43,5 @@
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+[gitlab]
+	user = sribar

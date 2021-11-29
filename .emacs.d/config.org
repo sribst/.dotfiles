@@ -85,7 +85,8 @@
 - [[#project][Project]]
   - [[#interaction-projectile][interaction =projectile=]]
   - [[#git][Git]]
-    - [[#interaction-magit][Interaction =magit=]]
+    - [[#git-interaction-magit][Git interaction =magit=]]
+    - [[#git-forge-integration-forge][Git forge integration =forge=]]
     - [[#add-git-message-git-commit][add git message =git-commit=]]
     - [[#current-modification-git-gutter][current modification =git-gutter=]]
     - [[#show-last-commit-modification-git-timemachine][show last commit modification =git-timemachine=]]
@@ -126,7 +127,7 @@ The sources of package. So
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/") ;; Official
           ("melpa" . "http://melpa.org/packages/")  ;; Unofficial but use everywhere
-          ("org" . "http://orgmode.org/elpa/")      ;; Org-mode package source
+          ;; ("org" . "http://orgmode.org/elpa/")      ;; Org-mode package source
           ))
 #+END_SRC
 
@@ -1027,6 +1028,7 @@ rustic takes care of starting
 #+END_SRC
 
 **** OCaml
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun shell-cmd (cmd)
     "Returns the stdout output of a shell command or nil if the command returned
@@ -1064,15 +1066,15 @@ Setup environment variables and opam-lib using opam
 ****** Ocp tools
 comes with opam
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package ocp-indent
-      :ensure nil
-      :if opam-p
-      :config
-      (load-file "/home/baroud/.opam/default/share/typerex/ocp-indent/ocp-indent.el")
-      )
-    (use-package ocp-index
-      :ensure nil
-      :if opam-p)
+  ;; (use-package ocp-indent
+  ;;   :ensure nil
+  ;;   :if opam-p
+  ;;   :config
+  ;;   (load-file "/home/baroud/.opam/default/share/typerex/ocp-indent/ocp-indent.el"))
+
+  ;; (use-package ocp-index
+  ;;   :ensure nil
+  ;;   :if opam-p)
 #+END_SRC
 
 ****** builder =dune=
@@ -1171,14 +1173,17 @@ it format also dune file, which is annoying
 
 **** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package python)
+
   (use-package elpy
     :delight " "
     :ensure-system-package (markdown . "yay -S python")
-    :defer t
-    :mode "\\.py$"
-    :init
-    (advice-add 'python-mode :before 'elpy-enable))
+    ;; :mode "\\.py$"
+    :config
+    (elpy-enable)
+    :hook python-mode)
 #+END_SRC
+
 *** Pdf =pdf-tools=
 *** Description language
 **** csv =csv-mode=
@@ -1256,7 +1261,7 @@ it format also dune file, which is annoying
 #+end_src
 
 ** Git
-*** Interaction =magit=
+*** Git interaction =magit=
 It is quite common to work on Git repositories, so it is important to have a
 configuration that we like.
 #+BEGIN_QUOTE
@@ -1271,10 +1276,15 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit
-    :delight " "
-    :bind ("C-c g" . magit-status)
+    :delight " "
     :hook
     (after-save . magit-after-save-refresh-buffers))
+#+END_SRC
+*** Git forge integration =forge=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package forge
+    :delight " "
+    :after magit)
 #+END_SRC
 
 *** add git message =git-commit=
