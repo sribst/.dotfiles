@@ -1522,28 +1522,37 @@ Org super agenda allows a more readible agenda by grouping the todo item
          (alltodo ""
                   ((org-super-agenda-groups
                     '(
-                      (:name "Book"          :todo "BOOK")
+                      (:name "Work tasks"   :tag "TEZOS")
+                      (:name "Book"         :todo "BOOK")
                       (:name "Tasks"
                              :and
                              (
                               :category "agenda"
                               :todo ("TODO" "INPROGRESS" "WAITING")
-                              :tag "tezos"
+                              :not (:tag ("config" "HOME" "GARDEN" "PROJECT" ))
                               ))
-                      (:name "Tasks"
+                      (:name "Home"
                              :and
                              (
                               :category "agenda"
+                              :tag "HOME"
                               :todo ("TODO" "INPROGRESS" "WAITING")
-                              :not (:tag ("config" "DIY"))
                               ))
-                      (:name "Personnal Project"
+                      (:name "Garden"
                              :and
                              (
                               :category "agenda"
-                              :tag "DIY"
+                              :tag "GARDEN"
+                              :todo ("TODO" "INPROGRESS" "WAITING")
                               ))
-                      (:name "Personnal Config"
+                      (:name "Project"
+                             :and
+                             (
+                              :category "agenda"
+                              :tag "PROJECT"
+                              :todo ("TODO" "INPROGRESS" "WAITING")
+                              ))
+                      (:name "Config"
                              :and
                              (
                               :tag "config"
@@ -1659,15 +1668,15 @@ It's buggy, the view show an event starting on each day it set
 
 ** clock =org-clock=
 #+begin_src emacs-lisp :tangle yes
-  (use-package org-clock
-    :ensure nil
-    :after org
-    :bind
-    ("C-c t s" . org-clock-in)
-    ("C-c t f" . org-clock-out)
-    ("C-c t c" . org-clock-cancel)
-    ("C-c t l" . org-clock-in-last)
-    )
+  ;; (use-package org-clock
+  ;;   :ensure nil
+  ;;   :after org
+  ;;   :bind
+  ;;   ("C-c t s" . org-clock-in)
+  ;;   ("C-c t f" . org-clock-out)
+  ;;   ("C-c t c" . org-clock-cancel)
+  ;;   ("C-c t l" . org-clock-in-last)
+  ;;   )
 
   (use-package counsel-org-clock
     :after org
