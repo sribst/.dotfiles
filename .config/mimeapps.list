@@ -21,6 +21,7 @@ image/gif=org.gnome.eog.desktop;
 image/png=feh.desktop;
 x-scheme-handler/tg=userapp-Telegram Desktop-YA8KW0.desktop;userapp-Telegram Desktop-W6OOA1.desktop;
 application/octet-stream=firefox.desktop;
+text/markdown=org.gnome.gedit.desktop;
 
 [Default Applications]
 x-scheme-handler/http=firefox.desktop

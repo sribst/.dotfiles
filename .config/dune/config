@@ -1,3 +1,0 @@
-(lang dune 2.6)
-(cache enabled)
-(cache-trim-size 50GB)
