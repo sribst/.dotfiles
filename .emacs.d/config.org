@@ -806,7 +806,7 @@ containing the candidates.
 : iedit-mode
 ** Auto-indentation =aggressive-indent=
 =aggressive-indent-mode= is a minor mode that keeps your code *always*
-indented.  It reindents after every change, making it more reliable than
+indented. It reindents after every change, making it more reliable than
 electric-indent-mode.
 
 Aggressive indent is too aggressive, I need to make it a bit less stronger
@@ -815,7 +815,8 @@ Aggressive indent is too aggressive, I need to make it a bit less stronger
     :delight ""
     :hook (tuareg-mode . aggressive-indent-mode)
     :custom
-    (aggressive-indent-comments-too t)
+    (aggressive-indent-protected-commands '(undo undo-tree-undo undo-tree-redo whitespace-cleanup))
+    (aggressive-indent-comments-too nil)
     (aggressive-indent-sit-for-time 0.5)  )
 #+END_SRC
 
@@ -1499,8 +1500,13 @@ Foreground and the weight (bold) of each keywords.
     (org-agenda-skip-deadline-if-done t)
     (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
-    (org-agenda-skip-timestamp-if-done t))
+    (org-agenda-skip-timestamp-if-done t)
+    (org-agenda-clockreport-mode t)
+    (org-agenda-clockreport-parameter-plist
+    '(:link t :maxlevel 4 :fileskip0 t :compact t :formula % :hidefiles t)))
 #+END_SRC
+
+#+RESULTS:
 
 *** improved agenda view =org-super-agenda=
 Org super agenda allows a more readible agenda by grouping the todo item
@@ -1700,63 +1706,19 @@ information.
     :preface
     (defvar my/with "%^{With |Sylvain|Claire|Adrien|Ada|Bernadat|P&C|A&D|B&J}")
     (defvar my/place "%^{Place |78 rue Hippolyte Kahn, Villeurbanne |17 rue Crozatier, Paris |12 ter rue Etienne Cardaire, Montpellier |12 rue Jules Ferry, Ivry-sur-seine |18 rue du square Carpeaux, Paris}")
-    (defvar my/gare "|Lyon Part-dieu | Lyon Perrache | Paris Gare de Lyon |Montpellier St-Roch")
-    (defvar my/stop "|Lyon Brasserie Georges|Montpellier ")
-    (defvar my/from  (concat "%^{From " my/gare my/stop "}"))
-    (defvar my/to    (concat "%^{To " my/gare my/stop "}"))
-    (defvar my/agenda-template
+
+    (defvar my/org-meeting-template
       (concat
-       "%^{Name}
+       "* %^{Name}
   :PROPERTIES:
   :CREATED: %U
   :LOCATION: " my/place "
-  :GMAPS: [[gmaps:%\\2][%\\2]]
   :WITH:    " my/with "
   :END:
   %^{When}T
   "))
 
-    (defvar my/org-tobook-template (concat "* BOOK " my/agenda-template))
 
-    (defvar my/org-meeting-template (concat "* " my/agenda-template))
-
-    (defvar my/org-trip-template
-      (concat
-       "* %\\1 -> %\\2
-    :PROPERTIES:
-    :CREATED: %U
-    :FROM:   " my/from "
-    :TO:     "  my/to "
-    :TYPE:    %^{Type}p
-    :WITH:   " my/with "
-    :END:
-    %^{When}T
-  "))
-
-    (defvar my/org-roundtrip-template
-      (concat
-       "* %\\1 -> %\\2
-    :PROPERTIES:
-    :CREATED: %U
-    :LOCATION:   " my/from "
-    :TO:     "  my/to "
-    :TYPE:    %^{Type}p
-    :WITH:   " my/with "
-    :END:
-    %^{When}T
-  ,* %\\2 -> %\\1
-    :PROPERTIES:
-    :CREATED: %U
-    :LOCATION: %\\2
-    :TO:       %\\1
-    :TYPE:    %^{Type}p
-    :WITH:   " my/with "
-    :END:
-    %^{When}T
-
-
-  %?
-  "))
 
     (defvar my/org-voucher-template
       "* USE %^{Value}
@@ -1862,43 +1824,11 @@ information.
   %?
   ")
 
-  ;; :init
-  ;;   (defun my/transform-square-brackets-to-round-ones(string-to-transform)
-  ;;     "Transforms [ into ( and ] into ), other chars left unchanged."
-  ;;     (concat
-  ;;      (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
-  ;;     )
-
-  ;;   (defvar my/delete-frame-after-capture 0 "Whether to delete the last frame after the current capture")
-
-  ;;   (defun my/delete-frame-if-neccessary (&rest r)
-  ;;     (cond
-  ;;      ((= my/delete-frame-after-capture 0) nil)
-  ;;      ((> my/delete-frame-after-capture 1)
-  ;;       (setq my/delete-frame-after-capture (- my/delete-frame-after-capture 1)))
-  ;;      (t
-  ;;       (setq my/delete-frame-after-capture 0)
-  ;;       (delete-frame))))
-
-  ;;   (advice-add 'org-capture-finalize :after 'my/delete-frame-if-neccessary)
-  ;;   (advice-add 'org-capture-kill :after 'my/delete-frame-if-neccessary)
-  ;;   (advice-add 'org-capture-refile :after 'my/delete-frame-if-neccessary)
-
-    :custom
+  :custom
     (org-capture-templates
-     `(("b" "Book" entry
-        (file+headline "~/org/master.org" "Agenda"),
-        my/org-tobook-template)
-       ("a" "Appointment"
+     `(("a" "Appointment"
         entry (file+headline "~/org/master.org" "Agenda"),
         my/org-meeting-template)
-       ("g" "Go")
-       ("go" "On way trip"
-        entry (file+headline "~/org/master.org" "Trip"),
-        my/org-trip-template)
-       ("gr" "Round trip"
-        entry (file+headline "~/org/master.org" "Trip"),
-        my/org-roundtrip-template)
        ("s" "stuff")
        ("sf" "fetch"
         entry (file+headline "~/org/master.org" "Stuff"),
@@ -1916,13 +1846,9 @@ information.
        ("v" "voucher"
         entry (file+headline "~/org/master.org" "Voucher"),
         my/org-voucher-template)
-       ("j" "Journal")
-       ("je" "Entry"
+       ("j" "Journal"
         entry (file+olp+datetree "~/org/master.org" "Journal"),
         my/org-journal-template)
-       ("ji" "Tasks Interruption"
-        entry (file+olp+datetree "~/org/master.org" "Journal"),
-        my/org-journal-template :clock-in t :clock-resume t)
        ("p" "Bookmark-description"
         entry (file+headline ,"~/org/master.org" "Bookmarks"),
         my/org-bookmark-desc-template)
