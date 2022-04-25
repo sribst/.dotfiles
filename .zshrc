@@ -40,3 +40,8 @@ test -r /home/baroud/.opam/opam-init/init.zsh && . /home/baroud/.opam/opam-init/
 
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias privateconf='/usr/bin/git --git-dir=$HOME/.private/ --work-tree=$HOME'
+
+alias tezt='dune exec tezt/tests/main.exe --' # tezos test framework
+
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

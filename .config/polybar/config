@@ -84,7 +84,7 @@ font-8 = Icons:style=Regular:pixelsize=12;1
 
 separator = ":|:"
 
-modules-left   = backlight alsa
+modules-left   = backlight alsa bluetooth
 modules-center = i3
 modules-right  =
 
@@ -133,12 +133,17 @@ ramp-signal-foreground = ${colors.secondary}
 type = internal/backlight
 card = intel_backlight
 enable-scroll = true
+use-actual-brightness = true
 
 format = <bar>
 format-prefix = " "
 format-prefix-foreground = ${colors.secondary}
 
-bar-width = 10
+bar-width = 100
+bar-indicator = -
+bar-fill = ━
+bar-empty = ┉
+
 bar-gradient = false
 bar-foreground-0  = #000000
 bar-foreground-1  = #191300
@@ -151,12 +156,7 @@ bar-foreground-7  = #b28704
 bar-foreground-8  = #cc9a05
 bar-foreground-9  = #e5ad06
 bar-foreground-10 = #ffc107
-
-bar-indicator = -
 bar-indicator-foreground = ${colors.tertiary}
-
-bar-fill = ━
-bar-empty = ┉
 bar-empty-foreground = ${color.be}
 
 [module/alsa]
@@ -196,19 +196,13 @@ bar-volume-fill = ━
 bar-volume-empty = ┉
 bar-volume-empty-foreground = ${color.be}
 
-; format-volume = <ramp-volume> <label-volume>
-; ; format-volume = ${colors.secondary}
-
-; label-volume = %percentage%
-; label-muted =  %percentage%
-; label-muted-foreground = ${colors.tertiary}
-; label-muted-underline = ${colors.tertiary}
-
-; ramp-volume-0 = 
-; ramp-volume-1 = 
-; ramp-volume-2 = 
-; ramp-volume-foreground = ${colors.secondary}
-
+[module/bluetooth]
+type = custom/script
+exec = ~/.config/polybar/script/bluetooth.sh
+interval = 2
+click-left = exec blueberry
+click-right =  exec ~/.config/polybar/script/toggle_bluetooth.sh
+format-padding = 1
 
 [module/memory]
 type = internal/memory

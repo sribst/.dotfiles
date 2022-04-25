@@ -1102,20 +1102,6 @@ comes with opam
     ;; Start merlin on ml files
     ((tuareg-mode caml-mode) . merlin-mode)
   )
-    ;; (use-package merlin
-    ;;     :hook ((tuareg-mode caml-mode) . merlin-mode)
-    ;;     :bind (:map merlin-mode-map
-    ;;                 ("M-." . merlin-locate)
-    ;;                 ("M-," . merlin-pop-stack))
-    ;;     :delight ""
-    ;;     :custom
-    ;;     (merlin-locate-preference 'ml)
-    ;;     (merlin-command 'opam)
-    ;;     :config
-    ;;     (with-eval-after-load 'company
-    ;;       (add-hook 'merlin-mode-hook 'company-mode)
-    ;;       ;; (add-to-list 'company-backends 'merlin-company-backend)
-    ;;       ))
 
     (use-package merlin-eldoc
       :after merlin
@@ -1147,22 +1133,6 @@ comes with opam
 ****** format =ocp-indent,ocamlformat=
 it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package ocamlformat
-  ;;   :config
-  ;;   (defun my/deactivate-ocamlformat ()
-  ;;     (interactive)
-  ;;     (setq ocamlformat-enable 'disable))
-  ;;   (defun my/activate-ocamlformat ()
-  ;;     (interactive)
-  ;;     (setq ocamlformat-enable 'enable))
-  ;;   :custom
-  ;;   (ocamlformat-enable 'enable-outside-detected-project)
-  ;;   (ocamlformat-show-errors 'echo)
-  ;;   (ocamlformat-enable 'enable)
-  ;;   :bind
-  ;;   (:map tuareg-mode-map ("C-M-<tab>" . #'ocamlformat))
-  ;;   :hook
-  ;;   (before-save . ocamlformat-before-save))
   (use-package ocamlformat
     :ensure nil
     :if opam-p
@@ -1281,11 +1251,12 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
     :hook
     (after-save . magit-after-save-refresh-buffers))
 #+END_SRC
-*** Git forge integration =forge=
+
+*** TODO Git forge integration =forge=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package forge
-    :delight " "
-    :after magit)
+  ;; (use-package forge
+  ;;   :delight " "
+  ;;   :after magit)
 #+END_SRC
 
 *** add git message =git-commit=
@@ -1383,7 +1354,7 @@ One of the next two is useless, need to determine wich one
 Amazing mode of GNU Emacs.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org
-    :ensure org-plus-contrib
+    ;; ensure org-plus-contrib ;; nowhere to be found
     :delight " "
     :bind
     ("C-c l" . org-store-link)
@@ -1584,17 +1555,37 @@ It's buggy, the view show an event starting on each day it set
     :bind ("C-c z" . cfw:open-org-calendar)
     :custom
     (cfw:org-overwrite-default-keybinding t)
-    :config
     ;; Another unicode chars
-    (setq cfw:fchar-junction ?╬
-          cfw:fchar-vertical-line ?║
-          cfw:fchar-horizontal-line ?=
-          cfw:fchar-left-junction ?╠
-          cfw:fchar-right-junction ?╣
-          cfw:fchar-top-junction ?╦
-          cfw:fchar-top-left-corner ?╔
-          cfw:fchar-top-right-corner ?╗))
+    (cfw:fchar-junction ?╬)
+    (cfw:fchar-vertical-line ?║)
+    (cfw:fchar-horizontal-line ?=)
+    (cfw:fchar-left-junction ?╠)
+    (cfw:fchar-right-junction ?╣)
+    (cfw:fchar-top-junction ?╦)
+    (cfw:fchar-top-left-corner ?╔)
+    (cfw:fchar-top-right-corner ?╗)
+    :config
+    ;; hotfix: incorrect time range display
+    ;; source: https://github.com/zemaye/emacs-calfw/commit/3d17649c545423d919fd3bb9de2efe6dfff210fe
+    (defun cfw:org-get-timerange (text)
+      "Return a range object (begin end text).
+  If TEXT does not have a range, return nil."
+      (let* ((dotime (cfw:org-tp text 'dotime)))
+        (and (stringp dotime) (string-match org-ts-regexp dotime)
+             (let* ((matches  (s-match-strings-all org-ts-regexp dotime))
+                    (start-date (nth 1 (car matches)))
+                    (end-date (nth 1 (nth 1 matches)))
+                    (extra (cfw:org-tp text 'extra)))
+               (if (string-match "(\\([0-9]+\\)/\\([0-9]+\\)): " extra)
+                   ( list( calendar-gregorian-from-absolute
+                           (time-to-days
+                            (org-read-date nil t start-date))
+                           )
+                         (calendar-gregorian-from-absolute
+                          (time-to-days
+                           (org-read-date nil t end-date))) text)))))))
 #+END_SRC
+
 
 *** TODO Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1742,6 +1733,16 @@ information.
   %?
   ")
 
+    (defvar my/org-review-template
+      "* TODO [[https://gitlab.com/tezos/tezos/-/merge_requests/%^{number}][%^{What is it about}]]
+    :PROPERTIES:
+    :CREATED:     %U
+    :END:
+
+
+  %?
+  ")
+
     (defvar my/org-someday-template
       "* SOMEDAY %^{What} %^G
     :PROPERTIES:
@@ -1774,7 +1775,7 @@ information.
   ")
 
     (defvar my/org-journal-template
-            "* %^{My though}
+      "* %^{My though}
   :PROPERTIES:
   :CREATED: %U
   :END:
@@ -1803,28 +1804,7 @@ information.
   %?
   ")
 
-  (defvar my/org-bd-template
-      "*** %^{Name}
-  :PROPERTIES:
-  :CREATED: %U
-  :END:
-
-  %?
-  ")
-
-  (defvar my/org-game-template
-      "*** %^{Name}
-  :PROPERTIES:
-  :CREATED: %U
-  :PLAYER: %^{Number of player |1-2|2|2-4|2-5|3-4|3-5|3-6}
-  :TIME: %^{TIME}p
-  :COMPLEXITY: %^{COMPLEXITY}p
-  :END:
-
-  %?
-  ")
-
-  :custom
+    :custom
     (org-capture-templates
      `(("a" "Appointment"
         entry (file+headline "~/org/master.org" "Agenda"),
@@ -1837,13 +1817,16 @@ information.
         entry (file+headline "~/org/master.org" "Stuff"),
         my/org-gift-template)
        ("t" "Tasks")
-       ("tt" "todo"
+       ("tt" "Todo"
         entry (file+headline "~/org/master.org" "Tasks"),
         my/org-task-template)
+       ("tr" "Review"
+        entry (file+olp "~/org/master.org" "Work tasks" "Octez Merge-Team" "Review"),
+        my/org-review-template)
        ("to" "One day"
         entry (file+headline "~/org/master.org" "Tasks"),
         my/org-someday-template)
-       ("v" "voucher"
+       ("v" "Voucher"
         entry (file+headline "~/org/master.org" "Voucher"),
         my/org-voucher-template)
        ("j" "Journal"
@@ -1855,16 +1838,12 @@ information.
        ("L" "Bookmark"
         entry (file+headline ,"~/org/master.org" "Bookmarks"),
         my/org-bookmark-template)
-       ("m" "media")
-       ("mg" "Game"
-        entry (file+headline ,"~/org/master.org" "Tabletop game"),
-        my/org-game-template)
-       ("mb" "BD"
-        entry (file+headline ,"~/org/master.org" "BD"),
-        my/org-bd-template)
 
        )))
 #+END_SRC
+
+#+RESULTS:
+
 * read-only major-mode
 ** Mail
 *** mu =mu4e=

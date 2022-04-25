@@ -291,8 +291,8 @@ exec deadd-notification-center
 # start battery signal
 exec batsignal
 
-exec --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 # map capslock to ctrl
+exec --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 
 # tabbed layout for social
 for_window [workspace=$ws5] layout tabbed
