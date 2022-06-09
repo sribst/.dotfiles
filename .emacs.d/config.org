@@ -166,7 +166,6 @@ Update current package
 *** TODO menu =paradox=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package paradox
-    :init (paradox-enable)
     :custom
     (paradox-column-width-package 27)
     (paradox-column-width-version 13)
@@ -174,9 +173,12 @@ Update current package
     (paradox-hide-wiki-packages t)
     (paradox-github-token (cadr (auth-source-user-and-password "api.github.com" "sribst^paradox")))
     :config
-    (paradox-enable)
+     (paradox-enable)
     (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
 #+END_SRC
+
+#+RESULTS:
+: t
 
 ** configuration
 *** global variable
