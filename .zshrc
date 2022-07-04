@@ -7,16 +7,13 @@ source .config/zsh.d//antigen.zsh
 antigen use oh-my-zsh
 
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
-antigen bundle git
-antigen bundle heroku
-antigen bundle pip
 antigen bundle lein
 antigen bundle command-not-found
 antigen bundle agkozak/zsh-z
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle djui/alias-tips
 antigen bundle mollifier/anyframe
-
+antigen bundle zsh-auto-notify
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
 
