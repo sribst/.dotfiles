@@ -43,6 +43,7 @@
     - [[#kill-current-buffer-without-asking][kill current buffer without asking]]
     - [[#order-buffer-list-ibuffer][order buffer list =ibuffer=]]
     - [[#dimme-non-focus-buffer-dimmer][dimme non focus buffer =dimmer=]]
+    - [[#center-buffer][Center buffer]]
   - [[#window][Window]]
     - [[#parameter-3][parameter]]
     - [[#switch-window-ace-window][switch window =ace-window=]]
@@ -563,6 +564,12 @@ ibuffer is a better buffer mode
   (use-package dimmer
     :init (dimmer-mode t))
 #+END_SRC
+
+*** Center buffer
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package centered-window)
+#+END_SRC
+
 
 ** Window
 *** parameter
