@@ -21,6 +21,6 @@ do
     rand=$(($RANDOM % ${#baker[@]}))
     # ./tezos-client -d $TMP/yes-wallet bake for ${baker[$rand]} --minimal-timestamp --force
     # sleep 1
-    tezos-client bake for ${baker[$rand]} --minimal-timestamp --force
+    octez-client bake for ${baker[$rand]} --minimal-timestamp --force
     n=$(( n + 1 ))
 done

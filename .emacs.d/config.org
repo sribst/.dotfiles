@@ -59,8 +59,8 @@
   - [[#whitespace-whitespace][Whitespace =whitespace=]]
   - [[#auto-completion-company][Auto-Completion =company=]]
   - [[#edit-all-occurence-iedit][Edit all occurence =iedit=]]
-  - [[#auto-indentation-aggressive-indent][Auto-indentation =aggressive-indent=]]
   - [[#decoration][Decoration]]
+    - [[#sticky-function-][sticky function =]]
     - [[#colorize-background-of-text-color-like-green-rainbow-mode][colorize background of text color like green =rainbow-mode=]]
     - [[#show-indentation-level-highlight-indent-guides][Show indentation level =highlight-indent-guides=]]
     - [[#show-line-at-80-char-fill-column-indicator][Show line at 80 char =fill-column-indicator=]]
@@ -109,6 +109,7 @@
   - [[#org-link][Org link]]
   - [[#clock-org-clock][clock =org-clock=]]
   - [[#capture-org-capture][Capture =org-capture=]]
+  - [[#show-current-header-org-sticky-header][show current header =org-sticky-header=]]
 - [[#read-only-major-mode][read-only major-mode]]
   - [[#mail][Mail]]
     - [[#mu-mu4e][mu =mu4e=]]
@@ -531,34 +532,41 @@ ibuffer is a better buffer mode
                   (name . "^\\*Messages\\*$")))
         ("Ediff" (name . "^\\*Ediff.*\\*$"))
         )))
-    :hook ('ibuffer-mode .
-                         (lambda ()
-                           (ibuffer-auto-mode 1)
-                           (ibuffer-switch-to-saved-filter-groups "default"))))
+    (ibuffer-auto-mode 1)
+    (ibuffer-switch-to-saved-filter-groups "default"))
 
   (use-package ibuffer-projectile
-    :after ibuffer
-    ;; :config
-    ;; (setq ibuffer-formats
-    ;;    '((mark modified read-only " "
-    ;;            (name 18 18 :left :elide)
-    ;;            " "
-    ;;            (size 9 -1 :right)
-    ;;            " "
-    ;;            (mode 16 16 :left :elide)
-    ;;            " "
-    ;;            project-relative-file)))
-    :hook  ('ibuffer-mode .
-                          (lambda ()
-                            (ibuffer-projectile-set-filter-groups)
-                            (unless (eq ibuffer-sorting-mode 'alphabetic)
-                              (ibuffer-do-sort-by-alphabetic)))))
-#+END_SRC
-
-#+RESULTS:
-| lambda | nil | (ibuffer-projectile-set-filter-groups) | (unless (eq ibuffer-sorting-mode (quote alphabetic)) (ibuffer-do-sort-by-alphabetic)) |
-| lambda | nil | (ibuffer-auto-mode 1)                  | (ibuffer-switch-to-saved-filter-groups default)                                       |
-
+    :after projectile ibuffer
+    :custom
+    (ibuffer-saved-filter-groups
+          (list
+           (cons "default"
+                 (append
+                  (ibuffer-projectile-generate-filter-groups) ; get groups from
+                                          ; ibuffer-projectile
+                  '(("emacs-config" (filename . ".emacs.d"))
+                    ("org" (or
+                            (mode . org-mode)
+                            (filename . "^.*org$")))
+                    ("shell" (or
+                              (mode . eshell-mode)
+                              (mode . (shell-mode))))
+                    ("emacs" (or (name . "*scratch*")
+                                 (name . "*Messages*"))))))))
+    ;; Don't show filter groups if there are no buffers in that group
+    (ibuffer-show-empty-filter-groups nil)
+    ;; Don't ask for confirmation to delete marked buffers
+    (ibuffer-expert t)
+    :hook
+    ('ibuffer-mode .
+              (lambda ()
+                (ibuffer-projectile-set-filter-groups)
+                (unless (eq ibuffer-sorting-mode 'alphabetic)
+                  (ibuffer-do-sort-by-alphabetic))))
+    ('ibuffer-mode .
+              (lambda ()
+                (ibuffer-auto-mode 1)
+                (ibuffer-switch-to-saved-filter-groups "default"))))
 *** dimme non focus buffer =dimmer=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dimmer
@@ -813,23 +821,14 @@ containing the candidates.
 
 #+RESULTS:
 : iedit-mode
-** Auto-indentation =aggressive-indent=
-=aggressive-indent-mode= is a minor mode that keeps your code *always*
-indented. It reindents after every change, making it more reliable than
-electric-indent-mode.
+** Decoration
 
-Aggressive indent is too aggressive, I need to make it a bit less stronger
+*** sticky function =
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package aggressive-indent
-    :delight ""
-    :hook (tuareg-mode . aggressive-indent-mode)
-    :custom
-    (aggressive-indent-protected-commands '(undo undo-tree-undo undo-tree-redo whitespace-cleanup))
-    (aggressive-indent-comments-too nil)
-    (aggressive-indent-sit-for-time 0.5)  )
+  ;; (use-package topsy
+  ;;   :hook prog-mode)
 #+END_SRC
 
-** Decoration
 *** colorize background of text color like green =rainbow-mode=
 Colorize colors as text with their value.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1068,7 +1067,9 @@ Setup environment variables and opam-lib using opam
   (use-package tuareg
     :ensure nil ; comes from opam
     :if opam-p
-  :mode ("\\.ml[ily]?$" . tuareg-mode))
+    :mode ("\\.ml[ily]?$" . tuareg-mode)
+    :custom
+    (comment-style "indent"))
 #+END_SRC
 
 ***** helpers
@@ -1150,6 +1151,9 @@ it format also dune file, which is annoying
     (ocamlformat-show-errors 'echo)
     :hook (before-save . ocamlformat-before-save) )
 #+END_SRC
+
+#+RESULTS:
+| ocamlformat-before-save | delete-trailing-whitespace |
 
 **** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1852,6 +1856,13 @@ information.
 #+END_SRC
 
 #+RESULTS:
+
+** TODO show current header =org-sticky-header=
+Not working with org-super-agenda
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package org-sticky-header
+  ;;   :hook org-mode)
+#+END_SRC
 
 * read-only major-mode
 ** Mail

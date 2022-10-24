@@ -24,7 +24,7 @@ focus_follows_mouse yes
 # kill focused window
 bindsym $super+Shift+A kill
 
-set $menu Menu: (k) kill; each command exit mode
+# set $menu Menu: (k) kill; each command exit mode
 # bindsym $super+$alt+x mode "$menu"
 # mode "$menu" {
 #         # These bindings trigger as soon as you enter the app mode
@@ -39,10 +39,10 @@ set $menu Menu: (k) kill; each command exit mode
 bindsym $super+Tab focus next
 bindsym $super+Shift+Tab focus prev
 
-bindsym $super+j focus left
-bindsym $super+k focus down
-bindsym $super+l focus up
-bindsym $super+m focus right
+bindsym $super+b focus left
+bindsym $super+n focus down
+bindsym $super+p focus up
+bindsym $super+f focus right
 
 # move focused window
 bindsym $super+Shift+j move left
@@ -57,7 +57,7 @@ bindsym $super+h split h
 bindsym $super+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $super+f fullscreen toggle
+bindsym $super+Shift+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 # bindsym $super+s layout stacking => I never use that anyway
@@ -272,8 +272,8 @@ bindsym $super+e exec emacsclient -c
 bindsym $super+x exec --no-startup-id rofi -show combi
 
 # start gopass (password manager with rofi interface)
-bindsym $super+p exec --no-startup-id  $HOME/bin/rofi-gopass
-bindsym $super+y exec --no-startup-id  $HOME/bin/rofi-ykman
+bindsym $super+y exec --no-startup-id  $HOME/bin/rofi-gopass
+# bindsym $super+y exec --no-startup-id  $HOME/bin/rofi-ykman
 
 #start udiskie and bind manager with rofi interface
 exec udiskie
@@ -292,7 +292,7 @@ exec deadd-notification-center
 exec batsignal
 
 # map capslock to ctrl
-exec --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
+exec_always --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 
 # tabbed layout for social
 for_window [workspace=$ws5] layout tabbed
@@ -300,7 +300,7 @@ for_window [workspace=$ws5] layout tabbed
 # start all common social software
 bindsym $super+c exec telegram-desktop; exec slack; exec signal-desktop # ;exec discord
 
-bindsym $super+b exec firefox
+# bindsym $super+b exec firefox
 
 set $i3_resurrect i3-resurrect
 

@@ -37,3 +37,4 @@ export PATH="$PATH:$GOPATH/bin"
 # rust
 # source "$HOME/.cargo/env"
 # export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
+. "$HOME/.cargo/env"
