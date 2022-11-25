@@ -1140,7 +1140,7 @@ comes with opam
     (tuareg-mode . utop-minor-mode))
 #+END_SRC
 
-****** format =ocp-indent,ocamlformat=
+****** format =ocamlformat=
 it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ocamlformat

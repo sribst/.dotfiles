@@ -45,10 +45,10 @@ bindsym $super+p focus up
 bindsym $super+f focus right
 
 # move focused window
-bindsym $super+Shift+j move left
-bindsym $super+Shift+k move down
-bindsym $super+Shift+l move up
-bindsym $super+Shift+M move right
+bindsym $super+Shift+b move left
+bindsym $super+Shift+n move down
+bindsym $super+Shift+p move up
+bindsym $super+Shift+f move right
 
 # split in horizontal orientation
 bindsym $super+h split h
@@ -57,7 +57,7 @@ bindsym $super+h split h
 bindsym $super+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $super+Shift+f fullscreen toggle
+bindsym $super+ctrl+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 # bindsym $super+s layout stacking => I never use that anyway
@@ -212,10 +212,10 @@ bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 # media controls
-bindsym XF86AudioPlay exec "mpc toggle"
-bindsym XF86AudioStop exec "mpc stop"
-bindsym XF86AudioNext exec "mpc next"
-bindsym XF86AudioPrev exec "mpc prev"
+# bindsym XF86AudioPlay exec "mpc toggle"
+# bindsym XF86AudioStop exec "mpc stop"
+# bindsym XF86AudioNext exec "mpc next"
+# bindsym XF86AudioPrev exec "mpc prev"
 # backlight
 bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
