@@ -14,7 +14,7 @@
     - [[#global-variable][global variable]]
     - [[#customization][Customization]]
     - [[#update][update]]
-  - [[#backup][Backup]]
+  - [[#auto-backup-file][auto backup file]]
   - [[#auto-save-mode][auto-save-mode]]
   - [[#apparence][apparence]]
     - [[#turn-off-mouse-interface][Turn off mouse interface]]
@@ -261,7 +261,7 @@ user with the UI, I add the generated code in a separate file.
 #+RESULTS:
 : my/force-update-config
 
-** Backup
+** auto backup file
 It is important to have a stable backup environment.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package files
@@ -1074,24 +1074,12 @@ Setup environment variables and opam-lib using opam
 
 ***** helpers
 
-****** Ocp tools
-comes with opam
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package ocp-indent
-  ;;   :ensure nil
-  ;;   :if opam-p
-  ;;   :config
-  ;;   (load-file "/home/baroud/.opam/default/share/typerex/ocp-indent/ocp-indent.el"))
-
-  ;; (use-package ocp-index
-  ;;   :ensure nil
-  ;;   :if opam-p)
-#+END_SRC
-
 ****** builder =dune=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dune
+    :after tuareg
     :delight " "
+    :mode ("dune$" . dune-mode)
     :if opam-p)
 #+END_SRC
 
@@ -1132,12 +1120,12 @@ comes with opam
 
 ****** repl =utop=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package utop
-    :delight " "
-    :custom
-    (utop-command "utop -emacs")
-    :hook
-    (tuareg-mode . utop-minor-mode))
+  ;; (use-package utop
+  ;;   :delight " "
+  ;;   :custom
+  ;;   (utop-command "utop -emacs")
+  ;;   :hook
+  ;;   (tuareg-mode . utop-minor-mode))
 #+END_SRC
 
 ****** format =ocamlformat=
@@ -1625,6 +1613,9 @@ It's buggy, the view show an event starting on each day it set
             (:calendar-id "claire"
                           :files ("~/org/claire.org")
                           :inbox (file+headline "~/org/claire.org" "sync"))
+            (:calendar-id "billy"
+                          :files ("~/org/billy.org")
+                          :inbox (file+headline "~/org/billy.org" "sync"))
             ;; (:calendar-id "calendargooglecom-1"
             ;;               :sync-direction 'cal->org
             ;;               :inbox ("~/org/nomadic labs.org"))
@@ -1646,9 +1637,6 @@ It's buggy, the view show an event starting on each day it set
             (lambda ()
               (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
 #+END_SRC
-
-#+RESULTS:
-| (lambda nil (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))) | rmail-after-save-hook | (lambda nil (if (eq major-mode 'org-mode) (progn (my/org-caldav-sync-with-delay 30)))) | my/config-tangle | magit-after-save-refresh-buffers |
 
 *** notification =org-wild-notifier=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1716,11 +1704,11 @@ information.
        "* %^{Name}
   :PROPERTIES:
   :CREATED: %U
-  :LOCATION: " my/place "
-  :WITH:    " my/with "
   :END:
-  %^{When}T
+  %^{When}t
   "))
+  ;; :LOCATION: " my/place "
+  ;; :WITH:    " my/with "
 
 
 
@@ -1938,6 +1926,9 @@ Not working with org-super-agenda
 
   (setq shr-color-visible-luminance-min 80)
 #+END_SRC
+
+#+RESULTS:
+: 80
 
 ** compilation
 add ansi color to the compilation buffer
