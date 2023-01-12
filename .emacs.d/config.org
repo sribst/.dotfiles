@@ -18,14 +18,12 @@
   - [[#auto-save-mode][auto-save-mode]]
   - [[#apparence][apparence]]
     - [[#turn-off-mouse-interface][Turn off mouse interface]]
-    - [[#xcolor-x-get-resource][XColor =x-get-resource=]]
-    - [[#theme][Theme]]
+    - [[#theme-xresources-theme][Theme =xresources-theme=]]
     - [[#font][font]]
       - [[#icons-all-the-icons][icons =all-the-icons=]]
 - [[#mini-buffer][Mini-buffer]]
   - [[#parameter][parameter]]
   - [[#auto-completion-engine-ivy][Auto-completion engine =ivy=]]
-    - [[#improved-ivy-file-browsing-ivy-explorer][improved ivy file browsing =ivy-explorer=]]
   - [[#search-in-current-buffer-swiper][search in current buffer =swiper=]]
   - [[#search-somewhere-else-m-xdiredetc-smexcounsel][search somewhere else "M-x/dired/etc" =smex,counsel=]]
   - [[#improved-text-search-ripgrep][improved text search =ripgrep=]]
@@ -36,14 +34,12 @@
 - [[#mode-line][Mode-line]]
   - [[#parameter-1][Parameter]]
   - [[#mode-icons-delight][Mode icons =delight=]]
-  - [[#indicate-position-on-file---nyan][Indicate position on file   =nyan=]]
+  - [[#indicate-position-on-file-nyan][Indicate position on file =nyan=]]
 - [[#interface-interaction][Interface interaction]]
   - [[#buffer][Buffer]]
     - [[#parameter-2][parameter]]
     - [[#kill-current-buffer-without-asking][kill current buffer without asking]]
-    - [[#order-buffer-list-ibuffer][order buffer list =ibuffer=]]
     - [[#dimme-non-focus-buffer-dimmer][dimme non focus buffer =dimmer=]]
-    - [[#center-buffer][Center buffer]]
   - [[#window][Window]]
     - [[#parameter-3][parameter]]
     - [[#switch-window-ace-window][switch window =ace-window=]]
@@ -54,7 +50,7 @@
 - [[#edition][Edition]]
   - [[#parameter-4][Parameter]]
   - [[#replace-string-visual-replace][replace string =visual-replace=]]
-  - [[#delete-all-space-in-front-hungry-delete][delete all space in front =hungry-delete=]]
+  - [[#delete-all-space-in-front-smart-hungry-delete][delete all space in front =smart-hungry-delete=]]
   - [[#move-text-move-text][Move text =move-text=]]
   - [[#whitespace-whitespace][Whitespace =whitespace=]]
   - [[#auto-completion-company][Auto-Completion =company=]]
@@ -65,6 +61,7 @@
     - [[#show-indentation-level-highlight-indent-guides][Show indentation level =highlight-indent-guides=]]
     - [[#show-line-at-80-char-fill-column-indicator][Show line at 80 char =fill-column-indicator=]]
     - [[#color-parenthesis-rainbow-delimiters][Color parenthesis =rainbow-delimiters=]]
+  - [[#copy-line-when-no-active-region][copy line when no active region]]
   - [[#specific][Specific]]
     - [[#language-server-lsp-mode][Language server =lsp-mode=]]
     - [[#spell-checking-flyspell][spell checking =flyspell=]]
@@ -129,7 +126,7 @@ The sources of package. So
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/") ;; Official
           ("melpa" . "http://melpa.org/packages/")  ;; Unofficial but use everywhere
-          ;; ("org" . "http://orgmode.org/elpa/")      ;; Org-mode package source
+          ("org" . "http://orgmode.org/elpa/")      ;; Org-mode package source
           ))
 #+END_SRC
 
@@ -150,7 +147,7 @@ src: https://github.com/jwiegley/use-package
   (use-package use-package-ensure-system-package)
 #+END_SRC
 *** update =auto-package-update=
-Update current package
+Auto-update all packages regularly
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package auto-package-update
     :defer t
@@ -166,6 +163,8 @@ Update current package
     (progn (auto-package-update-maybe)))
 #+END_SRC
 *** TODO menu =paradox=
+Paradox is a better mode to look after package. I need to fix the access to
+github. Theses access are only needed to start package in gh IIUC.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package paradox
     :custom
@@ -179,9 +178,6 @@ Update current package
     (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
 #+END_SRC
 
-#+RESULTS:
-: t
-
 ** configuration
 *** global variable
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -190,14 +186,14 @@ Update current package
    initial-scratch-message "" ; Empty the initial *scratch* buffer
    initial-major-mode 'text-mode ; major mode of  *scratch* buffer
    ad-redefinition-action 'accept ; Silence warnings for redefinition
-   fill-column 80 ; Set width for automatic line breaks
+   fill-column 70 ; Set width for automatic line breaks
    help-window-select t ; Focus new help windows when opened
    load-prefer-newer t ; Prefers the newest version of a file
    scroll-conservatively most-positive-fixnum ; Always scroll by one line
-   )
-  (set-default-coding-systems 'utf-8) ; Default to utf-8 encoding
-  (make-variable-buffer-local 'compile-command) ; be able to set it as a dir-locals
+   set-default-coding-systems 'utf-8 ; Default to utf-8 encoding
+   make-variable-buffer-local 'compile-command) ; be able to set it as a dir-locals
 #+END_SRC
+
 *** Customization
 To avoid overloading the GNU Emacs custormization =init.el= file made by the
 user with the UI, I add the generated code in a separate file.
@@ -252,23 +248,20 @@ user with the UI, I add the generated code in a separate file.
     (interactive)
     (load-file (expand-file-name "config.el" user-emacs-directory)))
 
-  (defun my/update-config ()
+  (defun my/update-and-reload-config ()
     "Force the update of the configuration."
     (interactive)
     (org-babel-load-file (expand-file-name "config.org" user-emacs-directory)))
 #+END_SRC
 
-#+RESULTS:
-: my/force-update-config
-
 ** auto backup file
 It is important to have a stable backup environment.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package files
-    :ensure nil ; don't need to ensure as it is default package
+    :ensure nil
     :custom
     (backup-directory-alist `(("." . "~/.emacs.d/backup")))
-    (delete-old-versions -1)
+    (delete-old-versions t)
     (vc-make-backup-files t)
     (version-control t))
 #+END_SRC
@@ -290,31 +283,9 @@ I find invasive.
   (tool-bar-mode -1)      ; Disable the tool bar
   (tooltip-mode -1)       ; Disable the tooltips
 #+END_SRC
-*** XColor =x-get-resource=
-set color var
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (setq color0  (x-get-resource "color0" "")
-  ;;       color1  (x-get-resource "color1" "")
-  ;;       color2  (x-get-resource "color2" "")
-  ;;       color3  (x-get-resource "color3" "")
-  ;;       color4  (x-get-resource "color4" "")
-  ;;       color5  (x-get-resource "color5" "")
-  ;;       color6  (x-get-resource "color6" "")
-  ;;       color7  (x-get-resource "color7" "")
-  ;;       color8  (x-get-resource "color8" "")
-  ;;       color9  (x-get-resource "color9" "")
-  ;;       color10 (x-get-resource "color10" "")
-  ;;       color11 (x-get-resource "color11" "")
-  ;;       color12 (x-get-resource "color12" "")
-  ;;       color13 (x-get-resource "color13" "")
-  ;;       color14 (x-get-resource "color14" "")
-  ;;       color15 (x-get-resource "color15" "")
-  ;;       )
-#+END_SRC
 
-
-*** Theme
-xresources-theme qui respect les couleurs de Xressources
+*** Theme =xresources-theme=
+xresources-theme that respect Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package xresources-theme)
 
@@ -322,43 +293,44 @@ xresources-theme qui respect les couleurs de Xressources
   (defvar my/theme-terminal-loaded nil)
   (defvar my/theme 'xresources)
   (if (daemonp)
-      (add-hook 'after-make-frame-functions
-                (lambda (frame)
-                  (select-frame frame)
-                  (if (window-system frame)
-                      (unless my/theme-window-loaded
-                        (if my/theme-terminal-loaded
-                            (enable-theme my/theme)
-                          (progn
-                            (load-theme my/theme t)
-                            (set-face-background 'hl-line (x-get-resource "color8" ""))
-                            ))
-                        (setq my/theme-window-loaded t))
-                    (unless my/theme-terminal-loaded
-                      (if my/theme-window-loaded
-                          (enable-theme my/theme)
-                        (progn
-                          (load-theme my/theme t)
-                          (set-face-background 'hl-line (x-get-resource "color8" ""))
-                          ))
-                      (setq my/theme-terminal-loaded t)))))
+      (add-hook
+       'after-make-frame-functions
+       (lambda (frame)
+         (select-frame frame)
+         (if (window-system frame)
+             (unless my/theme-window-loaded
+               (if my/theme-terminal-loaded
+                   (enable-theme my/theme)
+                 (progn
+                   (load-theme my/theme t)
+                   (set-face-background 'hl-line (x-get-resource "color8" ""))
+                   ))
+               (setq my/theme-window-loaded t))
+           (unless my/theme-terminal-loaded
+             (if my/theme-window-loaded
+                 (enable-theme my/theme)
+               (progn
+                 (load-theme my/theme t)
+                 (set-face-background 'hl-line (x-get-resource "color8" ""))
+                 ))
+             (setq my/theme-terminal-loaded t)))))
     (progn
       (load-theme my/theme t)
-      ;; (set-face-background 'hl-line (x-get-resource "color8" ""))
+      (set-face-background 'hl-line (x-get-resource "color8" ""))
       (if (display-graphic-p)
           (setq my/theme-window-loaded t)
         (setq my/theme-terminal-loaded t))))
-#+END_SRC
 
+#+END_SRC
 *** font
 **** icons =all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
     ;; (set-frame-font "ProggyClean-14")
   (setq default-frame-alist '((font . "Fantasque Sans Mono-11")))
   (use-package all-the-icons)
+      ;; (set-face-attribute 'default nil :height 96)
 #+END_SRC
 
-#+RESULTS:
 
 * Mini-buffer
 ** parameter
@@ -388,111 +360,94 @@ xresources-theme qui respect les couleurs de Xressources
     :after ivy
     :config (all-the-icons-ivy-setup))
 #+END_SRC
-: t
-
-*** TODO improved ivy file browsing =ivy-explorer=
-not working  'Error in post-command-hook (ivy--queue-exhibit): (arith-error)'
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package ivy-explorer
-  ;;  :after ivy counsel
-  ;;  :config (ivy-explorer-mode 1))
-#+END_SRC
 
 ** search in current buffer =swiper=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package swiper
-    :after ivy xresources-theme
-    :config
-    (custom-set-faces
-     `(swiper-line-face ((t (:background ,(x-get-resource "color12" "")))))
-     `(swiper-match-face-1 ((t (:background ,(x-get-resource "color11" "")))))
-     `(swiper-match-face-2 ((t (:background ,(x-get-resource "color9" "") :weight bold))))
-     `(swiper-match-face-3 ((t (:background ,(x-get-resource "color10" "") :weight bold))))
-     `(swiper-match-face-4 ((t (:background ,(x-get-resource "color13" "") :weight bold))))
-     `(swiper-minibuffer-match-face-1 ((t (:background ,(x-get-resource "color11" "")))))
-     `(swiper-minibuffer-match-face-2 ((t (:background ,(x-get-resource "color9" "") :weight bold))))
-     `(swiper-minibuffer-match-face-3 ((t (:background ,(x-get-resource "color10" "") :weight bold))))
-     `(swiper-minibuffer-match-face-4 ((t (:background ,(x-get-resource "color13" "") :weight bold)))))
-    :bind ("C-s" . swiper))
+    (use-package swiper
+      :after (ivy xresources-theme)
+      :config
+      (custom-set-faces
+       `(swiper-line-face               ((t (:background ,(x-get-resource "color12" "")))))
+       `(swiper-match-face-1            ((t (:background ,(x-get-resource "color9"  "") :weight bold))))
+       `(swiper-match-face-2            ((t (:background ,(x-get-resource "color10" "") :weight bold))))
+       `(swiper-match-face-3            ((t (:background ,(x-get-resource "color11" "") :weight bold))))
+       `(swiper-match-face-4            ((t (:background ,(x-get-resource "color13" "") :weight bold)))))
+      :bind ("C-s" . swiper))
 #+END_SRC
 
 ** search somewhere else "M-x/dired/etc" =smex,counsel=
 smex order last command/mode by most used and recent
 
-counsel is intergrate launcher for exec alternative ("M-x")
+counsel is an intergrate launcher for exec alternative ("M-x")
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smex)
   (use-package counsel
-    :after ivy smex
-    :delight
-    :bind ("C-c r" . counsel-recentf)
-    :init (counsel-mode 1))
+    :after (ivy smex)
+     :init (counsel-mode 1))
 #+END_SRC
 
 ** improved text search =ripgrep=
 ripgrep is an alternative of grep that is faster and respect project (.gitignore, ...)
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ripgrep
-    :delight
-    :ensure-system-package (rg . "yay -S ripgrep"))
+     :ensure-system-package (rg . "yay -S ripgrep"))
 #+END_SRC
 
 ** modify grep result =wgrep=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package wgrep
-    :delight)
+  (use-package wgrep :disabled)
 #+END_SRC
 
 ** open with sudo =auto-sudoedit=
-automaticaly open with tramp when needed
+automatically open with tramp when needed
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package tramp
     :ensure nil
     :custom (tramp-default-method "sshx"))
   (use-package auto-sudoedit
-    :init (auto-sudoedit-mode 1))
+    :init (auto-sudoedit-mode t))
   (use-package counsel-tramp
-    ;; :bind ("C-c t" . counsel-tramp)
-    :after counsel)
+     :after (tramp counsel))
 #+END_SRC
-
-#+RESULTS:
 
 ** hints/information of current mark =eldoc=
 Provides minibuffer hints when working with Emacs Lisp.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package eldoc
-    :delight
     :hook ((prog-mode org-mode) . eldoc-mode))
 #+END_SRC
+
 ** keystroke helper =which-key=
-=which-key= show all possible completion after a keystroke
+show all possible completion after a keystroke.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package which-key
-    :delight
     :config (which-key-mode))
 #+END_SRC
+
 * Mode-line
+
 ** Parameter
 #+BEGIN_SRC emacs-lisp :tangle yes
   (column-number-mode 1) ; Show the column number
 #+END_SRC
+
 ** Mode icons =delight=
-delight is a way of showing wich major/minor is currently open
-It's show which mode on the main bar
+delight is a way of showing wich major/minor is currently open. It's
+show which mode on the main bar.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package delight)
 #+END_SRC
-** Indicate position on file   =nyan=
+
+** Indicate position on file =nyan=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package nyan-mode
     :config (nyan-mode)
     :custom
     (nyan-animate-nyancat t)
     (nyan-wavy-trail t)
-    (nyan-bar-length 15))
+    (nyan-bar-length 20))
 #+END_SRC
+
 * Interface interaction
 ** Buffer
 *** parameter
@@ -506,89 +461,28 @@ Don't ask before killing a buffer. I know what I'm doing.
   (global-set-key [remap kill-buffer] #'kill-current-buffer)
 #+END_SRC
 
-
-*** order buffer list =ibuffer=
-ibuffer is a better buffer mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ibuffer
-    :bind ("C-x C-b" . ibuffer)
-    :custom
-    (ibuffer-saved-filter-groups
-     '(("default"
-        ("org"   (name . "^.*org$"))
-        ("magit" (or (mode . magit-mode)
-                     (name . "^magit.*$" )))
-        ("dired" (mode . dired-mode))
-
-        ("IRC"   (or (mode . circe-channel-mode) (mode . circe-server-mode)))
-        ("web"   (or (mode . web-mode) (mode . js2-mode)))
-        ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
-        ("programming" (or
-                        (mode . java-mode)
-                        (mode . groovy-mode)
-                        (mode . conf-space-mode)))
-        ("emacs" (or
-                  (name . "^\\*scratch\\*$")
-                  (name . "^\\*Messages\\*$")))
-        ("Ediff" (name . "^\\*Ediff.*\\*$"))
-        )))
-    (ibuffer-auto-mode 1)
-    (ibuffer-switch-to-saved-filter-groups "default"))
-
-  (use-package ibuffer-projectile
-    :after projectile ibuffer
-    :custom
-    (ibuffer-saved-filter-groups
-          (list
-           (cons "default"
-                 (append
-                  (ibuffer-projectile-generate-filter-groups) ; get groups from
-                                          ; ibuffer-projectile
-                  '(("emacs-config" (filename . ".emacs.d"))
-                    ("org" (or
-                            (mode . org-mode)
-                            (filename . "^.*org$")))
-                    ("shell" (or
-                              (mode . eshell-mode)
-                              (mode . (shell-mode))))
-                    ("emacs" (or (name . "*scratch*")
-                                 (name . "*Messages*"))))))))
-    ;; Don't show filter groups if there are no buffers in that group
-    (ibuffer-show-empty-filter-groups nil)
-    ;; Don't ask for confirmation to delete marked buffers
-    (ibuffer-expert t)
-    :hook
-    ('ibuffer-mode .
-              (lambda ()
-                (ibuffer-projectile-set-filter-groups)
-                (unless (eq ibuffer-sorting-mode 'alphabetic)
-                  (ibuffer-do-sort-by-alphabetic))))
-    ('ibuffer-mode .
-              (lambda ()
-                (ibuffer-auto-mode 1)
-                (ibuffer-switch-to-saved-filter-groups "default"))))
 *** dimme non focus buffer =dimmer=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dimmer
+    :config
+    (dimmer-configure-which-key)
+    (dimmer-configure-company-box)
+    (dimmer-configure-magit)
+    (dimmer-configure-org)
+    :custom
+    (dimmer-adjustment-mode :foreground)
+    (dimmer-fraction 0.35)
     :init (dimmer-mode t))
 #+END_SRC
-
-*** Center buffer
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package centered-window)
-#+END_SRC
-
 
 ** Window
 *** parameter
 split-width-threshold nil does not work for me
 need to find correct config -> use toggle-windows-split atm
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (setq split-width-threshold nil) ; default split is vertical
 (setq split-height-threshold 180)
 (setq split-width-threshold 90)
 #+END_SRC
-
 
 *** switch window =ace-window=
 ace window allow to simply switch when only 2 window or to choose
@@ -599,7 +493,7 @@ which window with key when multiple buff
     (("C-x o" . ace-window)
      ("M-o" . ace-window))
     :init
-    (setq aw-keys '(?j ?k ?l ?m ?u ?i ?o ?p))
+    (setq aw-keys '(?& ?é ?\" ?' ?( ?- ?è ?_))
     (setq aw-scope 'frame))
 #+END_SRC
 
@@ -615,9 +509,6 @@ switch back to multiple open buffer.
              ("C-c f" . winner-redo))
       :init (winner-mode))
   #+END_SRC
-
-  #+RESULTS:
-  : winner-redo
 
 *** Toggle windows split
 switch layout when two buffers are open
@@ -646,19 +537,18 @@ switch layout when two buffers are open
             (set-window-buffer (next-window) next-win-buffer)
             (select-window first-win)
             (if this-win-2nd (other-window 1))))))
-
   (define-key ctl-x-4-map "t" 'toggle-window-split)
 #+END_SRC
 
 *** Scrolling
-Start scrolling when nm left of line < 10 top and bottom
+Start scrolling when nm left of line < 5 top and bottom
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq scroll-margin 5)
 #+END_SRC
 
 *** cursor =beacon= =hl=
 =hl= Highlight current lign with diff background color
-=beacon= beam-color whenever cursor change position
+=beacon= beam-color whenever cursor change
 
 #+begin_src emacs-lisp :tangle yes
   (global-hl-line-mode 1) ; Hightlight current line
@@ -670,9 +560,6 @@ Start scrolling when nm left of line < 10 top and bottom
     :config (beacon-mode 1))
 #+end_src
 
-#+RESULTS:
-: t
-
 * Edition
 ** Parameter
 basic default value to enable
@@ -682,6 +569,7 @@ basic default value to enable
   (show-paren-mode 1) ; Show the parenthesis
   (transient-mark-mode t) ; same mark mouse or keyboard
   (setq blink-cursor-mode nil) ; the cursor wont blink
+  (setq highlight-nonselected-windows t)
   (setq-default indent-tabs-mode nil) ; use space instead of tab to indent
   (delete-selection-mode t) ; when writing into marked region delete it
   (setq tab-width 4) ; Set width for tabs
@@ -694,21 +582,22 @@ basic default value to enable
       (interactive)
       (insert (gui-get-primary-selection))))
 #+END_SRC
+
 ** replace string =visual-replace=
+visuel-regexp show in the buffer the replaced
 #+begin_src emacs-lisp :tangle yes
-  (use-package visual-regexp
+  (use-package visualp-regexp
     :bind
-    (("C-c C-r s" . replace-string)
-     ("C-c C-r r" . vr/replace)
-     ("C-c C-r q" . vr/query-replace)
-     )
-    )
+    ("C-c s r" . vr/replace)
+    ("C-c s q" . vr/query-replace))
 #+end_src
-** delete all space in front =hungry-delete=
+** delete all space in front =smart-hungry-delete=
 #+begin_src emacs-lisp :tangle yes
-  (use-package hungry-delete
-    :config
-    (global-hungry-delete-mode))
+  (use-package smart-hungry-delete
+    :bind (([remap backward-delete-char-untabify] . smart-hungry-delete-backward-char)
+           ([remap delete-backward-char] . smart-hungry-delete-backward-char)
+           ([remap delete-char] . smart-hungry-delete-forward-char))
+    :init (smart-hungry-delete-add-default-hooks))
 #+end_src
 
 ** Move text =move-text=
@@ -730,7 +619,6 @@ Moves the current line (or if marked, the current region's, whole lines).
     :hook
     (((prog-mode text-mode org-mode) . whitespace-mode)
      (before-save . delete-trailing-whitespace))
-
     :custom
     (whitespace-style
      '(face trailing tabs newline empty tab-mark newline-mark))
@@ -742,7 +630,7 @@ Moves the current line (or if marked, the current region's, whole lines).
 
 ** Auto-Completion =company=
 
-=company= provides auto-completion at point and to Displays a small pop-in
+=company= provides auto-completion at point and to displays a small pop-in
 containing the candidates.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -752,62 +640,28 @@ containing the candidates.
     :config
     (bind-key [remap completion-at-point] #'company-complete company-mode-map)
     :custom
-    (company-begin-commands '(self-insert-command))
-    (company-idle-delay 0.2)
-    (company-minimum-prefix-length 3)
-    (company-show-numbers t)
+    (company-idle-delay
+     (lambda () (if (company-in-string-or-comment) nil 0.3)))
+    (company-minimum-prefix-length 2)
+    (company-show-numbers nil)
     (company-tooltip-align-annotations t)
     :bind
-    ;; (:map company-mode-map
-    ;;       ("<tab>". tab-indent-or-complete)
-    ;;       ("TAB". tab-indent-or-complete))
     (:map company-active-map
            ("C-n" . company-select-next)
            ("C-p" . company-select-previous)
            ("M-<" . company-select-first)
            ("M->" . company-select-last)))
 
-  (use-package yasnippet
+  (use-package company-box
     :delight
-    :config
-    (yas-reload-all)
-    (add-hook 'prog-mode-hook 'yas-minor-mode)
-    (add-hook 'text-mode-hook 'yas-minor-mode))
-
-  (defun company-yasnippet-or-completion ()
-    (interactive)
-    (or (do-yas-expand)
-        (company-complete-common)))
-
-  (defun check-expansion ()
-    (save-excursion
-      (if (looking-at "\\_>") t
-        (backward-char 1)
-        (if (looking-at "\\.") t
-          (backward-char 1)
-          (if (looking-at "::") t nil)))))
-
-  (defun do-yas-expand ()
-    (let ((yas/fallback-behavior 'return-nil))
-      (yas/expand)))
-
-  (defun tab-indent-or-complete ()
-    (interactive)
-    (if (minibufferp)
-        (minibuffer-complete)
-      (if (or (not yas/minor-mode)
-              (null (do-yas-expand)))
-          (if (check-expansion)
-              (company-complete-common)
-            (indent-for-tab-command)))))
+    :custom
+    (company-box-doc-delay 0.1)
+    (company-box-doc-frame-parameters '((internal-border-width . 10)))
+    :hook (company-mode . company-box-mode))
 
   (use-package company-quickhelp ; Documentation popups for Company
     :delight
     :hook (global-company-mode . company-quickhelp-mode))
-
-  (use-package company-box
-    :delight
-    :hook (company-mode . company-box-mode))
 #+END_SRC
 
 #+RESULTS:
@@ -867,11 +721,20 @@ Colorize colors as text with their value.
     :hook ((prog-mode org-mode) . rainbow-delimiters-mode))
 #+END_SRC
 
+** copy line when no active region
+Here I defined my own functions eithers fund online or written by me.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package whole-line-or-region
+    :delight
+    :config
+    (whole-line-or-region-global-mode))
+#+END_SRC
+
 ** Specific
 *** Language server =lsp-mode=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package lsp-mode
-    :after which-key flycheck
+    :after (which-key flycheck)
     :hook
     (lsp-mode . lsp-enable-which-key-integration)
     :commands (lsp lsp-deferred)
@@ -916,7 +779,7 @@ Colorize colors as text with their value.
     :hook (lsp-mode . lsp-ui-mode))
 
   (use-package lsp-ivy
-    :after lsp-mode ivy
+    :after (lsp-mode ivy)
     :bind
     (:map projectile-mode-map
           ([remap projectile-ag] . lsp-ivy-workspace-symbol))
@@ -924,7 +787,7 @@ Colorize colors as text with their value.
 
   (use-package company-lsp
     :ensure nil
-    :after lsp-mode company
+    :after (lsp-mode company)
     :commands company-lsp
     ;; :custom
     ;; Breaks a lot of stuff for some reason...
@@ -971,9 +834,9 @@ Colorize colors as text with their value.
 *** Programming language
 **** protocol =protobuf=
 #+begin_src emacs-lisp :tangle yes
-    (use-package protobuf-mode
-      :delight ""
-      )
+  (use-package protobuf-mode
+    :disabled
+    )
 #+end_src
 
 **** Shell script =shfmt=
@@ -987,7 +850,7 @@ Colorize colors as text with their value.
 
 **** Golang
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package go-mode)
+  (use-package go-mode :disabled)
 #+END_SRC
 **** Rust =rustic-mode=
 cargo gives set of combination to perform cargo (rust builder) task
@@ -1172,7 +1035,7 @@ it format also dune file, which is annoying
 #+begin_src emacs-lisp :tangle yes
   (use-package css-mode
     :ensure nil
-      :delight " "
+    :disabled
     :mode ("\\.css$" "\\.rasi$")
     )
 #+end_src
@@ -1187,22 +1050,21 @@ it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package markdown-mode
     :ensure-system-package (markdown . "yay -S markdown")
-    :delight " "
+    :disabled
     :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'" "\\.markdown\\'" "\\.md\\'"))
 #+END_SRC
 **** =Yaml=
 #+begin_src emacs-lisp :tangle yes
   (use-package yaml-mode
-    :delight " "
+    :disabled
     :mode "\\.yml\\'"
     )
 #+end_src
 
 * Project
-** TODO interaction =projectile=
+** interaction =projectile=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
-    :delight " "
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :custom
@@ -1212,7 +1074,7 @@ it format also dune file, which is annoying
     :init (projectile-mode))
 
   (use-package counsel-projectile
-    :after counsel projectile
+    :after (counsel projectile)
     :init (counsel-projectile-mode)
     :config
     (counsel-projectile-modify-action
@@ -1220,18 +1082,6 @@ it format also dune file, which is annoying
      '((default counsel-projectile-switch-project-action-vc)))
     )
 #+END_SRC
-#+begin_src emacs-lisp :tangle yes
-  ;; (use-package org-projectile
-  ;;   :after projectile org
-  ;;   :bind
-  ;;   (:map projectile-command-map ("n" . org-projectile-capture-for-current-project))
-  ;;   :config
-  ;;   (push (org-projectile-project-todo-entry) org-capture-templates)
-  ;;   :custom
-  ;;   (org-projectile-capture-template (format "%s" "* TODO %?"))
-  ;;   (org-projectile-projects-file "~/org/projects.org"))
-#+end_src
-
 ** Git
 *** Git interaction =magit=
 It is quite common to work on Git repositories, so it is important to have a
@@ -1616,15 +1466,15 @@ It's buggy, the view show an event starting on each day it set
             (:calendar-id "billy"
                           :files ("~/org/billy.org")
                           :inbox (file+headline "~/org/billy.org" "sync"))
-            ;; (:calendar-id "calendargooglecom-1"
-            ;;               :sync-direction 'cal->org
-            ;;               :inbox ("~/org/nomadic labs.org"))
+            (:calendar-id "calendargooglecom-2"
+                          :sync-direction 'cal->org
+                          :inbox ("~/org/nomadic labs.org"))
             ;; (:url "https://www.facebook.com/events/ical/upcoming/?uid=525297993&key=ShuJLNbIhhWI0VBp"
             ;;       :sync-direction 'cal->org
             ;;       :inbox ("~/org/facebook.org"))
-            ;; (:calendar-id "contact_birthdays"
-            ;;               :sync-direction 'cal->org
-            ;;               :inbox (file+headline "~/org/master.org" "Contact birthdays"))
+            (:calendar-id "contact_birthdays"
+                          :sync-direction 'cal->org
+                          :inbox (file+headline "~/org/master.org" "Contact birthdays"))
             ))
     (setq org-icalendar-use-deadline
           '(event-if-todo-not-done todo-due))
@@ -1641,7 +1491,7 @@ It's buggy, the view show an event starting on each day it set
 *** notification =org-wild-notifier=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-wild-notifier
-    :after org-agenda alert
+    :after (org-agenda alert)
     :custom
     (org-wild-notifier-keyword-whitelist nil)
     (org-wild-notifier-keyword-blacklist '("CANCELED" "DONE" "ABORDED" "HAVE" "GIVEN" "CONSUMED" "LOST"))
@@ -1858,7 +1708,7 @@ Not working with org-super-agenda
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smtpmail :ensure nil)
   (use-package mu4e
-    :after ivy smtpmail
+    :after (ivy smtpmail)
     :ensure nil
     :bind ("C-c m" . mu4e)
     :ensure-system-package mu

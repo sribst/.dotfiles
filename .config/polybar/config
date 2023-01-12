@@ -135,29 +135,30 @@ card = intel_backlight
 enable-scroll = true
 use-actual-brightness = true
 
-format = <bar>
 format-prefix = " "
 format-prefix-foreground = ${colors.secondary}
+label = %percentage%%
+format = <bar>
 
-bar-width = 100
-bar-indicator = -
-bar-fill = ━
-bar-empty = ┉
+# bar-width = 100
+# bar-indicator = -
+# bar-fill = ━
+# bar-empty = ┉
 
-bar-gradient = false
-bar-foreground-0  = #000000
-bar-foreground-1  = #191300
-bar-foreground-2  = #332601
-bar-foreground-3  = #4c3902
-bar-foreground-4  = #664d02
-bar-foreground-5  = #7f6003
-bar-foreground-6  = #997304
-bar-foreground-7  = #b28704
-bar-foreground-8  = #cc9a05
-bar-foreground-9  = #e5ad06
-bar-foreground-10 = #ffc107
-bar-indicator-foreground = ${colors.tertiary}
-bar-empty-foreground = ${color.be}
+# bar-gradient = false
+# bar-foreground-0  = #000000
+# bar-foreground-1  = #191300
+# bar-foreground-2  = #332601
+# bar-foreground-3  = #4c3902
+# bar-foreground-4  = #664d02
+# bar-foreground-5  = #7f6003
+# bar-foreground-6  = #997304
+# bar-foreground-7  = #b28704
+# bar-foreground-8  = #cc9a05
+# bar-foreground-9  = #e5ad06
+# bar-foreground-10 = #ffc107
+# bar-indicator-foreground = ${colors.tertiary}
+# bar-empty-foreground = ${color.be}
 
 [module/alsa]
 type = internal/alsa
@@ -273,7 +274,7 @@ type = internal/date
 interval = 5
 
 time = %H:%M
-date = %A, %B %d
+date = %a %d
 date-alt = %A, %B %d, %Y
 time-alt = %H:%M:%S
 
