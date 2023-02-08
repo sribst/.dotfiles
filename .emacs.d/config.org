@@ -1,7 +1,6 @@
-#+TITLE: Gnu Emacs Confidguration
+#+TITLE: Gnu Emacs Configuration
 #+AUTHOR: Sylvain Ribstein
 #+CATEGORY: config
-# #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
 * Table of content :TOC_4:
 - [[#global-configuration][Global configuration]]
@@ -23,7 +22,7 @@
       - [[#icons-all-the-icons][icons =all-the-icons=]]
 - [[#mini-buffer][Mini-buffer]]
   - [[#parameter][parameter]]
-  - [[#auto-completion-engine-ivy][Auto-completion engine =ivy=]]
+  - [[#completion-engine-ivy][completion engine =ivy=]]
   - [[#search-in-current-buffer-swiper][search in current buffer =swiper=]]
   - [[#search-somewhere-else-m-xdiredetc-smexcounsel][search somewhere else "M-x/dired/etc" =smex,counsel=]]
   - [[#improved-text-search-ripgrep][improved text search =ripgrep=]]
@@ -40,6 +39,7 @@
     - [[#parameter-2][parameter]]
     - [[#kill-current-buffer-without-asking][kill current buffer without asking]]
     - [[#dimme-non-focus-buffer-dimmer][dimme non focus buffer =dimmer=]]
+  - [[#auto-center-when-only-one-window-centered-window][auto center when only one window =centered-window=]]
   - [[#window][Window]]
     - [[#parameter-3][parameter]]
     - [[#switch-window-ace-window][switch window =ace-window=]]
@@ -53,19 +53,17 @@
   - [[#delete-all-space-in-front-smart-hungry-delete][delete all space in front =smart-hungry-delete=]]
   - [[#move-text-move-text][Move text =move-text=]]
   - [[#whitespace-whitespace][Whitespace =whitespace=]]
-  - [[#auto-completion-company][Auto-Completion =company=]]
+  - [[#auto-completion-corfu][Auto-Completion =corfu=]]
   - [[#edit-all-occurence-iedit][Edit all occurence =iedit=]]
   - [[#decoration][Decoration]]
-    - [[#sticky-function-][sticky function =]]
     - [[#colorize-background-of-text-color-like-green-rainbow-mode][colorize background of text color like green =rainbow-mode=]]
     - [[#show-indentation-level-highlight-indent-guides][Show indentation level =highlight-indent-guides=]]
-    - [[#show-line-at-80-char-fill-column-indicator][Show line at 80 char =fill-column-indicator=]]
     - [[#color-parenthesis-rainbow-delimiters][Color parenthesis =rainbow-delimiters=]]
   - [[#copy-line-when-no-active-region][copy line when no active region]]
   - [[#specific][Specific]]
-    - [[#language-server-lsp-mode][Language server =lsp-mode=]]
     - [[#spell-checking-flyspell][spell checking =flyspell=]]
     - [[#syntax-checking-flycheck][syntax checking =flycheck=]]
+    - [[#language-server-lsp-mode][Language server =lsp-mode=]]
     - [[#programming-language][Programming language]]
       - [[#protocol-protobuf][protocol =protobuf=]]
       - [[#shell-script-shfmt][Shell script =shfmt=]]
@@ -121,7 +119,7 @@
 Here is configuration that is used across all emacs mode
 ** Packages
 *** Sources
-The sources of package. So
+The sources of package.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/") ;; Official
@@ -316,7 +314,7 @@ xresources-theme that respect Xressources
              (setq my/theme-terminal-loaded t)))))
     (progn
       (load-theme my/theme t)
-      (set-face-background 'hl-line (x-get-resource "color8" ""))
+      ;; (set-face-background 'hl-line (x-get-resource "color8" ""))
       (if (display-graphic-p)
           (setq my/theme-window-loaded t)
         (setq my/theme-terminal-loaded t))))
@@ -338,7 +336,7 @@ xresources-theme that respect Xressources
   (fset 'yes-or-no-p 'y-or-n-p) ; Replace yes/no prompts with y/n
 #+END_SRC
 
-** Auto-completion engine =ivy=
+** completion engine =ivy=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ivy
     :demand ;force-loading
@@ -466,7 +464,6 @@ Don't ask before killing a buffer. I know what I'm doing.
   (use-package dimmer
     :config
     (dimmer-configure-which-key)
-    (dimmer-configure-company-box)
     (dimmer-configure-magit)
     (dimmer-configure-org)
     :custom
@@ -474,6 +471,16 @@ Don't ask before killing a buffer. I know what I'm doing.
     (dimmer-fraction 0.35)
     :init (dimmer-mode t))
 #+END_SRC
+
+** TODO auto center when only one window =centered-window=
+
+This is not working currently because it opens new windows instead of
+buffer.
+#+begin_src emacs-lisp :tangle yes
+  (use-package centered-window)
+#+end_src
+
+#+RESULTS:
 
 ** Window
 *** parameter
@@ -493,7 +500,7 @@ which window with key when multiple buff
     (("C-x o" . ace-window)
      ("M-o" . ace-window))
     :init
-    (setq aw-keys '(?& ?é ?\" ?' ?( ?- ?è ?_))
+    (setq aw-keys '(?& ?é ?\" ?' ?\( ?- ?è ?_))
     (setq aw-scope 'frame))
 #+END_SRC
 
@@ -554,11 +561,15 @@ Start scrolling when nm left of line < 5 top and bottom
   (global-hl-line-mode 1) ; Hightlight current line
 
   (use-package beacon
+    :delight
     :when (window-system)
     :custom
     (beacon-color (x-get-resource "color13" ""))
     :config (beacon-mode 1))
 #+end_src
+
+#+RESULTS:
+: t
 
 * Edition
 ** Parameter
@@ -586,11 +597,12 @@ basic default value to enable
 ** replace string =visual-replace=
 visuel-regexp show in the buffer the replaced
 #+begin_src emacs-lisp :tangle yes
-  (use-package visualp-regexp
+  (use-package visual-regexp
     :bind
     ("C-c s r" . vr/replace)
     ("C-c s q" . vr/query-replace))
 #+end_src
+
 ** delete all space in front =smart-hungry-delete=
 #+begin_src emacs-lisp :tangle yes
   (use-package smart-hungry-delete
@@ -628,44 +640,33 @@ Moves the current line (or if marked, the current region's, whole lines).
        (tab-mark 9 [9655 9] [92 9]))))
 #+END_SRC
 
-** Auto-Completion =company=
+** Auto-Completion =corfu=
 
-=company= provides auto-completion at point and to displays a small pop-in
-containing the candidates.
+=corfu= provides auto-completion at point and to displays a small
+pop-in containing the candidates.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package company
-    :delight
-    :init (global-company-mode)
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+
+  (use-package corfu
+    ;; Optional customizations
+    :custom
+    ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto t)                 ;; Enable auto completion
+    ;; (corfu-separator ?\s)          ;; Orderless field separator
+    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
     :config
-    (bind-key [remap completion-at-point] #'company-complete company-mode-map)
-    :custom
-    (company-idle-delay
-     (lambda () (if (company-in-string-or-comment) nil 0.3)))
-    (company-minimum-prefix-length 2)
-    (company-show-numbers nil)
-    (company-tooltip-align-annotations t)
-    :bind
-    (:map company-active-map
-           ("C-n" . company-select-next)
-           ("C-p" . company-select-previous)
-           ("M-<" . company-select-first)
-           ("M->" . company-select-last)))
-
-  (use-package company-box
-    :delight
-    :custom
-    (company-box-doc-delay 0.1)
-    (company-box-doc-frame-parameters '((internal-border-width . 10)))
-    :hook (company-mode . company-box-mode))
-
-  (use-package company-quickhelp ; Documentation popups for Company
-    :delight
-    :hook (global-company-mode . company-quickhelp-mode))
+    (corfu-popupinfo-mode)
+    :init (global-corfu-mode))
 #+END_SRC
-
-#+RESULTS:
-| company-mode-set-explicitly | company-box-mode |
 
 ** Edit all occurence =iedit=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -673,15 +674,7 @@ containing the candidates.
     :bind ("C-c e" . iedit-mode))
 #+END_SRC
 
-#+RESULTS:
-: iedit-mode
 ** Decoration
-
-*** sticky function =
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package topsy
-  ;;   :hook prog-mode)
-#+END_SRC
 
 *** colorize background of text color like green =rainbow-mode=
 Colorize colors as text with their value.
@@ -689,29 +682,22 @@ Colorize colors as text with their value.
   (use-package rainbow-mode
     :delight
     :custom
-    ;; (rainbow-x-colors-major-mode-list '(prog-mode org-mode))
     (rainbow-x-colors t)
     (rainbow-r-colors t)
     :hook ((prog-mode org-mode) .  rainbow-mode))
 #+END_SRC
+
 *** Show indentation level =highlight-indent-guides=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package highlight-indent-guides
     :delight
+    :disabled
     :custom
     (highlight-indent-guides-method 'character)
     (highlight-indent-guides-character ?║)
     (highlight-indent-guides-responsive 'stack)
-    :hook ((prog-mode org-mode) .  highlight-indent-guides-mode))
+    :hook ((prog-mode org-mode) . highlight-indent-guides-mode))
 #+END_SRC
-
-*** TODO Show line at 80 char =fill-column-indicator=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq display-fill-column-indicator-column t)
-#+END_SRC
-
-#+RESULTS:
-: |
 
 *** Color parenthesis =rainbow-delimiters=
 
@@ -722,15 +708,54 @@ Colorize colors as text with their value.
 #+END_SRC
 
 ** copy line when no active region
-Here I defined my own functions eithers fund online or written by me.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package whole-line-or-region
     :delight
-    :config
+    :init
     (whole-line-or-region-global-mode))
 #+END_SRC
 
+#+RESULTS:
+
 ** Specific
+
+*** spell checking =flyspell=
+spell checking on the fly
+#+begin_src emacs-lisp :tangle yes
+  (use-package flyspell
+    :delight
+    :hook
+    ((text-mode . flyspell-mode)
+     (prog-mode . flyspell-prog-mode)))
+
+  (use-package flyspell-correct
+    :after flyspell
+    :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+
+  (use-package flyspell-correct-ivy
+    :after flyspell-correct)
+#+end_src
+
+*** syntax checking =flycheck=
+spell checking on the fly
+#+begin_src emacs-lisp :tangle yes
+  (use-package flycheck
+    :delight
+    :commands flycheck-mode
+    :init (global-flycheck-mode))
+
+  (use-package flycheck-color-mode-line
+    :delight
+    :after flycheck
+    :hook
+    (flycheck-mode . flycheck-color-mode-line-mode))
+
+  (use-package flycheck-pos-tip
+    :delight ""
+    :after flycheck)
+#+end_src
+
 *** Language server =lsp-mode=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package lsp-mode
@@ -748,14 +773,21 @@ Here I defined my own functions eithers fund online or written by me.
     :after lsp-mode
     :commands lsp-ui-mode
     :custom-face
-    (lsp-ui-sideline-code-action ((t (:inherit warning))))
+    (markdown-code-face  ((t (:inherit consolas))))
+  ;;   (lsp-ui-sideline-code-action ((t (:inherit warning))))
     :bind
     (:map lsp-ui-mode-map
           ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-          ([remap xref-find-references] . lsp-ui-peek-find-references))
+          ([remap xref-find-references] . lsp-ui-peek-find-references)
+          ("C-c C-f" . lsp-ui-imenu)
+          )
     :custom
     ;; lsp-ui-sideline
+    (
     (lsp-ui-sideline-show-hover t)
+    (lsp-ui-sideline-show-diagnostics t)
+    (lsp-ui-sideline-delay 0.2)
+    (lsp-ui-sideline-code-actions-prefix "")
     ;; symbol is already shown by eldocand ui-doc
     (lsp-ui-sideline-show-symbol nil)
     (lsp-ui-sideline-update-mode 'line)
@@ -772,11 +804,11 @@ Here I defined my own functions eithers fund online or written by me.
     (lsp-ui-peek-enable)
     (lsp-ui-peek-show-directory t)
     (lsp-ui-peek-list-width 30)
-    (lsp-ui-peek-peek-height 30)
+    (lsp-ui-peek-peek-height 30))
 
     ;; lsp-ui-imenu
-
-    :hook (lsp-mode . lsp-ui-mode))
+    :hook (lsp-mode . lsp-ui-mode)
+    )
 
   (use-package lsp-ivy
     :after (lsp-mode ivy)
@@ -784,52 +816,10 @@ Here I defined my own functions eithers fund online or written by me.
     (:map projectile-mode-map
           ([remap projectile-ag] . lsp-ivy-workspace-symbol))
     :commands lsp-ivy-workspace-symbol)
-
-  (use-package company-lsp
-    :ensure nil
-    :after (lsp-mode company)
-    :commands company-lsp
-    ;; :custom
-    ;; Breaks a lot of stuff for some reason...
-    ;; (company-lsp-enable-recompletion t)
-    :init
-    (push 'company-lsp company-backend))
 #+END_SRC
 
-*** spell checking =flyspell=
-#+begin_src emacs-lisp :tangle yes
-  (use-package flyspell
-      :delight ""
-      :hook
-    ((text-mode . flyspell-mode)
-     (prog-mode . flyspell-prog-mode)))
-
-  (use-package flyspell-correct
-    :after flyspell
-    :bind (:map flyspell-mode-map ("M-§" . flyspell-correct-wrapper)))
-
-
-  (use-package flyspell-correct-ivy
-    :after flyspell-correct)
-#+end_src
-
-*** syntax checking =flycheck=
-#+begin_src emacs-lisp :tangle yes
-  (use-package flycheck
-    :delight ""
-    :commands flycheck-mode
-    :init (global-flycheck-mode))
-
-  (use-package flycheck-color-mode-line
-    :delight ""
-    :after flycheck
-    :hook
-    (flycheck-mode . flycheck-color-mode-line-mode))
-
-  (use-package flycheck-pos-tip
-    :delight ""
-    :after flycheck)
-#+end_src
+#+RESULTS:
+: lsp-ivy-workspace-symbol
 
 *** Programming language
 **** protocol =protobuf=
@@ -857,14 +847,14 @@ cargo gives set of combination to perform cargo (rust builder) task
 rustic takes care of starting
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rustic
-    :delight
+    :delight " "
     :mode ("\\.rs$" . rustic-mode)
     :hook
     (rustic-mode . lsp)
     :commands (rustic-mode)
     :bind (:map rustic-mode-map
-                ("C-c C-f" . lsp-find-references)
-                ("C-c C-l" . lsp-find-definition)
+                ;;               ("C-c C-f" . lsp-ui-peek-find-definition)
+                ;;               ("C-c C-l" . lsp-ui-peek-find-implementation)
                 ("C-c C-c ?" . lsp-describe-thing-at-point)
                 ("C-c C-c !" . lsp-execute-code-action)
                 ("C-c C-c r" . lsp-rename)
@@ -878,6 +868,7 @@ rustic takes care of starting
                 ("C-c C-c C-u" . rustic-cargo-upgrade)
                 ("C-c C-c C-o" . rustic-cargo-outdated))
     :custom
+    (rustic-lsp-server 'rust-analyzer)
     (lsp-rust-analyzer-cargo-watch-command "clippy")
     (rustic-format-on-save nil)
     (rustic-format-display-method 'pop-to-buffer)
@@ -897,10 +888,13 @@ rustic takes care of starting
      `(rustic-compilation-info ((t (:foreground ,(x-get-resource "color11" "" )))))
      `(rustic-compilation-warning ((t (:foreground ,(x-get-resource "color9)" "" ))))))
   )
+
 #+END_SRC
 
 **** OCaml
 
+***** load opam
+Setup environment variables and opam-lib using opam
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun shell-cmd (cmd)
     "Returns the stdout output of a shell command or nil if the command returned
@@ -908,11 +902,6 @@ rustic takes care of starting
     (car (ignore-errors (apply 'process-lines (split-string cmd)))))
 
   (setq opam-p (shell-cmd "which opam"))
-#+END_SRC
-
-***** load opam
-Setup environment variables and opam-lib using opam
-#+BEGIN_SRC emacs-lisp :tangle yes
   (if opam-p
       (dolist (var (car (read-from-string (shell-command-to-string "opam config env --sexp"))))
         (setenv (car var) (cadr var))))
@@ -928,12 +917,14 @@ Setup environment variables and opam-lib using opam
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package caml) ; needed for merlin
   (use-package tuareg
-    :ensure nil ; comes from opam
-    :if opam-p
+    :ensure nil ; It's installed with opam
+  ;;   :if opam-p
     :mode ("\\.ml[ily]?$" . tuareg-mode)
     :custom
     (comment-style "indent"))
 #+END_SRC
+
+
 
 ***** helpers
 
@@ -962,24 +953,28 @@ Setup environment variables and opam-lib using opam
     :hook
     ;; Start merlin on ml files
     ((tuareg-mode caml-mode) . merlin-mode)
-  )
+    )
 
-    (use-package merlin-eldoc
-      :after merlin
-      :custom
-      (eldoc-echo-area-use-multiline-p t) ; use multiple lines when necessary
-      (merlin-eldoc-max-lines 8)          ; but not more than 8
-      (merlin-eldoc-type-verbosity 'min)  ; don't display verbose types
-      (merlin-eldoc-function-arguments nil) ; don't show function arguments
-      (merlin-eldoc-doc t)                ; don't show the documentation
-      :bind (:map merlin-mode-map
-                  ("C-c o p" . merlin-eldoc-jump-to-prev-occurrence)
-                  ("C-c o n" . merlin-eldoc-jump-to-next-occurrence))
-      :hook (tuareg-mode . merlin-eldoc-setup))
+  (use-package merlin-eldoc
+    :after merlin
+    :custom
+    (eldoc-echo-area-use-multiline-p t) ; use multiple lines when necessary
+    (merlin-eldoc-max-lines 8)          ; but not more than 8
+    (merlin-eldoc-type-verbosity 'min)  ; don't display verbose types
+    (merlin-eldoc-function-arguments nil) ; don't show function arguments
+    (merlin-eldoc-doc t)                ; don't show the documentation
+    :bind (:map merlin-mode-map
+                ("C-c o p" . merlin-eldoc-jump-to-prev-occurrence)
+                ("C-c o n" . merlin-eldoc-jump-to-next-occurrence))
+    :hook (tuareg-mode . merlin-eldoc-setup))
+
+  (use-package flycheck-ocaml
+    :after merlin tuareg
+    :custom
+    (merlin-error-after-save nil)
+    :hook
+    (tuareg-mode . flycheck-ocaml-setup))
 #+END_SRC
-
-#+RESULTS:
-: merlin-eldoc-jump-to-next-occurrence
 
 ****** repl =utop=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -996,15 +991,11 @@ it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ocamlformat
     :ensure nil
-    :if opam-p
     :custom
     (ocamlformat-enable 'enable-outside-detected-project)
     (ocamlformat-show-errors 'echo)
-    :hook (before-save . ocamlformat-before-save) )
+    :hook (before-save . ocamlformat-before-save))
 #+END_SRC
-
-#+RESULTS:
-| ocamlformat-before-save | delete-trailing-whitespace |
 
 **** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1065,6 +1056,7 @@ it format also dune file, which is annoying
 ** interaction =projectile=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
+    :delight ""
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :custom
@@ -1082,6 +1074,7 @@ it format also dune file, which is annoying
      '((default counsel-projectile-switch-project-action-vc)))
     )
 #+END_SRC
+
 ** Git
 *** Git interaction =magit=
 It is quite common to work on Git repositories, so it is important to have a
@@ -1438,10 +1431,13 @@ It's buggy, the view show an event starting on each day it set
 #+END_SRC
 
 
-*** TODO Caldav sync =org-caldav=
+*** DONE Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-caldav
     :init
+    (defun org-caldav-sync-at-close ()
+      (org-caldav-sync)
+      (save-some-buffers))
     (defvar org-caldav-sync-timer nil
       "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
     (defun my/org-caldav-sync-with-delay (secs)
@@ -1453,8 +1449,15 @@ It's buggy, the view show an event starting on each day it set
     (org-caldav-backup-file "~/org/org-caldav-backup.org")
     (org-icalendar-alarm-time 10) ; set alarm 10 minutes before for calendar
     (org-caldav-show-sync-results nil)
-    (org-icalendar-include-todo t)
+    (org-icalendar-include-todo 'all)
+    (org-caldav-sync-todo 'all)
     (org-caldav-delete-calendar-entries 'always)
+    (org-caldav-todo-percent-states
+     '((1 "BOOK") (99 "CANCELED") (0 "TODO") (2 "INPROGRESS")
+       (3 "WAITING") (4 "SOMEDAY") (100 "DONE") (98 "ABORDED")
+       (5 "IDEA") (6 "WANT") (7 "FETCH") (8 "GIVE") (97 "HAVE")
+       (96  "GIVEN") (9 "USE") (96 "CONSUMED") (95 "LOST")))
+    (org-caldav-resume-aborted 'never)
     :config
     (setq org-caldav-calendars
           '((:calendar-id "master"
@@ -1466,26 +1469,18 @@ It's buggy, the view show an event starting on each day it set
             (:calendar-id "billy"
                           :files ("~/org/billy.org")
                           :inbox (file+headline "~/org/billy.org" "sync"))
-            (:calendar-id "calendargooglecom-2"
-                          :sync-direction 'cal->org
-                          :inbox ("~/org/nomadic labs.org"))
-            ;; (:url "https://www.facebook.com/events/ical/upcoming/?uid=525297993&key=ShuJLNbIhhWI0VBp"
-            ;;       :sync-direction 'cal->org
-            ;;       :inbox ("~/org/facebook.org"))
-            (:calendar-id "contact_birthdays"
-                          :sync-direction 'cal->org
-                          :inbox (file+headline "~/org/master.org" "Contact birthdays"))
             ))
     (setq org-icalendar-use-deadline
           '(event-if-todo-not-done todo-due))
     (setq org-icalendar-use-scheduled
           '(todo-start event-if-todo-not-done))
-    :hook (
-           (kill-emacs . org-caldav-sync)
-           (after-save
-            .
-            (lambda ()
-              (when (eq major-mode 'org-mode) (my/org-caldav-sync-with-delay 30))))))
+    :hook
+    ( (kill-emacs . org-caldav-sync-at-close)
+      (after-save
+       .
+       (lambda ()
+         (when (eq major-mode 'org-mode)
+           (my/org-caldav-sync-with-delay 300))))))
 #+END_SRC
 
 *** notification =org-wild-notifier=

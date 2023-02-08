@@ -132,14 +132,19 @@ ramp-signal-foreground = ${colors.secondary}
 [module/backlight]
 type = internal/backlight
 card = intel_backlight
-enable-scroll = true
 use-actual-brightness = true
+enable-scroll = true
 
-format-prefix = " "
 format-prefix-foreground = ${colors.secondary}
-label = %percentage%%
-format = <bar>
-
+format-prefix = " "
+format-foreground = ${colors.secondary}
+# format-prefix-foreground = ${colors.secondary}
+format = <ramp>
+ramp-0 = "   "
+ramp-1 = " ▂ "
+ramp-2 = " ▄ "
+ramp-3 = " ▅ "
+ramp-4 = " ▇ "
 # bar-width = 100
 # bar-indicator = -
 # bar-fill = ━
@@ -200,10 +205,13 @@ bar-volume-empty-foreground = ${color.be}
 [module/bluetooth]
 type = custom/script
 exec = ~/.config/polybar/script/bluetooth.sh
-interval = 2
-click-left = exec blueberry
-click-right =  exec ~/.config/polybar/script/toggle_bluetooth.sh
+tail = true
+click-left = ~/.config/polybar/script/bluetooth.sh --toggle &
+click-right = exec blueberry
 format-padding = 1
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
 
 [module/memory]
 type = internal/memory
@@ -324,3 +332,10 @@ format-offline = <label-offline>
 label-offline = ""
 
 format-online = <label-song>
+
+
+[module/vpn]
+type = custom/script
+exec = ~/polybar-scripts/vpn-wireguard-wg.sh
+interval = 5
+click-left = ~/polybar-scripts//vpn-wireguard-wg.sh --toggle &
