@@ -31,7 +31,6 @@
 #         plus-empty-line-marker-style  = normal 22
 #         whitespace-error-style        = reverse 22
 
-
 # [delta "decorations"]
 #        commit-decoration-style = bold yellow box ul
 #        file-style = bold yellow ul
@@ -44,4 +43,4 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 [gitlab]
-	user = sribar
+	user = sribaroud

@@ -1,7 +1,2 @@
 .dotfiles
 .private
-
-
-# Added by cargo
-
-/target
