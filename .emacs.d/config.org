@@ -844,7 +844,11 @@ spell checking on the fly
 #+END_SRC
 **** Rust =rustic-mode=
 cargo gives set of combination to perform cargo (rust builder) task
-rustic takes care of starting
+rustic takes care of starting.
+
+You must install rust-analyzer by hand with your package manager. No
+solution found yet.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rustic
     :delight " "
@@ -853,8 +857,10 @@ rustic takes care of starting
     (rustic-mode . lsp)
     :commands (rustic-mode)
     :bind (:map rustic-mode-map
+                ;; Using the M-. and M-? as described in the lsp package
                 ;;               ("C-c C-f" . lsp-ui-peek-find-definition)
                 ;;               ("C-c C-l" . lsp-ui-peek-find-implementation)
+                ;; The following should be moved to the lsp package I guess ? :shrug:
                 ("C-c C-c ?" . lsp-describe-thing-at-point)
                 ("C-c C-c !" . lsp-execute-code-action)
                 ("C-c C-c r" . lsp-rename)
