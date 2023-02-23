@@ -17,12 +17,14 @@
   - [[#auto-save-mode][auto-save-mode]]
   - [[#apparence][apparence]]
     - [[#turn-off-mouse-interface][Turn off mouse interface]]
+    - [[#theme-constant-theme][Theme =constant-theme=]]
     - [[#theme-xresources-theme][Theme =xresources-theme=]]
     - [[#font][font]]
       - [[#icons-all-the-icons][icons =all-the-icons=]]
 - [[#mini-buffer][Mini-buffer]]
   - [[#parameter][parameter]]
   - [[#completion-engine-ivy][completion engine =ivy=]]
+  - [[#m-x-on-popup-ivy-posframe][M-x on popup =ivy-posframe=]]
   - [[#search-in-current-buffer-swiper][search in current buffer =swiper=]]
   - [[#search-somewhere-else-m-xdiredetc-smexcounsel][search somewhere else "M-x/dired/etc" =smex,counsel=]]
   - [[#improved-text-search-ripgrep][improved text search =ripgrep=]]
@@ -34,6 +36,7 @@
   - [[#parameter-1][Parameter]]
   - [[#mode-icons-delight][Mode icons =delight=]]
   - [[#indicate-position-on-file-nyan][Indicate position on file =nyan=]]
+  - [[#modified-modeline-nano-modeline][modified modeline =nano-modeline=]]
 - [[#interface-interaction][Interface interaction]]
   - [[#buffer][Buffer]]
     - [[#parameter-2][parameter]]
@@ -54,6 +57,7 @@
   - [[#move-text-move-text][Move text =move-text=]]
   - [[#whitespace-whitespace][Whitespace =whitespace=]]
   - [[#auto-completion-corfu][Auto-Completion =corfu=]]
+  - [[#snippet-yasnippet][snippet =yasnippet=]]
   - [[#edit-all-occurence-iedit][Edit all occurence =iedit=]]
   - [[#decoration][Decoration]]
     - [[#colorize-background-of-text-color-like-green-rainbow-mode][colorize background of text color like green =rainbow-mode=]]
@@ -282,6 +286,14 @@ I find invasive.
   (tooltip-mode -1)       ; Disable the tooltips
 #+END_SRC
 
+*** Theme =constant-theme=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package constant-theme)
+  ;; (load-theme 'constant t)
+#+END_SRC
+
+#+RESULTS:
+
 *** Theme =xresources-theme=
 xresources-theme that respect Xressources
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -301,7 +313,6 @@ xresources-theme that respect Xressources
                    (enable-theme my/theme)
                  (progn
                    (load-theme my/theme t)
-                   (set-face-background 'hl-line (x-get-resource "color8" ""))
                    ))
                (setq my/theme-window-loaded t))
            (unless my/theme-terminal-loaded
@@ -309,17 +320,16 @@ xresources-theme that respect Xressources
                  (enable-theme my/theme)
                (progn
                  (load-theme my/theme t)
-                 (set-face-background 'hl-line (x-get-resource "color8" ""))
                  ))
              (setq my/theme-terminal-loaded t)))))
     (progn
       (load-theme my/theme t)
-      ;; (set-face-background 'hl-line (x-get-resource "color8" ""))
       (if (display-graphic-p)
           (setq my/theme-window-loaded t)
         (setq my/theme-terminal-loaded t))))
 
 #+END_SRC
+
 *** font
 **** icons =all-the-icons=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -359,17 +369,37 @@ xresources-theme that respect Xressources
     :config (all-the-icons-ivy-setup))
 #+END_SRC
 
+** M-x on popup =ivy-posframe=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ivy-posframe
+    :config
+    ;; Different command can use different display function.
+    (setq ivy-posframe-height-alist '((swiper . 20)
+                                      (t      . 40)))
+    (setq ivy-posframe-display-functions-alist
+          '((swiper          . ivy-display-function-fallback)
+            (counsel-M-x     . ivy-posframe-display-at-window-bottom-left)
+            (t               . ivy-posframe-display)))
+    :init
+    (ivy-posframe-mode 1)
+    )
+#+END_SRC
+
+#+RESULTS:
+: t
+
+
 ** search in current buffer =swiper=
 #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package swiper
       :after (ivy xresources-theme)
       :config
       (custom-set-faces
-       `(swiper-line-face               ((t (:background ,(x-get-resource "color12" "")))))
+       `(swiper-line-face               ((t (:background ,(xresources-theme-color "color12")))))
        `(swiper-match-face-1            ((t (:background ,(x-get-resource "color9"  "") :weight bold))))
-       `(swiper-match-face-2            ((t (:background ,(x-get-resource "color10" "") :weight bold))))
-       `(swiper-match-face-3            ((t (:background ,(x-get-resource "color11" "") :weight bold))))
-       `(swiper-match-face-4            ((t (:background ,(x-get-resource "color13" "") :weight bold)))))
+       `(swiper-match-face-2            ((t (:background ,(xresources-theme-color "color10") :weight bold))))
+       `(swiper-match-face-3            ((t (:background ,(xresources-theme-color "color11") :weight bold))))
+       `(swiper-match-face-4            ((t (:background ,(xresources-theme-color "color13") :weight bold)))))
       :bind ("C-s" . swiper))
 #+END_SRC
 
@@ -445,6 +475,21 @@ show which mode on the main bar.
     (nyan-wavy-trail t)
     (nyan-bar-length 20))
 #+END_SRC
+
+** modified modeline =nano-modeline=
+#+begin_src emacs-lisp :tangle yes
+  (use-package mood-line
+    ;; Enable mood-line
+    :config
+    (mood-line-mode)
+
+    ;; Use pretty Fira Code-compatible glyphs
+    :custom
+    (mood-line-glyph-alist mood-line-glyphs-fira-code)
+    )
+#+end_src
+
+#+RESULTS:
 
 * Interface interaction
 ** Buffer
@@ -564,7 +609,7 @@ Start scrolling when nm left of line < 5 top and bottom
     :delight
     :when (window-system)
     :custom
-    (beacon-color (x-get-resource "color13" ""))
+    (beacon-color (xresources-theme-color "color13"))
     :config (beacon-mode 1))
 #+end_src
 
@@ -668,6 +713,20 @@ pop-in containing the candidates.
     :init (global-corfu-mode))
 #+END_SRC
 
+** snippet =yasnippet=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package yasnippet
+    :custom
+    (yas-verbosity 1) ; No need to be so verbose
+    (yas-wrap-around-region t)
+    :config
+    (yas-reload-all)
+    (yas-global-mode)  )
+
+  (use-package yasnippet-snippets         ; Collection of snippets
+    :requires yasnippet)
+#+END_SRC
+
 ** Edit all occurence =iedit=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package iedit
@@ -759,7 +818,7 @@ spell checking on the fly
 *** Language server =lsp-mode=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package lsp-mode
-    :after (which-key flycheck)
+    :after (which-key flycheck yasnippet)
     :hook
     (lsp-mode . lsp-enable-which-key-integration)
     :commands (lsp lsp-deferred)
@@ -774,38 +833,43 @@ spell checking on the fly
     :commands lsp-ui-mode
     :custom-face
     (markdown-code-face  ((t (:inherit consolas))))
-  ;;   (lsp-ui-sideline-code-action ((t (:inherit warning))))
+    ;;   (lsp-ui-sideline-code-action ((t (:inherit warning))))
     :bind
     (:map lsp-ui-mode-map
           ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
           ([remap xref-find-references] . lsp-ui-peek-find-references)
+          ("C-c d" . lsp-ui-doc-focus-frame)
           ("C-c C-f" . lsp-ui-imenu)
           )
     :custom
     ;; lsp-ui-sideline
     (
-    (lsp-ui-sideline-show-hover t)
-    (lsp-ui-sideline-show-diagnostics t)
-    (lsp-ui-sideline-delay 0.2)
-    (lsp-ui-sideline-code-actions-prefix "")
-    ;; symbol is already shown by eldocand ui-doc
-    (lsp-ui-sideline-show-symbol nil)
-    (lsp-ui-sideline-update-mode 'line)
+     (lsp-completion-provider :none)
+     (lsp-ui-sideline-show-hover 'nil)
+     (lsp-ui-sideline-show-diagnostics t)
+     (lsp-ui-sideline-delay 0.2)
+     (lsp-ui-sideline-code-actions-prefix " ")
+     (lsp-ui-sideline-show-code-actions t)
+     ;; symbol is already shown by eldoc and ui-doc
+     (lsp-ui-sideline-show-symbol t)
+     (lsp-ui-sideline-update-mode 'point)
 
-    ;; lsp-ui-doc
-    (lsp-ui-doc-position 'at-point)
-    (lsp-ui-doc-enable t)
-    (lsp-ui-doc-delay 0.8)
-    (lsp-ui-doc-max-height 30)
-    (lsp-ui-doc-max-width 80)
+     ;; lsp-ui-doc
+     (lsp-ui-doc-enable t)
+     (lsp-ui-doc-include-signature t)
+     (lsp-ui-doc-position 'at-point)
+     (lsp-ui-doc-delay 0.2)
+     (lsp-ui-doc-max-height 13)
+     (lsp-ui-doc-max-width 150)
+     (lsp-ui-doc-show-with-cursor t)
 
-    ;; lsp-ui-peek
-    (lsp-ui-peek-always-show nil)
-    (lsp-ui-peek-enable)
-    (lsp-ui-peek-show-directory t)
-    (lsp-ui-peek-list-width 30)
-    (lsp-ui-peek-peek-height 30))
-
+     ;; lsp-ui-peek
+     (lsp-ui-peek-always-show nil)
+     (lsp-ui-peek-enable)
+     (lsp-ui-peek-show-directory t)
+     (lsp-ui-peek-list-width 30)
+     (lsp-ui-peek-peek-height 30)
+     (lsp-eldoc-enable-hover t))
     ;; lsp-ui-imenu
     :hook (lsp-mode . lsp-ui-mode)
     )
@@ -876,7 +940,7 @@ solution found yet.
     :custom
     (rustic-lsp-server 'rust-analyzer)
     (lsp-rust-analyzer-cargo-watch-command "clippy")
-    (rustic-format-on-save nil)
+    (rustic-format-on-save t)
     (rustic-format-display-method 'pop-to-buffer)
     :config
     ;; This does not work, from what I understood, that uses ansi and xterm-color
@@ -887,15 +951,18 @@ solution found yet.
     (push 'rustic-clippy flycheck-checkers)
     ;; this works expect for the line
     (custom-set-faces
-     `(rustic-message ((t (:foreground ,(x-get-resource "color14" "" )))))
-     `(rustic-compilation-column ((t (:foreground ,(x-get-resource "color12" "" )))))
-     `(rustic-compilation-line ((t (:foreground ,(x-get-resource "color12" "" )))))
-     `(rustic-compilation-error ((t (:foreground ,(x-get-resource "color5" "" )))))
-     `(rustic-compilation-info ((t (:foreground ,(x-get-resource "color11" "" )))))
-     `(rustic-compilation-warning ((t (:foreground ,(x-get-resource "color9)" "" ))))))
-  )
-
+     `(rustic-message ((t (:foreground ,(xresources-theme-color "color14" )))))
+     `(rustic-compilation-column ((t (:foreground ,(xresources-theme-color "color12" )))))
+     `(rustic-compilation-line ((t (:foreground ,(xresources-theme-color "color12" )))))
+     `(rustic-compilation-error ((t (:foreground ,(xresources-theme-color "color5" )))))
+     `(rustic-compilation-info ((t (:foreground ,(xresources-theme-color "color11" )))))
+     `(rustic-compilation-warning ((t (:foreground ,(xresources-theme-color "color9" ))))))
+    )
 #+END_SRC
+
+#+RESULTS:
+: rustic-cargo-outdated
+
 
 **** OCaml
 
@@ -929,8 +996,6 @@ Setup environment variables and opam-lib using opam
     :custom
     (comment-style "indent"))
 #+END_SRC
-
-
 
 ***** helpers
 
@@ -1062,13 +1127,15 @@ it format also dune file, which is annoying
 ** interaction =projectile=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package projectile
-    :delight ""
+    :delight
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :custom
     (projectile-grep-default-files "src/")
     (projectile-project-search-path '("~/CS/Project/"))
     (projectile-completion-system 'ivy)
+    (projectile-sort-order 'recentf)
+    (projectile-mode-line-prefix " ")
     :init (projectile-mode))
 
   (use-package counsel-projectile
@@ -1080,6 +1147,9 @@ it format also dune file, which is annoying
      '((default counsel-projectile-switch-project-action-vc)))
     )
 #+END_SRC
+
+#+RESULTS:
+: t
 
 ** Git
 *** Git interaction =magit=

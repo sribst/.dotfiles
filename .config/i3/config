@@ -80,8 +80,8 @@ bindsym $super+q focus parent
 # We use variables to avoid repeating the names in multiple places.
 
 set $ws1 ""
-set $ws2 ""
-set $ws3 ""
+set $ws2 ""
+set $ws3 ""
 set $ws4 ""
 set $ws5 ""
 set $ws6 ""
@@ -212,10 +212,10 @@ bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 # media controls
-# bindsym XF86AudioPlay exec "mpc toggle"
-# bindsym XF86AudioStop exec "mpc stop"
-# bindsym XF86AudioNext exec "mpc next"
-# bindsym XF86AudioPrev exec "mpc prev"
+bindsym XF86AudioPlay exec "playerctl play-pause"
+bindsym XF86AudioStop exec "playerctl pause"
+bindsym XF86AudioNext exec "playerctl next"
+bindsym XF86AudioPrev exec "playerctl previous"
 # backlight
 bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
@@ -232,6 +232,7 @@ assign [class="^Chromium"]    → $ws4
 assign [class="^next"]        → $ws4
 assign [class="^firefox"]     → $ws4
 
+
 # social
 assign [class="^Wire"]        → $ws5
 assign [class="^Telegram"]    → $ws5
@@ -240,9 +241,13 @@ assign [class="^Slack"]       → $ws5
 assign [class="^Element"]     → $ws5
 assign [class="^Spectral"]    → $ws5
 assign [class="^Signal"]      → $ws5
-assign [class="^Discord"]     → $ws5
+assign [class="^discord"]     → $ws5
 assign [class="^TeamSpeak 3"] → $ws5
 
+# media
+# hackish way to sind spotify to ws6
+for_window [class="Spotify"]    move window to workspace $ws6
+assign [class="^mpv"]         → $ws6
 
 # cloud
 exec --no-startup-id nextcloud &
@@ -298,7 +303,7 @@ exec_always --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 for_window [workspace=$ws5] layout tabbed
 
 # start all common social software
-bindsym $super+c exec telegram-desktop; exec slack; exec signal-desktop # ;exec discord
+bindsym $super+c exec telegram-desktop; exec slack; exec signal-desktop; exec firefox; exec spotify # ;exec discord
 
 # bindsym $super+b exec firefox
 
