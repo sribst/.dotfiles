@@ -3,7 +3,7 @@
 #+CATEGORY: config
 
 * Table of content :TOC_4:
-- [[#use-this-config][use this config]]
+- [[#update-my-conf-using-config][update my conf using config]]
 - [[#global-configuration][Global configuration]]
   - [[#packages][Packages]]
     - [[#sources][Sources]]
@@ -122,9 +122,7 @@
     - [[#contact-database-ebdb][contact database =ebdb=]]
 - [[#not-used-anymore][not used anymore]]
 
-* TODO use this [[https://github.com/alhassy/emacs.d#emacs-vs-initorg][config]]
-
-
+* TODO update my conf using [[https://github.com/alhassy/emacs.d#emacs-vs-initorg][config]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
