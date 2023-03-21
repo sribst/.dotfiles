@@ -13,7 +13,8 @@ antigen bundle agkozak/zsh-z
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle djui/alias-tips
 antigen bundle mollifier/anyframe
-antigen bundle zsh-auto-notify
+antigen bundle MichaelAquilina/zsh-auto-notify
+
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
 

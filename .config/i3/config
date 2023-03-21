@@ -74,20 +74,31 @@ bindsym $super+space focus mode_toggle
 bindsym $super+q focus parent
 
 # focus the child container
-#bindsym $super+d focus child
+bindsym $super+Shift+q focus child
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 
-set $ws1 ""
-set $ws2 ""
-set $ws3 ""
-set $ws4 ""
-set $ws5 ""
-set $ws6 ""
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
+# set $ws1 ""
+# set $ws2 ""
+# set $ws3 ""
+# set $ws4 ""
+# set $ws5 ""
+# set $ws6 ""
+# set $ws7 "7"
+# set $ws8 "8"
+# set $ws9 "9"
+# set $ws10 "10"
+
+set $ws1  "1"
+set $ws2  "2"
+set $ws3  "3"
+set $ws4  "4"
+set $ws5  "5"
+set $ws6  "6"
+set $ws7  "7"
+set $ws8  "8"
+set $ws9  "9"
 set $ws10 "10"
 
 # 2 screen output
@@ -204,6 +215,9 @@ client.background       $background
 #polybar
 exec_always --no-startup-id $HOME/bin/startsimplebar
 
+#background
+exec_always --no-startup-id feh --bg-fill --randomize ~/Media/wallpaper/
+
 # volume controls
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
@@ -291,7 +305,10 @@ exec nm-applet
 # exec blueman-applet
 
 # start notification center
-exec deadd-notification-center
+exec_always --no-startup-id dunst&
+
+# start autolock when suspend,...
+exec --no-startup-id xss-lock --transfer-sleep-lock -- "i3lock-fancy-rapid 5 10 -u -p default" &
 
 # start battery signal
 exec batsignal
@@ -305,65 +322,7 @@ for_window [workspace=$ws5] layout tabbed
 # start all common social software
 bindsym $super+c exec telegram-desktop; exec slack; exec signal-desktop; exec firefox; exec spotify # ;exec discord
 
-# bindsym $super+b exec firefox
 
-set $i3_resurrect i3-resurrect
-
-# Save workspace mode.
-set $save Save workspace: (&) , (é) , (\") ², ...
-bindsym $super+u mode "save"
-mode "save" {
-         bindsym $super+ampersand  exec "$i3_resurrect save -w 1 --swallow=class,instance,title"
-         bindsym $super+eacute     exec "$i3_resurrect save -w 2 --swallow=class,instance,title"
-         bindsym $super+quotedbl   exec "$i3_resurrect save -w 3 --swallow=class,instance,title"
-         bindsym $super+apostrophe exec "$i3_resurrect save -w 4 --swallow=class,instance,title"
-         bindsym $super+parenleft  exec "$i3_resurrect save -w 5 --swallow=class,instance,title"
-         bindsym $super+minus      exec "$i3_resurrect save -w 6 --swallow=class,instance,title"
-         bindsym $super+egrave     exec "$i3_resurrect save -w 7 --swallow=class,instance,title"
-         bindsym $super+underscore exec "$i3_resurrect save -w 8 --swallow=class,instance,title"
-         bindsym $super+ccedilla   exec "$i3_resurrect save -w 9 --swallow=class,instance,title"
-         bindsym $super+agrave     exec "$i3_resurrect save -w 10 --swallow=class,instance,title"
-
-          # back to normal: Enter or Escape or $super+r
-          bindsym Return mode "default"
-          bindsym Escape mode "default"
-          bindsym $super+g mode "default"
-          bindsym $super+u mode "default"
-}
-
-
-# Restore workspace mode.
-set $restore Restore workspace: (&) , (é) , (\") ², ...
-bindsym $super+i mode "restore"
-mode "restore" {
-         bindsym $super+ampersand  exec "$i3_resurrect restore -w 1 --programs-only"
-         bindsym $super+eacute     exec "$i3_resurrect restore -w 2 --programs-only"
-         bindsym $super+quotedbl   exec "$i3_resurrect restore -w 3 --programs-only"
-         bindsym $super+apostrophe exec "$i3_resurrect restore -w 4 --programs-only"
-         bindsym $super+parenleft  exec "$i3_resurrect restore -w 5 --programs-only"
-         bindsym $super+minus      exec "$i3_resurrect restore -w 6 --programs-only"
-         bindsym $super+egrave     exec "$i3_resurrect restore -w 7 --programs-only"
-         bindsym $super+underscore exec "$i3_resurrect restore -w 8 --programs-only"
-         bindsym $super+ccedilla   exec "$i3_resurrect restore -w 9 --programs-only"
-         bindsym $super+agrave     exec "$i3_resurrect restore -w 10 --programs-only"
-
-         bindsym $super+ampersand  exec "$i3_resurrect restore -w 1 --layout-only"
-         bindsym $super+eacute     exec "$i3_resurrect restore -w 2 --layout-only"
-         bindsym $super+quotedbl   exec "$i3_resurrect restore -w 3 --layout-only"
-         bindsym $super+apostrophe exec "$i3_resurrect restore -w 4 --layout-only"
-         bindsym $super+parenleft  exec "$i3_resurrect restore -w 5 --layout-only"
-         bindsym $super+minus      exec "$i3_resurrect restore -w 6 --layout-only"
-         bindsym $super+egrave     exec "$i3_resurrect restore -w 7 --layout-only"
-         bindsym $super+underscore exec "$i3_resurrect restore -w 8 --layout-only"
-         bindsym $super+ccedilla   exec "$i3_resurrect restore -w 9 --layout-only"
-         bindsym $super+agrave     exec "$i3_resurrect restore -w 10 --layout-only"
-
-          # back to normal: Enter or Escape or $super+r
-          bindsym Return mode "default"
-          bindsym Escape mode "default"
-          bindsym $super+g mode "default"
-          bindsym $super+i mode "default"
-}
 #############################
 ### settings for i3-gaps: ###
 #############################

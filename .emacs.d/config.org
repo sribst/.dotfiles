@@ -3,6 +3,7 @@
 #+CATEGORY: config
 
 * Table of content :TOC_4:
+- [[#use-this-config][use this config]]
 - [[#global-configuration][Global configuration]]
   - [[#packages][Packages]]
     - [[#sources][Sources]]
@@ -45,6 +46,7 @@
   - [[#auto-center-when-only-one-window-centered-window][auto center when only one window =centered-window=]]
   - [[#window][Window]]
     - [[#parameter-3][parameter]]
+    - [[#auto-balance-window-balanced-windows][Auto balance window =balanced-windows=]]
     - [[#switch-window-ace-window][switch window =ace-window=]]
     - [[#window-configuration-winner-mode][window configuration =winner-mode=]]
     - [[#toggle-windows-split][Toggle windows split]]
@@ -69,6 +71,7 @@
     - [[#syntax-checking-flycheck][syntax checking =flycheck=]]
     - [[#language-server-lsp-mode][Language server =lsp-mode=]]
     - [[#programming-language][Programming language]]
+      - [[#semantic-highlighting-color-identifiers-mode][semantic highlighting =color-identifiers-mode=]]
       - [[#protocol-protobuf][protocol =protobuf=]]
       - [[#shell-script-shfmt][Shell script =shfmt=]]
       - [[#golang][Golang]]
@@ -118,6 +121,10 @@
 - [[#tasks][Tasks]]
     - [[#contact-database-ebdb][contact database =ebdb=]]
 - [[#not-used-anymore][not used anymore]]
+
+* TODO use this [[https://github.com/alhassy/emacs.d#emacs-vs-initorg][config]]
+
+
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -192,8 +199,7 @@ github. Theses access are only needed to start package in gh IIUC.
    help-window-select t ; Focus new help windows when opened
    load-prefer-newer t ; Prefers the newest version of a file
    scroll-conservatively most-positive-fixnum ; Always scroll by one line
-   set-default-coding-systems 'utf-8 ; Default to utf-8 encoding
-   make-variable-buffer-local 'compile-command) ; be able to set it as a dir-locals
+   set-default-coding-systems 'utf-8) ; Default to utf-8 encoding
 #+END_SRC
 
 *** Customization
@@ -332,13 +338,13 @@ xresources-theme that respect Xressources
 
 *** font
 **** icons =all-the-icons=
+One need to run M-x all-the-icons-install-fonts after all-the-icons
+being installed
 #+BEGIN_SRC emacs-lisp :tangle yes
-    ;; (set-frame-font "ProggyClean-14")
-  (setq default-frame-alist '((font . "Fantasque Sans Mono-11")))
-  (use-package all-the-icons)
-      ;; (set-face-attribute 'default nil :height 96)
+  (use-package all-the-icons
+    :if (display-graphic-p)
+    )
 #+END_SRC
-
 
 * Mini-buffer
 ** parameter
@@ -485,8 +491,7 @@ show which mode on the main bar.
 
     ;; Use pretty Fira Code-compatible glyphs
     :custom
-    (mood-line-glyph-alist mood-line-glyphs-fira-code)
-    )
+    (mood-line-glyph-alist mood-line-glyphs-fira-code))
 #+end_src
 
 #+RESULTS:
@@ -535,6 +540,14 @@ need to find correct config -> use toggle-windows-split atm
 (setq split-height-threshold 180)
 (setq split-width-threshold 90)
 #+END_SRC
+
+*** Auto balance window =balanced-windows=
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package balanced-windows
+  :config
+  (balanced-windows-mode))
+ #+END_SRC
+
 
 *** switch window =ace-window=
 ace window allow to simply switch when only 2 window or to choose
@@ -882,10 +895,16 @@ spell checking on the fly
     :commands lsp-ivy-workspace-symbol)
 #+END_SRC
 
-#+RESULTS:
-: lsp-ivy-workspace-symbol
-
 *** Programming language
+
+**** semantic highlighting =color-identifiers-mode=
+#+begin_src emacs-lisp :tangle yes
+  (use-package color-identifiers-mode
+    :config (global-color-identifiers-mode)
+    :custom
+    (color-identifiers:recoloring-delay 0.2))
+#+end_src
+
 **** protocol =protobuf=
 #+begin_src emacs-lisp :tangle yes
   (use-package protobuf-mode

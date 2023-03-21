@@ -3,12 +3,23 @@
 pkill polybar
 sleep 0.1
 
+# if type "xrandr"; then
+#   for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+#       MONITOR=$m polybar info &
+#       MONITOR=$m polybar bottom &
+#   done
+# else
+#     polybar info
+#     polybar bottom
+# fi
+
 if type "xrandr"; then
-  for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-      MONITOR=$m polybar info &
-      MONITOR=$m polybar bottom &
-  done
+    MONITOR=$(xrandr --query | grep " primary" | cut -d" " -f1) polybar primary &
+
+    for m in $(xrandr --query | grep " connected" | grep -v " primary" | cut -d" " -f1); do
+        MONITOR=$m polybar second &
+    done
+
 else
-    polybar info
-    polybar bottom
+    polybar fancy
 fi
