@@ -1,0 +1,311 @@
+[global/wm]
+
+margin-bottom = 0
+margin-top = 0
+fixed-center = true
+
+include-file = $HOME/.config/polybar/colors.ini
+
+[settings]
+
+throttle-output = 5
+throttle-output-for = 10
+screenchange-reload = true
+
+; Compositing operators
+
+pseudo-transparency = true
+compositing-background = source
+compositing-foreground = over
+compositing-overline = over
+compositing-underline = over
+compositing-border = over
+
+[bar/info]
+monitor = ${env:MONITOR:}
+
+# width = 100%
+# height = 0%
+bottom = false
+
+# background = #002d333f
+# foreground = ${color.foreground}
+# dim-value = 1.0
+background = ${colors.background}
+foreground = ${colors.primary}
+
+font-0 = Open Sans:pixelsize=12;1
+font-1 = file\-icons:style=Regular:pixelsize=12;1
+font-2 = Material Icons:style=Regular:pixelsize=12;1
+font-3 = FontAwesome:style=Regular:pixelsize=12;1
+font-4 = FontAwesome5Free:style=Solid:pixelsize=12:antialias=false;3
+font-5 = FontAwesome5Brands:style=Solid:pixelsize=12:antialias=false;3
+font-6 = octicons:style=Regular:pixelsize=12;1
+font-7 = github\-octicons:style=Regular:pixelsize=12;1
+font-8 = Icons:style=Regular:pixelsize=12;1
+
+# separator = ":|:"
+separator =
+
+modules-left   = memory temperature
+modules-center = date
+modules-right  = updates-arch-combined wired-network wireless-network vpn-status battery0
+
+fixed-center = true
+
+# border-top-size = 1%:-10
+# border-bottom-size = 1%:-10
+# border-top-color = ${colors.cyan-light}
+# border-bottom-color = ${colors.cyan-light}
+
+module-margin = 3
+padding = 5
+
+# ; Enable support for inter-process messaging
+# ; See the Messaging wiki page for more details.
+enable-ipc = true
+
+[bar/bottom]
+monitor = ${env:MONITOR:}
+width = 100%
+# height = 3%
+bottom = true
+
+background = ${colors.background}
+foreground = ${colors.primary}
+
+font-0 = Open Sans:pixelsize=12;1
+font-1 = file\-icons:style=Regular:pixelsize=12;1
+font-2 = Material Icons:style=Regular:pixelsize=12;1
+font-3 = FontAwesome:style=Regular:pixelsize=12;1
+font-4 = FontAwesome5Free:style=Solid:pixelsize=12:antialias=false;3
+font-5 = FontAwesome5Brands:style=Solid:pixelsize=12:antialias=false;3
+font-6 = octicons:style=Regular:pixelsize=12;1
+font-7 = github\-octicons:style=Regular:pixelsize=12;1
+font-8 = Icons:style=Regular:pixelsize=12;1
+
+separator = ":|:"
+
+modules-left   = backlight alsa bluetooth
+modules-center = i3
+modules-right  =
+
+tray-position = right
+tray-padding = 5
+tray-maxsize = 15
+
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
+
+fixed-center = true
+
+# border-top-size = 1%:-10
+# border-bottom-size = 1%:-10
+border-top-color = ${colors.cyan-light}
+border-bottom-color = ${colors.cyan-light}
+
+module-margin = 3
+padding-left = 5
+
+[module/wired-network]
+type = internal/network
+interface = enp0s31f6
+label-connected = %downspeed:0%
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+
+[module/wireless-network]
+type = internal/network
+interface = wlp0s20f3
+
+format-connected =  <ramp-signal> <label-connected>
+format-connected-foreground = ${colors.secondary}
+label-connected = %downspeed:0%
+
+format-disconnected = ""
+
+ramp-signal-0 = "   "
+ramp-signal-1 = " ▂ "
+ramp-signal-2 = " ▄ "
+ramp-signal-3 = " ▅ "
+ramp-signal-4 = " ▇ "
+ramp-signal-foreground = ${colors.secondary}
+
+[module/backlight]
+type = internal/backlight
+
+card = intel_backlight
+use-actual-brightness = true
+enable-scroll = true
+
+format =<ramp> <label>
+format-background = ${color.background}
+format-foreground = ${colors.secondary}
+label =%percentage%%
+
+ramp-0 =
+ramp-1 =
+ramp-foreground = ${color.yellow}
+
+[module/alsa]
+type = internal/alsa
+interval = 5
+
+master-soundcard = default
+speaker-soundcard = default
+headphone-soundcard = default
+master-mixer = Master
+
+format-volume = <ramp-volume> <label-volume>
+format-volume-background = ${color.background}
+format-muted = <label-muted>
+format-muted-background = ${color.background}
+format-volume-foreground = ${colors.secondary}
+format-foreground = ${colors.secondary}
+label-volume = %percentage%%
+label-muted = 
+label-muted-foreground =${color.red}
+format-muted-prefix-foreground = ${colors.secondary}
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-headphones-0 = 
+ramp-volume-foreground = ${color.blue}
+
+[module/bluetooth]
+type = custom/script
+exec = ~/.config/polybar/script/bluetooth.sh
+tail = true
+click-left = ~/.config/polybar/script/bluetooth.sh --toggle &
+click-right = exec blueberry
+format-padding = 1
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+
+[module/memory]
+type = internal/memory
+interval = 3
+format = <label>
+
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+
+label = " %gb_used%"
+
+[module/cpu]
+type = internal/cpu
+interval = 0.5
+format = <label>
+
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+
+label = %percentage%%
+
+[module/temperature]
+type = internal/temperature
+interval = 0.5
+format = <ramp> <label>
+
+format-warn = <ramp> <label-warn>
+label = %temperature-c%
+
+label-warn = "%temperature-c% "
+
+ramp-0 = " "
+ramp-1 = " "
+ramp-2 = " "
+ramp-3 = " "
+ramp-4 = " "
+ramp-foreground = ${colors.secondary}
+
+[module/battery0]
+type = internal/battery
+battery = BAT0
+adapter = ACPI
+poll-interval = 5
+
+format-charging = <animation-charging> <label-charging>
+label-charging = %percentage%%
+animation-charging-0 = " "
+animation-charging-1 = " "
+animation-charging-2 = " "
+animation-charging-3 = " "
+animation-charging-4 = " "
+animation-charging-framerate = 750
+animation-charging-foreground = ${colors.secondary}
+
+format-discharging = <animation-discharging> <label-discharging>
+label-discharging = %percentage%% %time%
+
+animation-discharging-0 = " "
+animation-discharging-1 = " "
+animation-discharging-2 = " "
+animation-discharging-3 = " "
+animation-discharging-4 = " "
+animation-discharging-framerate = 750
+animation-discharging-foreground = ${colors.secondary}
+
+[module/date]
+type = internal/date
+interval = 5
+
+time = %H:%M
+date = %a %d
+date-alt = %A, %B %d, %Y
+time-alt = %H:%M:%S
+
+label = %date%, %time%
+
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+
+[module/i3]
+type = internal/i3
+index-sort      = true
+wrapping-scroll = true
+pin-workspaces  = true
+
+label-separator = "::"
+label-separator-padding = 2
+label-separator-foreground = ${colors.separator}
+label-urgent-foreground    = ${colors.urgent}
+label-focused-foreground   = ${colors.primary}
+label-visible-foreground   = ${colors.secondary}
+label-unfocused-foreground = ${colors.tertiary}
+
+[module/apps]
+type=custom/text
+content = "  "
+click-left = rofi -show combi
+
+[module/updates-arch-combined]
+type = custom/script
+interval = 600
+
+label =  %output:0:15:...%
+exec = ~/.config/polybar/script/updates-yay.sh
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+
+[module/vpn-status]
+type = custom/script
+label = %output:0:15:...%
+exec = ~/.config/polybar/script/vpn-networkmanager-status.sh
+interval = 10
+
+[module/mpd]
+type = internal/mpd
+interval = 1
+format-offline = <label-offline>
+label-offline = ""
+
+format-online = <label-song>
+
+
+[module/vpn]
+type = custom/script
+exec = ~/polybar-scripts/vpn-wireguard-wg.sh
+interval = 5
+click-left = ~/polybar-scripts//vpn-wireguard-wg.sh --toggle &
