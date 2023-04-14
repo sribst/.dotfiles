@@ -278,7 +278,7 @@ exec_always --no-startup-id $HOME/bin/xrandr-changed &
 ## screen detection
 exec_always --no-startup-id autorandr --change &
 ## auto rotate screen when pc is turned
-exec --no-startup-id systemctl --user start 2in1screen.service &
+# exec --no-startup-id systemctl --user start 2in1screen.service &
 
 # start a terminal
 # bindsym $super+Return exec urxvt
@@ -308,7 +308,11 @@ exec nm-applet
 exec_always --no-startup-id dunst&
 
 # start autolock when suspend,...
-exec --no-startup-id xss-lock --transfer-sleep-lock -- "i3lock-fancy-rapid 5 10 -u -p default" &
+# not working
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- "i3lock-fancy-rapid 5 10 -u -p default" &
+
+# start clight to auto dim backlight
+exec --no-startup-id clight&
 
 # start battery signal
 exec batsignal
@@ -340,6 +344,8 @@ for_window [class="^.*"] border pixel 1
 # gaps bottom all set $default_gaps_outer
 smart_gaps on
 smart_borders on
+
+
 
 # Set inner/outer gaps
 gaps inner 20

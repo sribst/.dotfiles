@@ -8,10 +8,10 @@
 
 general {
 colors	  = true
-color_good="#d0d0d0"
-color_degraded="#ddb26f"
-color_bad="#fb9fb1"
-color_separator="#d0d0d0"
+color_good=""
+color_degraded=""
+color_bad=""
+color_separator=""
 interval  = 10
 separator = ""
 }
