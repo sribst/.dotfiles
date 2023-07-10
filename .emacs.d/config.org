@@ -51,7 +51,7 @@
     - [[#window-configuration-winner-mode][window configuration =winner-mode=]]
     - [[#toggle-windows-split][Toggle windows split]]
     - [[#scrolling][Scrolling]]
-    - [[#cursor-beacon-hl][cursor =beacon= =hl=]]
+    - [[#cursor-setting-beacon-hl][cursor setting =beacon= =hl=]]
 - [[#edition][Edition]]
   - [[#parameter-4][Parameter]]
   - [[#replace-string-visual-replace][replace string =visual-replace=]]
@@ -609,7 +609,7 @@ Start scrolling when nm left of line < 5 top and bottom
   (setq scroll-margin 5)
 #+END_SRC
 
-*** cursor =beacon= =hl=
+*** cursor setting =beacon= =hl=
 =hl= Highlight current lign with diff background color
 =beacon= beam-color whenever cursor change
 
@@ -621,6 +621,9 @@ Start scrolling when nm left of line < 5 top and bottom
     :when (window-system)
     :custom
     (beacon-color (xresources-theme-color "color13"))
+    (beacon-blink-when-window-scrolls t)
+    (beacon-blink-when-point-moves-horizontally 10)
+    (beacon-push-mark 35)
     :config (beacon-mode 1))
 #+end_src
 
@@ -1871,10 +1874,6 @@ Not working with org-super-agenda
     :hook
     (after-init . mu4e-alert-enable-notifications)
     (after-init . mu4e-alert-enable-mode-line-display))
-
-  (use-package mu4e-maildirs-extension
-    :after mu4e
-    :init (mu4e-maildirs-extension))
 
   (setq shr-color-visible-luminance-min 80)
 #+END_SRC
