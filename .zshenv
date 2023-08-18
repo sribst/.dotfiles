@@ -16,9 +16,9 @@ export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=Y
 eval `opam config env`
 
 # pyenv config
-path+=$HOME/.pyenv/bin
+# path+=$HOME/.pyenv/bin
 # eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# eval "$(pyenv virtualenv-init -)"
 # disable warning message of opencv
 export OPENCV_LOG_LEVEL=ERROR
 
@@ -30,11 +30,10 @@ gpgconf --launch gpg-agent
 export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
 
 # golang
-export GOPATH="$HOME/go"
-export PATH="$PATH:$GOPATH/bin"
-
+# export GOPATH="$HOME/go"
+# export PATH="$PATH:$GOPATH/bin"
 
 # rust
-# source "$HOME/.cargo/env"
-# export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
+source "$HOME/.cargo/env"
+export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
 . "$HOME/.cargo/env"

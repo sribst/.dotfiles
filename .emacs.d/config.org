@@ -472,12 +472,12 @@ show which mode on the main bar.
 
 ** Indicate position on file =nyan=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package nyan-mode
-    :config (nyan-mode)
-    :custom
-    (nyan-animate-nyancat t)
-    (nyan-wavy-trail t)
-    (nyan-bar-length 20))
+  ;; (use-package nyan-mode
+  ;;   :config (nyan-mode)
+  ;;   :custom
+  ;;   (nyan-animate-nyancat t)
+  ;;   (nyan-wavy-trail t)
+  ;;   (nyan-bar-length 20))
 #+END_SRC
 
 ** modified modeline =nano-modeline=
@@ -712,7 +712,7 @@ pop-in containing the candidates.
 
   (use-package corfu
     ;; Optional customizations
-    :custom
+    ;;   :custom
     ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   ;;   (corfu-auto t)                 ;; Enable auto completion
     ;; (corfu-separator ?\s)          ;; Orderless field separator
@@ -916,10 +916,10 @@ spell checking on the fly
 **** Shell script =shfmt=
 
 #+begin_src emacs-lisp :tangle yes
-  (use-package shfmt
-    :ensure-system-package shfmt
-    :delight ""
-    )
+  ;; (use-package shfmt
+  ;;   :ensure-system-package shfmt
+  ;;   :delight ""
+  ;;   )
 #+end_src
 
 **** Golang
@@ -989,9 +989,6 @@ solution found yet.
      `(rustic-compilation-warning ((t (:foreground ,(xresources-theme-color "color9" ))))))
     )
 #+END_SRC
-
-#+RESULTS:
-: rustic-cargo-outdated
 
 
 **** OCaml
@@ -1100,17 +1097,17 @@ it format also dune file, which is annoying
 
 **** Python =elpy=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package python
-    :disabled)
+  ;; (use-package python
+  ;;   :disabled)
 
-  (use-package elpy
-    :disabled
-    :delight " "
-    :ensure-system-package (markdown . "yay -S python")
-    ;; :mode "\\.py$"
-    :config
-    (elpy-enable)
-    :hook python-mode)
+  ;; (use-package elpy
+  ;;   :disabled
+  ;;   :delight " "
+  ;;   :ensure-system-package (markdown . "yay -S python")
+  ;;   ;; :mode "\\.py$"
+  ;;   :config
+  ;;   (elpy-enable)
+  ;;   :hook python-mode)
 #+END_SRC
 
 *** Pdf =pdf-tools=
@@ -1811,71 +1808,71 @@ Not working with org-super-agenda
 ** Mail
 *** mu =mu4e=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package smtpmail :ensure nil)
-  (use-package mu4e
-    :after (ivy smtpmail)
-    :ensure nil
-    :bind ("C-c m" . mu4e)
-    :ensure-system-package mu
-    :custom
-    (mu4e-maildir "~/Maildir")
-    (mu4e-use-fancy-chars t)
-    (mu4e-view-show-addresses t)
-    (mu4e-view-show-images t)
-    (message-send-mail-function 'smtpmail-send-it)
-    (mu4e-view-auto-mark-as-read  nil)
-    ;; (mu4e-compose-signature
-    ;;  (concat
-    ;;   "Sylvain Ribstein\n"
-    ;;   "sylvain.ribstein@gmail.com\n"
-    ;;   "00336 66 26 05 28\n"))
-    (smtpmail-stream-type 'starttls)
-    (smtpmail-smtp-service 587)
-    (mu4e-get-mail-command "offlineimap -o -q")
-    (message-kill-buffer-on-exit t)
-    (mu4e-completing-read-function 'ivy-completing-read)
-    (mu4e-headers-fields
-     '((:human-date . 12)
-       (:maildir . 22)
-       (:flags . 6)
-       (:from-or-to . 22)
-       (:mailing-list . 10)
-       (:thread-subject)
-       ))
-    (mu4e-confirm-quit nil)
-    :config
-    (setq
-     mu4e-contexts
-     `(,(make-mu4e-context
-         :name "Personnal Gmail"
-         :enter-func (lambda () (mu4e-message "Entering personnal Gmail context"))
-         :leave-func (lambda () (mu4e-message "Leaving personnal Gmail context"))
-         :match-func
-         (lambda (msg)
-           (when msg
-             (string-match-p "^/Gmail" (mu4e-message-field msg :maildir))))
-         :vars
-         '( ( user-mail-address . "sylvain.ribstein@gmail.com"  )
-            (smtpmail-smtp-user . "sylvain.ribstein")
-            ( smtpmail-smtp-server . "smtp.gmail.com" )
-            ( user-full-name . "Sylvain Ribstein" )
-            ( mu4e-trash-folder . "/Gmail/[Gmail]/Trash" )
-            ( mu4e-refile-folder . "/Gmail/[Gmail]/Archive" )
-            ( mu4e-drafts-folder . "/Gmail/[Gmail]/Drafts" )
-            (mu4e-sent-folder . "/Gmail/[Gmail]/Sent Mail" )
-            ( mu4e-compose-signature
-              . (concat
-                 "Sylvain Ribstein\n"
-                 "sylvain.ribstein@gmail.com\n"
-                 "00336 66 26 05 28\n")))))))
+  ;; (use-package smtpmail :ensure nil)
+  ;; (use-package mu4e
+  ;;   :after (ivy smtpmail)
+  ;;   :ensure nil
+  ;;   :bind ("C-c m" . mu4e)
+  ;;   :ensure-system-package mu
+  ;;   :custom
+  ;;   (mu4e-maildir "~/Maildir")
+  ;;   (mu4e-use-fancy-chars t)
+  ;;   (mu4e-view-show-addresses t)
+  ;;   (mu4e-view-show-images t)
+  ;;   (message-send-mail-function 'smtpmail-send-it)
+  ;;   (mu4e-view-auto-mark-as-read  nil)
+  ;;   ;; (mu4e-compose-signature
+  ;;   ;;  (concat
+  ;;   ;;   "Sylvain Ribstein\n"
+  ;;   ;;   "sylvain.ribstein@gmail.com\n"
+  ;;   ;;   "00336 66 26 05 28\n"))
+  ;;   (smtpmail-stream-type 'starttls)
+  ;;   (smtpmail-smtp-service 587)
+  ;;   (mu4e-get-mail-command "offlineimap -o -q")
+  ;;   (message-kill-buffer-on-exit t)
+  ;;   (mu4e-completing-read-function 'ivy-completing-read)
+  ;;   (mu4e-headers-fields
+  ;;    '((:human-date . 12)
+  ;;      (:maildir . 22)
+  ;;      (:flags . 6)
+  ;;      (:from-or-to . 22)
+  ;;      (:mailing-list . 10)
+  ;;      (:thread-subject)
+  ;;      ))
+  ;;   (mu4e-confirm-quit nil)
+  ;;   :config
+  ;;   (setq
+  ;;    mu4e-contexts
+  ;;    `(,(make-mu4e-context
+  ;;        :name "Personnal Gmail"
+  ;;        :enter-func (lambda () (mu4e-message "Entering personnal Gmail context"))
+  ;;        :leave-func (lambda () (mu4e-message "Leaving personnal Gmail context"))
+  ;;        :match-func
+  ;;        (lambda (msg)
+  ;;          (when msg
+  ;;            (string-match-p "^/Gmail" (mu4e-message-field msg :maildir))))
+  ;;        :vars
+  ;;        '( ( user-mail-address . "sylvain.ribstein@gmail.com"  )
+  ;;           (smtpmail-smtp-user . "sylvain.ribstein")
+  ;;           ( smtpmail-smtp-server . "smtp.gmail.com" )
+  ;;           ( user-full-name . "Sylvain Ribstein" )
+  ;;           ( mu4e-trash-folder . "/Gmail/[Gmail]/Trash" )
+  ;;           ( mu4e-refile-folder . "/Gmail/[Gmail]/Archive" )
+  ;;           ( mu4e-drafts-folder . "/Gmail/[Gmail]/Drafts" )
+  ;;           (mu4e-sent-folder . "/Gmail/[Gmail]/Sent Mail" )
+  ;;           ( mu4e-compose-signature
+  ;;             . (concat
+  ;;                "Sylvain Ribstein\n"
+  ;;                "sylvain.ribstein@gmail.com\n"
+  ;;                "00336 66 26 05 28\n")))))))
 
 
-  (use-package mu4e-alert
-    :hook
-    (after-init . mu4e-alert-enable-notifications)
-    (after-init . mu4e-alert-enable-mode-line-display))
+  ;; (use-package mu4e-alert
+  ;;   :hook
+  ;;   (after-init . mu4e-alert-enable-notifications)
+  ;;   (after-init . mu4e-alert-enable-mode-line-display))
 
-  (setq shr-color-visible-luminance-min 80)
+  ;; (setq shr-color-visible-luminance-min 80)
 #+END_SRC
 
 #+RESULTS:

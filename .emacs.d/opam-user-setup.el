@@ -120,12 +120,12 @@
 
 (opam-auto-tools-setup)
 ;; ## end of OPAM user-setup addition for emacs / base ## keep this line
-;; ## added by OPAM user-setup for emacs / ocp-indent ## d01e6d6d89f92d743e2a83ec6993da11 ## you can edit, but keep this line
+;; ## added by OPAM user-setup for emacs / ocp-indent ## 1274f92a612318f3cdb67a91e2b3094b ## you can edit, but keep this line
 ;; Load ocp-indent from its original switch when not found in current switch
 (when (not (assoc "ocp-indent" opam-tools-installed))
-  (autoload 'ocp-setup-indent "/home/baroud/CS/Project/tezos-z/_opam/share/emacs/site-lisp/ocp-indent.el" "Improved indentation for Tuareg mode")
-  (autoload 'ocp-indent-caml-mode-setup "/home/baroud/CS/Project/tezos-z/_opam/share/emacs/site-lisp/ocp-indent.el" "Improved indentation for Caml mode")
+  (autoload 'ocp-setup-indent "/home/sribaroud/.opam/default/share/emacs/site-lisp/ocp-indent.el" "Improved indentation for Tuareg mode")
+  (autoload 'ocp-indent-caml-mode-setup "/home/sribaroud/.opam/default/share/emacs/site-lisp/ocp-indent.el" "Improved indentation for Caml mode")
   (add-hook 'tuareg-mode-hook 'ocp-setup-indent t)
   (add-hook 'caml-mode-hook 'ocp-indent-caml-mode-setup  t)
-  (setq ocp-indent-path "/home/baroud/CS/Project/tezos-z/_opam/bin/ocp-indent"))
+  (setq ocp-indent-path "/home/sribaroud/.opam/default/bin/ocp-indent"))
 ;; ## end of OPAM user-setup addition for emacs / ocp-indent ## keep this line
