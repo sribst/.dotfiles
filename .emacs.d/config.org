@@ -1808,7 +1808,7 @@ Not working with org-super-agenda
 ** Mail
 *** mu =mu4e=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package smtpmail :ensure nil)
+ ;; (use-package smtpmail :ensure nil)
   ;; (use-package mu4e
   ;;   :after (ivy smtpmail)
   ;;   :ensure nil

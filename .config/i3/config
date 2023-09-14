@@ -235,6 +235,9 @@ bindsym XF86AudioPlay exec "playerctl play-pause"
 bindsym XF86AudioStop exec "playerctl pause"
 bindsym XF86AudioNext exec "playerctl next"
 bindsym XF86AudioPrev exec "playerctl previous"
+bindsym $super+Ctrl+space exec "playerctl play-pause"
+bindsym $super+Ctrl+n exec "playerctl next"
+bindsym $super+Ctrl+p exec "playerctl previous"
 # backlight
 bindsym XF86MonBrightnessUp   exec brightnessctl set +10%
 bindsym XF86MonBrightnessDown exec brightnessctl set -10%
@@ -336,7 +339,7 @@ exec_always --no-startup-id /usr/bin/setxkbmap -option "ctrl:nocaps"
 for_window [workspace=$ws5] layout tabbed
 
 # start all common social software
-bindsym $super+c exec telegram-desktop; exec slack; exec signal-desktop; exec firefox; exec spotify # ;exec discord
+# bindsym $super+c exec telegram-desktop; exec slack; exec signal-desktop; exec firefox; exec spotify # ;exec discord
 
 
 #############################

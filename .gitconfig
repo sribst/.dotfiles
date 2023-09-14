@@ -44,3 +44,5 @@
 	smudge = git-lfs smudge -- %f
 [gitlab]
 	user = sribaroud
+[push]
+	default = current
