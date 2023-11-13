@@ -934,60 +934,60 @@ You must install rust-analyzer by hand with your package manager. No
 solution found yet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; finds all Cargo.toml files in your current project and returns a vector of them
-  (defun my/rust-find-project-config ()
-    (let* ((project-root (projectile-project-root))
-           (found-cargo-files
-            (directory-files-recursively project-root "Cargo.toml")))
-      (vconcat found-cargo-files)))
+   ;; finds all Cargo.toml files in your current project and returns a vector of them
+   ;; (defun my/rust-find-project-config ()
+   ;;   (let* ((project-root (projectile-project-root))
+   ;;          (found-cargo-files
+   ;;           (directory-files-recursively project-root "Cargo.toml")))
+   ;;     (vconcat found-cargo-files)))
 
   (use-package rustic
-    :delight " "
-    :mode ("\\.rs$" . rustic-mode)
-    :hook
-    (rustic-mode . lsp)
-    :commands (rustic-mode)
-    :bind (:map rustic-mode-map
-                ;; Using the M-. and M-? as described in the lsp package
-                ;;               ("C-c C-f" . lsp-ui-peek-find-definition)
-                ;;               ("C-c C-l" . lsp-ui-peek-find-implementation)
-                ;; The following should be moved to the lsp package I guess ? :shrug:
-                ("C-c C-c ?" . lsp-describe-thing-at-point)
-                ("C-c C-c !" . lsp-execute-code-action)
-                ("C-c C-c r" . lsp-rename)
-                ("C-c C-c q" . lsp-workspace-restart)
-                ("C-c C-c Q" . lsp-workspace-shutdown)
-                ("C-c C-c f" . rustic-format-buffer)
-                ("C-c C-c e" . lsp-rust-analyzer-expand-macro)
-                ("C-c C-c s" . lsp-rust-analyzer-status)
-                ("C-c C-c C-a" . rustic-cargo-add)
-                ("C-c C-c C-d" . rustic-cargo-rm)
-                ("C-c C-c C-u" . rustic-cargo-upgrade)
-                ("C-c C-c C-o" . rustic-cargo-outdated))
-    :custom
-    (rustic-lsp-server 'rust-analyzer)
-    (lsp-rust-analyzer-cargo-watch-command "clippy")
-    (rustic-format-on-save t)
-    (rustic-format-display-method 'pop-to-buffer)
-    :config
+     :delight " "
+     :mode ("\\.rs$" . rustic-mode)
+     :hook
+     (rustic-mode . lsp)
+     :commands (rustic-mode)
+     :bind (:map rustic-mode-map
+                 ;; Using the M-. and M-? as described in the lsp package
+                 ;;               ("C-c C-f" . lsp-ui-peek-find-definition)
+                 ;;               ("C-c C-l" . lsp-ui-peek-find-implementation)
+                 ;; The following should be moved to the lsp package I guess ? :shrug:
+                 ("C-c C-c ?" . lsp-describe-thing-at-point)
+                 ("C-c C-c !" . lsp-execute-code-action)
+                 ("C-c C-c r" . lsp-rename)
+                 ("C-c C-c q" . lsp-workspace-restart)
+                 ("C-c C-c Q" . lsp-workspace-shutdown)
+                 ("C-c C-c f" . rustic-format-buffer)
+                 ("C-c C-c e" . lsp-rust-analyzer-expand-macro)
+                 ("C-c C-c s" . lsp-rust-analyzer-status)
+                 ("C-c C-c C-a" . rustic-cargo-add)
+                 ("C-c C-c C-d" . rustic-cargo-rm)
+                 ("C-c C-c C-u" . rustic-cargo-upgrade)
+                 ("C-c C-c C-o" . rustic-cargo-outdated))
+     :custom
+     (rustic-lsp-server 'rust-analyzer)
+     (lsp-rust-analyzer-cargo-watch-command "clippy")
+     (rustic-format-on-save t)
+     (rustic-format-display-method 'pop-to-buffer)
+     :config
 
-    (setq lsp-rust-analyzer-linked-projects (my/rust-find-project-config))
+   ;;   (setq lsp-rust-analyzer-linked-projects (my/rust-find-project-config))
 
-    ;; This does not work, from what I understood, that uses ansi and xterm-color
-    ;; (custom-set-variables
-    ;;  '(rustic-ansi-faces
-    ;;    [,color8 ,color9 ,color10 ,color11 ,color12 ,color13 ,color14 ,color15]))
+     ;; This does not work, from what I understood, that uses ansi and xterm-color
+     ;; (custom-set-variables
+     ;;  '(rustic-ansi-faces
+     ;;    [,color8 ,color9 ,color10 ,color11 ,color12 ,color13 ,color14 ,color15]))
 
-    (push 'rustic-clippy flycheck-checkers)
-    ;; this works expect for the line
-    (custom-set-faces
-     `(rustic-message ((t (:foreground ,(xresources-theme-color "color14" )))))
-     `(rustic-compilation-column ((t (:foreground ,(xresources-theme-color "color12" )))))
-     `(rustic-compilation-line ((t (:foreground ,(xresources-theme-color "color12" )))))
-     `(rustic-compilation-error ((t (:foreground ,(xresources-theme-color "color5" )))))
-     `(rustic-compilation-info ((t (:foreground ,(xresources-theme-color "color11" )))))
-     `(rustic-compilation-warning ((t (:foreground ,(xresources-theme-color "color9" ))))))
-    )
+     (push 'rustic-clippy flycheck-checkers)
+     ;; this works expect for the line
+     (custom-set-faces
+      `(rustic-message ((t (:foreground ,(xresources-theme-color "color14" )))))
+      `(rustic-compilation-column ((t (:foreground ,(xresources-theme-color "color12" )))))
+      `(rustic-compilation-line ((t (:foreground ,(xresources-theme-color "color12" )))))
+      `(rustic-compilation-error ((t (:foreground ,(xresources-theme-color "color5" )))))
+      `(rustic-compilation-info ((t (:foreground ,(xresources-theme-color "color11" )))))
+      `(rustic-compilation-warning ((t (:foreground ,(xresources-theme-color "color9" ))))))
+     )
 #+END_SRC
 
 
@@ -1538,7 +1538,7 @@ It's buggy, the view show an event starting on each day it set
 #+END_SRC
 
 
-*** DONE Caldav sync =org-caldav=
+*** Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-caldav
     :init
@@ -1556,14 +1556,14 @@ It's buggy, the view show an event starting on each day it set
     (org-caldav-backup-file "~/org/org-caldav-backup.org")
     (org-icalendar-alarm-time 10) ; set alarm 10 minutes before for calendar
     (org-caldav-show-sync-results nil)
-    (org-icalendar-include-todo nil)
-    (org-caldav-sync-todo nil)
+  ;;   (org-icalendar-include-todo nil)
+  ;;   (org-caldav-sync-todo nil)
     (org-caldav-delete-calendar-entries 'always)
-    (org-caldav-todo-percent-states
-     '((1 "BOOK") (99 "CANCELED") (0 "TODO") (2 "INPROGRESS")
-       (3 "WAITING") (4 "SOMEDAY") (100 "DONE") (98 "ABORDED")
-       (5 "IDEA") (6 "WANT") (7 "FETCH") (8 "GIVE") (97 "HAVE")
-       (96  "GIVEN") (9 "USE") (96 "CONSUMED") (95 "LOST")))
+  ;;   (org-caldav-todo-percent-states
+  ;;    '((1 "BOOK") (99 "CANCELED") (0 "TODO") (2 "INPROGRESS")
+  ;;      (3 "WAITING") (4 "SOMEDAY") (100 "DONE") (98 "ABORDED")
+  ;;      (5 "IDEA") (6 "WANT") (7 "FETCH") (8 "GIVE") (97 "HAVE")
+  ;;      (96  "GIVEN") (9 "USE") (96 "CONSUMED") (95 "LOST")))
     (org-caldav-resume-aborted 'never)
     :config
     (setq org-caldav-calendars

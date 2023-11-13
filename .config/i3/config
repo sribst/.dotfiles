@@ -240,7 +240,7 @@ bindsym $super+Ctrl+n exec "playerctl next"
 bindsym $super+Ctrl+p exec "playerctl previous"
 # backlight
 bindsym XF86MonBrightnessUp   exec brightnessctl set +10%
-bindsym XF86MonBrightnessDown exec brightnessctl set -10%
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
 bindsym XF86Display           exec brightnessctl set 50%; exec xrandr --output eDP-1 --primary --auto
 
 # Lock screen
