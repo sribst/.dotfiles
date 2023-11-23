@@ -34,6 +34,5 @@ export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
 # export PATH="$PATH:$GOPATH/bin"
 
 # rust
-source "$HOME/.cargo/env"
-export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
+# export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
 . "$HOME/.cargo/env"
