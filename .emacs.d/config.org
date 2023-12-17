@@ -76,6 +76,7 @@
       - [[#shell-script-shfmt][Shell script =shfmt=]]
       - [[#golang][Golang]]
       - [[#rust-rustic-mode][Rust =rustic-mode=]]
+      - [[#docker][Docker]]
       - [[#ocaml][OCaml]]
       - [[#python-elpy][Python =elpy=]]
     - [[#pdf-pdf-tools][Pdf =pdf-tools=]]
@@ -916,11 +917,13 @@ spell checking on the fly
 **** Shell script =shfmt=
 
 #+begin_src emacs-lisp :tangle yes
-  ;; (use-package shfmt
-  ;;   :ensure-system-package shfmt
-  ;;   :delight ""
-  ;;   )
+   (use-package shfmt
+     :ensure-system-package shfmt
+     :delight ""
+     )
 #+end_src
+
+#+RESULTS:
 
 **** Golang
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -990,6 +993,12 @@ solution found yet.
      )
 #+END_SRC
 
+
+**** Docker
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package dockerfile-mode)
+#+END_SRC
 
 **** OCaml
 
