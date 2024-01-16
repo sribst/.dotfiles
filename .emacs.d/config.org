@@ -74,6 +74,7 @@
       - [[#semantic-highlighting-color-identifiers-mode][semantic highlighting =color-identifiers-mode=]]
       - [[#protocol-protobuf][protocol =protobuf=]]
       - [[#shell-script-shfmt][Shell script =shfmt=]]
+      - [[#javascript][Javascript]]
       - [[#golang][Golang]]
       - [[#rust-rustic-mode][Rust =rustic-mode=]]
       - [[#docker][Docker]]
@@ -917,13 +918,45 @@ spell checking on the fly
 **** Shell script =shfmt=
 
 #+begin_src emacs-lisp :tangle yes
-   (use-package shfmt
-     :ensure-system-package shfmt
-     :delight ""
-     )
+  (use-package shfmt
+    :ensure-system-package shfmt
+    :delight ""
+    )
+
+  ;; (flycheck-define-checker sh-shellcheck
+  ;; "A shell script syntax checker using ShellCheck."
+  ;; :command ("shellcheck" "-x" "-f" "checkstyle"
+  ;;           source-inplace)
+  ;; :error-parser flycheck-parse-checkstyle
+  ;; :modes (sh-mode
+  ;;         ksh-mode
+  ;;         bash-mode
+  ;;         shen-mode
+  ;;         zsh-mode))
 #+end_src
 
 #+RESULTS:
+
+**** Javascript
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package js2-mode
+    :mode "\\.js\\'"
+    :hook (js2-mode . eldoc-mode))
+
+  (use-package tide
+    :after js2-mode
+    :hook
+    (
+     (js2-mode . tide-setup)
+     (before-save . tide-format-before-save)))
+
+  (use-package prettier-js
+    :ensure-system-package (prettier . "npm -g prettier-js")
+    :hook ((js2-mode . prettier-js-mode)))
+#+END_SRC
+
+#+RESULTS:
+| tide-setup | eldoc-mode | prettier-js-mode |
 
 **** Golang
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1112,7 +1145,7 @@ it format also dune file, which is annoying
   ;; (use-package elpy
   ;;   :disabled
   ;;   :delight " "
-  ;;   :ensure-system-package (markdown . "yay -S python")
+  ;;   :ensure-system-package t
   ;;   ;; :mode "\\.py$"
   ;;   :config
   ;;   (elpy-enable)
@@ -1150,7 +1183,6 @@ it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package markdown-mode
     :ensure-system-package (markdown . "yay -S markdown")
-    :disabled
     :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'" "\\.markdown\\'" "\\.md\\'"))
 #+END_SRC
 **** =Yaml=
