@@ -1,0 +1,21 @@
+[font.bold]
+family = "Fira Code Retina"
+style = "Bold"
+
+[font.italic]
+family = "Fira Code Retina"
+
+[font.normal]
+family = "Fira Code Retina"
+style = "Regular"
+
+[scrolling]
+history = 100000
+
+[window]
+decorations = "none"
+dynamic_title = true
+
+[window.class]
+general = "Alacritty"
+instance = "Alacritty"
