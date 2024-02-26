@@ -222,7 +222,7 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 # fine sound control
-bindsym $super+Ctrl+b exec terminal -e 'ncpamixer'
+bindsym $super+Ctrl+b exec alacritty -T "ncpamixer" -e 'ncpamixer'
 
 # media controls
 bindsym XF86AudioPlay exec "playerctl play-pause"
@@ -268,7 +268,7 @@ assign [class="^mpv"]         → $ws6
 
 # Open specific applications in floating mode
 for_window [title="ncpamixer"] floating enable border pixel 1
-for_window [class="Pavucontrol"] floating enable
+for_window [class="Pavucontrol"] floating enable border pixel 1
 
 # cloud
 exec --no-startup-id nextcloud &

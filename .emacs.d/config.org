@@ -3,7 +3,6 @@
 #+CATEGORY: config
 
 * Table of content :TOC_4:
-- [[#update-my-conf-using-config][update my conf using config]]
 - [[#global-configuration][Global configuration]]
   - [[#packages][Packages]]
     - [[#sources][Sources]]
@@ -36,14 +35,12 @@
 - [[#mode-line][Mode-line]]
   - [[#parameter-1][Parameter]]
   - [[#mode-icons-delight][Mode icons =delight=]]
-  - [[#indicate-position-on-file-nyan][Indicate position on file =nyan=]]
   - [[#modified-modeline-nano-modeline][modified modeline =nano-modeline=]]
 - [[#interface-interaction][Interface interaction]]
   - [[#buffer][Buffer]]
     - [[#parameter-2][parameter]]
     - [[#kill-current-buffer-without-asking][kill current buffer without asking]]
     - [[#dimme-non-focus-buffer-dimmer][dimme non focus buffer =dimmer=]]
-  - [[#auto-center-when-only-one-window-centered-window][auto center when only one window =centered-window=]]
   - [[#window][Window]]
     - [[#parameter-3][parameter]]
     - [[#auto-balance-window-balanced-windows][Auto balance window =balanced-windows=]]
@@ -62,8 +59,6 @@
   - [[#snippet-yasnippet][snippet =yasnippet=]]
   - [[#edit-all-occurence-iedit][Edit all occurence =iedit=]]
   - [[#decoration][Decoration]]
-    - [[#colorize-background-of-text-color-like-green-rainbow-mode][colorize background of text color like green =rainbow-mode=]]
-    - [[#show-indentation-level-highlight-indent-guides][Show indentation level =highlight-indent-guides=]]
     - [[#color-parenthesis-rainbow-delimiters][Color parenthesis =rainbow-delimiters=]]
   - [[#copy-line-when-no-active-region][copy line when no active region]]
   - [[#specific][Specific]]
@@ -72,33 +67,24 @@
     - [[#language-server-lsp-mode][Language server =lsp-mode=]]
     - [[#programming-language][Programming language]]
       - [[#semantic-highlighting-color-identifiers-mode][semantic highlighting =color-identifiers-mode=]]
-      - [[#protocol-protobuf][protocol =protobuf=]]
       - [[#shell-script-shfmt][Shell script =shfmt=]]
-      - [[#javascript][Javascript]]
-      - [[#golang][Golang]]
+      - [[#javascript-js2-mode-tide-pretier-js][Javascript =js2-mode, tide, pretier-js=]]
       - [[#rust-rustic-mode][Rust =rustic-mode=]]
-      - [[#docker][Docker]]
+      - [[#docker-dockerfile-mode][Docker =dockerfile-mode=]]
       - [[#ocaml][OCaml]]
-      - [[#python-elpy][Python =elpy=]]
-    - [[#pdf-pdf-tools][Pdf =pdf-tools=]]
     - [[#description-language][Description language]]
       - [[#csv-csv-mode][csv =csv-mode=]]
-      - [[#css-css-mode][CSS =css-mode=]]
       - [[#json][=Json=]]
-      - [[#markdown][=Markdown=]]
-      - [[#yaml][=Yaml=]]
 - [[#project][Project]]
   - [[#interaction-projectile][interaction =projectile=]]
   - [[#git][Git]]
     - [[#git-interaction-magit][Git interaction =magit=]]
-    - [[#git-forge-integration-forge][Git forge integration =forge=]]
     - [[#add-git-message-git-commit][add git message =git-commit=]]
     - [[#current-modification-git-gutter][current modification =git-gutter=]]
     - [[#show-last-commit-modification-git-timemachine][show last commit modification =git-timemachine=]]
 - [[#system-interaction][System interaction]]
   - [[#file-explorer-dired][File explorer =dired=]]
   - [[#environment-variable][Environment variable]]
-  - [[#system-notification-alert][system notification =alert=]]
 - [[#organisercalendarlinkeretc-org-mode][Organiser/calendar/linker/etc =org-mode=]]
   - [[#table-of-content-toc-org][Table of content =toc-org=]]
   - [[#org-indentation-org-indent][Org indentation =org-indent=]]
@@ -109,22 +95,12 @@
     - [[#calendar-view-calfw][calendar view =calfw=]]
     - [[#caldav-sync-org-caldav][Caldav sync =org-caldav=]]
     - [[#notification-org-wild-notifier][notification =org-wild-notifier=]]
-  - [[#org-search-ivy-omni-org][Org search =ivy-omni-org=]]
   - [[#org-link][Org link]]
   - [[#clock-org-clock][clock =org-clock=]]
   - [[#capture-org-capture][Capture =org-capture=]]
-  - [[#show-current-header-org-sticky-header][show current header =org-sticky-header=]]
 - [[#read-only-major-mode][read-only major-mode]]
-  - [[#mail][Mail]]
-    - [[#mu-mu4e][mu =mu4e=]]
   - [[#compilation][compilation]]
-  - [[#dashboard-dashboard][Dashboard =dashboard=]]
-  - [[#web-browser-xwwp-follow-link][Web browser =xwwp-follow-link=]]
-- [[#tasks][Tasks]]
-    - [[#contact-database-ebdb][contact database =ebdb=]]
-- [[#not-used-anymore][not used anymore]]
-
-* TODO update my conf using [[https://github.com/alhassy/emacs.d#emacs-vs-initorg][config]]
+- [[#update-my-conf-using-config][update my conf using config]]
 
 * Global configuration
 Here is configuration that is used across all emacs mode
@@ -171,9 +147,9 @@ Auto-update all packages regularly
                 (lambda (frame) (auto-package-update-maybe)))
     (progn (auto-package-update-maybe)))
 #+END_SRC
-*** TODO menu =paradox=
+*** menu =paradox=
 Paradox is a better mode to look after package. I need to fix the access to
-github. Theses access are only needed to start package in gh IIUC.
+github.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package paradox
     :custom
@@ -181,7 +157,6 @@ github. Theses access are only needed to start package in gh IIUC.
     (paradox-column-width-version 13)
     (paradox-execute-asynchronously t)
     (paradox-hide-wiki-packages t)
-    (paradox-github-token (cadr (auth-source-user-and-password "api.github.com" "sribst^paradox")))
     :config
      (paradox-enable)
     (remove-hook 'paradox-after-execute-functions #'paradox--report-buffer-print))
@@ -459,7 +434,6 @@ show all possible completion after a keystroke.
 #+END_SRC
 
 * Mode-line
-
 ** Parameter
 #+BEGIN_SRC emacs-lisp :tangle yes
   (column-number-mode 1) ; Show the column number
@@ -472,29 +446,16 @@ show which mode on the main bar.
   (use-package delight)
 #+END_SRC
 
-** Indicate position on file =nyan=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package nyan-mode
-  ;;   :config (nyan-mode)
-  ;;   :custom
-  ;;   (nyan-animate-nyancat t)
-  ;;   (nyan-wavy-trail t)
-  ;;   (nyan-bar-length 20))
-#+END_SRC
-
 ** modified modeline =nano-modeline=
 #+begin_src emacs-lisp :tangle yes
   (use-package mood-line
     ;; Enable mood-line
     :config
     (mood-line-mode)
-
     ;; Use pretty Fira Code-compatible glyphs
     :custom
     (mood-line-glyph-alist mood-line-glyphs-fira-code))
 #+end_src
-
-#+RESULTS:
 
 * Interface interaction
 ** Buffer
@@ -521,16 +482,6 @@ Don't ask before killing a buffer. I know what I'm doing.
     (dimmer-fraction 0.35)
     :init (dimmer-mode t))
 #+END_SRC
-
-** TODO auto center when only one window =centered-window=
-
-This is not working currently because it opens new windows instead of
-buffer.
-#+begin_src emacs-lisp :tangle yes
-  (use-package centered-window)
-#+end_src
-
-#+RESULTS:
 
 ** Window
 *** parameter
@@ -750,32 +701,7 @@ pop-in containing the candidates.
 #+END_SRC
 
 ** Decoration
-
-*** colorize background of text color like green =rainbow-mode=
-Colorize colors as text with their value.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-mode
-    :delight
-    :custom
-    (rainbow-x-colors t)
-    (rainbow-r-colors t)
-    :hook ((prog-mode org-mode) .  rainbow-mode))
-#+END_SRC
-
-*** Show indentation level =highlight-indent-guides=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package highlight-indent-guides
-    :delight
-    :disabled
-    :custom
-    (highlight-indent-guides-method 'character)
-    (highlight-indent-guides-character ?║)
-    (highlight-indent-guides-responsive 'stack)
-    :hook ((prog-mode org-mode) . highlight-indent-guides-mode))
-#+END_SRC
-
 *** Color parenthesis =rainbow-delimiters=
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rainbow-delimiters
     :delight
@@ -794,7 +720,6 @@ Colorize colors as text with their value.
 #+RESULTS:
 
 ** Specific
-
 *** spell checking =flyspell=
 spell checking on the fly
 #+begin_src emacs-lisp :tangle yes
@@ -849,7 +774,7 @@ spell checking on the fly
     :commands lsp-ui-mode
     :custom-face
     (markdown-code-face  ((t (:inherit consolas))))
-    ;;   (lsp-ui-sideline-code-action ((t (:inherit warning))))
+    (lsp-ui-sideline-code-action ((t (:inherit warning))))
     :bind
     (:map lsp-ui-mode-map
           ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
@@ -898,21 +823,16 @@ spell checking on the fly
     :commands lsp-ivy-workspace-symbol)
 #+END_SRC
 
-*** Programming language
+#+RESULTS:
+: lsp-ivy-workspace-symbol
 
+*** Programming language
 **** semantic highlighting =color-identifiers-mode=
 #+begin_src emacs-lisp :tangle yes
   (use-package color-identifiers-mode
     :config (global-color-identifiers-mode)
     :custom
     (color-identifiers:recoloring-delay 0.2))
-#+end_src
-
-**** protocol =protobuf=
-#+begin_src emacs-lisp :tangle yes
-  (use-package protobuf-mode
-    :disabled
-    )
 #+end_src
 
 **** Shell script =shfmt=
@@ -937,7 +857,7 @@ spell checking on the fly
 
 #+RESULTS:
 
-**** Javascript
+**** Javascript =js2-mode, tide, pretier-js=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package js2-mode
     :mode "\\.js\\'"
@@ -958,83 +878,78 @@ spell checking on the fly
 #+RESULTS:
 | tide-setup | eldoc-mode | prettier-js-mode |
 
-**** Golang
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package go-mode :disabled)
-#+END_SRC
 **** Rust =rustic-mode=
 cargo gives set of combination to perform cargo (rust builder) task
 rustic takes care of starting.
 
-You must install rust-analyzer by hand with your package manager. No
-solution found yet.
-
 #+BEGIN_SRC emacs-lisp :tangle yes
-   ;; finds all Cargo.toml files in your current project and returns a vector of them
-   ;; (defun my/rust-find-project-config ()
-   ;;   (let* ((project-root (projectile-project-root))
-   ;;          (found-cargo-files
-   ;;           (directory-files-recursively project-root "Cargo.toml")))
-   ;;     (vconcat found-cargo-files)))
+  ;; (defun find-cargo-files-in-project ()
+  ;;   "Return a list of paths to all Cargo.toml files in the current project."
+  ;;   (when (projectile-project-p)
+  ;;     (projectile-files-from-cmd "find -name Cargo.toml" (projectile-project-root))))
 
+  ;; (defun my/update-lsp-rust-analyzer-linked-projects ()
+  ;;   "Update the projects imported by rust-analyzer"
+  ;;   (interactive)
+  ;;   (let ((cargo-files (find-cargo-files-in-project)))
+  ;;     (if cargo-files
+  ;;         (setq lsp-rust-analyzer-linked-projects cargo-files)
+  ;;       (message "No Cargo files found in the current Projectile project."))))
+  ;;   (defun update-linked-projects-hook ()
+  ;;     "Custom hook for Rustic mode."
+  ;;     (my/update-lsp-rust-analyzer-linked-projects))
+  ;;   (add-hook 'rustic-mode-hook update-linked-projects-hook)
   (use-package rustic
-     :delight " "
-     :mode ("\\.rs$" . rustic-mode)
-     :hook
-     (rustic-mode . lsp)
-     :commands (rustic-mode)
-     :bind (:map rustic-mode-map
-                 ;; Using the M-. and M-? as described in the lsp package
-                 ;;               ("C-c C-f" . lsp-ui-peek-find-definition)
-                 ;;               ("C-c C-l" . lsp-ui-peek-find-implementation)
-                 ;; The following should be moved to the lsp package I guess ? :shrug:
-                 ("C-c C-c ?" . lsp-describe-thing-at-point)
-                 ("C-c C-c !" . lsp-execute-code-action)
-                 ("C-c C-c r" . lsp-rename)
-                 ("C-c C-c q" . lsp-workspace-restart)
-                 ("C-c C-c Q" . lsp-workspace-shutdown)
-                 ("C-c C-c f" . rustic-format-buffer)
-                 ("C-c C-c e" . lsp-rust-analyzer-expand-macro)
-                 ("C-c C-c s" . lsp-rust-analyzer-status)
-                 ("C-c C-c C-a" . rustic-cargo-add)
-                 ("C-c C-c C-d" . rustic-cargo-rm)
-                 ("C-c C-c C-u" . rustic-cargo-upgrade)
-                 ("C-c C-c C-o" . rustic-cargo-outdated))
-     :custom
-     (rustic-lsp-server 'rust-analyzer)
-     (lsp-rust-analyzer-cargo-watch-command "clippy")
-     (rustic-format-on-save t)
-     (rustic-format-display-method 'pop-to-buffer)
-     :config
+    :delight " "
+    :mode ("\\.rs$" . rustic-mode)
+    :bind
+    (:map rustic-mode-map
+          ;; Using the M-. and M-? as described in the lsp package
+          ;;               ("C-c C-f" . lsp-ui-peek-find-definition)
+          ;;               ("C-c C-l" . lsp-ui-peek-find-implementation)
+          ;; The following should be moved to the lsp package I guess ? :shrug:
+          ("C-c C-c ?" . lsp-describe-thing-at-point)
+          ("C-c C-c !" . lsp-execute-code-action)
+          ("C-c C-c r" . lsp-rename)
+          ("C-c C-c q" . lsp-workspace-restart)
+          ("C-c C-c Q" . lsp-workspace-shutdown)
+          ("C-c C-c f" . rustic-format-buffer)
+          ("C-c C-c e" . lsp-rust-analyzer-expand-macro)
+          ("C-c C-c s" . lsp-rust-analyzer-status)
+          ("C-c C-c C-a" . rustic-cargo-add)
+          ("C-c C-c C-d" . rustic-cargo-rm)
+          ("C-c C-c C-u" . rustic-cargo-upgrade)
+          ("C-c C-c C-o" . rustic-cargo-outdated))
+    :custom
+    (rustic-lsp-server 'rust-analyzer)
+    (lsp-rust-analyzer-cargo-watch-command "clippy")
+    (rustic-format-on-save t)
+    (rustic-format-display-method 'pop-to-buffer)
+    :config
 
-   ;;   (setq lsp-rust-analyzer-linked-projects (my/rust-find-project-config))
-
-     ;; This does not work, from what I understood, that uses ansi and xterm-color
-     ;; (custom-set-variables
-     ;;  '(rustic-ansi-faces
-     ;;    [,color8 ,color9 ,color10 ,color11 ,color12 ,color13 ,color14 ,color15]))
-
-     (push 'rustic-clippy flycheck-checkers)
-     ;; this works expect for the line
-     (custom-set-faces
-      `(rustic-message ((t (:foreground ,(xresources-theme-color "color14" )))))
-      `(rustic-compilation-column ((t (:foreground ,(xresources-theme-color "color12" )))))
-      `(rustic-compilation-line ((t (:foreground ,(xresources-theme-color "color12" )))))
-      `(rustic-compilation-error ((t (:foreground ,(xresources-theme-color "color5" )))))
-      `(rustic-compilation-info ((t (:foreground ,(xresources-theme-color "color11" )))))
-      `(rustic-compilation-warning ((t (:foreground ,(xresources-theme-color "color9" ))))))
-     )
+    (push 'rustic-clippy flycheck-checkers)
+    ;; this works expect for the line
+    (custom-set-faces
+     `(rustic-message ((t (:foreground ,(xresources-theme-color "color14" )))))
+     `(rustic-compilation-column ((t (:foreground ,(xresources-theme-color "color12" )))))
+     `(rustic-compilation-line ((t (:foreground ,(xresources-theme-color "color12" )))))
+     `(rustic-compilation-error ((t (:foreground ,(xresources-theme-color "color5" )))))
+     `(rustic-compilation-info ((t (:foreground ,(xresources-theme-color "color11" )))))
+     `(rustic-compilation-warning ((t (:foreground ,(xresources-theme-color "color9" ))))))
+    )
 #+END_SRC
 
+#+RESULTS:
+: rustic-cargo-outdated
 
-**** Docker
+**** Docker =dockerfile-mode=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dockerfile-mode)
+   (use-package dockerfile-mode
+     :mode ("^Dockerfile$" . dockerfile-mode))
 #+END_SRC
 
 **** OCaml
-
 ***** load opam
 Setup environment variables and opam-lib using opam
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1115,17 +1030,6 @@ Setup environment variables and opam-lib using opam
     :hook
     (tuareg-mode . flycheck-ocaml-setup))
 #+END_SRC
-
-****** repl =utop=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package utop
-  ;;   :delight " "
-  ;;   :custom
-  ;;   (utop-command "utop -emacs")
-  ;;   :hook
-  ;;   (tuareg-mode . utop-minor-mode))
-#+END_SRC
-
 ****** format =ocamlformat=
 it format also dune file, which is annoying
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1136,23 +1040,6 @@ it format also dune file, which is annoying
     (ocamlformat-show-errors 'echo)
     :hook (before-save . ocamlformat-before-save))
 #+END_SRC
-
-**** Python =elpy=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package python
-  ;;   :disabled)
-
-  ;; (use-package elpy
-  ;;   :disabled
-  ;;   :delight " "
-  ;;   :ensure-system-package t
-  ;;   ;; :mode "\\.py$"
-  ;;   :config
-  ;;   (elpy-enable)
-  ;;   :hook python-mode)
-#+END_SRC
-
-*** Pdf =pdf-tools=
 *** Description language
 **** csv =csv-mode=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1160,32 +1047,14 @@ it format also dune file, which is annoying
       :delight ""
     :mode "\\.[Cc][Ss][Vv]\\'"
     :custom
-    (csv-separators '(";" ",")
-                    ))
+    (csv-separators '(";" ",")))
 #+END_SRC
-**** CSS =css-mode=
-
-#+begin_src emacs-lisp :tangle yes
-  (use-package css-mode
-    :ensure nil
-    :disabled
-    :mode ("\\.css$" "\\.rasi$")
-    )
-#+end_src
-
 **** =Json=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package json-mode
     :delight " "
     :mode ("\\.json$" . json-mode))
 #+END_SRC
-**** =Markdown=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package markdown-mode
-    :ensure-system-package (markdown . "yay -S markdown")
-    :mode ("INSTALL\\'" "CONTRIBUTORS\\'" "LICENSE\\'" "README\\'" "\\.markdown\\'" "\\.md\\'"))
-#+END_SRC
-**** =Yaml=
 #+begin_src emacs-lisp :tangle yes
   (use-package yaml-mode
     :disabled
@@ -1240,13 +1109,6 @@ Git clients exist, only Magit and Git itself deserve to be called porcelains.
     :delight " "
     :hook
     (after-save . magit-after-save-refresh-buffers))
-#+END_SRC
-
-*** TODO Git forge integration =forge=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package forge
-  ;;   :delight " "
-  ;;   :after magit)
 #+END_SRC
 
 *** add git message =git-commit=
@@ -1323,7 +1185,7 @@ dired-x is a minor that brings a lot to dired like hidding
   #+END_SRC
 
 #+END_SRC
-** TODO Environment variable
+** Environment variable
 One of the next two is useless, need to determine wich one
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package keychain-environment
@@ -1333,13 +1195,6 @@ One of the next two is useless, need to determine wich one
     (exec-path-from-shell-copy-env "SSH_AGENT_PID")
     (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
 #+end_SRC
-** system notification =alert=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package alert
-    :custom
-    (alert-default-style 'libnotify))
-#+END_SRC
-
 * Organiser/calendar/linker/etc =org-mode=
 Amazing mode of GNU Emacs.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1466,8 +1321,6 @@ Foreground and the weight (bold) of each keywords.
     (org-agenda-clockreport-parameter-plist
     '(:link t :maxlevel 4 :fileskip0 t :compact t :formula % :hidefiles t)))
 #+END_SRC
-
-#+RESULTS:
 
 *** improved agenda view =org-super-agenda=
 Org super agenda allows a more readible agenda by grouping the todo item
@@ -1643,8 +1496,6 @@ It's buggy, the view show an event starting on each day it set
     :init (org-wild-notifier-mode t))
 #+END_SRC
 
-** Org search =ivy-omni-org=
-
 ** Org link
 [[gmap:test test][test test]]
 #+begin_src emacs-lisp :tangle yes
@@ -1659,16 +1510,6 @@ It's buggy, the view show an event starting on each day it set
 
 ** clock =org-clock=
 #+begin_src emacs-lisp :tangle yes
-  ;; (use-package org-clock
-  ;;   :ensure nil
-  ;;   :after org
-  ;;   :bind
-  ;;   ("C-c t s" . org-clock-in)
-  ;;   ("C-c t f" . org-clock-out)
-  ;;   ("C-c t c" . org-clock-cancel)
-  ;;   ("C-c t l" . org-clock-in-last)
-  ;;   )
-
   (use-package counsel-org-clock
     :after org
     :bind
@@ -1838,87 +1679,8 @@ information.
 
 #+RESULTS:
 
-** TODO show current header =org-sticky-header=
-Not working with org-super-agenda
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package org-sticky-header
-  ;;   :hook org-mode)
-#+END_SRC
 
 * read-only major-mode
-** Mail
-*** mu =mu4e=
-#+BEGIN_SRC emacs-lisp :tangle yes
- ;; (use-package smtpmail :ensure nil)
-  ;; (use-package mu4e
-  ;;   :after (ivy smtpmail)
-  ;;   :ensure nil
-  ;;   :bind ("C-c m" . mu4e)
-  ;;   :ensure-system-package mu
-  ;;   :custom
-  ;;   (mu4e-maildir "~/Maildir")
-  ;;   (mu4e-use-fancy-chars t)
-  ;;   (mu4e-view-show-addresses t)
-  ;;   (mu4e-view-show-images t)
-  ;;   (message-send-mail-function 'smtpmail-send-it)
-  ;;   (mu4e-view-auto-mark-as-read  nil)
-  ;;   ;; (mu4e-compose-signature
-  ;;   ;;  (concat
-  ;;   ;;   "Sylvain Ribstein\n"
-  ;;   ;;   "sylvain.ribstein@gmail.com\n"
-  ;;   ;;   "00336 66 26 05 28\n"))
-  ;;   (smtpmail-stream-type 'starttls)
-  ;;   (smtpmail-smtp-service 587)
-  ;;   (mu4e-get-mail-command "offlineimap -o -q")
-  ;;   (message-kill-buffer-on-exit t)
-  ;;   (mu4e-completing-read-function 'ivy-completing-read)
-  ;;   (mu4e-headers-fields
-  ;;    '((:human-date . 12)
-  ;;      (:maildir . 22)
-  ;;      (:flags . 6)
-  ;;      (:from-or-to . 22)
-  ;;      (:mailing-list . 10)
-  ;;      (:thread-subject)
-  ;;      ))
-  ;;   (mu4e-confirm-quit nil)
-  ;;   :config
-  ;;   (setq
-  ;;    mu4e-contexts
-  ;;    `(,(make-mu4e-context
-  ;;        :name "Personnal Gmail"
-  ;;        :enter-func (lambda () (mu4e-message "Entering personnal Gmail context"))
-  ;;        :leave-func (lambda () (mu4e-message "Leaving personnal Gmail context"))
-  ;;        :match-func
-  ;;        (lambda (msg)
-  ;;          (when msg
-  ;;            (string-match-p "^/Gmail" (mu4e-message-field msg :maildir))))
-  ;;        :vars
-  ;;        '( ( user-mail-address . "sylvain.ribstein@gmail.com"  )
-  ;;           (smtpmail-smtp-user . "sylvain.ribstein")
-  ;;           ( smtpmail-smtp-server . "smtp.gmail.com" )
-  ;;           ( user-full-name . "Sylvain Ribstein" )
-  ;;           ( mu4e-trash-folder . "/Gmail/[Gmail]/Trash" )
-  ;;           ( mu4e-refile-folder . "/Gmail/[Gmail]/Archive" )
-  ;;           ( mu4e-drafts-folder . "/Gmail/[Gmail]/Drafts" )
-  ;;           (mu4e-sent-folder . "/Gmail/[Gmail]/Sent Mail" )
-  ;;           ( mu4e-compose-signature
-  ;;             . (concat
-  ;;                "Sylvain Ribstein\n"
-  ;;                "sylvain.ribstein@gmail.com\n"
-  ;;                "00336 66 26 05 28\n")))))))
-
-
-  ;; (use-package mu4e-alert
-  ;;   :hook
-  ;;   (after-init . mu4e-alert-enable-notifications)
-  ;;   (after-init . mu4e-alert-enable-mode-line-display))
-
-  ;; (setq shr-color-visible-luminance-min 80)
-#+END_SRC
-
-#+RESULTS:
-: 80
-
 ** compilation
 add ansi color to the compilation buffer
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1930,37 +1692,4 @@ add ansi color to the compilation buffer
     :hook
     (compilation-filter . my/colorize-compilation-buffer))
 #+END_SRC
-
-** Dashboard =dashboard=
-Always good to have a dashboard.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dashboard
-    :after projectile
-    :delight ""
-    :custom
-    (dashboard-startup-banner 'official)
-    (dashboard-center-content t)
-    :config
-    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items
-          '((agenda . 10)
-            (projects . 3)
-            (recents  . 5))))
-#+END_SRC
-
-** TODO Web browser =xwwp-follow-link=
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package xwwp-follow-link
-  ;; :load-path "~/.emacs.d/xwwp-follow-link"
-  ;; :custom
-  ;; (xwwp-follow-link-completion-system 'ivy)
-  ;; :bind (:map xwidget-webkit-mode-map
-  ;;               ("v" . xwwp-follow-link)))
-#+END_SRC
-
-* Tasks
-#+END_SRC
-*** TODO contact database =ebdb=
-This one will at some point incorporate a carddav sync
-* not used anymore
+* TODO update my conf using [[https://github.com/alhassy/emacs.d#emacs-vs-initorg][config]]

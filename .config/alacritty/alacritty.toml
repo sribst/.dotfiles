@@ -15,7 +15,7 @@ history = 100000
 [window]
 decorations = "none"
 dynamic_title = true
-
+dimensions = { columns = 200, lines = 40 }
 [window.class]
 general = "Alacritty"
 instance = "Alacritty"

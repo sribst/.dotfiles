@@ -29,10 +29,6 @@ gpgconf --launch gpg-agent
 
 export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
 
-# golang
-# export GOPATH="$HOME/go"
-# export PATH="$PATH:$GOPATH/bin"
-
 # rust
 # export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
 . "$HOME/.cargo/env"
