@@ -14,19 +14,20 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle djui/alias-tips
 antigen bundle mollifier/anyframe
 antigen bundle MichaelAquilina/zsh-auto-notify
+antigen bundle unixorn/fzf-zsh-plugin@main
+antigen-bundle Tarrasch/zsh-autoenv
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
 
 # antigen bundle unixorn/fzf-zsh-plugin
-antigen bundle zsh-users/zsh-history-substring-search
+# antigen bundle zsh-users/zsh-history-substring-search
 
 # Load the theme.
 antigen theme dogenpunk
 
 # Tell Antigen that you're done.
 antigen apply
-
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 bindkey '^P' history-substring-search-up
