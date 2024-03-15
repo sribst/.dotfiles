@@ -35,6 +35,7 @@ bindkey '^N' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_FUZZY=true
 
 # opam configuration
+
 test -r /home/baroud/.opam/opam-init/init.zsh && . /home/baroud/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
