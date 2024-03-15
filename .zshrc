@@ -15,7 +15,7 @@ antigen bundle djui/alias-tips
 antigen bundle mollifier/anyframe
 antigen bundle MichaelAquilina/zsh-auto-notify
 antigen bundle unixorn/fzf-zsh-plugin@main
-antigen-bundle Tarrasch/zsh-autoenv
+antigen bundle Tarrasch/zsh-autoenv
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
