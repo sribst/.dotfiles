@@ -30,8 +30,6 @@ antigen theme dogenpunk
 antigen apply
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-bindkey '^P' history-substring-search-up
-bindkey '^N' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_FUZZY=true
 
 # opam configuration
