@@ -24,6 +24,7 @@
 - [[#mini-buffer][Mini-buffer]]
   - [[#parameter][parameter]]
   - [[#completion-engine-ivy][completion engine =ivy=]]
+  - [[#save-command-history-save-hist][save command history =save-hist=]]
   - [[#m-x-on-popup-ivy-posframe][M-x on popup =ivy-posframe=]]
   - [[#search-in-current-buffer-swiper][search in current buffer =swiper=]]
   - [[#search-somewhere-else-m-xdiredetc-smexcounsel][search somewhere else "M-x/dired/etc" =smex,counsel=]]
@@ -72,6 +73,7 @@
       - [[#rust-rustic-mode][Rust =rustic-mode=]]
       - [[#docker-dockerfile-mode][Docker =dockerfile-mode=]]
       - [[#ocaml][OCaml]]
+      - [[#sql-sql-indent][sql =sql-indent=]]
     - [[#description-language][Description language]]
       - [[#csv-csv-mode][csv =csv-mode=]]
       - [[#json][=Json=]]
@@ -147,6 +149,10 @@ Auto-update all packages regularly
                 (lambda (frame) (auto-package-update-maybe)))
     (progn (auto-package-update-maybe)))
 #+END_SRC
+
+#+RESULTS:
+| (lambda (frame) (auto-package-update-maybe)) | (lambda (frame) (select-frame frame) (if (window-system frame) (if my/theme-window-loaded nil (if my/theme-terminal-loaded (enable-theme my/theme) (progn (load-theme my/theme t))) (setq my/theme-window-loaded t)) (if my/theme-terminal-loaded nil (if my/theme-window-loaded (enable-theme my/theme) (progn (load-theme my/theme t))) (setq my/theme-terminal-loaded t)))) | x-dnd-init-frame |
+
 *** menu =paradox=
 Paradox is a better mode to look after package. I need to fix the access to
 github.
@@ -350,6 +356,12 @@ being installed
     :config (all-the-icons-ivy-setup))
 #+END_SRC
 
+** save command history =save-hist=
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package savehist
+    :config (savehist-mode 1))
+  #+END_SRC
+
 ** M-x on popup =ivy-posframe=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ivy-posframe
@@ -365,10 +377,6 @@ being installed
     (ivy-posframe-mode 1)
     )
 #+END_SRC
-
-#+RESULTS:
-: t
-
 
 ** search in current buffer =swiper=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1040,6 +1048,15 @@ it format also dune file, which is annoying
     (ocamlformat-show-errors 'echo)
     :hook (before-save . ocamlformat-before-save))
 #+END_SRC
+**** sql =sql-indent=
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package sql-indent
+      :after sql-mode
+      :delight "")
+#+END_SRC
+
+#+RESULTS:
+
 *** Description language
 **** csv =csv-mode=
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1049,6 +1066,7 @@ it format also dune file, which is annoying
     :custom
     (csv-separators '(";" ",")))
 #+END_SRC
+
 **** =Json=
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package json-mode
@@ -1434,54 +1452,54 @@ It's buggy, the view show an event starting on each day it set
 
 *** Caldav sync =org-caldav=
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-caldav
-    :init
-    (defun org-caldav-sync-at-close ()
-      (org-caldav-sync)
-      (save-some-buffers))
-    (defvar org-caldav-sync-timer nil
-      "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-    (defun my/org-caldav-sync-with-delay (secs)
-      (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
-      (setq org-caldav-sync-timer
-            (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
-    :custom
-    (org-caldav-url "https://cloud.cowfa.xyz/remote.php/dav/calendars/baroud/")
-    (org-caldav-backup-file "~/org/org-caldav-backup.org")
-    (org-icalendar-alarm-time 10) ; set alarm 10 minutes before for calendar
-    (org-caldav-show-sync-results nil)
-  ;;   (org-icalendar-include-todo nil)
-  ;;   (org-caldav-sync-todo nil)
-    (org-caldav-delete-calendar-entries 'always)
-  ;;   (org-caldav-todo-percent-states
-  ;;    '((1 "BOOK") (99 "CANCELED") (0 "TODO") (2 "INPROGRESS")
-  ;;      (3 "WAITING") (4 "SOMEDAY") (100 "DONE") (98 "ABORDED")
-  ;;      (5 "IDEA") (6 "WANT") (7 "FETCH") (8 "GIVE") (97 "HAVE")
-  ;;      (96  "GIVEN") (9 "USE") (96 "CONSUMED") (95 "LOST")))
-    (org-caldav-resume-aborted 'never)
-    :config
-    (setq org-caldav-calendars
-          '((:calendar-id "master"
-                          :files ("~/org/master.org")
-                          :inbox (file+headline "~/org/master.org" "sync"))
-            (:calendar-id "claire"
-                          :files ("~/org/claire.org")
-                          :inbox (file+headline "~/org/claire.org" "sync"))
-            (:calendar-id "billy"
-                          :files ("~/org/billy.org")
-                          :inbox (file+headline "~/org/billy.org" "sync"))
-            ))
-    (setq org-icalendar-use-deadline
-          '(event-if-todo-not-done todo-due))
-    (setq org-icalendar-use-scheduled
-          '(todo-start event-if-todo-not-done))
-    :hook
-    ( (kill-emacs . org-caldav-sync-at-close)
-      (after-save
-       .
-       (lambda ()
-         (when (eq major-mode 'org-mode)
-           (my/org-caldav-sync-with-delay 300))))))
+  ;; (use-package org-caldav
+  ;;   :init
+  ;;   (defun org-caldav-sync-at-close ()
+  ;;     (org-caldav-sync)
+  ;;     (save-some-buffers))
+  ;;   (defvar org-caldav-sync-timer nil
+  ;;     "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  ;;   (defun my/org-caldav-sync-with-delay (secs)
+  ;;     (when org-caldav-sync-timer (cancel-timer org-caldav-sync-timer))
+  ;;     (setq org-caldav-sync-timer
+  ;;           (run-with-idle-timer (* 1 secs) nil 'org-caldav-sync)))
+  ;;   :custom
+  ;;   (org-caldav-url "https://cloud.cowfa.xyz/remote.php/dav/calendars/baroud/")
+  ;;   (org-caldav-backup-file "~/org/org-caldav-backup.org")
+  ;;   (org-icalendar-alarm-time 10) ; set alarm 10 minutes before for calendar
+  ;;   (org-caldav-show-sync-results nil)
+  ;; ;;   (org-icalendar-include-todo nil)
+  ;; ;;   (org-caldav-sync-todo nil)
+  ;;   (org-caldav-delete-calendar-entries 'always)
+  ;; ;;   (org-caldav-todo-percent-states
+  ;; ;;    '((1 "BOOK") (99 "CANCELED") (0 "TODO") (2 "INPROGRESS")
+  ;; ;;      (3 "WAITING") (4 "SOMEDAY") (100 "DONE") (98 "ABORDED")
+  ;; ;;      (5 "IDEA") (6 "WANT") (7 "FETCH") (8 "GIVE") (97 "HAVE")
+  ;; ;;      (96  "GIVEN") (9 "USE") (96 "CONSUMED") (95 "LOST")))
+  ;;   (org-caldav-resume-aborted 'never)
+  ;;   :config
+  ;;   (setq org-caldav-calendars
+  ;;         '((:calendar-id "master"
+  ;;                         :files ("~/org/master.org")
+  ;;                         :inbox (file+headline "~/org/master.org" "sync"))
+  ;;           (:calendar-id "claire"
+  ;;                         :files ("~/org/claire.org")
+  ;;                         :inbox (file+headline "~/org/claire.org" "sync"))
+  ;;           (:calendar-id "billy"
+  ;;                         :files ("~/org/billy.org")
+  ;;                         :inbox (file+headline "~/org/billy.org" "sync"))
+  ;;           ))
+  ;;   (setq org-icalendar-use-deadline
+  ;;         '(event-if-todo-not-done todo-due))
+  ;;   (setq org-icalendar-use-scheduled
+  ;;         '(todo-start event-if-todo-not-done))
+  ;;   :hook
+  ;;   ( (kill-emacs . org-caldav-sync-at-close)
+  ;;     (after-save
+  ;;      .
+  ;;      (lambda ()
+  ;;        (when (eq major-mode 'org-mode)
+  ;;          (my/org-caldav-sync-with-delay 300))))))
 #+END_SRC
 
 *** notification =org-wild-notifier=
