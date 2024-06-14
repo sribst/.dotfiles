@@ -271,8 +271,7 @@ for_window [title="ncpamixer"] floating enable border pixel 1
 for_window [class="Pavucontrol"] floating enable border pixel 1
 
 # cloud
-# disconnect while nextcloud is down
-# exec --no-startup-id nextcloud &
+exec --no-startup-id nextcloud &
 
 # touchscreen
 ## keyboard
