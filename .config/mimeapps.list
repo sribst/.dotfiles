@@ -22,6 +22,7 @@ image/png=feh.desktop;
 x-scheme-handler/tg=userapp-Telegram Desktop-YA8KW0.desktop;userapp-Telegram Desktop-W6OOA1.desktop;userapp-Telegram Desktop-EU07W1.desktop;org.telegram.desktop.desktop;
 application/octet-stream=firefox.desktop;
 text/markdown=org.gnome.gedit.desktop;
+x-scheme-handler/tonsite=org.telegram.desktop.desktop;
 
 [Default Applications]
 x-scheme-handler/http=firefox.desktop
@@ -45,3 +46,4 @@ application/x-directory=emacs-dired.desktop
 inode/directory=emacs-dired.desktop
 x-scheme-handler/msteams=teams.desktop
 x-scheme-handler/tg=org.telegram.desktop.desktop
+x-scheme-handler/tonsite=org.telegram.desktop.desktop

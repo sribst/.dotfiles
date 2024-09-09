@@ -11,7 +11,7 @@ export TMPPREFIX=${TMPDIR}/zsh
 
 # remove tezos warning that we are in sandbox
 export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=Y
-
+export OCTEZ_RUST_DEPS_TARGET_DIR=~/CS/Project/tezos/src/rust_deps/target
 # ocaml global env
 eval `opam config env`
 
@@ -32,3 +32,5 @@ export PASSWORD_STORE_GPG_OPTS='--no-throw-keyids'
 # rust
 # export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library"
 . "$HOME/.cargo/env"
+
+export PATH="$PATH:/home/sribaroud/.foundry/bin"
